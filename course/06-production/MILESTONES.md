@@ -124,8 +124,17 @@ python3 06-production/verify.py
 RESULT: ALL CHECKS PASSED
 ```
 
-Two defects were found by this work and fixed before it shipped, both recorded in
+**45 unit tests** run in this gate: 32 caption tests and 13 provider tests. The provider suite exists
+because the ElevenLabs release path is the *primary* voice and cannot be exercised here — it needs a
+paid key this repository does not hold. It is driven instead through a stubbed transport with a real
+encode and a real `ffprobe`, so the request we build, the alignment we parse, the proportional
+fallback and the no-retry rule are all verified. The suite was mutation-checked: flipping
+`ends[hi]` to `ends[lo]` in the token-timing map, and dropping the token start time, each fail three
+tests. Word-exactness alone did not catch either, which is why the timing assertions were added.
+
+Three defects were found by this work and fixed before it shipped, all recorded in
 [`narration/DESIGN.md`](narration/DESIGN.md): an abbreviation guard that matched `ms.` inside
-`seams.` (which scrambled caption timing on affected slides), and a player panel that was created
-hidden and never shown (so every narration control existed and none was visible). The second was
-caught only because the browser check was extended to assert visibility rather than presence.
+`seams.` (which scrambled caption timing on affected slides); a player panel that was created hidden
+and never shown, so every narration control existed and none was visible; and a merge step that could
+push a cue past the line limits. The panel bug was caught only because the browser check was extended
+to assert visibility rather than presence.

@@ -100,6 +100,22 @@ and duration, and saves the manifest after every single slide. A run that dies o
 banked 139 recordings, and re-running only fills the gaps. A lock file (`.generate.lock`) refuses two
 concurrent runs, because both would read-modify-write the manifest and lose work.
 
+## Tests
+
+```bash
+make -C course test        # or: cd course/06-production/narration && python3 test_captions.py
+```
+
+* `test_captions.py` (32) — the word-equality invariant, pronunciation span mapping, the shared
+  sentence rule, cue monotonicity and cue width.
+* `test_providers.py` (13) — the ElevenLabs release path driven through a **stubbed transport** with a
+  real encode and a real `ffprobe`, asserting the request we build, the alignment we parse, the
+  proportional fallback when alignment does not line up, and that a network failure is never retried.
+
+The release voice cannot be exercised without a paid key, and a release path that is never run is how
+one rots. What is faked is the socket; what is verified is our code. Nothing here proves the *voice* is
+good — only a real key does that (issue #21).
+
 ## What the contract enforces
 
 `validate_narration.py` fails (never warns) on any of these:

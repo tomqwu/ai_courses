@@ -79,7 +79,8 @@ course/06-production/narration/          ← the pipeline (source of truth)
   generate_narration.py                  ← CLI: plan | generate | verify
   import_narration.py                    ← bring in an externally recorded take
   validate_narration.py                  ← the contract; --require-complete gates release
-  test_captions.py                       ← 30 tests, incl. the sentence-rule regression
+  test_captions.py                       ← 32 caption tests, incl. the sentence-rule regression
+  test_providers.py                      ← 13 provider tests; drives the release path with a stubbed transport
   README.md                              ← operator's guide
 
 course/learner-site/assets/audio/<edition>/<deck>/slide-N.{mp3,vtt}   ← generated, gitignored

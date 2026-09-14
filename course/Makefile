@@ -5,6 +5,7 @@
 #   make site               build the learner site from the decks + recordings
 #   make serve              build, then serve on http://localhost:8043
 #   make check              validate scripts, media, decks, the site build and the player
+#   make test               caption-engine and TTS-provider unit tests
 #
 # The learner site is generated: the deck Markdown and narration/scripts/*.json are the source of
 # truth, and nothing under learner-site/ except the player assets is committed.
@@ -36,6 +37,7 @@ serve: site
 
 test:
 	cd $(NARRATION) && $(PYTHON) test_captions.py
+	cd $(NARRATION) && $(PYTHON) test_providers.py
 
 check: test
 	$(PYTHON) $(NARRATION)/validate_narration.py --scripts-only
