@@ -15,6 +15,8 @@ Built from a deep study of three production open-source repositories by the same
 ```
 course/
 ├── README.md                       ← you are here (package map)
+│   (repository front door: ../README.md)
+├── Makefile                        ← narration · transcripts · site · serve · test · check
 ├── 00-research/                    ← the deep research behind the course
 │   ├── 00-synthesis.md            ← the unified method (Spec-to-Ship Loop) drawn from all 3 repos
 │   ├── 01-listentome-deep-read.md ← architecture, privacy engineering, release discipline (with file pointers)
@@ -59,11 +61,15 @@ course/
         ├── DESIGN.md              ← what this borrows from ai_qe, and what it deliberately changes
         ├── README.md              ← operator's guide: generate, validate, swap the voice
         ├── scripts/mNN.json       ← the approved narration words for each deck
-        └── generate_narration.py · validate_narration.py · captions.py · providers.py
+        ├── voices: elevenlabs (release) · say (free preview) · pronunciations.json
+        ├── generate_narration.py · validate_narration.py · import_narration.py
+        ├── captions.py · providers.py · narration_data.py
+        └── test_captions.py (32) · test_providers.py (13)
 
-├── learner-site/                   ← the learner-facing build: one slide at a time, narrated
+└── learner-site/                   ← the learner-facing build: one slide at a time, narrated
     ├── build_site.py              ← decks + narration manifest → static site (no framework)
     ├── check_player.py            ← headless browser check (uses a browser already installed)
+    ├── transcripts/               ← committed transcripts: mNN.md × 9 + ALL.md
     └── assets/player.js · narration-media.js · player.css
 ```
 
@@ -73,9 +79,10 @@ course/
 
 **To teach it:** start with `02-instructor/instructor-guide.md`. Each module folder carries **eight artifacts**: the lesson (readable as-is, or record each `M#.#` segment from `video-scripts.md`), the lab, the quiz, a Marp slide deck with speaker notes on every slide, lab solutions with expected output, a printable handout, a 90-minute facilitation kit, a glossary, per-lab rubrics, and accessibility/transcript notes. Render the decks with `make -C 06-production/slides html`; validate them with `make -C 06-production/slides check`.
 
-**To learn it, narrated:** `make -C course narration-preview && make -C course serve` builds the learner site and serves it on <http://localhost:8043>. All 233 slides are narrated, captioned and keyboard-navigable; the free preview voice needs no API key, and `make -C course narration` records the release voice when `ELEVENLABS_API_KEY` is set. See `learner-site/README.md`.
+**To learn it, narrated:** `make -C course narration-preview && make -C course serve` builds the learner site and serves it on <http://localhost:8043>. All 233 slides are narrated, captioned and keyboard-navigable; the free preview voice needs no API key, and `make -C course narration` records the release voice when `ELEVENLABS_API_KEY` is set. Every deck also has a transcript, committed under `learner-site/transcripts/` — `ALL.md` covers all nine modules in one file. See `learner-site/README.md`.
+**To read it instead:** `course/learner-site/transcripts/ALL.md` — 233 slides, 21,536 words, with per-slide timings.
 
-**To verify the package:** `python3 06-production/verify.py` checks all 72 module artifacts against the length bands, sums every rubric's weights, confirms the three bundles ship their five files, lints all nine decks, resolves every repo file pointer (900+), and runs the narration contract — every caption must match its approved script word for word. It is the same evidence discipline the course teaches, applied to the course.
+**To verify the package:** `python3 06-production/verify.py` checks all 72 banded module artifacts against the length bands, sums every rubric's weights, confirms the three bundles ship their five files, lints all nine decks, resolves every repo file pointer (1,048), and runs the narration contract — every caption and every published transcript must match its approved script word for word. It is the same evidence discipline the course teaches, applied to the course.
 
 **To sell one archetype instead of all three:** `05-tracks/` holds three standalone bundles at $199 (on-device app · spec-driven SaaS · expertise) with their own syllabus, sales page, pricing, and bundle map. Each states plainly that the $399 full course is the better value.
 
@@ -83,7 +90,6 @@ course/
 
 **To run the labs yourself:** the Module 2/3 labs use `03-content/m02-ondevice-app/tinycopilot/` — a complete, tested Python reference implementation that mirrors ListenToMe's architecture (see its README). **Verified status as shipped:** `make lab-m2` → 191 passed, 100% coverage (floor 90 enforced); `make lab-m3` → 49 passed; `make e2e` → 2 passed against a live Ollama daemon; `make demo` → three role outputs. Requirements: Python 3.11+ (TinyCopilot itself also runs on 3.10), pytest, httpx, and Ollama (`ollama pull qwen3:0.6b` for a local model).
 
-**To sell it:** `04-sales/` is publish-ready: landing-page copy, pricing rationale grounded in 2025–26 platform benchmarks, and a full launch plan with the 7-email arc.
 
 ## Course at a glance
 
