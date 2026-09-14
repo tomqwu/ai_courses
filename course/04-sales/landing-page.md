@@ -1,0 +1,186 @@
+# Sales Page: AI Product Studio
+
+> Full landing-page copy for **AI Product Studio: Build, Ship & Sell 3 Types of AI Products**. Follows the evidence-backed anatomy: transformation headline → who it's for/isn't → problem → curriculum-as-outcomes → proof → instructor → testimonials → FAQ → pricing. Target length for a $399–$1,490 offer with cold traffic: ~2,200 words. Publish-ready copy is below the metadata.
+
+**Page metadata (for the platform):**
+- Title: `AI Product Studio: Build, Ship & Sell 3 Types of AI Products`
+- Meta description: `A project-based course built on three real, shipped open-source AI products — an on-device macOS/iOS AI app, a spec-driven SaaS, and a research-backed expertise site. Study the real code, build your own, and package it to sell.`
+- Primary CTA: `Enroll in the next cohort` / `Get instant access` (self-paced)
+- Social proof strip: repo badges — `ListenToMe · 96% core coverage · MIT`, `SignUpFlow · 1,464 tests passing · dated evidence`, `AI × QE · 116 evidence-cited slides`
+
+---
+
+## [Hero]
+
+# Ship three real AI products. Learn from code that actually shipped.
+
+**AI Product Studio** is a project-based course built on three production open-source apps by one engineer — a private on-device meeting copilot, a multi-tenant SaaS with a 7-tier test suite, and an evidence-cited briefing site with a consulting funnel.
+
+You'll study how each one was actually built — the specs, the agent instructions, the test tiers, the release discipline, the provenance — then build working versions yourself with AI as your engineering team, and package what you build to sell.
+
+**You leave with:** three portfolio-grade builds, public repos with recorded validation evidence, a pricing and positioning package for your product, and a repeatable operating system for shipping the next one.
+
+**Level up how you build with AI — by studying products that prove it works.**
+
+[**Enroll in the next cohort →**] · [**Get self-paced access →**]
+
+*8 weeks · 9 modules · 27 lessons · 8 hands-on labs · capstone demo day · lifetime access to materials*
+
+---
+
+## [Who this is for — and isn't]
+
+**This is for you if you:**
+- Write code professionally (or seriously) — Python **or** Swift — and want to build real AI products, not API-call demos
+- Use AI coding agents (Claude Code, Codex, Cursor, Copilot…) and suspect you're getting 20% of the value
+- Want your next portfolio, side project, or product to be *shipped and sellable*, not another abandoned repo
+
+**This isn't for you if you:**
+- Haven't written code before (start with a general programming course first)
+- Want prompt-engineering trivia or "AI side hustle" content with no building
+- Need an enterprise AI-governance compliance curriculum
+
+---
+
+## [The problem — and why most AI courses leave you with nothing]
+
+Most AI-app courses teach you to call an API and stop there. You end up with a notebook, not a product. Three things are always missing:
+
+1. **Nobody teaches the hard 20%** — privacy that's engineered rather than promised, multi-tenant security, tests that catch real regressions, releases you can actually point customers to.
+2. **Nobody teaches the workflow that makes AI agents genuinely useful** — the specs, agent rule files, and evidence discipline that let one engineer ship at team speed *without* shipping hallucinations.
+3. **Nobody teaches the part after "it works"** — pricing, positioning, packaging, launching. The repo graveyard is full of apps that work and earn nothing.
+
+This course covers all three — on three product types that cover the whole space of what a solo technical builder can ship.
+
+---
+
+## [The three products you'll study — and build]
+
+### 1. The native on-device AI app
+**Case study: ListenToMe** — a free, open-source, fully on-device meeting copilot for macOS/iOS. Live dual-channel capture, on-device transcription (3 swappable engines), real-time AI through Ollama with per-pane model selection, and a local-only mode engineered to fail closed against cloud model aliases. **96% core test coverage.** Signed, notarized public releases. A 12-competitor analysis in the repo that derived its positioning from a real market gap.
+
+**You build:** TinyCopilot — a working multi-role copilot core (Python + Ollama; runs on macOS/Linux/Windows) with model routing, prompt builders, proactive triggers, unit tests, and a hardened local-only mode — with a Swift track mapped onto the real repo for Mac developers.
+
+### 2. The spec-driven AI SaaS
+**Case study: SignUpFlow** — a multi-tenant volunteer-scheduling SaaS (FastAPI + SQLAlchemy 2.0 + JWT + HTMX) whose real story is the *process*: 17 spec-kit feature folders (spec → research → plan → tasks → contracts), agent rule files that actually constrain agents, a 7-tier test pyramid with **1,464 passing tests recorded with dates and SHAs**, playbook acceptance over six-week operational scenarios, and an executable authorization matrix.
+
+**You build:** a complete spec-kit for a real feature of your own SaaS, then harden it — tenant isolation with real-JWT negative-path tests, permissions-vs-qualifications done right, and a playbook fixture with an honest coverage manifest.
+
+### 3. The expertise product
+**Case study: AI × QE** — a research-backed presentation site on AI-assisted quality engineering: **116 narrated, evidence-cited slides**, per-claim provenance with SHA-256 retrieval records, audience-routed decks (executive vs technical), editioned immutable releases, a published self-audit with remediations — and a consulting funnel where the honesty *is* the conversion engine.
+
+**You build:** a mini-briefing on a topic you know — research log, provenance table, 12-slide outline, two audience routes, an edition decision — the skeleton of a sellable expertise product.
+
+---
+
+## [Curriculum — what you'll be able to do]
+
+| Week | Module | You'll leave able to… |
+|---|---|---|
+| 0 | **Orientation** | Run all three case studies locally; pick your archetype; get your first ship-win in 30 minutes |
+| 1 | **The AI Product Operating System** | Write constitution + AGENTS.md rule files that actually constrain agents; run a spec → plan → TDD loop; record honest validation evidence |
+| 2 | **On-device app: architecture** | Build the capture→transcribe→context→prompt→route pipeline; per-role model routing; prompt builders as pure, tested functions |
+| 3 | **On-device app: privacy, testing, shipping** | Engineer a fail-closed local-only mode; red-team cloud aliases; run a real-LLM contract test; enforce a coverage floor; derive positioning from a sourced competitive table |
+| 4 | **Spec-driven SaaS: the spec kit** | Produce spec/research/data-model/plan/tasks/contracts artifacts a fresh agent session can execute without conversation context |
+| 5 | **Spec-driven SaaS: security & acceptance** | Enforce tenant isolation with tests; separate permissions from qualifications; build playbook acceptance with an honest coverage manifest |
+| 6 | **The expertise product** | Turn research into a trustworthy artifact: provenance, epistemic labels, audience routing, editions, a consulting-style funnel |
+| 7 | **Monetize** | Price per archetype with sourced comparators; choose packaging and platforms; write honest marketing that converts |
+| 8 | **Launch + capstone** | Ship your v1 through the full loop with evidence; write the sales page; run a 5-email launch arc; demo day |
+
+*Every lesson ends with an action step — a commit, a test run, or a post. Every module ends with a lab whose pass criteria is objective: tests pass, tables reconcile, artifacts work.*
+
+---
+
+## [Proof — why you can trust this course]
+
+The three case studies are public, and everything this course claims about them is checkable:
+
+- **ListenToMe** — MIT-licensed, notarized releases on GitHub, 96% core coverage badge, and the full design specs, implementation plans, and gap reviews in-repo for you to read.
+- **SignUpFlow** — dated validation evidence (`1,464 passed / 21 skipped, 2026-09-12`), 17 spec folders, executable authorization matrix, playbook coverage manifest. Nothing is claimed that isn't recorded.
+- **AI × QE** — every slide claim carries a source record; the site publishes its own 14-finding audit *and* the remediations; releases are editioned and immutable.
+
+This course teaches the evidence discipline those repos practice — and practices it. Every number on this page has a file you can open.
+
+---
+
+## [Your instructor]
+
+**Tom Wu** is a software engineer who builds in public. With AI agents under the discipline this course teaches, he shipped:
+
+- **ListenToMe** — an on-device AI meeting copilot (macOS + iOS) with 96% core coverage and notarized releases,
+- **SignUpFlow** — a production-shaped multi-tenant SaaS with 1,464 passing tests across seven tiers,
+- **AI × QE** — an evidence-cited briefing platform with 116 narrated slides and a consulting funnel.
+
+All three are open-source or public. You'll read their specs, their agent rules, their test suites, and their release scripts in class — the same artifacts this course's method is drawn from. Tom teaches exactly the workflow he uses daily: spec-driven, agent-powered, evidence-recorded.
+
+---
+
+## [Testimonials]
+
+> *Beta cohort: testimonials land here. The beta agreement trades the cohort discount for a testimonial + feedback session — see `launch-plan.md`. Until then, this section stays honest: no invented social proof. The three repos above are the pre-beta proof.*
+
+**[Reserved for beta-cohort testimonials — 3 slots: before/after/result format]**
+
+---
+
+## [FAQ]
+
+**Do I need a Mac?**
+No. The core labs are Python + Ollama and run on macOS, Linux, and Windows. The Swift stretch track maps the same labs onto the real ListenToMe Swift code and requires a Mac.
+
+**Do I need to know AI/ML?**
+No. We use models through Ollama (free, local). The course teaches model routing, prompt architecture, and privacy engineering — not model training.
+
+**How much time per week?**
+4–6 hours (75 min lessons + 2–3 h lab). Cohort pace is one module weekly; self-paced is yours.
+
+**What if I fall behind in the cohort?**
+Materials are lifetime; each workshop is recorded; you can re-join a later cohort's calls for free (one repeat).
+
+**What exactly do I leave with?**
+Three working builds (TinyCopilot with privacy hardening + tests; your spec-kit + tenant-hardened SaaS feature; your mini-briefing), plus a pricing/positioning package, sales page draft, launch email arc, and a recorded capstone demo.
+
+**Refunds?**
+Full refund within 14 days or before Module 3 (cohort), whichever is later — keep the materials. We'd rather lose a sale than host a regretful student.
+
+**Is this another "vibe coding" course?**
+It's the opposite. You'll use agents aggressively — under constitutions, verifiable rules, tests, and evidence recording. That's the whole point: agents raise the stakes for discipline.
+
+**Team discounts?**
+Yes — the Team tier (3–5 seats) adds a private workshop and code review. Email for details.
+
+---
+
+## [Pricing]
+
+### Studio (self-paced) — **$399**
+All 9 modules · 8 labs with acceptance checklists · 72 quiz questions with keys · community access · capstone rubric · lifetime updates.
+
+### Studio Live (8-week cohort) — **$1,490**
+Everything in Studio · weekly 90-minute workshops (I do / We do / You do) · instructor code review on 3 labs · capstone review + demo day · cohort channel. *Founding cohort: $990 in exchange for a testimonial and feedback.*
+
+### Team — from **$2,500** (3–5 seats)
+Private cohort or workshop · private code review on team labs · team capstone review. Contact for scheduling.
+
+[**Enroll in the next cohort →**] · [**Get self-paced access →**]
+
+*Prices are per person in USD. Cohorts run with a minimum of 12 and a maximum of 40 students.*
+
+---
+
+## [Final call]
+
+The three products you'll study took one engineer — with the exact workflow you'll learn — from idea to shipped, tested, released, and sellable. Three times.
+
+You'll do the same thing, at lab scale, in eight weeks — and leave with the operating system to keep doing it.
+
+[**Enroll in the next cohort →**]
+
+---
+
+## Authoring notes (not published)
+
+- Keep every number on this page synchronized with `course/00-research/*.md` (source: the repos). If a repo updates its evidence line, update the page — the course's credibility standard applies to its own marketing.
+- The "before/after/result" testimonial format and the objection-teardown FAQ entries (falling behind, refunds, "other courses failed me") come from the launch research in `04-sales/launch-plan.md`.
+- Length check: ~2,250 words — appropriate for a $500+ offer with cold traffic.
+- A/B test candidates: headline variant "Stop studying AI. Start shipping it." vs. current; proof-first layout (badges above hero) for cold technical traffic.

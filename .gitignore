@@ -1,0 +1,17 @@
+# The three case-study repositories are cloned separately (see course/03-content/m00-orientation/lab.md
+# for the clone commands). They carry their own git history and are upstream projects, not course content.
+/ListenToMe/
+/SignUpFlow/
+/ai_qe/
+
+# macOS
+.DS_Store
+
+# Python caches (belt and braces; tinycopilot has its own .gitignore too)
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+*.egg-info/
