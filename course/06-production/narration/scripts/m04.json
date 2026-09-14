@@ -1,0 +1,117 @@
+{
+  "label": "M4 — The Spec-Driven SaaS: From Idea to Executable Spec",
+  "slides": {
+    "slide-1": {
+      "title": "M4 — The Spec-Driven SaaS",
+      "text": "Welcome to Module 4, the Spec-Driven SaaS. In Module 1 you got the operating system; today we run it at production scale on a real multi-tenant SaaS. The promise is narrow and testable: by the end, you can produce a spec folder complete enough that a fresh agent session, with no chat history and no memory of your reasoning, can implement story one without asking a single question. Our case study is SignUpFlow, which drives features with spec-kit slash commands, and its seventeen spec folders are the evidence. Expect roughly seventy-five minutes of lesson, plus a ninety to one hundred twenty minute lab."
+    },
+    "slide-2": {
+      "title": "By the end you can…",
+      "text": "Read these as six verbs, not topics: each is something you will do in the lab. You will walk a production spec folder artifact by artifact, run the chain from specify through clarify, plan, checklist, and tasks, and judge specs by the stranger test. You will enforce the checklist gate's pass rules, record change with severity-tagged review, and catch drift in generated artifacts. The last two separate a demo from a deliverable. Anyone can generate a beautiful spec folder; the discipline is reviewing it locally with findings that name a severity and a file. If you remember two things today: the stranger test and the drift checks."
+    },
+    "slide-3": {
+      "title": "M4.1 — The command chain",
+      "text": "Here is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote, so nothing is carried in anyone's head. Specify writes the WHAT, clarify burns a small question budget, then research, data model, and plan add the HOW and the Constitution Check. The checklist gates, contracts pin the seams, and tasks turn it into work. The command definitions live in the dot-claude commands folder and the templates in dot-specify templates, both openable in the clone. Notice there is exactly one gate, and it is cheap."
+    },
+    "slide-4": {
+      "title": "Proof: `spec.md` owns WHAT",
+      "text": "The spec file owns the WHAT. In the security-hardening spec you will find eight user stories, six of them P1 and two P2, forty-four functional requirements all phrased System MUST, seven edge cases, and twelve success criteria. Open story one: given a user attempts to log in, when they fail authentication five times within five minutes, then further login attempts are blocked for fifteen minutes. Those numbers, five, five, and fifteen, will reappear in a functional requirement, in a contract config row, and in a test assertion. That recurrence is the point. And the spec names no technology at all."
+    },
+    "slide-5": {
+      "title": "Proof: `research.md` — decisions with receipts",
+      "text": "Research settles technology, and it does so with receipts. This file is nine hundred sixty-five lines holding eight numbered decisions, each with the same anatomy: the decision, the options evaluated with pros and cons, the rationale, then implementation details. Decision one chooses Redis and rejects in-memory outright, because in-memory counters are lost on restart and are not shared across API instances. Decision two chooses TOTP, time-based one-time passwords, over SMS, because NIST special publication 800-63B deprecates SMS and SIM-swap attacks are well documented. Here is the rule to steal: a decision without a rejected alternative is a preference, not a decision."
+    },
+    "slide-6": {
+      "title": "Proof: `plan.md` — HOW, plus one absence",
+      "text": "The plan owns the HOW, and it opens with a gate. The Constitution Check walks the project's seven principles and gives each one a verdict, ending with the line Constitution Violations: NONE and an empty Complexity Tracking table, which the template says to fill only when violations exist. Every file the plan touches is annotated as new or modify. Then the honest absence: this feature has no data-model file, because security infrastructure spans many entities, and the plan says so. Six other specs do have one. The template defines the full set of artifacts, but each feature decides what earns its keep."
+    },
+    "slide-7": {
+      "title": "Proof: `contracts/` — six seams",
+      "text": "The contract folder is where WHAT and HOW first meet. This feature has six contracts, and together they run to four thousand six hundred sixty-one lines: rate limiting, the two-factor API, audit logging, CSRF, session, and password reset. Look at the rate-limiting config table's first row: a POST to the login endpoint, a five minute window, five attempts, per IP, with a fifteen minute lockout — the same five, five, fifteen from the acceptance scenario, now with a scope and a key format attached. That is what a contract is for. If you write one artifact carefully in the lab, make it the contract."
+    },
+    "slide-8": {
+      "title": "Proof: the gate and the quickstart",
+      "text": "The quickstart is six hundred forty-three lines of timed deployment with exact commands, plus prerequisites and troubleshooting. The requirements checklist is fifty lines and grades three groups: Content Quality, Requirement Completeness, and Feature Readiness. Its first rule bans implementation details, and it ends with a verdict of all checks passed and a quality score of one hundred percent. Hold that number. In a few slides I will show you a count in this very file that is wrong, and the one hundred percent did not catch it. A self-graded gate tells you what its author believed; only reading it against the spec tells you what is true."
+    },
+    "slide-9": {
+      "title": "Proof: `tasks.md` — Phase 2, and the gap",
+      "text": "Here is the honest gap in the exemplar. This feature was specced down to four thousand lines of contracts and never generated a task breakdown; its plan's Next Steps still lists that command as Phase 2. So read the real format from the template: checkboxes with an ID, an optional parallel marker, and a story tag. The parallel marker flags work that can run at the same time, the story tag ties each task to a story, and the template requires exact file paths in descriptions. One real line reads: T017, parallel, story one, implement the create wizard state method in the onboarding service file. Every task names a file."
+    },
+    "slide-10": {
+      "title": "M4.2 — The stranger test",
+      "text": "The constitution's Context A defines the Ralph loop. Started by a shell script, or by any prompt mentioning implement spec, the agent must pick the highest priority incomplete spec from the specs folder, complete all acceptance criteria, and output a done promise when it is one hundred percent finished. That agent has no chat history, and in Ralph mode no appetite for questions. So the quality test for every artifact is one sentence: delete the conversation — could a stranger implement this? Everything in this segment follows from that. First consequence: the split between WHAT and HOW."
+    },
+    "slide-11": {
+      "title": "WHAT vs HOW",
+      "text": "Kill the misconception: a good spec does not contain the schema. The spec describes user-visible behavior in technology-agnostic terms. The plan carries languages, versions, storage choices, and performance targets. The gate's rule is explicit — no implementation details such as languages, frameworks, or APIs — and schema SQL belongs to the data model, the contracts, and the migrations. Entities in the spec are described without implementation. That separation buys you something real. This feature's spec recorded an open decision to use an in-memory cache with a database backup, dated TBD; research later chose Redis and rejected in-memory outright. The requirement never changed, and the reversal is on the record."
+    },
+    "slide-12": {
+      "title": "Every story is an MVP slice",
+      "text": "The spec template mandates it: each user story must be independently testable, meaning if you implement just one of them you still have a viable MVP. Independently developed, tested, deployed, demonstrated. Every story in the security-hardening spec carries its own independent test line; story one's is to simulate failed logins and verify both the lockout and the message shown. Three consequences follow. A partial implementation still ships value. A pull request can carry exactly one story. And the task file groups work by story, with a checkpoint after each one."
+    },
+    "slide-13": {
+      "title": "Scenarios ready to become tests",
+      "text": "Recall story one's first scenario: fail five times in five minutes, then blocked for fifteen minutes. Those numbers recur downstream like a refrain. They become functional requirement zero zero one, the first row of the rate-limiting contract's config table, and an assertion in a test sketch. A scenario is done when the person writing the test needs to make no further decisions. Contrast the anti-examples. Then the system is secure cannot be coded against. Then authentication failures are handled appropriately names no observable outcome. Both fail the gate's rule that requirements must be testable and unambiguous. Write Then-clauses that a test could assert tomorrow."
+    },
+    "slide-14": {
+      "title": "Bounded clarification",
+      "text": "What about what you genuinely do not know yet? Drafts may mark a requirement with a needs-clarification placeholder — for example, a requirement that authenticates users without naming the method. But the checklist's Requirement Completeness group requires that no markers remain before planning. There are two resolution paths. The clarify command runs before plan on a deliberately small budget; this feature's next steps cap it at three questions. Or you document a default in Assumptions, which is how this spec settled ninety-day log retention, one-hour token expiry, and a thirty-second TOTP tolerance. An honest footnote: the clarify command definition says up to five questions, a drift we will return to."
+    },
+    "slide-15": {
+      "title": "The gate's pass rules",
+      "text": "The gate has three groups, and every item is binary. Content Quality checks that there are no implementation details, that the spec focuses on user value, and that a non-technical stakeholder can read it. Requirement Completeness checks that no markers remain, that requirements are testable and unambiguous, that success criteria are measurable, and that scope, dependencies, and assumptions are defined. Feature Readiness checks that every requirement has acceptance criteria, that scenarios cover the primary flows, and that no implementation leaked in. Calling checklists bureaucracy is backwards: this is the last cheap moment before you spend an autonomous implementation loop on a spec with a hole in it."
+    },
+    "slide-16": {
+      "title": "Tasks cite exact file paths",
+      "text": "Why is a path mandatory in a task? Because a fresh agent session has no idea how your project is arranged, and the repository's own anti-hallucination rule forbids inventing structure. It says: do not invent file paths, function names, route paths, commands, URLs, or identifiers; grep the repo before referencing. A task like update the backend forces the agent either to guess, which is how hallucinated endpoints happen, or to burn budget rediscovering your layout. A task that names the file makes its first action a grep that confirms rather than invents. Tasks can just say update the backend is the misconception to unlearn today."
+    },
+    "slide-17": {
+      "title": "Contracts are the seams between sessions",
+      "text": "A contract is the interface between the session that designed the feature and the different session that implements it. Those two share nothing but the files on disk, so the seam has to be written down: request and response shapes, error keys, the Redis key schema, and a test sketch. In the rate-limiting contract, the config table is where the spec's WHAT and the plan's HOW first meet, with the same five, five, and fifteen numbers, now carrying per-IP scope and a key format. Miss the contract and the implementing agent invents the error keys, and your frontend never matches."
+    },
+    "slide-18": {
+      "title": "Constitution Check — and the Ralph loop",
+      "text": "An agent writing a plan will cheerfully violate your principles, skipping end-to-end tests or adding infrastructure nobody asked for, because it has not internalized them. The Constitution Check forces the plan to walk each principle with a verdict and evidence, and any violation must be argued in the Complexity Tracking table, filled only if violations exist. Here: seven principles, seven verdicts, zero violations, an empty table. Now close the loop with the Ralph context. An agent that must complete all acceptance criteria and cannot ask questions is safe exactly to the degree your artifacts are complete. The pipeline is the precondition for autonomy, not ceremony around it."
+    },
+    "slide-19": {
+      "title": "M4.3 — One PR per story",
+      "text": "The task file is built for one pull request per story. Tasks are grouped by story, tests are written first and fail, and there is a checkpoint after each group — the template's line is, stop at any checkpoint to validate story independently. A pull request carrying exactly one story is reviewable in one sitting, demoable to a stakeholder, and revertable without dragging unrelated changes back out. This is not process for its own sake. It is what makes the Validation section short enough to be honest."
+    },
+    "slide-20": {
+      "title": "The PR body format",
+      "text": "The pull request body has four fixed sections. Summary names the change in one line per change. Changed files gives a path and a reason for each. Validation records the commands you ran and their results. Follow-ups records known gaps, deferred work, and open questions. Behind that format are the rules: run the full test target for every pull request, and note that there is no continuous integration, so all validation runs locally. Record commands, outcomes, limitations, and the pushed head SHA. Merge only after local validation and review are recorded and GitHub reports the branch mergeable. Never fabricate status checks, bypass protections, or treat missing evidence as success."
+    },
+    "slide-21": {
+      "title": "Local code review",
+      "text": "The repository's review policy is itself a file, and it states that Ollama is not a code-review provider — the former hosted gate is retired, so do not recreate it. The checklist is concrete: record the pull request's head and base SHAs, inspect the complete diff along with affected source, tests, and agent instructions, and check correctness, security, organization isolation, authorization, API contracts, migrations, and negative-path test coverage. Report findings with a severity and a file and line reference, then fix blocking issues and re-review the final diff. Two hard lines: do not claim independent review when the builder performed the review itself, and missing review is not approval."
+    },
+    "slide-22": {
+      "title": "Drift case 1: the stale path",
+      "text": "Now the part that surprises people: generated files lie. Open the onboarding task file and read line three. It says the input is design documents from the specs zero two zero user onboarding folder. But the folder is specs zero zero zero user onboarding. The feature was renumbered at some point, and the generated task file kept the stale path. Nothing failed. No test caught it, no warning fired. It just sat in a generated artifact, waiting for an agent to follow a dead end. Everything in a spec folder is generated output, and generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code."
+    },
+    "slide-23": {
+      "title": "Drift cases 2–3: count and directory",
+      "text": "Two more drift cases, both inside the exemplar folder. Case two: the requirements checklist prints eight prioritized user stories, five P1, two P2, zero P3 — but the spec marks six P1 stories: rate limiting, audit logging, CSRF, session invalidation, input validation, and password reset. The same checklist then lists those six while still printing five P1. The one hundred percent quality score did not catch it; only reading the checklist against the spec did. Case three: the onboarding tasks file assigns a migration to a migrations versions path, and no migrations directory exists — migrations live under alembic versions. Both files were generated, and both were wrong."
+    },
+    "slide-24": {
+      "title": "Countermeasures: grep, recount, open",
+      "text": "The repository already has the rules that target this drift. Operating loop step six says: search for stale commands, counts, check names, and feature-state claims before declaring done. The anti-hallucination rule says: grep the repo before referencing. So the countermeasures are mechanical. Grep every path a generated file cites and confirm it exists — that catches the nonexistent migrations directory. Recount every count against its source — that catches the five-P1 claim against six P1 stories. And never accept a self-reported score as a substitute for opening the file, which is the habit that catches the stale path. In the lab you run these on your own checklist."
+    },
+    "slide-25": {
+      "title": "Lab M4 — Spec a Real Feature",
+      "text": "The lab is ninety to one hundred twenty minutes, the whole module compressed into one deliverable: a complete spec folder for one real feature. Work in your own project's specs folder, or extend SignUpFlow if you have no SaaS of your own. You need seven artifacts, the same set we walked: spec, research, data model, plan, contract, checklist, and tasks. Two things are graded unusually strictly. Every task must name an exact file path that exists in your repository, and your checklist must survive your own drift checks — grep each cited path, recount each count. The pass gate is that a stranger implements story one with zero questions."
+    },
+    "slide-26": {
+      "title": "Quiz M4",
+      "text": "The quiz has eight questions, six multiple choice and two short answer, mapping to the three segments. It covers artifact responsibilities, gate rules, the task format, and the research decision format, and one question is the drift-check question. The distractors encode the misconceptions we taught against: that a spec may contain code, that secure is a testable Then-clause, that a task may name no file. Question eight asks you to name the two countermeasure habits from AGENTS dot M D and say which drift case each would have caught. Grep catches the nonexistent migrations directory; recounting catches the five-P1 claim against six P1 stories."
+    },
+    "slide-27": {
+      "title": "Recap",
+      "text": "Six lines to take away. The pipeline is a chain where each command consumes the previous file. The exemplar shows the full set at scale: eight stories, forty-four functional requirements, seven edge cases, twelve success criteria, eight research decisions, and six contracts totaling four thousand six hundred sixty-one lines — and one honest gap, no tasks file. Quality has a single test, the stranger test, and the gate enforces its consequences. The change record is a format, not a feeling. And generated artifacts drift, so grep paths and recount counts before you cite anything."
+    },
+    "slide-28": {
+      "title": "Discussion prompt",
+      "text": "Post to the community with this template. Name the feature you would spec first. Name the artifact you were most tempted to skip, and what breaks without it. Name the hardest thing to make stranger-testable. And name one drift check you now run, whether that is a grep or a recount. The third line matters most: name the specific scenario, requirement, or task you had to sharpen, and say what was vague before. Then read two classmates' posts and comment on one with a single question — would their sharpest acceptance scenario let you implement without asking anything? That is the stranger test, applied to each other."
+    }
+  }
+}

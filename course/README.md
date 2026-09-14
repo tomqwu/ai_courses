@@ -54,7 +54,17 @@ course/
     ├── build-glossary.py          ← merges the nine module glossaries
     ├── glossary-master.md         ← 137 merged terms (13 shared across modules)
     ├── certificate.md             ← completion certificate + issuance rules (SHA-bounded)
-    └── welcome-packet.md          ← onboarding emails, environment checklist, help routing
+    ├── welcome-packet.md          ← onboarding emails, environment checklist, help routing
+    └── narration/                 ← narrated audio + captions pipeline (scripts → TTS → align → validate)
+        ├── DESIGN.md              ← what this borrows from ai_qe, and what it deliberately changes
+        ├── README.md              ← operator's guide: generate, validate, swap the voice
+        ├── scripts/mNN.json       ← the approved narration words for each deck
+        └── generate_narration.py · validate_narration.py · captions.py · providers.py
+
+├── learner-site/                   ← the learner-facing build: one slide at a time, narrated
+    ├── build_site.py              ← decks + narration manifest → static site (no framework)
+    ├── check_player.py            ← headless browser check (uses a browser already installed)
+    └── assets/player.js · narration-media.js · player.css
 ```
 
 ## How to use this package
@@ -63,7 +73,9 @@ course/
 
 **To teach it:** start with `02-instructor/instructor-guide.md`. Each module folder carries **eight artifacts**: the lesson (readable as-is, or record each `M#.#` segment from `video-scripts.md`), the lab, the quiz, a Marp slide deck with speaker notes on every slide, lab solutions with expected output, a printable handout, a 90-minute facilitation kit, a glossary, per-lab rubrics, and accessibility/transcript notes. Render the decks with `make -C 06-production/slides html`; validate them with `make -C 06-production/slides check`.
 
-**To verify the package:** `python3 06-production/verify.py` checks all 72 module artifacts against the length bands, sums every rubric's weights, confirms the three bundles ship their five files, lints all nine decks, and resolves every repo file pointer (900+). It is the same evidence discipline the course teaches, applied to the course.
+**To learn it, narrated:** `make -C course narration-preview && make -C course serve` builds the learner site and serves it on <http://localhost:8043>. All 233 slides are narrated, captioned and keyboard-navigable; the free preview voice needs no API key, and `make -C course narration` records the release voice when `ELEVENLABS_API_KEY` is set. See `learner-site/README.md`.
+
+**To verify the package:** `python3 06-production/verify.py` checks all 72 module artifacts against the length bands, sums every rubric's weights, confirms the three bundles ship their five files, lints all nine decks, resolves every repo file pointer (900+), and runs the narration contract — every caption must match its approved script word for word. It is the same evidence discipline the course teaches, applied to the course.
 
 **To sell one archetype instead of all three:** `05-tracks/` holds three standalone bundles at $199 (on-device app · spec-driven SaaS · expertise) with their own syllabus, sales page, pricing, and bundle map. Each states plainly that the $399 full course is the better value.
 

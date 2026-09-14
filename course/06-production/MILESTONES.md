@@ -49,6 +49,16 @@ Each bundle ships `README.md`, `syllabus.md`, `sales-page.md`, `pricing.md`, and
 | Verification pass (decks build, pointers resolve, counts consistent) | [#15](https://github.com/tomqwu/ai_courses/issues/15) |
 | Docs update + release | [#16](https://github.com/tomqwu/ai_courses/issues/16) |
 
+## Milestone 4 — [Narrated learner site](https://github.com/tomqwu/ai_courses/milestone/4)
+
+| Workstream | Issue |
+|---|---|
+| Narration pipeline (scripts, TTS providers, caption engine, contract) | [#17](https://github.com/tomqwu/ai_courses/issues/17) |
+| Learner site (static build + player, captions, transcript, keyboard) | [#18](https://github.com/tomqwu/ai_courses/issues/18) |
+| Record all 9 decks — 233 slides narrated and validated | [#19](https://github.com/tomqwu/ai_courses/issues/19) |
+| Verification and docs (browser check, verify.py, regression tests) | [#20](https://github.com/tomqwu/ai_courses/issues/20) |
+| Release voice with ElevenLabs | [#21](https://github.com/tomqwu/ai_courses/issues/21) — open, needs an API key |
+
 ## How this milestone set was derived
 
 The expansion is scoped by one rule from the course's own method (M1): **a claim is only as good as the
@@ -58,15 +68,21 @@ checklists one-for-one rather than existing as a separate project plan.
 
 ## Status
 
-**All three milestones are complete** — 16/16 issues closed, each with a comment carrying measured
+**Milestones 1–3 are complete** — 16/16 issues closed, each with a comment carrying measured
 evidence (artifact list, word counts, deck slide/note counts, and the verification command to
 reproduce it) rather than a statement of intent.
+
+**Milestone 4** adds the narrated learner site: 4/5 issues closed, with #21 (the paid release voice)
+deliberately left open because it needs an `ELEVENLABS_API_KEY` this repository does not hold. The
+preview recording is complete, labelled as a preview in the data and in the UI, and swappable with one
+command.
 
 | Milestone | Issues | State |
 |---|---|---|
 | Course Core — Complete Module Packages | #1–#9 | ✅ closed |
 | Track Bundles — 3 standalone products | #10–#12 | ✅ closed |
 | Production & Launch Readiness | #13–#16 | ✅ closed |
+| Narrated learner site | #17–#21 | ✅ #17–#20 closed · #21 open (needs `ELEVENLABS_API_KEY`) |
 
 Final verification at completion (`bd43c95`):
 
@@ -86,3 +102,30 @@ The pass caught five real errors in content that had already shipped (recorded i
 [`../README.md`](../README.md), "Drift the verification pass caught") and rejected two proposed
 corrections that did not survive checking the source. Both outcomes are the point: the tracking is
 only worth having if closing an issue means a check ran.
+
+Final verification for milestone 4 (`make -C course check`):
+
+```
+$ make -C course check
+python3 06-production/narration/validate_narration.py --scripts-only
+Narration scripts verified: 9 decks, 233 slides, 21,536 words (mean 92 words/slide)
+python3 06-production/narration/validate_narration.py
+Narration verified: 9 decks, 233 scripted slides, 233 recordings with timed captions — complete
+python3 learner-site/build_site.py --check
+site written to /tmp/aps-site-check   decks: 9 · slides: 233 · scripted: 233 · recorded: 233
+python3 learner-site/check_player.py --all --print-skip
+  ok  m00 … m08   (233 slides, 233 narrated)
+browser check passed: 9 deck(s) — panel injected, captions parsed, deep links and status regions correct
+python3 06-production/verify.py
+[PASS] Artifacts + length bands      [PASS] Rubrics        [PASS] Track bundles
+[PASS] Decks                         [PASS] Sales claims   [PASS] Narration contract
+[PASS] Learner site                  [PASS] Repo file pointers (1048 checked)
+
+RESULT: ALL CHECKS PASSED
+```
+
+Two defects were found by this work and fixed before it shipped, both recorded in
+[`narration/DESIGN.md`](narration/DESIGN.md): an abbreviation guard that matched `ms.` inside
+`seams.` (which scrambled caption timing on affected slides), and a player panel that was created
+hidden and never shown (so every narration control existed and none was visible). The second was
+caught only because the browser check was extended to assert visibility rather than presence.

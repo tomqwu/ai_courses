@@ -8,6 +8,8 @@ Checks
   4. rubric weights sum to 100 in each lab-rubrics.md
   5. bundles each ship their 5 files
   6. no deck is missing Marp front matter or speaker notes (delegates detail to deck_lint.py)
+  7. narration: every deck has approved words, and every recording matches them word for word
+  8. the learner site, when built, has one page per deck with the right slide count
 
 Usage:
   python3 verify.py                # full report, exit 1 on any failure
@@ -208,6 +210,63 @@ def check_sales_claims() -> list[str]:
     return problems
 
 
+def check_narration() -> list[str]:
+    """Run the narration contract without re-hashing media; `make check` runs the full version.
+
+    Word equality between captions, transcript and the approved script is the invariant that makes
+    a narrated deck trustworthy, so it belongs in the main gate rather than an optional extra.
+    """
+    validator = ROOT / "06-production" / "narration" / "validate_narration.py"
+    if not validator.exists():
+        return [f"{validator.name}: missing"]
+    proc = subprocess.run([sys.executable, str(validator), "--no-media"],
+                          capture_output=True, text=True)
+    if proc.returncode == 0:
+        return []
+    return [f"narration: {line.strip()}" for line in
+            ((proc.stdout or "") + (proc.stderr or "")).splitlines()
+            if line.strip().startswith("✗")][:40] or ["narration: validation failed"]
+
+
+def check_learner_site() -> list[str]:
+    """Only meaningful once the site is built; an unbuilt site is a note, not a failure."""
+    site = ROOT / "learner-site"
+    pages = sorted(site.glob("m*.html"))
+    if not pages:
+        return []
+    problems = []
+    if not (site / "narration.json").exists():
+        problems.append("learner-site/narration.json missing — rebuild with `make site`")
+    sys.path.insert(0, str(site))
+    sys.path.insert(0, str(ROOT / "06-production" / "narration"))
+    sys.path.insert(0, str(ROOT / "06-production" / "slides"))   # deck_lint lives here
+    try:
+        from narration_data import load_scripts                       # noqa: PLC0415
+        from deck_lint import split_slides                            # noqa: PLC0415
+        scripts = load_scripts()["decks"]
+        for page in pages:
+            deck_id = page.stem
+            script = scripts.get(deck_id)
+            if not script:
+                problems.append(f"{page.name}: no narration script for this deck")
+                continue
+            slides = split_slides(sorted(CONTENT.glob(f"{deck_id}-*/slides.md"))[0]
+                                  .read_text(encoding="utf-8"))[1] if list(
+                CONTENT.glob(f"{deck_id}-*/slides.md")) else []
+            html = page.read_text(encoding="utf-8")
+            rendered = html.count('aria-roledescription="slide"')
+            if slides and rendered != len(slides):
+                problems.append(f"{page.name}: renders {rendered} slides, deck has {len(slides)}")
+            if len(script["slides"]) != len(slides) and slides:
+                problems.append(f"{page.name}: script covers {len(script['slides'])} of {len(slides)} slides")
+            for asset in ("assets/player.js", "assets/narration-media.js", "assets/player.css"):
+                if f'"{asset}"' not in html and f'/{asset}"' not in html:
+                    problems.append(f"{page.name}: does not load {asset}")
+    finally:
+        pass
+    return problems
+
+
 def main(argv: list[str]) -> int:
     if "--pointers" in argv:
         checked, problems = check_pointers()
@@ -222,6 +281,8 @@ def main(argv: list[str]) -> int:
         ("Track bundles", check_bundles),
         ("Decks", check_decks),
         ("Sales claims", check_sales_claims),
+        ("Narration contract", check_narration),
+        ("Learner site", check_learner_site),
     ]
     failed = 0
     for title, fn in sections:

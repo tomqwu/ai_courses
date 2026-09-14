@@ -1,0 +1,81 @@
+{
+  "label": "M0 — Orientation: Three Products, One Method",
+  "slides": {
+    "slide-1": {
+      "title": "M0 — Orientation: Three Products, One Method",
+      "text": "Welcome. In the next thirty minutes you will not watch anyone else build anything. You will clone three real products, run one of them end to end, and pull a local model onto your own machine. The promise of this module is real production software running before Module 1, with no prerequisites. By the end you will have three repos cloned, one solver run, and one local model. Keep a terminal open beside this video."
+    },
+    "slide-2": {
+      "title": "By the end you can…",
+      "text": "These six outcomes are the quiz blueprint and the lab checklist, so treat them as the contract for this module. Notice the verbs: describe, name, explain, run, pull, post. Every one of them is something checkable from an artifact you paste, and none of them is understand. That standard is copied from the case-study repos themselves: if it cannot be observed, it does not count as done."
+    },
+    "slide-3": {
+      "title": "M0.1 — Three archetypes, one method",
+      "text": "Almost everything a solo technical builder can ship falls into one of three shapes. Type 1 is a native on-device AI app, type 2 is a spec-driven AI SaaS, and type 3 is an expertise content product. Their technical centers of gravity barely overlap. The method behind them does, and that is the whole pedagogical bet of this course: you learn the method once and watch it instantiated three times."
+    },
+    "slide-4": {
+      "title": "Type 1 — ListenToMe (on-device app)",
+      "text": "ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is twelve rows, each claim sourced and dated, which is positioning work done as research."
+    },
+    "slide-5": {
+      "title": "Type 2 — SignUpFlow (spec-driven SaaS)",
+      "text": "SignUpFlow schedules volunteers for churches, leagues, and non-profits, built on FastAPI and SQLAlchemy. A greedy solver auto-generates fair rosters: YAML workspace in, JSON solution out. Every feature starts as a specification folder and ends as tested code, and seventeen of those folders exist today. The proof asset is a dated evidence line in a validation playbook: 1,464 passed, 21 skipped. The skips are counted, not hidden, and in Module 5 you will learn why that record is more valuable than a green badge."
+    },
+    "slide-6": {
+      "title": "Type 3 — AI × QE (expertise product)",
+      "text": "The third archetype is content as a product: a research-backed briefing site on AI in quality engineering. It ships 116 narrated slides across four decks and ten current PDF editions; the 116 figure is 21 plus 33 plus 26 plus 36, defined in the briefing-room data file. What makes it credible is not the volume. Every claim carries provenance, and the author published a fourteen-finding audit of his own site. He is more skeptical of his own claims than his audience is, and that is the entire sales strategy for a type 3 product."
+    },
+    "slide-7": {
+      "title": "Production-grade means proof you can open",
+      "text": "Here is the definition this course runs on: production-grade means a shipped artifact with proof you can open and verify. The on-device app shows a 96% core-coverage badge in its README. The spec-driven SaaS shows the line 1,464 passed, 21 skipped in a validation playbook. The expertise product shows a fourteen-finding self-audit. Every asset is a file, dated or machine-checkable, and none of them is a testimonial. A finished claim in a README, or a repository merely existing, is not evidence, and your labs are graded against this same bar."
+    },
+    "slide-8": {
+      "title": "M0.2 — The Spec-to-Ship Loop",
+      "text": "The Spec-to-Ship Loop has six stages, and you will run all six in every module: Study, Spec, Build, Validate, Release, Prove. Study produces research, competition, and positioning, which is an artifact rather than a slogan. Spec produces something a fresh agent session could execute without conversation memory. Build is tests first, in small reviewable edits. Validate is tests, coverage floors, and playbooks, which is a record rather than a feeling. Release is signing, editioning, and deploying. Prove is the honest account of what was verified and what was not."
+    },
+    "slide-9": {
+      "title": "Stages 1–3 — real artifacts",
+      "text": "Open each of these files as you go. The twelve-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first."
+    },
+    "slide-10": {
+      "title": "Stages 4–6 — real artifacts",
+      "text": "Validate is where most builders stop. ListenToMe enforces a ninety-five percent coverage floor with a script, and SignUpFlow runs seven test tiers in separate processes with dated counts. Release is signing and notarizing: the ListenToMe agent file requires signed, notarized DMGs that target an exact source commit. Then look at Prove, in the last row. A review told the author not to promote a build that already had 97.24% coverage. That decision is the rarest artifact in software, and it is the spine of this course."
+    },
+    "slide-11": {
+      "title": "Prove is the spine",
+      "text": "Read SignUpFlow's validation playbook and you will find the engineer listing his own failures: a browser click race that made a test flaky, and a type-checking debt line that says explicitly, not a pass. He could have deleted both lines. Keeping them is what makes the passing numbers believable. Tests validate what you built; evidence discipline validates what you shipped. When you write your capstone evidence record, the failures section is not optional, because a record with no limitations reads as unverified."
+    },
+    "slide-12": {
+      "title": "M0.3 — Set up and get your first win",
+      "text": "Everything in this segment is a command you type, not a concept you remember. Clone the three case studies, verify you have Python 3.11 or newer, install Ollama and pull a small local model, run SignUpFlow's solver on the sample data, run TinyCopilot's test suite, and post your first win. The whole sequence takes under fifteen minutes, and most of that is download time. Do it in order, and do not skip the test suite. It is the exact acceptance gate you will re-implement in Module 2, and seeing it green now tells you your environment is real."
+    },
+    "slide-13": {
+      "title": "First ship-win — clone and run the solver",
+      "text": "Clone the three repositories first, then, inside SignUpFlow, run make setup. That installs the Poetry environment, runs migrations, and seeds data. The init command writes three YAML files: organization, people, and events. The solve command runs the real greedy scheduler. On the sample workspace it prints a health score of 100.0 out of 100, with zero hard and zero soft violations and a fairness standard deviation of 0.43. Capture that health-score line and keep the raw terminal output, because it is your first artifact. Do not retype it from memory."
+    },
+    "slide-14": {
+      "title": "Local LLM in three commands",
+      "text": "Install Ollama first, then run ollama pull qwen3:0.6b to fetch a small model, and check ollama list to confirm it is there. The run command is your first local completion: one prompt, one answer, entirely on your hardware. There is no API key and no cloud bill, and no transcript leaves your machine. Module 2 builds a copilot on exactly this foundation. Look at the list output carefully, because it is also the diagnostic for the one environment quirk in this lab."
+    },
+    "slide-15": {
+      "title": "Two valid environments (say which you have)",
+      "text": "I want to be explicit, because students with an unusual daemon sometimes think they are blocked. If ollama list shows the local model qwen3:0.6b, you have a local setup. If every name it shows ends in the cloud suffix, those are cloud-backed aliases, not local models, and you are still not blocked: that environment is valid for Module 0 and Module 2. For Module 2 you either pull a genuinely local model or run roles in cloud mode. Module 3's privacy lab is richer with a local model, and the fail-closed test passes either way. State which environment you have in your first-win post."
+    },
+    "slide-16": {
+      "title": "Lab M0 — Environment Setup & First Ship-Win",
+      "text": "The lab has six steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, run the TinyCopilot tests, and post to the community. The goal is every tool installed and proven with real output, and the three pass gates are solver output with a health score, an ollama list showing at least one model, and a TinyCopilot suite that is green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is the only automatic fail."
+    },
+    "slide-17": {
+      "title": "Quiz M0",
+      "text": "The quiz has eight questions: six multiple choice and two short answer, covering archetypes, proof assets, loop stages, and your environment. It is open-book by design, because the file pointers are the point. The two short-answer questions are graded against a model answer, so write them as applications, not definitions. One asks for the exact two solver commands after setup and the line to capture. Another hands you a friend's product idea and asks which archetype it is and which repo to study. Take the quiz after the lab, not before."
+    },
+    "slide-18": {
+      "title": "Recap",
+      "text": "If you remember three things, make them these. Each archetype has a distinct proof asset. The loop has six stages, Study, Spec, Build, Validate, Release, and Prove, with a real artifact at every stage. And Prove is the stage that separates a portfolio project from a product, because it means recording failures too. You have already run a production scheduler and a local language model before Module 1. That first win is banked, so paste both outputs into your evidence log with the date on each entry."
+    },
+    "slide-19": {
+      "title": "Discussion prompt",
+      "text": "Your first-win post has three parts: the solver output including the health-score line, your ollama list, and one sentence naming which archetype you want to build by week eight. Then the real question. Which proof asset from this module surprised you, and would it survive a skeptical customer opening the file? Reply to one other student and tell them which archetype you think their goal belongs to. If you disagree with them, say why and point at the file."
+    }
+  }
+}

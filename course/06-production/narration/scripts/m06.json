@@ -1,0 +1,117 @@
+{
+  "label": "M6 — The Expertise Product: Evidence, Routing, Editions",
+  "slides": {
+    "slide-1": {
+      "title": "M6 — The Expertise Product: Evidence, Routing, Editions",
+      "text": "Welcome to Module 6, where we take on the third archetype: packaging expertise itself. Modules 2 and 3 shipped an on-device app, and Modules 4 and 5 specced and hardened a SaaS. Here the product is your own research base. Your case study is AI and QE, a research-backed presentation site about modernizing quality engineering in regulated financial services. Its topic is banking QA, but the discipline transfers to any field. The promise of this module is narrow and testable: you will learn to publish claims that a skeptic can audit."
+    },
+    "slide-2": {
+      "title": "By the end you can…",
+      "text": "These six outcomes are the module's contract: they are the quiz blueprint and the lab checklist. Notice the verbs — label, keep, hash, re-cut, run, design. Each one produces an artifact someone else can check. That is the standard the case-study repositories hold themselves to: if it cannot be observed, it does not count. The lab turns all six into a single deliverable, a twelve-slide mini-briefing with a provenance table and two audience routes."
+    },
+    "slide-3": {
+      "title": "M6.1 — Credibility is the product",
+      "text": "Segment M6.1 makes one argument: in this archetype, trust is the product, and trust is engineered like software. AI and QE looks like an ordinary content site — four narrated decks, a fintech case study, research pages, downloadable PDFs. Underneath, every number carries a citation, a date, a sample, a method and an epistemic label. The site even publishes the things it could not verify. Over the next twenty-five minutes we will take that apart, file by file."
+    },
+    "slide-4": {
+      "title": "The citation is the evidence",
+      "text": "Here is the rule that sounds obvious and is almost never followed: the citation is the evidence, and no vendor is endorsed. Every benchmark record carries a date, a sample, a method and a unit, plus whether the result was self-reported or measured, who sponsored it, and what claim it can support. That last field is the one people skip. A number without a stated limit is not evidence; it is an advertisement. Anything unverifiable is listed as unverifiable, and no client or partner is ever named — only the bank, or the sponsor."
+    },
+    "slide-5": {
+      "title": "Benchmark records, side by side",
+      "text": "Read two records and the difference becomes visible. The METR entry says AI-allowed issues took nineteen percent longer, with a confidence interval from plus two to plus thirty-nine percent, across two hundred and forty-six real issues. Developers expected twenty-four percent faster and afterwards believed twenty percent faster. Two entries down, Peng reports fifty-five point eight percent faster, with ninety-five freelancers on one synthetic task, and that work was vendor-affiliated. METR was independent. Both results are real, and the record structure refuses to average them."
+    },
+    "slide-6": {
+      "title": "Log before you publish",
+      "text": "Research gets logged before it reaches a slide. The research log is an intake queue: a new entry is dated and filed first, then it goes into the topic page. Entries are structured as Question, Checked, Outcome, Changed. In the initial evidence base, the outcome states plainly that the only independent randomized controlled trial is negative. And the site keeps a Not verified list, including the World Quality Report cost-of-quality share and any Gartner AI-testing productivity figure. Deleting that list would be easy. Keeping it is what makes the other four entries believable."
+    },
+    "slide-7": {
+      "title": "Provenance manifests",
+      "text": "Three files exist only to record where content came from. The document manifest lists eleven retrievals, each with a URL, a retrieval date, a status and a SHA-256 hash of the downloaded file. Entry M02 is the McKinsey PDF, and its status is unavailable, with the reason recorded word for word: the read operation timed out. A spotless manifest is suspicious. A manifest that logs its own failure is checkable, because you can re-run the retrieval. Even images have provenance: the visual-provenance file records that the two hero illustrations are conceptual, not photographs of deployed systems, and it keeps the prompts."
+    },
+    "slide-8": {
+      "title": "Four levels of \"saving\"",
+      "text": "This table comes from the principles file, and the whole site runs on it. Every number is labelled with one of four levels. Task-level efficiency is the net time reduction for one activity, after review and correction, and a pilot can confirm it. QA capacity released is human hours freed across the workflow, and it needs a baseline time capture. A hard-dollar saving is budgeted cost that Finance can actually remove, against a named budget line. Total software-spend impact is broader engineering cost, and it must never be mislabelled as a QA saving. Read the third column: each level names who can confirm it, and it is not you."
+    },
+    "slide-9": {
+      "title": "The mixing error",
+      "text": "Now watch the mixing error happen. Take Peng's measured fifty-five point eight percent and try to sell it as a budget number. Coding is roughly sixteen percent of developer time, and code generation is twenty-five to thirty-five percent of idea-to-launch. So a fifty percent task gain dilutes to single digits of total engineering time, before any redeployment or headcount decision. The reading-the-evidence page states that dilution. The same paragraph flags the nineteen percent, the ten to fifteen percent and the roughly two-times figures as perception or per-task numbers."
+    },
+    "slide-10": {
+      "title": "Publish your own audit",
+      "text": "The strongest credibility move is to publish your own audit. This review of the site lists fourteen findings: four high priority, nine medium, one lower. Finding R01 is a content inconsistency between two different base-case economics — the site caught its own numbers disagreeing. A companion remediation file is a three-column table: finding, implemented response, verification. A later record even lists deliberate non-changes, such as not hiding weak economics or relabelling unknown results as observed. Findings, responses and refusals all stay published, and skeptics stop asking whether they should believe you."
+    },
+    "slide-11": {
+      "title": "M6.2 — One research base, many audiences",
+      "text": "Segment M6.2 is about distribution without duplication. The site has one hundred and sixteen narrated slides, and it serves them as four decks along two axes: executive or technical, and banking scenario or industry perspective. An executive gets the strategic cut. A technical lead gets contracts, sequencing and evidence schemas. Both trace back to the same source records, and nothing is forked, so a correction lands once and appears everywhere. We will also see how one questionnaire turns the same body of work into qualified leads."
+    },
+    "slide-12": {
+      "title": "116 slides, four decks",
+      "text": "The arithmetic shows that nothing is forked. The banking executive deck has twenty-one slides; banking technical, thirty-three; industry executive, twenty-six; industry technical, thirty-six. That is one hundred and sixteen narrated slides across four decks, with running times from twenty-five to sixty minutes. In the briefing room data file, each deck is declared as data: audience, series, cover, URL, PDF prefix, edition, slide count, duration and a full outline keyed by stable slide number. Because the outlines live in data rather than in four hand-maintained documents, the counts stay honest and the routes can be generated."
+    },
+    "slide-13": {
+      "title": "Routes over stable slide IDs",
+      "text": "Routes are the second layer. The briefing routes file declares curated sequences over the same stable slide identifiers. The banking executive route plays fourteen of the twenty-one slides, and it declares slide twelve, the brainstorm-questions slide, as its closing endpoint. The full order retains everything. The README's rule is that focused routes end on a decision discussion, while full decks keep the supporting material. The invariant is the slide identifier: a route reorders and omits, but it never rewrites. So a shared route link still resolves to the same slide next quarter."
+    },
+    "slide-14": {
+      "title": "Script the meeting, not the deck",
+      "text": "The deck exists to run a meeting, so script the meeting instead. The briefings index suggests a thirty-minute conversation in three parts. Align for five minutes: which part of QA creates the most delay or repeated work? Explore for fifteen: follow one workflow and show the platform services behind it. Agree for ten: choose the process, the owner and the evidence needed for a first pilot, landing on the discovery guide. Notice the shape. It spends half the meeting on the buyer's problem and closes on a decision, not on a feature list. The deck is not the product."
+    },
+    "slide-15": {
+      "title": "Sell the decision, not the transformation",
+      "text": "The wording rules here are exact, and they matter. Use phrases like a working hypothesis to be tested on the bank's own data, and say that capacity released is not a saving until Finance confirms how it is captured. Avoid saying that industry benchmarks show thirty to fifty percent productivity gains. Avoid an ROI figure before a pilot has measured anything, and avoid squad-level headcount arithmetic. The executive message ends on the line to remember: the decision today is whether to fund the first two phases, not whether to transform QA. A bounded ask is a decidable ask."
+    },
+    "slide-16": {
+      "title": "The questionnaire is lead qualification",
+      "text": "The questionnaire is not a survey; it is the funnel's filter. There is one form, role-routed at the first question, so respondents complete the sections they own and leave unknowns blank. Executive sponsors, Finance and procurement answer Sections 1, 5B and 6. Engineering, delivery, QE and platform leaders answer Sections 2, 3, 4, 5A and 6. Questions that define success — what success means, the autonomy ceiling, the go/no-go threshold — are single-select, because a nuanced multi-select produced no signal. Ranges stay mutually exclusive and gap-free, and an unknown option exists so that a guess is never recorded as data."
+    },
+    "slide-17": {
+      "title": "The failed form, dissected",
+      "text": "The same file dissects the form that failed. It had twenty-nine questions and one hundred and eighty-six checkbox options, across nineteen multi-select questions. That takes a knowledgeable respondent twenty to thirty minutes, not fifteen, because every option has to be read before a selection limit applies. And no single respondent could answer all six sections: an executive cannot answer flaky-test questions, and a quality engineering director cannot answer Finance-recognition questions. The largest omission was the financial-capture set. Without it, the same four percent capacity result can be booked as a saving, as cost avoidance, or as nothing."
+    },
+    "slide-18": {
+      "title": "M6.3 — Content as code",
+      "text": "Segment M6.3 applies software release discipline to content, and two ideas carry it. First, editions: the site version and the content editions move independently, so a player fix does not invalidate a client's PDF. Second, tests: content changes must pass a build, and a slide that overflows a projector viewport fails like a unit test. Published editions are never overwritten, and changelogs record what was deliberately retained. We then take the same discipline to the commercial end of the funnel, where the product is a phased pilot that measures rather than promises."
+    },
+    "slide-19": {
+      "title": "Editions: site vs content",
+      "text": "The release file keeps five separate fields, and the separation is the point. The version identifies the site and the player. The slide, fintech, questionnaire and research editions each move on their own schedule. Here the version advanced to one point twenty-four point one, while the slide edition deliberately stayed at one point twenty-four point zero. The rule is that public content changes require a new edition before deployment, and content changes without one are rejected on main. Why keep two numbers? Because a client holding a version one point twenty-four point zero PDF needs to know exactly what they have."
+    },
+    "slide-20": {
+      "title": "Changelogs record what is retained",
+      "text": "Open the changelog at version one point twenty-four point one. It says subtitles now use the available player width, and then it states explicitly that audio, subtitle timing and the version one point twenty-four point zero PDF editions remain unchanged. That sentence is the discipline: a changelog records what changed and what was deliberately retained. Immutability is enforced, not aspirational, because the contributing guide says an existing published edition is never overwritten. One tool assembles the PDFs, the MP4, the captions and the source registers with checksums, and the publish tool verifies the SHA-256 digests before anything goes out."
+    },
+    "slide-21": {
+      "title": "`make check` — content needs tests",
+      "text": "Content needs tests, so the check target is models, build, site, browser. The models step runs the npm tests, the Python unit tests, narration validation with require-complete, and contract validation. The browser step runs five CI-identical groups — playback, flows, site, models and architecture — in both Chromium and WebKit, at three viewports: twelve eighty by seven twenty, nineteen twenty by ten eighty, and three seventy-five by eight twelve. A slide that overflows a projector viewport fails like a unit test. And the link check does not treat a successful HTTP response as evidence that a claim is correct."
+    },
+    "slide-22": {
+      "title": "Hash-gate the media",
+      "text": "One hundred and sixteen slides carry recorded narration, so a silent slide edit would desynchronize the voice from the slide. The narration-review tool hashes each rendered slide together with its script, its recording and its caption-flow definitions. If a destination changes, you must make a deliberate retained or refreshed decision, with a specific reason, recorded in the review data. Here is the line to carry into your own pipeline: never reset the baseline to silence a stale-review failure. Resetting the baseline does not fix the drift; it rubber-stamps the drift you just erased."
+    },
+    "slide-23": {
+      "title": "The pilot is the product",
+      "text": "The pilot is the product, and the whole funnel points at it. There are five phases, zero through four, each with an objective, a duration, deliverables and a cost ceiling. Effort is quoted in person-day ranges and deliberately never converted to dollars, and every phase ends with a written go/no-go memo signed by the sponsor. Measurement freezes the goal before any result exists: you record the primary outcome and the acceptance criteria before you observe pilot results, and you never choose a different success metric after seeing a favourable one."
+    },
+    "slide-24": {
+      "title": "Gates live in data",
+      "text": "The exact boundaries live in data, not in prose that someone can soften later. You need a fifteen percent net-effort improvement to go, with a ten percent review band. The baseline runs three weeks, the pilot eight weeks, across two observed releases, with at least thirty comparable tasks per arm and one possible extension of up to four weeks. Here is the rule that separates this from every pilot you have suffered: a confidence interval that crosses ten or fifteen percent is insufficient evidence for that boundary, even when the point estimate looks favourable. A noisy result is no result."
+    },
+    "slide-25": {
+      "title": "Lab M6 — Build a mini-briefing",
+      "text": "Lab M6 is the checkpoint for the third archetype. You produce five artifacts. A research log with at least six dated entries in the Question, Checked, Outcome, Changed format, including at least two not-verified items. A provenance table with one row per claim. A twelve-slide outline where every quantitative slide cites a row by number. Two routes over those same twelve slides, one executive and one technical. And an edition decision record for a hypothetical version two. The pass conditions are binary, and nothing is graded on taste."
+    },
+    "slide-26": {
+      "title": "Quiz M6",
+      "text": "The quiz has eight questions, each mapped to exactly one segment objective, and that mapping is printed with the answer key. Six are multiple choice and two are short answer. The multiple-choice distractors are the misconceptions we taught against: treating a working HTTP response as proof of a claim, choosing a balanced combination on the outcome question, bumping every edition together, extending a pilot until the interval excludes the boundary, and republishing over a released edition. Take the quiz after the lab. The two short answers are the real assessment."
+    },
+    "slide-27": {
+      "title": "Recap",
+      "text": "Six lines to carry out of this module. The citation is the evidence, and research gets logged before it reaches a slide. Label every number with one of the four levels and never mix them. Publish your own audit: fourteen findings, a remediation table, and refusals that stay published. Route one research base of one hundred and sixteen slides into four decks whose guided routes end on a decision. Put content under edition discipline, where tests gate the change and published editions are immutable. And finally, sell measurement, not outcomes."
+    },
+    "slide-28": {
+      "title": "Discussion prompt",
+      "text": "Before you go, here is a discussion prompt. Find one quantitative claim from your field's public discourse that mixes the levels — a task-level number presented as a budget saving, or a self-reported figure presented as measured. Post the claim as written, name the level it actually belongs to, name the level it is being sold as, and write an honest replacement in one sentence, borrowing the tone of the Use list from the slide-language file. Then answer the real question: does the honest wording weaken the pitch, or sharpen the ask?"
+    }
+  }
+}

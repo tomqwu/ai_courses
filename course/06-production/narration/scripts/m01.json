@@ -1,0 +1,105 @@
+{
+  "label": "M1 — The AI Product Operating System",
+  "slides": {
+    "slide-1": {
+      "title": "M1 — The AI Product Operating System",
+      "text": "Welcome to Module 1, the AI product operating system. Module 0 gave you three shipped products and one loop. This module hands you the machinery that made them shippable by one engineer working with AI agents: governance, specification, and evidence discipline. The promise is simple. You govern agents, specify work, and record evidence, all inside your own repository. We cover three segments in about sixty minutes. By the end you will have written your own constitution and AGENTS.md and run one complete spec-to-TDD loop. That artifact is the deliverable, not the notes."
+    },
+    "slide-2": {
+      "title": "By the end you can…",
+      "text": "Here are the four capabilities this module delivers, and each one is checkable. Notice they are verbs: write, apply, turn, record. Not understand governance. You will write layered agent rules that are imperative, verifiable, and under about two hundred lines. You will apply the five-level instruction hierarchy and the anti-hallucination rules. You will turn one story into a scenario and a task. And you will record validation evidence with commands, counts, the date, limits, and the head SHA. The lab closes the loop with one red-then-green pytest run, recorded honestly."
+    },
+    "slide-3": {
+      "title": "Why governance comes before product type",
+      "text": "This is the module's core argument. Agents do not replace process; they raise the stakes for it. Code now appears at agent speed, while verification stays at human speed. So the bottleneck moves: specifying what you want, verifying what you got, and admitting the limits of what was actually validated. The product archetypes differ in what they build, never in how they govern the build. Most builders skip this part and pay for it later. SignUpFlow's deep read makes the same point in its first section."
+    },
+    "slide-4": {
+      "title": "Segment M1.1 — The four-file instruction stack",
+      "text": "Segment one is governance, and it starts with the stack. Four files, one canonical source. The baseline lives in AGENTS.md, and Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory all read it. Claude Code does not read AGENTS.md natively, so CLAUDE.md links to it at the top and adds Claude-specific addenda. Copilot needs its own restatement file under .github. The constitution sits above all of the agent files as the single source of truth."
+    },
+    "slide-5": {
+      "title": "Proof: the stack, with real line counts",
+      "text": "These lengths are real, and you can check them yourself. The constitution is seventy-nine lines. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow."
+    },
+    "slide-6": {
+      "title": "House style: a rule must be verifiable",
+      "text": "This is the heart of the house style. Every rule must be verifiable. Write in imperative voice, not as a suggestion. A stranger should be able to check whether the rule was followed without asking you anything. Numbers beat adjectives, which is why the cap is stated as under roughly two hundred lines. Commands beat prose, so name the exact check. The repo states the contrast directly: filter every query by org_id, not be careful with multi-tenancy. A rule an agent cannot check is a vibe, not a rule."
+    },
+    "slide-7": {
+      "title": "The contrast table",
+      "text": "Here are four rewrites, all drawn from AGENTS.md. Watch what changes each time. Be careful with multi-tenancy becomes a filter on org_id. Keep files manageable becomes a number: each file under about two hundred lines. Value test coverage becomes an action plus a check command: write tests first, run make test-unit. And handle secrets safely becomes a greppable prohibition: never commit secrets, read them from environment variables. Careful cannot be executed or checked; a filter can. In the lab you will rewrite rules like these yourself."
+    },
+    "slide-8": {
+      "title": "What a constitution holds",
+      "text": "A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is seventy-nine lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands."
+    },
+    "slide-9": {
+      "title": "Precedence: five levels, one tie-breaker",
+      "text": "When rules overlap, AGENTS.md gives you five levels and one tie-breaker. First, the user's request in the current task. Second, repository rules in CLAUDE.md and AGENTS.md. Third, path-scoped rules under the .github instructions folder. Fourth, general guidance from the AI agent coding strategy doc. Fifth, inferred best practice. The tie-breaker is the sentence to memorize: follow the more specific and safer one. That is how a specific path rule can beat a general baseline without anyone maintaining a precedence matrix."
+    },
+    "slide-10": {
+      "title": "Anti-hallucination rules",
+      "text": "Hallucination is the biggest failure mode of agent-assisted work, so it gets rules rather than advice. Do not invent file paths, function names, route paths, commands, URLs, or identifiers. Grep the repo before referencing anything. For facts like schema fields and environment variable names, read them from the canonical source; do not recall from memory. When a request is ambiguous, present two or three differentiated options instead of guessing. And encode a hard-stop checklist for research tasks. Each of these is checkable against a transcript."
+    },
+    "slide-11": {
+      "title": "How rules graduate",
+      "text": "New rules do not go straight into AGENTS.md. They graduate. An observation is recorded in the research log, which exists so that exploratory notes never become silent rules. The rule is then tested on at least one real change. Only after that is it promoted into AGENTS.md. The source row moves from pending to extracted to promoted. And if the rule generalizes, it is upstreamed to the shared GenAI Common repository. Rules earn their place the way features do: by surviving contact with real work."
+    },
+    "slide-12": {
+      "title": "Segment M1.2 — The spec-kit pipeline",
+      "text": "Segment two is specification. SignUpFlow builds features through GitHub's spec-kit slash commands, in this order: constitution, specify, clarify, plan, checklist, tasks, analyze, and implement. Each step produces a file, and those files are the interface between your intent and an agent session that has no memory of your conversation. The output is a folder of artifacts under specs. Seventeen spec folders exist in the repo today, so this is not theory. The pipeline's answer to the agent did the wrong thing is almost always the spec did not say."
+    },
+    "slide-13": {
+      "title": "Each artifact has one job",
+      "text": "Each artifact has exactly one job, and this table is the spine of the segment. The spec file is the what: prioritized P1, P2, and P3 stories with Given/When/Then scenarios, and it stays technology-agnostic. Research and plan hold the decisions and the how, with plan behind a Constitution Check gate. Data-model defines entities and relationships before code exists. Contracts hold per-domain interfaces, errors, and test sketches. Checklists are the quality gate before planning, while quickstart is the timed deployment path. Tasks are checkbox items with exact file paths."
+    },
+    "slide-14": {
+      "title": "Proof: the artifacts are real files",
+      "text": "This is proof, not description. Seventeen folders sit under the SignUpFlow specs directory. One real task line from spec nineteen reads: implement the POST /api/sms/send endpoint per the SMS API contract, in api/routers/sms.py. The Constitution Check gate sentence is real in spec fourteen's plan. And note the honesty detail: spec fourteen has no tasks file at all. A folder that stops at planning is a legitimate state, and the record says so rather than inventing a file that is not there."
+    },
+    "slide-15": {
+      "title": "Story → scenario → task",
+      "text": "Watch the abstraction drop. A sentence of intent becomes a checkable scenario, and then a task. The story is: as a volunteer, I can block dates so the solver skips me. The scenario gets concrete: given a blocked period covering a specific date, when an admin runs the solver, then the volunteer receives no assignment and the solution reports zero hard violations. The task line carries an ID, a priority marker, and a story tag, plus exact file paths, and it names the contract, the test file, and the order of work. Test first: the failing test is the task's first deliverable."
+    },
+    "slide-16": {
+      "title": "ListenToMe's variant: protocols and non-goals",
+      "text": "ListenToMe runs the same discipline in Swift. Its design spec pins protocol-level interfaces with exact Swift signatures so implementations stay swappable: AudioCapturing and Transcribing. It also writes down YAGNI non-goals: no cloud backend, no accounts, no billing, no multi-user, and no covert or stealth mode. Its implementation plan is a two-thousand-four-hundred-ten-line TDD task list that ends with a self-review mapping every spec bullet to tasks. On-device speech-to-text behind a swappable Transcribing protocol maps to tasks ten and thirteen, checked."
+    },
+    "slide-17": {
+      "title": "Segment M1.3 — No CI checks, by policy",
+      "text": "Segment three is evidence discipline. SignUpFlow runs no CI checks, and that is deliberate: a tested policy, not an omission. The constitution's Current Validation Policy says to run everything locally and never recreate hosted checks or require CI statuses. There is even a policy-regression test guarding that rule. The argument is this. A hosted check tells you pass or fail and nothing about the commands, the environment, or the limits. So the evidence travels with the revision instead. A hosted check is a snapshot; evidence is a record."
+    },
+    "slide-18": {
+      "title": "Proof: the evidence line",
+      "text": "Here is the full-suite line from Module 0, and here is where it lives: the validation playbook in the SignUpFlow docs, not TESTING.md. Four hundred twenty unit tests passed, with twenty-one skipped. Four hundred forty-four API tests, sixteen CLI tests, and three hundred twenty-five integration tests passed. Across the backend, web, contract, and browser suites, one thousand four hundred sixty-four passed and twenty-one skipped. Note the second bullet carefully: the file is dated September twelfth, twenty twenty-six, and was demoted to historical reference the next day. It is evidence of a past run, not a live status badge. The follow-up validation starts from a pinned head SHA."
+    },
+    "slide-19": {
+      "title": "Include the failures",
+      "text": "The record's hardest discipline is what it includes. Three moves. First, a real failure is named: an older recurring-event browser test exposed a click race, the fix is recorded, and the initial failure stays in the document rather than being hidden. Second, known debt is named as debt: full API mypy has eight hundred thirty-five errors in forty files, and the record says not a pass instead of rounding it away. Third, the record closes with limits, listing what was not verified. An evidence record that cannot say not verified is marketing."
+    },
+    "slide-20": {
+      "title": "Done means verified in the shipped thing",
+      "text": "Tests validate what you built; the Definition of Done validates what you shipped. ListenToMe requires the maintainer to verify affected behavior in the installed production app. For audio changes, you verify actual system-audio transcription labeled OTHERS; a permission toggle or microphone pickup is not proof. Its checklist also states that stale docs are a Definition-of-Done failure, not a follow-up. And the strongest artifact in all three repos is a gap review recommending against promoting version one point three point zero, despite two hundred fifteen passing Core tests and ninety-seven point two four percent coverage, because those numbers do not establish capture reliability."
+    },
+    "slide-21": {
+      "title": "Your evidence-log template",
+      "text": "Copy this template verbatim and use it in every lab for the rest of the course. It has five fields: the heading with project, feature, and date; the commands with their results in passed, skipped, and failed counts; the environment with operating system and Python version; the revision from git rev-parse HEAD; and the limitations, which must include at least one entry. If a run failed and you fixed it and re-ran, record both lines. The field students leave empty is limitations, and that is exactly the field that separates a record from a badge."
+    },
+    "slide-22": {
+      "title": "Lab M1 — build your operating system",
+      "text": "Now you build your own version of all of it. Lab M1 takes about two hours. You create a starter repo and write a constitution of at most eighty lines and an AGENTS.md of at most two hundred. Then a spec folder for a small todo command feature: the spec, a plan with its gate, and tasks. Then you run the TDD loop for real: failing test first, watch it fail, implement, watch pytest pass. You record the red run, the green run, the environment, the head SHA, and your limitations. The pass gate is objective: the artifacts exist and pytest exits zero."
+    },
+    "slide-23": {
+      "title": "Quiz M1",
+      "text": "Check your understanding before the workshop. Quiz M1 has eight questions: six multiple choice and two short answer. It covers rule verifiability, the precedence hierarchy, the job of each spec-kit artifact, and evidence discipline. The short answers are applications, not recall. Question seven asks you to write a Given/When/Then scenario plus a task line. Question eight asks for a full evidence entry that keeps a flaky failure visible. Take the quiz before the workshop, because the labs are graded on evidence, and we want live time for the rules you rewrote."
+    },
+    "slide-24": {
+      "title": "Recap",
+      "text": "Six lines, one idea each. Governance: a seventy-nine-line constitution above a one-hundred-seventy-seven-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing."
+    },
+    "slide-25": {
+      "title": "Discussion prompt",
+      "text": "One discussion prompt to close the module. Post the vague rule and its verifiable rewrite, your before and after. Post the evidence entry you wrote from Module 0. Then read two classmates' AGENTS.md rules and answer a single question: could you personally check whether their rule was followed, without asking them anything? If not, name the exact word that makes it uncheckable. That comment is the whole skill. It is the same test this repo applies to itself."
+    }
+  }
+}

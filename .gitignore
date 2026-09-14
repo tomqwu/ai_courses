@@ -17,3 +17,8 @@ dist/
 *.egg-info/
 # Rendered slide output (generated from slides.md by 06-production/slides/build.sh)
 course/06-production/slides/out/
+
+# Generated learner-site artifacts (build with `make -C course site`)
+course/learner-site/*.html
+course/learner-site/narration.json
+course/learner-site/assets/audio/

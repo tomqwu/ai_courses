@@ -1,0 +1,24 @@
+{
+  "_comment": "The release voice. `voice_id` is the same public voice the ai_qe decks use, so the two products sound like one publisher; replace it with your own cloned voice when you have one. No secret is stored here — ELEVENLABS_API_KEY comes from the environment only.",
+  "label": "ElevenLabs / Chris — Charming, Down-to-Earth",
+  "provider": "elevenlabs",
+  "voice_id": "iP95p4xoKVk53GoZ742B",
+  "model_id": "eleven_v3",
+  "output_format": "mp3_44100_128",
+  "language_code": "en",
+  "voice_settings": {
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "style": 0.0,
+    "use_speaker_boost": true
+  },
+  "preview": {
+    "_comment": "Used when --provider say. Free, offline, clearly labelled as a preview in provenance and in the player.",
+    "provider": "say",
+    "label": "macOS say / Samantha (preview)",
+    "voice": "Samantha",
+    "rate": 175,
+    "gap_seconds": 0.28,
+    "bitrate_note": "mono 64k mp3 — a preview, not the release encode"
+  }
+}

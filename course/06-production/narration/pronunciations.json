@@ -1,0 +1,27 @@
+{
+  "_comment": "The ONLY place a spoken respelling may happen. Captions and transcripts are always built from the display text; this table changes what the voice says and nothing else. Every entry must be a respelling of the same words, because validate_narration.py checks that the cue words equal the display words exactly. Per-slide `speak` overrides are NOT part of the schema: this table is the single respelling mechanism, so validation stays deterministic.",
+  "schema": 1,
+  "voice_note": "Applied case-sensitively, longest phrase first, ignoring surrounding punctuation.",
+  "substitutions": {
+    "ai_qe": "AI QE",
+    "ListenToMe": "Listen To Me",
+    "SignUpFlow": "Sign Up Flow",
+    "TinyCopilot": "Tiny Copilot",
+    "PostgreSQL": "Postgres",
+    "Testcontainers": "Test containers",
+    "JUnit": "J Unit",
+    "REST Assured": "Rest Assured",
+    "FastAPI": "Fast API",
+    "SQLAlchemy": "SQL Alchemy",
+    "pytest": "pie test",
+    "uvicorn": "you vi corn",
+    "nginx": "engine x",
+    "kubectl": "cube control",
+    "localhost": "local host",
+    "qwen3:0.6b": "qwen three zero point six b",
+    "Given/When/Then": "Given, When, Then",
+    "XCTSkipUnless": "X C T Skip Unless",
+    "LAB_E2E": "lab E two E",
+    "800-63B": "eight hundred sixty-three B"
+  }
+}

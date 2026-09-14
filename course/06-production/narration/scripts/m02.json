@@ -1,0 +1,109 @@
+{
+  "label": "M2 — The On-Device AI App: Architecture",
+  "slides": {
+    "slide-1": {
+      "title": "M2 — The On-Device AI App: Architecture",
+      "text": "Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until one hundred ninety-one tests pass. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision."
+    },
+    "slide-2": {
+      "title": "By the end you can…",
+      "text": "These six bullets are the whole contract of this module. You will sketch the pipeline from capture through transcribe, context, prompt, and route. You will name the file that implements each stage, and justify the three protocol seams. You will route models per role, cancel stale streams, write prompt builders as pure functions, and type streaming errors so truncation fails loudly. Notice what is not here: no prompt engineering tricks and no model benchmarks. This module is about architecture, where decisions live and how they are proved, and each objective maps to one lab step and at least one quiz question."
+    },
+    "slide-3": {
+      "title": "M2.1 — One pipeline, two layers",
+      "text": "Here is the whole system in one line. Microphone audio is tagged as you, system audio as others, and both arrive as PCM chunks. The pipeline then runs capture, transcribe, store, context, prompt, and route. The split is the important part: everything in the App folder touches hardware, and everything in ListenToMeCore is pure. The three seams are AudioCapturing, Transcribing, and LLMProvider. That layering is what makes the pipeline fully runnable in a unit test against mocks."
+    },
+    "slide-4": {
+      "title": "Capture is thin on purpose",
+      "text": "Capture is thin on purpose. DualChannelCapture taps two sources, the microphone and system audio, converts both to mono Float PCM, and emits them as audio chunks. The microphone tap tags its buffers as you, and the ScreenCaptureKit callback tags its buffers as others. That single tag is why the app can label You versus Others with no diarization model at all. Capture is bound to hardware, so it is the least testable code in the system, and that is exactly why it is kept as thin as possible."
+    },
+    "slide-5": {
+      "title": "Three protocol seams",
+      "text": "A seam is a protocol the pure core owns and the platform side implements, and the core declares three of them. AudioCapturing says what audio arrives, and the app provides AVAudioEngine and ScreenCaptureKit. Transcribing says partials and finals arrive, and the app provides SpeechAnalyzer or WhisperKit. LLMProvider says streamed text arrives, and the app provides an Ollama HTTP client. The core never names AVFoundation or Ollama; it only names these protocols, and that inversion is what lets the test suite inject mocks. Add a fourth transcription engine tomorrow, and nothing below the Transcribing protocol changes."
+    },
+    "slide-6": {
+      "title": "Three engines, one seam",
+      "text": "One seam, three engines. SpeechAnalyzer is the default and needs one analyzer per source, unlike the legacy speech recognizer, which has a process-global limit. WhisperKit is opt-in and works in batches, so it emits finalized segments only. Notice the prepare contract: warm up before audio arrives, so feed never blocks and the opening seconds of a meeting are not dropped. WhisperKit trades live partials for stronger multilingual quality, because Apple's on-device Speech picks one primary language and does not code-switch. Add an engine, and nothing downstream changes."
+    },
+    "slide-7": {
+      "title": "The store and its budget",
+      "text": "ConversationStore is the single source of truth. It keeps a log of finals plus one current partial. Applying a result appends finals and replaces partials. The context window walks utterances newest-first, keeping each one while it fits, and it always keeps the newest even if that one alone exceeds the budget, so the window is never empty. The default budget is 4,000 characters, but recap and action-item prompts get 100,000, because they have to cover the whole conversation."
+    },
+    "slide-8": {
+      "title": "When the engine gives no partials",
+      "text": "WhisperKit buffers audio, so something has to decide where an utterance ends. The core voice activity detector is thirty-seven lines. It measures root-mean-square energy per frame with a threshold of 0.02, and a trailing silence window of 0.8 seconds. It returns true exactly once, on the frame where silence after speech first exceeds that duration, so it fires once per utterance boundary. There is no machine learning model here, just a threshold and a timer. Spend the cheap heuristic where a model would be overkill."
+    },
+    "slide-9": {
+      "title": "The newest segment always survives",
+      "text": "This is the first proof slide, and it sets a pattern for the course. Every claim we make has a file pointer you can open, and that pointer resolves. The guarantee here is that the context window is never empty: the newest-first fit always keeps the most recent segment, even when it alone blows the budget. The default budget of 4,000 characters lives in ContextEngine. Open the file and read the loop yourself rather than trusting the bullets. The 96% core coverage badge and the 95% floor are downstream consequences of this kind of layering."
+    },
+    "slide-10": {
+      "title": "M2.2 — Three roles, three models",
+      "text": "Section M2.2 is about routing, and it starts with roles. Listener, Quick, and Deep are an enum in the core, not a UI accident. Listener keeps a rolling summary and refreshes continuously, so speed beats depth, while Quick answers on a global hotkey and fires proactively, so latency is the whole game. Deep is on-demand long reasoning, where strength matters more than speed. The app shows four panes, Transcript, Listener, Quick, and Deep, each with its own model dropdown. \"Just use the best model everywhere\" fails twice: it burns latency where you do not need it, and it pins the product to one model's quirks."
+    },
+    "slide-11": {
+      "title": "Local-first role defaults",
+      "text": "ModelRanking picks a default for each role automatically. Quick gets a model with a fast marker such as flash, mini, nano, lite, small, or fast, or the lightest one available. Deep gets a strong marker such as pro, reason, think, coder, code, ultra, max, or large, or the heaviest. The Cloud filter is a privacy default, not a speed one: an unpinned pane must never silently send a transcript to Ollama Cloud. Cloud models are selected only when no local model exists."
+    },
+    "slide-12": {
+      "title": "Token-prefix, not substring",
+      "text": "Here is a small check with a large blast radius. The router splits the model name into tokens and lets a marker match only at a token start. Look at gemini-2.5-flash: it contains the letters m-i-n-i, so a raw substring check would call it mini and rank it as fast. The token-prefix check rejects that hit, because mini is not a token in that name. One wrong check misroutes an entire model family, and no test fails unless you wrote the near-miss test. TinyCopilot ships exactly that test: test_gemini_is_not_demoted_as_mini."
+    },
+    "slide-13": {
+      "title": "Generation tokens kill stale streams",
+      "text": "Switching models mid-answer creates a subtle correctness bug, and the fix is a generation counter. MeetingSession keeps one counter per role. When you call set model, it cancels in-flight work and bumps the counter. The streaming loop then guards every write against that counter, so switch mid-answer and the old tokens die on the floor. Without it, a slow answer from the previous model finishes after the switch and displays under the new model's name, and users read that as the new model being wrong. Cancellation is a correctness feature, not an optimization."
+    },
+    "slide-14": {
+      "title": "PromptBuilder is pure",
+      "text": "Prompt is a public enum of static functions in the core. It performs no input or output, holds no state, and reads no clock. Context goes in, an LLMRequest comes out, and the same inputs always produce the same string. Purity is not a style preference here: the tests assert the built text directly, so prompt regressions are caught in milliseconds without a network call or a model. That is the only way to keep nine response actions across three roles honest. In TinyCopilot, any hidden state or randomness will fail the determinism test."
+    },
+    "slide-15": {
+      "title": "Three base prompts, three contracts",
+      "text": "Each role has its own base prompt and its own contract. Quick gets no preamble and must answer in one to three sentences. Listener must never invent an owner, a deadline, an agreement, or a completion. Deep prefers depth over brevity, with no padding. The Listener contract exists because its summary feeds back into the Quick and Deep prompts, so one hallucinated owner would propagate everywhere; it is blocked at the source. Nine response actions layer on top, and persona directives append to every role, so a preset like Interview shapes all three identically."
+    },
+    "slide-16": {
+      "title": "Only completed summaries ground other roles",
+      "text": "Open MeetingSession and count the summary properties: there are two, not one. The live value is what you see on screen, and it is cleared while a refresh streams. The completed value is separate, and only that one is injected into other roles' prompts. The misconception to kill here is that more context is always better, so you should inject whatever is on screen. An in-flight summary is a confident-looking half-answer, and Quick would treat it as fact. A half-answer is worse than no answer."
+    },
+    "slide-17": {
+      "title": "M2.3 — Proactive is restraint",
+      "text": "Section M2.3. Proactive sounds like it needs intelligence; it actually needs restraint. Question detection is twenty-eight lines of code, deliberately simple and swappable later. The design spec calls for a lightweight heuristic, debounced so it fires at most once every few seconds. Ship the cheap heuristic behind a seam and spend your complexity elsewhere. The trigger is about five percent of the work; the discipline around it is the other ninety-five."
+    },
+    "slide-18": {
+      "title": "QuestionDetector: three rules",
+      "text": "The detector has three rules. A segment ends in a question mark. It starts with an interrogative such as what, why, or how, or contains a word-boundary phrase cue such as can you, any thoughts, or walk me through. The word starts is load-bearing: the interrogative rule applies only to the first token. Phrase cues are matched on word boundaries, so many thoughts never triggers any thoughts, and we cannot use your laptop never triggers can you. Those near-misses are the tests people most often forget to write, so TinyCopilot ships eight of them for you."
+    },
+    "slide-19": {
+      "title": "The gate: finalized, others, debounced",
+      "text": "Detection alone does not fire the feature. Four conditions have to hold. The segment must be finalized, it must come from others, it must pass detection, and at least eight seconds must have passed since the last fire. The others condition is the one people miss: you do not want the app answering your own rhetorical questions. The debounce matters too, because without it two heated minutes of questions flood the pane with overlapping suggestions. One trigger, one answer, then quiet."
+    },
+    "slide-20": {
+      "title": "Typed streaming errors",
+      "text": "Ollama streams newline-delimited JSON over the chat endpoint, and it can return HTTP 200 and then an error object inside the stream, so the provider types its failures. A server error is an in-stream error event. Incomplete means the lines ended without a done flag, and empty means the stream completed with no visible text. Each case carries a user-facing message, so truncation can never finish as success. This design is a scar, not a guess: a review found the old provider let truncated streams pass while two hundred and fifteen core tests were green and coverage sat above ninety-seven percent."
+    },
+    "slide-21": {
+      "title": "Flicker is information; silence is a lie",
+      "text": "Open the review and read gap G06. The test suite validated what had been built, and what had been built was wrong. Two booleans, a completion flag and a content flag, are what the streaming loop now tracks. The fix was not more coverage; it was an honest failure model. Swallowing stream errors to avoid UI flicker is exactly backwards, because the user then gets a silently incomplete answer instead of a retry affordance. Flicker is information; silence is a lie."
+    },
+    "slide-22": {
+      "title": "Budgets come from observation",
+      "text": "Every number on this slide is a cost ceiling, not a feature. Quick evaluation forces thinking off and temperature zero. The 3,072-token cap was chosen from a real truncation: live testing showed planning text leaking through even with thinking off, which exhausted the former 1,600-token budget halfway through valid JSON. The cap is the smallest budget that stopped that observed truncation. Speech batches run five seconds with a twenty-four character eligibility rule, and response caps are thirty seconds or sixteen kibibytes. Summaries refresh every thirty seconds and Deep every sixty, serially."
+    },
+    "slide-23": {
+      "title": "Lab M2 — Build TinyCopilot's core",
+      "text": "Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports one hundred ninety-one tests passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model."
+    },
+    "slide-24": {
+      "title": "Quiz M2 — eight questions",
+      "text": "The quiz has eight questions: six multiple choice and two short answer. The topics mirror the module: pipeline order and the coverage enabler, role defaults on three installed models, generation counters and prompt purity, the never-invent contract, streaming error cases, and debounce conditions. The distractors encode the misconceptions we taught against, such as the strongest model is best everywhere, localhost proves local, and queue the old stream's tokens. The short answers ask you to apply the ideas, not recall them. Do the quiz before the workshop, and we will review the two most-missed items live."
+    },
+    "slide-25": {
+      "title": "Recap",
+      "text": "Three segments, three sentences. M2.1: one pipeline, with decisions in a pure core, hardware in thin glue, and three protocol seams. M2.2: models routed per role, matching by token prefix, and cancellation by generation counter. M2.3: a cheap twenty-eight-line heuristic, a hard gate with an eight-second debounce, and typed streaming errors. Every stage has a file pointer you can open, and every number is a measured ceiling. If you remember one thing, remember that the architecture is what makes the honesty possible."
+    },
+    "slide-26": {
+      "title": "Discussion prompt",
+      "text": "Here is your discussion prompt for the week. A stakeholder says: point the biggest model at it. Your job is to answer with architecture, not opinion: name the trigger, the debounce, and the budget, and cite at least three ListenToMe files. Then name one failure mode the stakeholder's design loses, for example no debounce means overlapping suggestions, or no typed errors means silent truncation. Aim for about one hundred fifty words and post it to the community; we grade it on those file pointers."
+    }
+  }
+}
