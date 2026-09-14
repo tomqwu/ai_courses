@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "06-production" / "
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "06-production" / "narration"))
 
 from deck_lint import split_slides                      # noqa: E402
+from captions import words
 from narration_data import (COURSE_DIR, DECK_IDS, EDITION, MANIFEST_PATH, PROVENANCE_PATH,  # noqa: E402
                             SITE_ROOT, load_manifest, load_scripts, read_json, write_json)
 
@@ -125,7 +126,7 @@ def render_blocks(lines: list[str]) -> str:
 
 # ---------------------------------------------------------------- deck parsing
 
-def parse_deck(deck_id: str) -> dict:
+def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
     matches = sorted(COURSE_DIR.glob(f"03-content/{deck_id}-*/slides.md"))
     if not matches:
         raise SystemExit(f"{deck_id}: no slides.md found")
@@ -142,6 +143,10 @@ def parse_deck(deck_id: str) -> dict:
         rendered = render_blocks(body.splitlines())
         # Point aria-labelledby at a real element: give the slide's first heading the id.
         rendered = re.sub(r"<(h[1-4])>", f'<\\1 id="slide-{index}-title">', rendered, count=1)
+        # The approved narration is the source of truth for anything spoken; the deck Markdown is
+        # the source of truth for what is displayed.
+        script_text = ((scripts or {}).get(deck_id, {}).get("slides", {})
+                       .get(f"slide-{index}", {}).get("text", "").strip())
         slides.append({
             "id": f"slide-{index}",
             "number": index,
@@ -149,6 +154,7 @@ def parse_deck(deck_id: str) -> dict:
             "classes": classes,
             "notes": notes,
             "html": rendered,
+            "script_text": script_text,
         })
     return {
         "id": deck_id,
@@ -156,6 +162,126 @@ def parse_deck(deck_id: str) -> dict:
         "source": str(source.relative_to(COURSE_DIR)),
         "slides": slides,
     }
+
+
+def _deck_voice(deck_id: str, manifest: dict, provenance: dict) -> tuple[str, int]:
+    """Return (voice label, number of preview recordings) for a deck."""
+    entries = (manifest.get("decks", {}).get(deck_id, {}) or {}).get("slides", {})
+    prov = {r.get("audio"): r for r in provenance.get("recordings", [])}
+    preview = sum(1 for e in entries.values()
+                  if prov.get(e.get("audio"), {}).get("basis") == "sentence-measured-preview")
+    label = next((e.get("voice") for e in entries.values() if e.get("voice")), "")
+    return label, preview
+
+
+def _slide_heading(deck: dict, slide: dict) -> str:
+    """Slide 1 is usually titled after the deck itself; do not say it twice."""
+    title = slide["title"].strip()
+    if title.split("—")[-1].strip().casefold() == deck["label"].split("—")[-1].strip().casefold():
+        return f"Slide {slide['number']}"
+    return f"Slide {slide['number']} — {title}"
+
+
+def transcript_markdown(deck: dict, manifest: dict, provenance: dict) -> str:
+    """A readable transcript of the narration for one deck.
+
+    Convention: a line starting with "> " is spoken narration and nothing else. Headings, timing and
+    the voice note are ordinary lines, so `words()` over the blockquotes must equal `words()` over the
+    approved script. Do not put metadata in a blockquote here.
+
+    The spoken words are the approved script — the same words the captions must match — so this file
+    is a text alternative to the audio, not a summary of it. Narration is emitted as blockquotes so
+    the words that are *spoken* are mechanically separable from the metadata around them; that is what
+    lets `validate_narration.py` prove the transcript still matches the script word for word.
+
+    Speaker notes are deliberately excluded: they are the presenter's version, not the narration.
+    """
+    entries = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
+    voice, preview = _deck_voice(deck["id"], manifest, provenance)
+    total = sum(float(e.get("duration", 0) or 0) for e in entries.values())
+    out = [f"# {deck['label']}", "", "## Narration transcript", ""]
+    out.append(f"**{len(deck['slides'])} slides · {len(entries)} narrated · "
+               f"{int(total // 60)}m {int(total % 60)}s of audio**")
+    out.append("")
+    if preview and preview == len(entries):
+        out.append("**Voice:** preview narration — a free local voice, not the finished release "
+                   "recording. The words below are the approved narration and do not change when the "
+                   "release voice is recorded.")
+    elif preview:
+        out.append(f"**Voice:** mixed — {preview} of {len(entries)} recordings are preview audio; "
+                   f"the rest were recorded separately. The words below are the approved narration.")
+    elif voice:
+        out.append(f"**Voice:** {voice}")
+    out.append("")
+    out.append("The text below is what is spoken on each slide, in order. It is the same text as the "
+               "captions and the approved narration script, checked word for word by "
+               "`course/06-production/narration/validate_narration.py`.")
+    out.append("")
+    out.append("---")
+    out.append("")
+    for slide in deck["slides"]:
+        entry = entries.get(slide["id"])
+        out.append(f"### {_slide_heading(deck, slide)}")
+        out.append("")
+        if entry:
+            out.append(f"*{float(entry.get('duration', 0) or 0):.1f}s · "
+                       f"{entry.get('caption_method', '')}*")
+            out.append("")
+        for paragraph in slide["script_text"].split("\n\n"):
+            if paragraph.strip():
+                out.append("> " + paragraph.strip())
+                out.append("")
+    return "\n".join(out).rstrip() + "\n"
+
+
+def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
+    """The same transcript as a printable page on the site."""
+    entries = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
+    voice, preview = _deck_voice(deck["id"], manifest, provenance)
+    total = sum(float(e.get("duration", 0) or 0) for e in entries.values())
+    rows = []
+    for slide in deck["slides"]:
+        entry = entries.get(slide["id"])
+        meta = (f"{float(entry.get('duration', 0) or 0):.1f}s · {entry.get('caption_method', '')}"
+                if entry else "not recorded")
+        rows.append(
+            f'<section class="transcript-slide" id="{slide["id"]}">'
+            f'<h2><a href="{site_base}/{deck["id"]}.html#{slide["id"]}">'
+            f'{html.escape(_slide_heading(deck, slide))}</a></h2>'
+            f'<p class="transcript-meta">{html.escape(meta)}</p>'
+            f'<blockquote>{inline(slide["script_text"])}</blockquote></section>')
+
+    if preview and preview == len(entries):
+        note = ('<p class="voice-badge" role="note">Preview narration — a free local voice, not the '
+                'finished release recording. These are the approved words and do not change when the '
+                'release voice is recorded.</p>')
+    elif preview:
+        note = (f'<p class="voice-badge" role="note">Mixed — {preview} of {len(entries)} recordings '
+                f'are preview audio. These are the approved words.</p>')
+    else:
+        note = ""
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(deck['label'])} — transcript</title>
+<link rel="stylesheet" href="{site_base}/assets/player.css">
+</head>
+<body class="transcript">
+<header class="index-header">
+  <p class="deck-kicker"><a href="{site_base}/index.html">AI Product Studio</a> · Module {deck['id'][1:]}</p>
+  <h1>{html.escape(deck['label'])} — transcript</h1>
+  <p>{len(deck['slides'])} slides · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s
+     · <a href="{site_base}/{deck['id']}.html">open the narrated deck</a></p>
+</header>
+{note}
+<main>
+{chr(10).join(rows)}
+</main>
+</body>
+</html>
+"""
 
 
 def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None) -> str:
@@ -219,6 +345,7 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
   </div>
   <div class="deck-tools">
     <button type="button" data-narration-start hidden aria-pressed="false">▶ Play narration</button>
+    <a class="tool-link" href="{site_base}/transcript-{deck['id']}.html">Transcript</a>
     <a class="tool-link" href="{site_base}/assets/audio/{EDITION}/{deck['id']}/slide-1.vtt" download>Captions</a>
   </div>
 </header>
@@ -290,6 +417,8 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     <ul>
       <li>Every deck plays slide by slide. Narration never autoplays — press play when you are ready.</li>
       <li>Captions are on by default and can be turned off; the transcript is one click away on every slide.</li>
+      <li>Prefer reading? Every deck has a <strong>Transcript</strong> link in its toolbar, and the
+          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> covers all nine modules in one file.</li>
       <li>Keyboard: <kbd>→</kbd>/<kbd>Space</kbd> next, <kbd>←</kbd> previous, <kbd>Home</kbd>/<kbd>End</kbd> first/last, <kbd>Esc</kbd> close.</li>
       <li>The speaker notes under each slide are the presenter version; the narration is the learner version.</li>
     </ul>
@@ -311,7 +440,7 @@ def main(argv=None) -> int:
     manifest = load_manifest()
     provenance = read_json(PROVENANCE_PATH, None) or {"recordings": []}
     scripts = load_scripts()
-    decks = [parse_deck(deck_id) for deck_id in DECK_IDS]
+    decks = [parse_deck(deck_id, scripts["decks"]) for deck_id in DECK_IDS]
 
     target = Path("/tmp/aps-site-check") if args.check else SITE_ROOT
     target.mkdir(parents=True, exist_ok=True)
@@ -323,15 +452,76 @@ def main(argv=None) -> int:
     for deck in decks:
         (target / f"{deck['id']}.html").write_text(
             page(deck, manifest, provenance, args.site_base), encoding="utf-8")
+        (target / f"transcript-{deck['id']}.html").write_text(
+            transcript_page(deck, manifest, provenance, args.site_base), encoding="utf-8")
     (target / "index.html").write_text(
         index_page(decks, manifest, provenance, args.site_base), encoding="utf-8")
+
+    # The transcripts are committed as Markdown, so a check must prove the committed copies still
+    # match what the scripts say rather than quietly regenerating them.
+    # Always the committed location: a check must compare against what is in the repository, not
+    # against a copy it just wrote.
+    transcript_dir = SITE_ROOT / "transcripts"
+    if not args.check:
+        transcript_dir.mkdir(parents=True, exist_ok=True)
+    drift = []
+    for deck in decks:
+        text = transcript_markdown(deck, manifest, provenance)
+        out = transcript_dir / f"{deck['id']}.md"
+        if args.check:
+            on_disk = out.read_text(encoding="utf-8") if out.is_file() else None
+            if on_disk != text:
+                drift.append(f"transcripts/{out.name}")
+        else:
+            out.write_text(text, encoding="utf-8")
+        # A transcript that does not say exactly what the script says is a bug, not a formatting
+        # difference: assert it here so it can never be committed wrong.
+        spoken = words(" ".join(line.lstrip("> ").strip()
+                                for line in text.splitlines() if line.startswith("> ")))
+        approved = words(" ".join(s["script_text"] for s in deck["slides"]))
+        if spoken != approved:
+            raise SystemExit(f"{deck['id']}: transcript words do not match the approved script")
+
+    combined = ["# AI Product Studio — complete narration transcript", "",
+                "Every word spoken in the course, in order. The words are the approved narration "
+                "scripts; they match the captions word for word and do not change when the release "
+                "voice is recorded.", ""]
+    for deck in decks:
+        entries = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
+        total = sum(float(e.get("duration", 0) or 0) for e in entries.values())
+        combined.append(f"- [{deck['label']}](#{deck['id']}) — {len(deck['slides'])} slides, "
+                        f"{int(total // 60)}m {int(total % 60)}s")
+    combined.append("")
+    for deck in decks:
+        body = transcript_markdown(deck, manifest, provenance)
+        body = "\n".join(body.splitlines()[2:])          # drop the repeated H1 and section heading
+        combined.append(f'<a id="{deck["id"]}"></a>')
+        combined.append("")
+        combined.append(f"# {deck['label']}")
+        combined.append(body.strip())
+        combined.append("")
+    all_text = "\n".join(combined).rstrip() + "\n"
+    out = transcript_dir / "ALL.md"
+    if args.check:
+        if not out.is_file() or out.read_text(encoding="utf-8") != all_text:
+            drift.append(f"transcripts/{out.name}")
+    else:
+        out.write_text(all_text, encoding="utf-8")
+
+    if args.check and drift:
+        print("transcripts are stale: " + ", ".join(str(d) for d in drift))
+        print("run `make -C .. transcripts` to regenerate them")
+        return 1
 
     total_slides = sum(len(d["slides"]) for d in decks)
     scripted = sum(len(v["slides"]) for v in scripts["decks"].values())
     recorded = sum(len((manifest.get("decks", {}).get(d, {}) or {}).get("slides", {}))
                    for d in scripts["decks"])
+    transcript_words = sum(len(s["script_text"].split()) for d in decks for s in d["slides"])
     print(f"site written to {target}")
     print(f"  decks: {len(decks)} · slides: {total_slides} · scripted: {scripted} · recorded: {recorded}")
+    print(f"  transcripts: {len(decks)} decks · {transcript_words:,} words"
+          f"{' (verified against the approved scripts)' if args.check else ''}")
     if recorded < scripted:
         print(f"  note: {scripted - recorded} slides have no recording yet — "
               f"run `python3 ../06-production/narration/generate_narration.py generate --provider say`")

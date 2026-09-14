@@ -1,8 +1,8 @@
 {
   "edition": "aps-1.0.0",
   "complete": true,
-  "voice": "macOS say / Samantha (preview)",
-  "provider": "macOS say",
+  "voice": "ElevenLabs / Chris — Charming, Down-to-Earth",
+  "provider": "ElevenLabs",
   "decks": {
     "m00": {
       "label": "M0 — Orientation: Three Products, One Method",
@@ -51,11 +51,11 @@
           "captions": "/assets/audio/aps-1.0.0/m00/slide-1.vtt",
           "transcript": "Welcome. In the next thirty minutes you will not watch anyone else build anything. You will clone three real products, run one of them end to end, and pull a local model onto your own machine. The promise of this module is real production software running before Module 1, with no prerequisites. By the end you will have three repos cloned, one solver run, and one local model. Keep a terminal open beside this video.",
           "title": "M0 — Orientation: Three Products, One Method",
-          "duration": 24.452,
-          "sha256": "73aac77fbe6a6095b821d623b9170f2650ba33bce5a845bcd0ae1d017aadf7bf",
-          "voice": "macOS say / Samantha (preview)",
-          "provider": "macOS say",
-          "caption_method": "sentence-measured",
+          "duration": 27.44,
+          "sha256": "9d66d19f52c82d126bd6c4e54090799ae586c694df25c74809e3a30a4ea5fdf6",
+          "voice": "ElevenLabs / Chris — Charming, Down-to-Earth",
+          "provider": "ElevenLabs",
+          "caption_method": "character-alignment",
           "cues": 7,
           "words": 75
         },
@@ -255,7 +255,7 @@
           "words": 87
         }
       },
-      "duration": 594.46
+      "duration": 597.45
     },
     "m01": {
       "label": "M1 — The AI Product Operating System",

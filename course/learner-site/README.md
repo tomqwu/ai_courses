@@ -23,6 +23,31 @@ recordings is still fully readable, and the player says so instead of failing.
 | `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
 | `build_site.py`, `check_player.py` | hand-written | **Yes** |
 
+## Transcripts
+
+Every deck has a transcript, committed as Markdown rather than generated HTML:
+
+```
+learner-site/transcripts/m00.md … m08.md   one deck each
+learner-site/transcripts/ALL.md            all nine modules in one file, with a table of contents
+```
+
+Each file carries the slide number, title, per-slide duration and caption method, then the spoken
+words. **Speaker notes are excluded** — they are the presenter's version, not the narration. The words
+are the approved narration scripts, so the transcript is a true text alternative to the audio and does
+not change when the release voice is recorded. Each deck page has a **Transcript** link in its toolbar.
+
+The convention that makes it checkable: **a line starting with `> ` is spoken narration and nothing
+else.** Headings, timing and the voice note are ordinary lines, so `words()` over the blockquotes must
+equal `words()` over the approved script. `build_site.py` asserts that at generation time,
+`validate_narration.py` asserts it on the committed files, and `build_site.py --check` fails if they
+are stale. Do not put metadata in a blockquote.
+
+```
+$ python3 06-production/narration/validate_narration.py --no-media
+Transcripts verified: 10 documents match the approved scripts (22,239 words)
+```
+
 ## Page structure
 
 Every generated deck page is:

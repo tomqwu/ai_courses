@@ -116,6 +116,18 @@ The release voice cannot be exercised without a paid key, and a release path tha
 one rots. What is faked is the socket; what is verified is our code. Nothing here proves the *voice* is
 good — only a real key does that (issue #21).
 
+## Transcripts
+
+The spoken words are also published as reading documents, generated from the same approved scripts:
+
+```bash
+make -C course transcripts
+```
+
+They live in `course/learner-site/transcripts/` and are checked twice — once when generated, and again
+by `validate_narration.py` against the committed files. `build_site.py --check` fails if they are
+stale. This is the same invariant as the captions, applied to the reading path.
+
 ## What the contract enforces
 
 `validate_narration.py` fails (never warns) on any of these:

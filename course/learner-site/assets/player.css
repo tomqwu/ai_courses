@@ -233,3 +233,22 @@ kbd {
   .slide a { color: #000; text-decoration: underline; }
   .slide code, .slide pre { background: #f4f4f4; color: #000; }
 }
+
+/* ── Transcript pages ────────────────────────────────────────────────────────
+   The reading path: the same words as the narration, laid out for print and
+   long-form reading rather than for a projector. */
+body.transcript { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem 6rem; }
+body.transcript .transcript-slide { border-top: 1px solid var(--rule, #2a2a33); padding-top: 1.75rem; margin-top: 2.5rem; }
+body.transcript .transcript-slide h2 { font-size: 1.15rem; margin: 0 0 .35rem; }
+body.transcript .transcript-slide h2 a { text-decoration: none; }
+body.transcript .transcript-slide h2 a:hover { text-decoration: underline; }
+body.transcript .transcript-meta { color: var(--muted, #9a9aa5); font-size: .8rem; margin: 0 0 1rem; }
+body.transcript blockquote { margin: 0; padding: 0 0 0 1.1rem; border-left: 3px solid var(--rule, #2a2a33);
+  font-size: 1.05rem; line-height: 1.7; }
+body.transcript blockquote p { margin: 0 0 .9rem; }
+
+@media print {
+  body.transcript { max-width: none; padding: 0; }
+  body.transcript .transcript-slide { break-inside: avoid; }
+  body.transcript .voice-badge { border: 1px solid #000; }
+}

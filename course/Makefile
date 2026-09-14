@@ -2,6 +2,7 @@
 #
 #   make narration          release voice  (needs ELEVENLABS_API_KEY)
 #   make narration-preview  free local preview voice, no key needed
+#   make transcripts        regenerate the committed transcript documents
 #   make site               build the learner site from the decks + recordings
 #   make serve              build, then serve on http://localhost:8043
 #   make check              validate scripts, media, decks, the site build and the player
@@ -27,6 +28,10 @@ narration:
 # Free, offline, sentence-accurate preview. Clearly labelled as a preview in provenance and in the UI.
 narration-preview:
 	$(PYTHON) $(NARRATION)/generate_narration.py generate --provider say
+
+transcripts:
+	$(PYTHON) learner-site/build_site.py
+	@echo "transcripts written to learner-site/transcripts/"
 
 site:
 	$(PYTHON) $(SITE)/build_site.py

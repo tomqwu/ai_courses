@@ -183,12 +183,57 @@ def check_media(scripts: dict, problems: list[str], verify_media: bool, require_
     return recorded, expected_total
 
 
+def check_transcripts(scripts: dict, problems: list[str]) -> tuple[int, int]:
+    """The committed transcript documents must still say exactly what the approved scripts say.
+
+    The transcripts are generated, and generated files are edited by hand eventually. They are also
+    the text alternative to the audio, so drift here means a learner reading the transcript is reading
+    words nobody approved. `> ` marks spoken narration and nothing else, which makes the comparison
+    mechanical.
+    """
+    directory = SITE_ROOT / "transcripts"
+    checked = 0
+    total_words = 0
+    for deck_id, deck in scripts["decks"].items():
+        path = directory / f"{deck_id}.md"
+        if not path.is_file():
+            problems.append(f"{deck_id}: transcript document is missing ({path.name})")
+            continue
+        spoken = words(" ".join(line[2:].strip()
+                                for line in path.read_text(encoding="utf-8").splitlines()
+                                if line.startswith("> ")))
+        approved = words(" ".join(s["text"] for s in deck["slides"].values()))
+        if spoken != approved:
+            problems.append(f"{deck_id}: transcript document does not match the approved script "
+                            f"({len(spoken)} words vs {len(approved)})")
+            continue
+        checked += 1
+        total_words += len(approved)
+    combined = directory / "ALL.md"
+    if not combined.is_file():
+        problems.append("transcripts/ALL.md is missing")
+    else:
+        every = words(" ".join(line[2:].strip()
+                               for line in combined.read_text(encoding="utf-8").splitlines()
+                               if line.startswith("> ")))
+        approved = words(" ".join(s["text"] for deck in scripts["decks"].values()
+                                  for s in deck["slides"].values()))
+        if every != approved:
+            problems.append(f"transcripts/ALL.md does not match the approved scripts "
+                            f"({len(every)} words vs {len(approved)})")
+        else:
+            checked += 1
+    return checked, total_words
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--scripts-only", action="store_true")
     parser.add_argument("--require-complete", action="store_true")
     parser.add_argument("--no-media", action="store_true", help="skip ffprobe/sha256 (fast)")
+    parser.add_argument("--no-transcripts", action="store_true",
+                        help="skip the committed transcript documents")
     args = parser.parse_args(argv)
 
     problems: list[str] = []
@@ -206,6 +251,7 @@ def main(argv=None) -> int:
 
     recorded, expected = check_media(scripts, problems, verify_media=not args.no_media,
                                      require_complete=args.require_complete)
+    transcripts, transcript_words = (0, 0) if args.no_transcripts else check_transcripts(scripts, problems)
     manifest = load_manifest()
     if problems:
         for problem in problems:
@@ -216,6 +262,9 @@ def main(argv=None) -> int:
     label = "complete" if manifest.get("complete") else f"partial ({recorded}/{expected})"
     print(f"Narration verified: {len(scripts['decks'])} decks, {slide_count} scripted slides, "
           f"{recorded} recordings with timed captions — {label}")
+    if not args.no_transcripts:
+        print(f"Transcripts verified: {transcripts} documents match the approved scripts "
+              f"({transcript_words:,} words)")
     if not manifest.get("complete") and not args.require_complete:
         print("  note: run with --require-complete to fail on missing recordings")
     return 0

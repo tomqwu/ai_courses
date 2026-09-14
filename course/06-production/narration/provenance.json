@@ -4411,22 +4411,23 @@
     },
     {
       "audio": "/assets/audio/aps-1.0.0/m00/slide-1.mp3",
-      "sha256": "73aac77fbe6a6095b821d623b9170f2650ba33bce5a845bcd0ae1d017aadf7bf",
-      "provider": "macOS say",
-      "basis": "sentence-measured-preview",
-      "voice": "macOS say / Samantha (preview)",
-      "caption_method": "sentence-measured",
-      "generated_at": "2026-09-14T21:16:36Z",
-      "received_at": "2026-09-14T21:16:36Z",
+      "sha256": "9d66d19f52c82d126bd6c4e54090799ae586c694df25c74809e3a30a4ea5fdf6",
+      "provider": "ElevenLabs",
+      "basis": "aligned-generation",
+      "voice": "ElevenLabs / Chris — Charming, Down-to-Earth",
+      "caption_method": "character-alignment",
+      "generated_at": "2026-09-14T21:49:33Z",
+      "received_at": "2026-09-14T21:49:33Z",
       "receipt": {
-        "provider": "macOS say",
-        "voice": "Samantha",
-        "rate": 175,
-        "sentences": 6,
-        "gap_seconds": 0.28
+        "provider": "ElevenLabs",
+        "voice_id": "iP95p4xoKVk53GoZ742B",
+        "model_id": "eleven_v3",
+        "output_format": "mp3_44100_128",
+        "characters": 417,
+        "alignment_matched": true
       },
       "evidence": null,
-      "note": "Local preview voice generated on this machine; not the release voice."
+      "note": "Generated against a paid voice; the provider receipt is the API response recorded here."
     }
   ]
 }
