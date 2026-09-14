@@ -58,5 +58,31 @@ checklists one-for-one rather than existing as a separate project plan.
 
 ## Status
 
-See the [issue list](https://github.com/tomqwu/ai_courses/issues) for live status. Milestones close when
-their Definition of Done has been verified, not when the files exist on disk.
+**All three milestones are complete** — 16/16 issues closed, each with a comment carrying measured
+evidence (artifact list, word counts, deck slide/note counts, and the verification command to
+reproduce it) rather than a statement of intent.
+
+| Milestone | Issues | State |
+|---|---|---|
+| Course Core — Complete Module Packages | #1–#9 | ✅ closed |
+| Track Bundles — 3 standalone products | #10–#12 | ✅ closed |
+| Production & Launch Readiness | #13–#16 | ✅ closed |
+
+Final verification at completion (`bd43c95`):
+
+```
+$ python3 course/06-production/verify.py
+[PASS] Artifacts + length bands
+[PASS] Rubrics
+[PASS] Track bundles
+[PASS] Decks
+[PASS] Sales claims
+[PASS] Repo file pointers (1044 checked)
+
+RESULT: ALL CHECKS PASSED
+```
+
+The pass caught five real errors in content that had already shipped (recorded in
+[`../README.md`](../README.md), "Drift the verification pass caught") and rejected two proposed
+corrections that did not survive checking the source. Both outcomes are the point: the tracking is
+only worth having if closing an issue means a check ran.
