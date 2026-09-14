@@ -49,9 +49,17 @@ Workshop formula is always **I do / We do / You do** (≈25/35/30 min split). Re
 
 ## 5. Grading workflow (keep it under 3 h/week at 40 students)
 
+- **Use the shipped rubrics, not your memory.** Every module has `03-content/mNN-*/lab-rubrics.md`: four levels (Exemplary / Proficient / Developing / Missing), observable criteria, an evidence-required column, weights summing to 100, and an auto-fail list. Grade the artifact against the row, not the student against the room.
 - **Quizzes:** auto-grade; scan the item-analysis weekly; if >30% miss a question, re-teach that objective in the workshop's We-do.
-- **Labs:** students post evidence in the lab thread; you review Labs M1, M2 (or M4), M5 deeply (the cohort's promised reviews) — others are peer/self-reviewed against the printed checklists. Use the evidence format itself as the grading rubric: commands+outputs present? checklist items honestly binary? limitations listed?
-- **Capstone:** score the 5-dimension rubric; peer scores first (demo day), instructor score final. Book 30-minute feedback interviews for the founding cohort (the testimonial trade).
+- **Labs:** students post evidence in the lab thread; you review Labs M1, M2 (or M4), M5 deeply (the cohort's promised reviews) — others are peer/self-reviewed against the printed checklists. Use the evidence format itself as the grading rubric: commands+outputs present? checklist items honestly binary? limitations listed? When a submission looks green but wrong, `solutions.md` for that module names the common wrong answers and how to tell a real pass from a plausible fake.
+- **Capstone:** score the 5-dimension rubric; peer scores first (demo day), instructor score final. Book 30-minute feedback interviews for the founding cohort (the testimonial trade). M8's `solutions.md` walks the rubric over two contrasting submissions (a pass and a fail) for calibration.
+- **Certificate:** follows `06-production/certificate.md` — all 8 labs + quizzes ≥75% + capstone ≥80%, with the auto-fail list overriding any score, and the awarded record pinned to the capstone's commit SHA.
+
+## 5b. Running a live session
+
+Each module ships a `facilitation.md` kit for a 90-minute session: a timing table that sums to 90 (I do / We do / You do), opening hook and close scripts, breakout roles with the one deliverable each group posts, discussion prompts with follow-up probes, the module's watch-fors with a 30-second intervention for each, and a post-session evidence checklist. The cohort cadence in §2 says *when* to run a session; the kit says *how* to run that specific one. For slides, render the module deck (`make -C 06-production/slides html`) — speaker notes are in the deck source, so you can present from HTML or export to PDF.
+
+If you are short on preparation time, the kit plus the deck is enough to run a session; the lesson is what you read to be able to answer questions off-script.
 
 ## 6. Academic honesty (the one real rule)
 

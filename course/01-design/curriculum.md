@@ -2,6 +2,27 @@
 
 > Master syllabus and authoring brief. Learning objectives use measurable verbs (build, write, run, red-team, price). Every module = 3 lesson segments + 1 lab + 1 quiz. Written lessons are the master scripts for 5–15 minute videos.
 
+## What ships with every module
+
+Each of the nine module folders carries a complete eight-artifact package, bound by
+[`content-standards.md`](content-standards.md):
+
+| Artifact | File | Used for |
+|---|---|---|
+| Lesson | `lesson.md` | The master script for the three segments (record from `video-scripts.md`) |
+| Lab | `lab.md` | The pass/fail checkpoint, with an objective acceptance checklist |
+| Quiz | `quiz.md` | 8 questions (6 multiple choice + 2 short answer) with an answer key |
+| Slides | `slides.md` | Marp deck, ≤6 bullets per slide, speaker notes on every slide |
+| Solutions | `solutions.md` | Lab solutions, expected output, common wrong answers, grading notes |
+| Video scripts | `video-scripts.md` | Timed per-segment recording scripts (hook → beats → action step) |
+| Handout | `handout.md` | Printable one-page cheat sheet students keep |
+| Facilitation | `facilitation.md` | 90-minute cohort session kit (timing, breakouts, watch-fors) |
+| Glossary | `glossary.md` | 10–18 terms with "where it lives" pointers + curated resources |
+| Rubrics | `lab-rubrics.md` | 4-level grading rubric per lab, weights summing to 100, auto-fail list |
+| Accessibility | `accessibility.md` | Deck/code accessibility, transcript and caption rules, accommodations |
+
+Verify the whole set with `python3 ../06-production/verify.py`.
+
 ## Course-level learning outcomes
 
 By completion, a student can:

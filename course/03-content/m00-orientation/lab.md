@@ -49,7 +49,7 @@ Start your **course evidence log** (you'll keep it all course): paste the solver
 ## Stretch goals
 
 - Mac user? Open `ListenToMe/README.md` and follow `make run` to launch the real app (requires macOS 26 + Xcode).
-- Run one AI × QE check: `cd ai_qe && cat _data/release.yml` — find the five separated edition fields (site vs slide vs questionnaire vs research). That's "content as code," coming in Module 6.
+- Run one AI × QE check: `cd ai_qe && cat _data/release.yml` — find the independently versioned fields (`version`, `slide_edition`, `fintech_edition`, `questionnaire_edition`, `research_edition`). Four editions move on their own schedules; that's "content as code," coming in Module 6.
 
 ## Discussion prompt
 

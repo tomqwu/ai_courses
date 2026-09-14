@@ -89,7 +89,7 @@ Re-cut one body of research into audience-specific decks and guided routes over 
 
 Nothing is forked: the executive gets the strategic cut, the technical lead gets contracts, sequencing and evidence schemas — both trace back to the same source records.
 
-**Guided routes over stable slide IDs.** `_data/briefing_routes.json` defines curated sequences *over the same stable slide IDs* — the banking executive route plays 14 of the 21 slides (`1, 3, 19, 20, 6, 21, 18, 17, 13, 14, 15, 16, 10, 12`) and declares `"closing": 12`, the brainstorm-questions slide; `full_order` retains everything. The README states the rule: "Focused routes end on a decision discussion; full decks retain the supporting material." Stable IDs are the invariant — routes reorder and omit, they never rewrite, so a route link still resolves. Routes are shareable by URL: `?route=client` on a deck (`README.md`), plus `?for=evp` / `?for=technical` audience views in the presentation room (`briefings/index.md`).
+**Guided routes over stable slide IDs.** `_data/briefing_routes.json` defines curated sequences *over the same stable slide IDs* — the banking executive route plays 14 of the 21 slides (`1, 3, 19, 20, 6, 21, 18, 17, 13, 14, 15, 16, 10, 12`) and declares `"closing": 12`, the brainstorm-questions slide; `full_order` retains everything. The README states the rule: "Focused routes end on a decision discussion; full decks retain the supporting material." Stable IDs are the invariant — routes reorder and omit, they never rewrite, so a route link still resolves. Routes are shareable by URL: `?route=client` on a deck (`README.md`), plus `?for=evp` / `?for=technical` audience views, linked from the homepage (`ai_qe/index.md:27,29`) and documented as shareable views in `ai_qe/CONTRIBUTING.md:23`, with the briefing index filtering cards by that parameter (`ai_qe/assets/js/sales-navigation.js:31`).
 
 **Script the meeting, not just the deck.** `briefings/index.md` embeds "A suggested 30-minute conversation": **01 / Align · 5 minutes** — which part of QA creates the most delay or repeated work? **02 / Explore · 15 minutes** — follow one workflow and show the platform services behind it. **03 / Agree · 10 minutes** — choose the process, owner and evidence needed for a first pilot, landing on the discovery guide. The deck is not the product; the conversation the deck enables is.
 
@@ -106,7 +106,7 @@ Nothing is forked: the executive gets the strategic cut, the technical lead gets
 ### Action step
 
 1. Open `_data/briefing_room.json` and `_data/briefing_routes.json`; trace the banking executive route (14 slides, closing 12) against `full_order` (21 slides) and confirm the route omits only, never rewrites.
-2. Open `briefings/index.md` and read the 30-minute script; open `discovery.md` and confirm where the Agree segment lands.
+2. Open `briefings/index.md` and read the 30-minute script; open `ai_qe/discovery.md` and confirm where the Agree segment lands.
 3. Take a 10–12 slide body of content you know and write two route declarations over stable IDs: a 5–6 slide executive route ending in a specific, fundable decision ask, and a technical route retaining the supporting evidence. Both routes over the *same* slides — that constraint is the exercise.
 
 ## Segment M6.3 — Content as code (~25 min)

@@ -15,3 +15,5 @@ __pycache__/
 htmlcov/
 dist/
 *.egg-info/
+# Rendered slide output (generated from slides.md by 06-production/slides/build.sh)
+course/06-production/slides/out/

@@ -149,6 +149,9 @@ It's the opposite. You'll use agents aggressively — under constitutions, verif
 **Team discounts?**
 Yes — the Team tier (3–5 seats) adds a private workshop and code review. Email for details.
 
+**I only need one of the three archetypes. Can I buy just that?**
+Yes. There are three single-track bundles at **$199** each — On-Device AI Apps, Spec-Driven AI SaaS, and Expertise as a Product. But be clear about what you're choosing: a bundle covers four modules plus a launch slice, and the full Studio tier is $399 for all nine plus the capstone. Per module they cost the same, so the bundle is a focus decision, not a saving. If you're unsure which archetype you'll sell, the full course is the better value — and it's the one I'd point you to.
+
 ---
 
 ## [Pricing]
@@ -161,6 +164,9 @@ Everything in Studio · weekly 90-minute workshops (I do / We do / You do) · in
 
 ### Team — from **$2,500** (3–5 seats)
 Private cohort or workshop · private code review on team labs · team capstone review. Contact for scheduling.
+
+### Single-track bundle — **$199** (choose one archetype)
+On-Device AI Apps · Spec-Driven AI SaaS · or Expertise as a Product. Four modules plus a launch slice, with the same labs, decks, and artifacts. Same per-module rate as Studio, so it's a focus decision — if you might build more than one archetype, Studio at $399 is the better value.
 
 [**Enroll in the next cohort →**] · [**Get self-paced access →**]
 
@@ -182,5 +188,5 @@ You'll do the same thing, at lab scale, in eight weeks — and leave with the op
 
 - Keep every number on this page synchronized with `course/00-research/*.md` (source: the repos). If a repo updates its evidence line, update the page — the course's credibility standard applies to its own marketing.
 - The "before/after/result" testimonial format and the objection-teardown FAQ entries (falling behind, refunds, "other courses failed me") come from the launch research in `04-sales/launch-plan.md`.
-- Length check: ~2,250 words — appropriate for a $500+ offer with cold traffic.
+- **Length check (measured, not estimated):** 2,251 words total, of which ~1,900 is publishable page copy; the remainder is authoring notes and reserved placeholders. **This number is checked automatically** — `06-production/verify.py` fails the package if this line drifts more than 10% from the measured file, because a count you don't re-measure after editing is the exact drift M4 warns about. For a $399–$1,490 cold-traffic offer the research band is 2,000–3,000 words of copy; this page sits at the lower end deliberately, because the free lead product (`lead-product-teardown.md`) carries the top-of-funnel education and this page only has to close. If conversion testing shows hesitation at checkout, extend §4 (curriculum-as-outcomes) and §7 (FAQ) first — those are the two sections that answer price objections.
 - A/B test candidates: headline variant "Stop studying AI. Start shipping it." vs. current; proof-first layout (badges above hero) for cold technical traffic.

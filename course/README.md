@@ -24,31 +24,50 @@ course/
 ├── 01-design/                      ← course design (read first)
 │   ├── positioning.md             ← concept, audience, promise, differentiation, pricing ladder, voice standards
 │   ├── curriculum.md              ← master syllabus: 9 modules, objectives, labs, quizzes (the authoring brief)
+│   ├── content-standards.md       ← BINDING spec for the 8 artifacts; every writer and reviewer follows it
 │   └── assessment-and-rubrics.md  ← grading weights, quiz rules, lab standard, capstone rubric
 ├── 02-instructor/
 │   └── instructor-guide.md         ← cohort cadence, workshop scripts (I do/We do/You do), stuck-point table, grading workflow
-├── 03-content/                    ← the course itself (9 modules)
-│   ├── m00-orientation/           ← lesson + lab + quiz
-│   ├── m01-operating-system/     ← lesson + lab + quiz
-│   ├── m02-ondevice-app/         ← lesson + lab + quiz + tinycopilot/ (runnable, tested lab code)
-│   ├── m03-privacy-ship/         ← lesson + lab + quiz
-│   ├── m04-spec-driven-saas/      ← lesson + lab + quiz
-│   ├── m05-security-tests/        ← lesson + lab + quiz
-│   ├── m06-expertise-product/    ← lesson + lab + quiz + evidence-dataset.md (student-facing claims data)
-│   ├── m07-monetize/             ← lesson + lab + quiz
-│   └── m08-launch-capstone/      ← lesson + lab (capstone) + quiz
-└── 04-sales/                       ← the course's own go-to-market
-    ├── landing-page.md           ← complete sales-page copy (~2,250 words, publish-ready)
-    ├── pricing-and-platforms.md  ← price ladder ($399 self-paced / $1,490 cohort / $2.5k team) with decision record
-    ├── launch-plan.md            ← launch timeline, 7-email arc, operations checklist, metrics
-    └── lead-product-teardown.md  ← the free lead product (3-email mini-course + 10-point checklist)
+├── 03-content/                    ← the course itself (9 modules, 8 artifacts each)
+│   ├── mNN-*/                     ← lesson.md · lab.md · quiz.md · slides.md (Marp + notes) · solutions.md
+│   │                                · video-scripts.md · handout.md · facilitation.md · glossary.md
+│   │                                · lab-rubrics.md · accessibility.md
+│   ├── m00-orientation/           ← + lab
+│   ├── m02-ondevice-app/         ← + tinycopilot/ (runnable, tested lab code)
+│   ├── m06-expertise-product/    ← + evidence-dataset.md (student-facing claims data)
+│   └── m08-launch-capstone/      ← the capstone lab
+├── 04-sales/                       ← the course's own go-to-market
+│   ├── landing-page.md           ← complete sales-page copy (~1,900 words, publish-ready)
+│   ├── pricing-and-platforms.md  ← price ladder ($399 self-paced / $1,490 cohort / $2.5k team) with decision record
+│   ├── launch-plan.md            ← launch timeline, 7-email arc, operations checklist, metrics
+│   └── lead-product-teardown.md  ← the free lead product (3-email mini-course + 10-point checklist)
+├── 05-tracks/                      ← 3 standalone sellable bundles ($199 each), one archetype apiece
+│   ├── README.md                  ← bundle index and the honest case for the full course
+│   └── {on-device-app,spec-driven-saas,expertise-product}/
+│                                   ← README · syllabus · sales-page · pricing · bundle-map
+└── 06-production/                  ← how the package is built and verified (instructor-facing)
+    ├── MILESTONES.md              ← public roadmap mirroring the GitHub milestones/issues
+    ├── slides/aps.css             ← shared Marp theme (`@theme aps`)
+    ├── slides/build.sh · Makefile ← render/validate every deck (HTML/PDF)
+    ├── slides/deck_lint.py        ← enforces bullets, per-slide notes, proof slide
+    ├── verify.py                  ← artifacts, bands, rubrics, bundles, 900+ pointers
+    ├── build-glossary.py          ← merges the nine module glossaries
+    ├── glossary-master.md         ← 137 merged terms (13 shared across modules)
+    ├── certificate.md             ← completion certificate + issuance rules (SHA-bounded)
+    └── welcome-packet.md          ← onboarding emails, environment checklist, help routing
 ```
 
 ## How to use this package
 
 **To understand the course:** read `01-design/positioning.md`, then `01-design/curriculum.md`.
 
-**To teach it:** start with `02-instructor/instructor-guide.md`. Each module folder contains the master lesson (readable as-is, or record each `M#.#` segment as a 5–15 minute video), the lab (with objective acceptance checklists), and the quiz (with answer keys).
+**To teach it:** start with `02-instructor/instructor-guide.md`. Each module folder carries **eight artifacts**: the lesson (readable as-is, or record each `M#.#` segment from `video-scripts.md`), the lab, the quiz, a Marp slide deck with speaker notes on every slide, lab solutions with expected output, a printable handout, a 90-minute facilitation kit, a glossary, per-lab rubrics, and accessibility/transcript notes. Render the decks with `make -C 06-production/slides html`; validate them with `make -C 06-production/slides check`.
+
+**To verify the package:** `python3 06-production/verify.py` checks all 72 module artifacts against the length bands, sums every rubric's weights, confirms the three bundles ship their five files, lints all nine decks, and resolves every repo file pointer (900+). It is the same evidence discipline the course teaches, applied to the course.
+
+**To sell one archetype instead of all three:** `05-tracks/` holds three standalone bundles at $199 (on-device app · spec-driven SaaS · expertise) with their own syllabus, sales page, pricing, and bundle map. Each states plainly that the $399 full course is the better value.
+
+**To sell it:** `04-sales/` is publish-ready: landing-page copy, pricing rationale grounded in 2025–26 platform benchmarks, and a full launch plan with the 7-email arc.
 
 **To run the labs yourself:** the Module 2/3 labs use `03-content/m02-ondevice-app/tinycopilot/` — a complete, tested Python reference implementation that mirrors ListenToMe's architecture (see its README). **Verified status as shipped:** `make lab-m2` → 191 passed, 100% coverage (floor 90 enforced); `make lab-m3` → 49 passed; `make e2e` → 2 passed against a live Ollama daemon; `make demo` → three role outputs. Requirements: Python 3.11+ (TinyCopilot itself also runs on 3.10), pytest, httpx, and Ollama (`ollama pull qwen3:0.6b` for a local model).
 
@@ -56,7 +75,9 @@ course/
 
 ## Course at a glance
 
-- **9 modules · 27 lesson segments · 9 labs (incl. the capstone) · 72 quiz questions (8 per module)**
+- **9 modules · 27 lesson segments · 8 module labs (M0–M7) + the M8 capstone · 72 quiz questions (8 per module)**
+- **9 Marp slide decks** (speaker notes on every slide) · **72 module artifacts** · **15 bundle artifacts**
+- **3 sellable track bundles** ($199 each) — see `05-tracks/README.md`
 - Formats: self-paced ($399) or 8-week cohort ($1,490) — see `04-sales/pricing-and-platforms.md`
 - Core labs: Python + Ollama (macOS/Linux/Windows); Swift stretch track maps labs onto the real ListenToMe code
 - Every claim in every file carries a source pointer — the course practices the evidence discipline it teaches
@@ -66,3 +87,24 @@ course/
 - All facts about the three case-study repos were read from the cloned repos in this workspace and carry file pointers; verify before publishing (repos evolve).
 - Market-research claims cite their sources in `00-research/02-course-market-research.md`; stats like completion rates and price bands are industry research, not guarantees.
 - Testimonials do not exist yet: the landing page reserves slots and says so. Run the founding cohort first (see `04-sales/launch-plan.md`).
+- The three track bundles are **subsets**, not independent courses: they sequence this course's modules for one archetype and reuse its artifacts. Each `bundle-map.md` says exactly what is in and out, and each `pricing.md` states that the full course is the better value rather than pretending otherwise.
+- **Length bands were recalibrated, not met by padding.** Six artifacts in the first production pass ran 1–26% over the original estimates; the maxima in `01-design/content-standards.md` were raised to the delivered envelope and the change is recorded there. Minima were untouched.
+
+### Drift the verification pass caught (and fixed)
+
+The expansion ran `06-production/verify.py` and a deck linter over every artifact, and the module
+writers were told to report anything they could not verify. That process found five real errors in
+**already-shipped** content — each one exactly the kind of drift M4 teaches students to hunt:
+
+| Drift | Where | Fix |
+|---|---|---|
+| Field names invented for a release file | `03-content/m00-orientation/lab.md` claimed "five edition fields (site vs slide…)" | Rewritten to the real fields: `version`, `slide_edition`, `fintech_edition`, `questionnaire_edition`, `research_edition` |
+| An off-by-two count presented as fact | M5 lesson said the policy's `admin` class had **80** operations | AST count gives 7/6/2/50/**78** = 143; lesson corrected and the total added |
+| A pointer attributed to the wrong file | M6 lesson placed the `?for=evp` audience views in `briefings/index.md` | Corrected to `ai_qe/index.md:27,29` + `ai_qe/CONTRIBUTING.md:23` |
+| An unmeasured "length check" | Landing page claimed "~2,250 words" in its own authoring note | Measured: 2,251 total / ~1,900 body; corrected in 7 places (and re-measured after the bundle edit) |
+| Prose contradicting the executable spec | M2 lab said the router picks a *distinct* Listener model when ≥3 exist | The Python tests share Listener/Quick; the Swift original differs. Lab now states the divergence explicitly and points at `ModelRanking.swift:76-94` |
+
+Two further "corrections" proposed by writers were **rejected after checking the source**: the
+coverage statuses really are on `coverage.py:18` (as the lesson said), and "Missing review is not
+approval" really is `AGENTS.md` PR rule 4 (as the M4 lesson said). A writer's suggested fix is a
+claim like any other — it carries a pointer or it doesn't get applied.
