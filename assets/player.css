@@ -879,6 +879,20 @@ body.transcript .voice-badge { width: auto; margin: 14px 0 0; }
 .inclusion-chip.is-slice { background: var(--wash); color: var(--proof-ink); border: 1px solid var(--line); }
 .slice-note { margin: 6px 0 0; font-size: var(--d-2); color: var(--proof-ink); }
 
+/* one row per path that shares a module — a module can belong to several, differently */
+.module-paths { display: grid; gap: 1px; margin: 0; padding: 1px; list-style: none;
+  background: var(--line); border-radius: 6px; }
+.path-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px;
+  padding: 11px 14px; background: var(--paper); }
+.path-line-medium { padding: 1px 9px; border-radius: 999px; background: var(--wash);
+  border: 1px solid var(--line); color: var(--teal);
+  font-size: var(--d-1); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.path-line-title { color: var(--navy); font-weight: 650; font-size: var(--d-3);
+  text-decoration: none; border-bottom: 1px solid var(--line); }
+.path-line-title:hover { border-bottom-color: var(--teal); }
+.path-line-note { flex: 1 1 100%; margin: 0; color: var(--ink-soft);
+  font-size: var(--d-2); line-height: 1.5; }
+
 .unit-list { display: grid; gap: 1px; margin: 0; padding: 1px; list-style: none; background: var(--line-soft); border: 1px solid var(--line); border-radius: 6px; }
 .unit { display: flex; align-items: center; gap: 12px; padding: 11px 16px; background: var(--paper); }
 .unit-check { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; cursor: pointer; }
