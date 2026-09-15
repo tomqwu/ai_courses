@@ -327,6 +327,25 @@ def track_units(track: dict, units_by_deck: dict[str, list[dict]]) -> list[dict]
     return out
 
 
+def paths_for_module(deck_id: str, tracks: list[dict] | None = None) -> list[dict]:
+    """Every built track that includes this module, and how it includes it.
+
+    M0 and M1 are shared by all three paths in full; M7 and M8 are sliced into all three, each with
+    a different exclude list. A module page that named only one owner path would misdescribe the
+    other two, so the module page renders one row per path instead of a single "Part of…" line.
+    """
+    out = []
+    for track in (tracks if tracks is not None else TRACKS):
+        if track["status"] != "built":
+            continue
+        if deck_id in track["core"]:
+            out.append({"track": track, "inclusion": "full", "spec": {}})
+        elif deck_id in (track.get("slice") or {}):
+            out.append({"track": track, "inclusion": "slice",
+                        "spec": slice_spec(track, deck_id)})
+    return out
+
+
 def track_minutes(track: dict, units_by_deck: dict[str, list[dict]],
                   seconds: dict[str, float]) -> float:
     """Measured narration seconds for the slide-backed units a path includes."""
@@ -392,8 +411,10 @@ def _doc_page(title: str, description: str, body: str, site_base: str, body_clas
 """
 
 
-def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
-               seconds: dict[str, float], site_base: str, brand: str) -> str:
+def path_cards_html(tracks: list[dict], units_by_deck: dict[str, list[dict]],
+                    seconds: dict[str, float], site_base: str) -> str:
+    """The path chooser. Rendered once and used on both the landing page and the paths page, so the
+    two cannot drift: the landing page is the paths GUI now, not a page that happens to link to it."""
     cards = []
     for track in tracks:
         units = track_units(track, units_by_deck)
@@ -425,6 +446,12 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
     <a class="btn-primary" href="{href}">{target} →</a>
   </div>
 </article>""")
+    return chr(10).join(cards)
+
+
+def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
+               seconds: dict[str, float], site_base: str, brand: str) -> str:
+    cards = path_cards_html(tracks, units_by_deck, seconds, site_base)
 
     total_units = sum(len(u) for u in units_by_deck.values())
     body = f"""<header class="site-header">
@@ -632,13 +659,50 @@ def _module_row(deck: dict, units: list[dict], minutes: float, site_base: str,
 
 
 def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_base: str,
-                brand: str, track: dict | None, text_only: bool) -> str:
-    """Microsoft Learn's module page: objectives, prerequisites, then the ordered unit list."""
+                brand: str, tracks_for: list[dict], text_only: bool) -> str:
+    """Microsoft Learn's module page: objectives, prerequisites, then the ordered unit list.
+
+    `tracks_for` is every built path that includes this module. Modules are shared between paths —
+    M0 and M1 open all three, M7 and M8 are sliced into all three — so the page says so per path
+    rather than claiming a single owner.
+    """
     number = int(NUM.match(deck["id"]).group(1))
     short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
     facts = cover_facts(deck)
     objectives_html = "".join(f"<li>{item}</li>" for item in objectives(deck))
     total = sum(seconds.get(f"{deck['id']}:{u['id']}", 0) for u in units)
+
+    mediums = " · ".join(entry["track"]["medium"] for entry in tracks_for) or "All three types"
+    path_rows = []
+    for entry in tracks_for:
+        track, inclusion, spec = entry["track"], entry["inclusion"], entry["spec"]
+        excluded = spec.get("exclude") or []
+        partial = spec.get("partial") or []
+        if inclusion == "full":
+            chip = '<span class="inclusion-chip is-full">full module</span>'
+            note = "Every unit of this module is in the path."
+        else:
+            chip = '<span class="inclusion-chip is-slice">slice</span>'
+            bits = []
+            if excluded:
+                bits.append("not in this path: " + ", ".join(
+                    html.escape(u["title"]) for u in units if u["id"] in excluded))
+            if partial:
+                bits.append("part only: " + ", ".join(
+                    html.escape(u["title"]) for u in units if u["id"] in partial))
+            note = html.escape(spec.get("note", "")) + (" — " + "; ".join(bits) if bits else "")
+        href = f"{site_base}/{track['page']}" if track.get("page") else f"{site_base}/index.html"
+        path_rows.append(f"""<li class="path-line">
+  <span class="path-line-medium">{html.escape(track['medium'])}</span>
+  <a class="path-line-title" href="{href}">{html.escape(track['title'])}</a>
+  {chip}
+  <span class="path-line-note">{note}</span>
+</li>""")
+    paths_section = f"""<section class="path-section">
+    <h2>Paths through this module</h2>
+    <p class="section-note">{"Shared by " + str(len(tracks_for)) + " of the paths." if len(tracks_for) > 1 else "This module belongs to one path."}</p>
+    <ul class="module-paths">{"".join(path_rows)}</ul>
+  </section>""" if tracks_for else ""
 
     rows = []
     for index, unit in enumerate(units, 1):
@@ -658,9 +722,11 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
   <a class="unit-open" href="{site_base}/{unit['href']}">Open →</a>
 </li>""")
 
-    path_link = (f'<a href="{site_base}/{track["page"]}">{html.escape(track["title"])}</a>'
-                 if track and track.get("page") and track["status"] == "built"
-                 else f'<a href="{site_base}/paths.html">Learning paths</a>')
+    if len(tracks_for) == 1 and tracks_for[0]["track"].get("page"):
+        path_link = (f'<a href="{site_base}/{tracks_for[0]["track"]["page"]}">'
+                     f'{html.escape(tracks_for[0]["track"]["title"])}</a>')
+    else:
+        path_link = f'<a href="{site_base}/paths.html">the learning paths</a>'
     first = units[0]["href"] if units else f"{deck['id']}.html"
 
     body = f"""<header class="site-header">
@@ -671,8 +737,9 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     <p class="eyebrow">Module · {len(units)} units · {fmt_minutes(total)} of narration</p>
     <h1>{html.escape(short)}</h1>
     <p class="site-lede">{html.escape(facts['promise'])}</p>
-    {_at_a_glance([("Path", track["title"] if track else "Full studio course"),
-                   ("Level", track["level"] if track else "Beginner to intermediate"),
+    {_at_a_glance([("Paths", mediums),
+                   ("Level", tracks_for[0]["track"]["level"] if tracks_for
+                    else "Beginner to intermediate"),
                    ("Lesson", facts["lesson_length"]),
                    ("Lab", lab_time(deck["id"]))])}
   </div>
@@ -686,6 +753,7 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     <h2>Prerequisites</h2>
     <p>{html.escape(lab_prereq(deck['id']))}</p>
   </section>
+{paths_section}
   <div class="section-heading">
     <h2>Units in this module</h2>
     <span class="section-note">Work them in order. Each unit opens the deck at its first slide.</span>

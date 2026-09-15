@@ -506,6 +506,36 @@ def check_units() -> list[str]:
                                   if t["status"] == "built" and t["page"]]:
         if not (SITE_ROOT / name).exists():
             problems.append(f"{name}: missing")
+
+    # The landing page is the paths GUI: the chooser comes first, offers every built path, and the
+    # module cards open the path-aware module pages rather than dropping straight into a deck.
+    index_html = (SITE_ROOT / "index.html").read_text(encoding="utf-8")
+    if 'class="path-grid"' not in index_html:
+        problems.append("index.html: no path chooser on the landing page")
+    if index_html.index('class="path-grid"') > index_html.index('class="room-grid"'):
+        problems.append("index.html: the module grid comes before the path chooser")
+    for track in SP.TRACKS:
+        if track["status"] == "built" and track["page"]:
+            if f'href="./{track["page"]}"' not in index_html:
+                problems.append(f"index.html: the chooser does not link {track['page']}")
+    if 'href="./module-m00.html"' not in index_html:
+        problems.append("index.html: module cards do not open the module pages")
+
+    # A module can sit in several paths, each including it differently. The module page must name
+    # every one of them — a page that named a single owner would misdescribe the other paths.
+    for deck_id in B.DECK_IDS:
+        page = SITE_ROOT / f"module-{deck_id}.html"
+        if not page.exists():
+            continue
+        expected = len(SP.paths_for_module(deck_id))
+        got = page.read_text(encoding="utf-8").count('class="path-line"')
+        if got != expected:
+            problems.append(f"module-{deck_id}.html lists {got} paths, expected {expected}")
+    # The shared core must actually be shared: M0/M1/M7/M8 sit in all three paths.
+    for deck_id in ("m00", "m01", "m07", "m08"):
+        if len(SP.paths_for_module(deck_id)) != 3:
+            problems.append(f"{deck_id}: expected in all 3 built paths, "
+                            f"found {len(SP.paths_for_module(deck_id))}")
     return problems
 
 

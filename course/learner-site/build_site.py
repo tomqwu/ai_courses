@@ -528,7 +528,8 @@ shown below in order and remains readable.</p></noscript>
 
 
 def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: str,
-               text_only: bool = False) -> str:
+               text_only: bool = False, path_cards: str = "",
+               module_paths: dict[str, int] | None = None) -> str:
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     cards = []
     grand_total = 0.0
@@ -552,15 +553,21 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
             f'<li><a href="{site_base}/{deck["id"]}.html#{s["id"]}">'
             f'{s["number"]}. {html.escape(s["title"][:64])}</a></li>'
             for s in deck["slides"][:8])
+        # Modules are shared between paths — M0 and M1 open all three — so the card says how many
+        # paths a module belongs to rather than implying it has one home.
+        shared_n = (module_paths or {}).get(deck["id"], 0)
+        shared_chip = (f'<span class="voice-chip is-shared">shared · {shared_n} paths</span>'
+                       if shared_n > 1 else "")
+        module_href = f"{site_base}/module-{deck['id']}.html"
         cards.append(f"""<article class="room-card">
-  <a class="room-cover" href="{site_base}/{deck['id']}.html">
+  <a class="room-cover" href="{module_href}">
     <span class="room-audience">Module {int(deck['id'][1:])} · {len(deck['slides'])} slides</span>
     <h3>{html.escape(short)}</h3>
     <span class="room-number">{f"{len(deck['slides'])} slides" if text_only else f"{int(total // 60)}m {int(total % 60)}s of narration"}</span>
     <span class="room-waves" aria-hidden="true">{waves}</span>
   </a>
   <div class="room-body">
-    <p class="room-meta">{"slides · transcript · print-ready" if text_only else f"{len(entries)} narrated · captions · transcript"} {chip}</p>
+    <p class="room-meta">{"slides · transcript · print-ready" if text_only else f"{len(entries)} narrated · captions · transcript"} {chip} {shared_chip}</p>
     <details><summary>See the slides</summary><ul>{outline}</ul></details>
     <div class="room-actions">
       <a class="btn-primary" href="{site_base}/{deck['id']}.html">Present this deck →</a>
@@ -629,12 +636,19 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     <ul class="site-facts">
 {facts}
     </ul>
-    <p class="header-nav"><a href="{site_base}/paths.html">Browse the four learning paths →</a></p>
   </div>
 </header>
 <main class="site-main">
   <div class="section-heading">
-    <h2>Open a module</h2>
+    <h2>Start with what you want to build</h2>
+    <span class="section-note">Each path teaches one product type end to end. Not sure what a
+      <a href="{site_base}/paths.html">path or a unit</a> is?</span>
+  </div>
+  <div class="path-grid">
+{path_cards}
+  </div>
+  <div class="section-heading">
+    <h2>Or open a single module</h2>
     <span class="section-note">{section_note}</span>
   </div>
   <div class="room-grid">
@@ -698,10 +712,6 @@ def main(argv=None) -> int:
         (target / f"transcript-{deck['id']}.html").write_text(
             transcript_page(deck, manifest, provenance, args.site_base, text_only=args.no_narration),
             encoding="utf-8")
-    (target / "index.html").write_text(
-        index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration),
-        encoding="utf-8")
-
     # ── learning paths ────────────────────────────────────────────────────────────────────────────
     # The Microsoft Learn hierarchy (path -> module -> unit) built on the content that already
     # exists. Paths are built one at a time; `status` on each track decides what gets a real page,
@@ -713,11 +723,12 @@ def main(argv=None) -> int:
     built_tracks = [t for t in SP.TRACKS if t["status"] == "built"]
     built_modules = {d for t in built_tracks for d in list(t["core"]) + list(t.get("slice") or {})}
     for deck_id in sorted(built_modules):
-        owner = next((t for t in built_tracks
-                      if deck_id in t["core"] or deck_id in (t.get("slice") or {})), None)
+        # Every path that includes the module, not a single owner: modules are shared, and a
+        # module page that named one path would misdescribe the other two.
+        tracks_for = SP.paths_for_module(deck_id, built_tracks)
         (target / f"module-{deck_id}.html").write_text(
             SP.module_page(decks_by_id[deck_id], units_by_deck[deck_id], seconds, args.site_base,
-                           BRAND_MARK, owner, args.no_narration), encoding="utf-8")
+                           BRAND_MARK, tracks_for, args.no_narration), encoding="utf-8")
     (target / "paths.html").write_text(
         SP.paths_page(SP.TRACKS, units_by_deck, seconds, args.site_base, BRAND_MARK),
         encoding="utf-8")
@@ -725,6 +736,16 @@ def main(argv=None) -> int:
         (target / track["page"]).write_text(
             SP.path_page(track, decks_by_id, units_by_deck, seconds, args.site_base, BRAND_MARK,
                          built_modules), encoding="utf-8")
+
+    # The landing page is the paths GUI now: the chooser is rendered from the same TRACKS data as
+    # the path pages, so the two cannot disagree about what exists.
+    path_cards = SP.path_cards_html(SP.TRACKS, units_by_deck, seconds, args.site_base)
+    module_paths = {deck_id: len(SP.paths_for_module(deck_id, built_tracks))
+                    for deck_id in DECK_IDS}
+    (target / "index.html").write_text(
+        index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration,
+                   path_cards=path_cards, module_paths=module_paths),
+        encoding="utf-8")
 
     # The transcripts are committed as Markdown, so a check must prove the committed copies still
     # match what the scripts say rather than quietly regenerating them.

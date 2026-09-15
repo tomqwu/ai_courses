@@ -131,9 +131,11 @@ module → unit — with each module following the same unit grammar (Introducti
 → Exercise → Knowledge check → Summary). This course already had every level; it just never surfaced
 one. The 233 slides resolve into **63 units**, and `check_player.py` asserts that partition covers every
 slide exactly once and agrees with the counts written by hand in `05-tracks/` — while the durations it
-shows are measured from the narration manifest rather than estimated. One path (On-Device AI Apps) is
-built end to end as the first slice; the other three link to the module list rather than to a page that
-does not exist yet. See [`course/learner-site/README.md`](course/learner-site/README.md).
+shows are measured from the narration manifest rather than estimated. The landing page opens with the
+path chooser — *what do you want to build: an app, a web service, or a content product?* — and all three
+paths are built end to end. Modules are shared between paths (M0 and M1 open all three; M7 and M8 are
+sliced into all three, differently), and each module page says which paths include it and how.
+See [`course/learner-site/README.md`](course/learner-site/README.md).
 
 ## Verification
 
