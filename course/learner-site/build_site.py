@@ -28,6 +28,14 @@ from captions import words
 from narration_data import (COURSE_DIR, DECK_IDS, EDITION, MANIFEST_PATH, PROVENANCE_PATH,  # noqa: E402
                             SITE_ROOT, load_manifest, load_scripts, read_json, write_json)
 
+# Our decks already write `M0.1 — Real title` and `Type 1 — Real title`, which is exactly the
+# kicker/title split ai_qe uses (`02 / Strategic target state`). Only an em dash splits: an en dash
+# inside "Stages 1–3" must stay part of the label.
+KICKER_RE = re.compile(
+    r"^(M\d+(?:\.\d+)?|Type\s+\d+|Lab\s+M\d+|Segment\s+M\d+(?:\.\d+)?|"
+    r"Stages?\s+\d+\s*[–-]\s*\d+|Proof|Part\s+\d+|Step\s+\d+)\s+—\s+(.+)$")
+DECK_LABEL_RE = re.compile(r"^(M\d+)\s*—\s*(.+)$")
+
 NOTES_RE = re.compile(r"<!--\s*NOTES:(.*?)-->", re.DOTALL)
 DIRECTIVE_RE = re.compile(r"<!--\s*(_class|_footer|_paginate|_header)\s*:\s*([^>]*?)\s*-->")
 FENCE_RE = re.compile(r"^```")
@@ -124,6 +132,25 @@ def render_blocks(lines: list[str]) -> str:
     return "\n".join(out)
 
 
+def module_tag(deck_id: str, label: str) -> str:
+    """`M0 · Orientation` — the standing kicker for slides that carry no section label of their own."""
+    match = DECK_LABEL_RE.match(label.strip())
+    tag, rest = (match.group(1), match.group(2)) if match else (deck_id.upper(), label.strip())
+    rest = rest.strip()
+    if len(rest) > 34 and ":" in rest:
+        rest = rest.split(":")[0].strip()
+    return f"{tag} · {rest}"
+
+
+def split_kicker(title: str, fallback: str) -> tuple[str, str]:
+    """Return (kicker, title) for a slide heading."""
+    match = KICKER_RE.match(title.strip())
+    if match:
+        kicker = re.sub(r"^Segment\s+", "", match.group(1).strip())
+        return kicker, match.group(2).strip()
+    return fallback, title.strip()
+
+
 # ---------------------------------------------------------------- deck parsing
 
 def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
@@ -132,17 +159,30 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
         raise SystemExit(f"{deck_id}: no slides.md found")
     source = matches[0]
     front, slide_texts = split_slides(source.read_text(encoding="utf-8"))
+    label = front.get("title", deck_id.upper())
+    standing = module_tag(deck_id, label)
     slides = []
+    chapter = "Opening"
     for index, raw in enumerate(slide_texts, 1):
         notes_match = NOTES_RE.search(raw)
         notes = notes_match.group(1).strip() if notes_match else ""
         classes = [m.group(2) for m in DIRECTIVE_RE.finditer(raw) if m.group(1) == "_class"]
         body = NOTES_RE.sub("", DIRECTIVE_RE.sub("", raw)).strip()
         title_match = re.search(r"^#{1,4}\s+(.*)$", body, re.MULTILINE)
-        title = title_match.group(1).strip() if title_match else f"Slide {index}"
-        rendered = render_blocks(body.splitlines())
-        # Point aria-labelledby at a real element: give the slide's first heading the id.
-        rendered = re.sub(r"<(h[1-4])>", f'<\\1 id="slide-{index}-title">', rendered, count=1)
+        raw_title = title_match.group(1).strip() if title_match else f"Slide {index}"
+        # The heading becomes the slide's own chrome, so keep it out of the rendered body.
+        content_body = re.sub(r"^#{1,4}\s+.*$", "", body, count=1, flags=re.MULTILINE).strip()
+        rendered = render_blocks(content_body.splitlines())
+        cover = index == 1
+        if cover:
+            # The opening slide is a title slide: the deck's own name, not a section label.
+            deck_match = DECK_LABEL_RE.match(raw_title)
+            kicker = f"AI Product Studio · Module {int(deck_id[1:])} of {len(DECK_IDS)}"
+            title = deck_match.group(2).strip() if deck_match else raw_title
+        else:
+            kicker, title = split_kicker(raw_title, standing)
+            if re.fullmatch(r"M\d+\.\d+", kicker):
+                chapter = kicker            # a segment heading opens a new chapter, carried forward
         # The approved narration is the source of truth for anything spoken; the deck Markdown is
         # the source of truth for what is displayed.
         script_text = ((scripts or {}).get(deck_id, {}).get("slides", {})
@@ -151,6 +191,10 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
             "id": f"slide-{index}",
             "number": index,
             "title": title,
+            "full_title": raw_title,
+            "kicker": kicker,
+            "chapter": chapter,
+            "cover": cover,
             "classes": classes,
             "notes": notes,
             "html": rendered,
@@ -158,7 +202,8 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
         })
     return {
         "id": deck_id,
-        "label": front.get("title", deck_id.upper()),
+        "label": label,
+        "module_tag": standing,
         "source": str(source.relative_to(COURSE_DIR)),
         "slides": slides,
     }
@@ -175,8 +220,12 @@ def _deck_voice(deck_id: str, manifest: dict, provenance: dict) -> tuple[str, in
 
 
 def _slide_heading(deck: dict, slide: dict) -> str:
-    """Slide 1 is usually titled after the deck itself; do not say it twice."""
-    title = slide["title"].strip()
+    """Slide 1 is usually titled after the deck itself; do not say it twice.
+
+    Uses the unsplit heading: the transcript has no kicker column, so "M0.1 — Three archetypes"
+    must survive here even though the slide chrome separates the two.
+    """
+    title = slide.get("full_title", slide["title"]).strip()
     if title.split("—")[-1].strip().casefold() == deck["label"].split("—")[-1].strip().casefold():
         return f"Slide {slide['number']}"
     return f"Slide {slide['number']} — {title}"
@@ -242,12 +291,11 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
     rows = []
     for slide in deck["slides"]:
         entry = entries.get(slide["id"])
-        meta = (f"{float(entry.get('duration', 0) or 0):.1f}s · {entry.get('caption_method', '')}"
-                if entry else "not recorded")
+        meta = (f'{slide["kicker"]} · {float(entry.get("duration", 0) or 0):.1f}s · '
+                f'{entry.get("caption_method", "")}' if entry else f'{slide["kicker"]} · not recorded')
         rows.append(
             f'<section class="transcript-slide" id="{slide["id"]}">'
-            f'<h2><a href="{site_base}/{deck["id"]}.html#{slide["id"]}">'
-            f'{html.escape(_slide_heading(deck, slide))}</a></h2>'
+            f'<h2><a href="{site_base}/{deck["id"]}.html#{slide["id"]}">{_slide_heading(deck, slide)}</a></h2>'
             f'<p class="transcript-meta">{html.escape(meta)}</p>'
             f'<blockquote>{inline(slide["script_text"])}</blockquote></section>')
 
@@ -266,16 +314,17 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(deck['label'])} — transcript</title>
+<link rel="preload" href="{site_base}/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{site_base}/assets/player.css">
 </head>
 <body class="transcript">
-<header class="index-header">
-  <p class="deck-kicker"><a href="{site_base}/index.html">AI Product Studio</a> · Module {deck['id'][1:]}</p>
+<header class="transcript-head">
+  <p class="kicker"><a href="{site_base}/index.html">AI Product Studio</a> · {html.escape(deck['module_tag'])}</p>
   <h1>{html.escape(deck['label'])} — transcript</h1>
   <p>{len(deck['slides'])} slides · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s
-     · <a href="{site_base}/{deck['id']}.html">open the narrated deck</a></p>
+     · <a href="{site_base}/{deck['id']}.html">open the narrated deck →</a></p>
+  {note}
 </header>
-{note}
 <main>
 {chr(10).join(rows)}
 </main>
@@ -284,38 +333,93 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
 """
 
 
-def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None) -> str:
-    classes = " ".join(["slide"] + slide["classes"])
+BRAND_MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">'
+              '<rect width="32" height="32" rx="7" fill="#096d69"/>'
+              '<path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#85d5c4" stroke-width="2.3" '
+              'stroke-linejoin="round" stroke-linecap="round"/>'
+              '<path d="M12.3 18.3h7.4" stroke="#fcfcfa" stroke-width="2.3" stroke-linecap="round"/>'
+              '</svg>')
+
+
+def slide_footer(deck: dict, slide: dict, site_base: str) -> str:
+    """One footer for every slide: what this is, where to read it, and where you are."""
+    total = len(deck["slides"])
+    return (f'<footer class="slide-footer">'
+            f'<span class="deck-tag">AI Product Studio <span class="footer-divider">/</span> '
+            f'{html.escape(deck["module_tag"])}</span>'
+            f'<span class="footer-divider" aria-hidden="true">/</span>'
+            f'<a href="{site_base}/transcript-{deck["id"]}.html#{slide["id"]}">Slide transcript</a>'
+            f'<span class="footer-divider" aria-hidden="true">/</span>'
+            f'<span class="slide-number" aria-label="Slide {slide["number"]} of {total}">'
+            f'{slide["number"]:02d} / {total:02d}</span></footer>')
+
+
+def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
+                site_base: str, cover_note: str = "") -> str:
+    classes = ["slide"]
+    if slide["cover"]:
+        classes.append("slide-cover")
+    elif "proof" in slide["classes"]:
+        classes.append("slide-proof")          # the decks' evidence slides get a change of rhythm
     hidden = "" if slide["number"] == 1 else " hidden"
     media = ""
     if manifest_entry:
         media = (f' data-audio="{html.escape(manifest_entry["audio"], quote=True)}"'
                  f' data-captions="{html.escape(manifest_entry["captions"], quote=True)}"'
                  f' data-duration="{manifest_entry.get("duration", "")}"')
-    return (f'<section class="{classes}" id="{slide["id"]}" data-number="{slide["number"]}"'
+    content = f'<div class="slide-content">{slide["html"]}</div>'
+    body = (f'<div class="cover-grid">{content}<aside class="cover-note">{cover_note}</aside></div>'
+            if slide["cover"] else content)
+    # Speaker notes travel with the slide so the drawer can read them without a second request.
+    notes = html.escape(slide["notes"]) if slide["notes"] else ""
+    return (f'<section class="{" ".join(classes)}" id="{slide["id"]}" data-number="{slide["number"]}"'
+            f' data-chapter="{html.escape(slide["chapter"], quote=True)}"'
             f'{media}{hidden} aria-roledescription="slide" aria-labelledby="{slide["id"]}-title">'
-            f'<div class="slide-content">{slide["html"]}</div>'
-            f'<details class="slide-notes"><summary>Speaker notes</summary>'
-            f'<div>{inline(slide["notes"]) if slide["notes"] else "No notes for this slide."}</div></details>'
+            f'<p class="kicker">{html.escape(slide["kicker"])}</p>'
+            f'<h2 id="{slide["id"]}-title">{inline(slide["title"])}</h2>'
+            f'{body}'
+            f'{slide_footer(deck, slide, site_base)}'
+            f'<div class="slide-notes-source" hidden>{notes}</div>'
             f'</section>')
 
 
 def page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
     deck_manifest = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
-    bases = {prov_by_audio.get(entry.get("audio"), {}).get("basis") for entry in deck_manifest.values()}
     preview_count = sum(1 for e in deck_manifest.values()
                         if prov_by_audio.get(e.get("audio"), {}).get("basis") == "sentence-measured-preview")
     mixed = 0 < preview_count < len(deck_manifest)
     is_preview = preview_count > 0
-    voice = (list(deck_manifest.values()) or [{}])[0].get("voice", manifest.get("voice", ""))
     total = round(sum(float(e.get("duration", 0) or 0) for e in deck_manifest.values()), 1)
     recorded = len(deck_manifest)
 
-    sections = "\n".join(slide_shell(deck, slide, deck_manifest.get(slide["id"])) for slide in deck["slides"])
+    if is_preview and mixed:
+        voice_chip = f'<span class="voice-chip is-preview">{preview_count} of {recorded} preview voice</span>'
+    elif is_preview:
+        voice_chip = '<span class="voice-chip is-preview">preview voice</span>'
+    else:
+        voice_chip = '<span class="voice-chip is-release">release voice</span>'
+
+    cover_note = (f'<strong>{len(deck["slides"])} slides · {recorded} narrated</strong>'
+                  f'<small>{int(total // 60)}m {int(total % 60)}s of narration with captions and transcript.'
+                  f'{" Free preview voice — the release recording is pending." if is_preview else ""}'
+                  f'</small>')
+    sections = "\n".join(
+        slide_shell(deck, slide, deck_manifest.get(slide["id"]), site_base, cover_note)
+        for slide in deck["slides"])
+
+    # Group the picker by chapter, the way the deck is actually structured.
+    groups: list[tuple[str, list[dict]]] = []
+    for slide in deck["slides"]:
+        if not groups or groups[-1][0] != slide["chapter"]:
+            groups.append((slide["chapter"], []))
+        groups[-1][1].append(slide)
     options = "\n".join(
-        f'<option value="{s["id"]}">{s["number"]}. {html.escape(s["title"][:70])}</option>'
-        for s in deck["slides"])
+        f'<optgroup label="{html.escape(chapter)}">' + "".join(
+            f'<option value="{s["id"]}">{s["number"]}. {html.escape(s["title"][:70])}</option>'
+            for s in slides) + '</optgroup>'
+        for chapter, slides in groups)
+
     if not is_preview:
         badge = ""
     elif mixed:
@@ -324,45 +428,58 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
                  f'The rest were recorded separately; each slide\'s transcript names its voice.</p>')
     else:
         badge = ('<p class="voice-badge" role="note">Preview narration — a free local voice, not the '
-                 'finished release recording.</p>')
+                 'finished release recording. The transcript is the approved narration and does not '
+                 'change when the release voice is recorded.</p>')
     return f"""<!doctype html>
-<html lang="en">
+<html lang="en" class="js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(deck['label'])} — AI Product Studio</title>
+<link rel="preload" href="{site_base}/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{site_base}/assets/player.css">
 </head>
-<body data-narration-manifest="{site_base}/narration.json" data-narration-deck="{deck['id']}"
-      data-site-base="{site_base}" data-voice="{'preview' if is_preview else 'release'}">
+<body class="deck-page" data-narration-manifest="{site_base}/narration.json"
+      data-narration-deck="{deck['id']}" data-site-base="{site_base}"
+      data-voice="{'preview' if is_preview else 'release'}">
 <a class="skip-link" href="#slides">Skip to slides</a>
 <header class="deck-header">
-  <div class="deck-heading">
-    <p class="deck-kicker"><a href="{site_base}/index.html">AI Product Studio</a> · Module {deck['id'][1:]}</p>
-    <h1>{html.escape(deck['label'])}</h1>
-    <p class="deck-meta">{len(deck['slides'])} slides · {recorded} narrated · {int(total // 60)}m {int(total % 60)}s
-      {'· <span class="meta-preview">preview voice</span>' if is_preview else ''}</p>
-  </div>
+  <a class="deck-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">{html.escape(deck['module_tag'])}</span></a>
+  <span class="deck-audience">{len(deck['slides'])} slides · {recorded} narrated · {int(total // 60)}m {int(total % 60)}s</span>
   <div class="deck-tools">
-    <button type="button" data-narration-start hidden aria-pressed="false">▶ Play narration</button>
+    <button type="button" class="tool-primary" data-narration-start hidden aria-pressed="false">▶ Play narration</button>
+    <button type="button" data-present aria-pressed="false" title="Full screen presentation">Present ↗</button>
+    <button type="button" data-reading aria-pressed="false" title="Show every slide as a document">Read all</button>
+    <button type="button" data-notes title="Presenter notes for this slide">Sources &amp; notes</button>
     <a class="tool-link" href="{site_base}/transcript-{deck['id']}.html">Transcript</a>
-    <a class="tool-link" href="{site_base}/assets/audio/{EDITION}/{deck['id']}/slide-1.vtt" download>Captions</a>
+    {voice_chip}
   </div>
 </header>
 {badge}
 <main id="slides" class="slides" tabindex="-1" aria-label="{html.escape(deck['label'])}">
+<h1 class="sr-only">{html.escape(deck['label'])}</h1>
 {sections}
 </main>
 <nav class="deck-navigation" aria-label="Slide navigation">
-  <button type="button" data-nav="prev">‹ Previous</button>
-  <label class="deck-picker"><span class="sr-only">Choose a slide</span>
-    <select data-slide-picker>{options}</select></label>
-  <button type="button" data-nav="next">Next ›</button>
+  <div class="deck-nav-controls">
+    <button type="button" data-nav="prev" aria-label="Previous slide">←</button>
+    <button type="button" data-nav="next" aria-label="Next slide">→</button>
+  </div>
   <p class="slide-status" role="status" aria-live="polite" aria-atomic="true"></p>
-  <p class="deck-message" role="status"></p>
+  <label class="slide-picker-label">Go to slide
+    <select data-slide-picker aria-label="Go to slide">{options}</select></label>
 </nav>
+<p class="deck-message" role="status"></p>
+<dialog class="deck-drawer" aria-labelledby="drawer-title">
+  <div class="drawer-heading">
+    <h2 id="drawer-title">Speaker notes</h2>
+    <button type="button" data-close-drawer aria-label="Close notes">Close ×</button>
+  </div>
+  <p class="drawer-meta" data-drawer-meta></p>
+  <div class="drawer-notes" data-drawer-notes></div>
+</dialog>
 <noscript><style>.slide[hidden]{{display:block}}</style>
-<p class="noscript">JavaScript is off, so narration and slide navigation are disabled. Every slide is
+<p class="no-script">JavaScript is off, so narration and slide navigation are disabled. Every slide is
 shown below in order and remains readable.</p></noscript>
 <script src="{site_base}/assets/narration-media.js" defer></script>
 <script src="{site_base}/assets/player.js" defer></script>
@@ -381,48 +498,90 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
         grand_total += total
         preview = any(prov_by_audio.get(e.get("audio"), {}).get("basis") == "sentence-measured-preview"
                       for e in entries.values())
-        cards.append(f"""<li class="deck-card">
-  <a href="{site_base}/{deck['id']}.html">
-    <span class="card-kicker">Module {deck['id'][1:]}</span>
-    <strong>{html.escape(deck['label'])}</strong>
-    <span class="card-meta">{len(deck['slides'])} slides · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s{' · preview voice' if preview else ''}</span>
+        if preview:
+            chip = '<span class="voice-chip is-preview">preview voice</span>'
+        else:
+            chip = '<span class="voice-chip is-release">release voice</span>'
+        short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
+        # A small waveform motif: one bar per chapter, so the cover is not a flat block.
+        waves = "".join(
+            f'<span style="height:{h}px"></span>' for h in (6, 11, 16, 9, 14, 7, 12))
+        outline = "".join(
+            f'<li><a href="{site_base}/{deck["id"]}.html#{s["id"]}">'
+            f'{s["number"]}. {html.escape(s["title"][:64])}</a></li>'
+            for s in deck["slides"][:8])
+        cards.append(f"""<article class="room-card">
+  <a class="room-cover" href="{site_base}/{deck['id']}.html">
+    <span class="room-audience">Module {int(deck['id'][1:])} · {len(deck['slides'])} slides</span>
+    <h3>{html.escape(short)}</h3>
+    <span class="room-number">{int(total // 60)}m {int(total % 60)}s of narration</span>
+    <span class="room-waves" aria-hidden="true">{waves}</span>
   </a>
-</li>""")
+  <div class="room-body">
+    <p class="room-meta">{len(entries)} narrated · captions · transcript {chip}</p>
+    <details><summary>See the slides</summary><ul>{outline}</ul></details>
+    <div class="room-actions">
+      <a class="btn-primary" href="{site_base}/{deck['id']}.html">Present this deck →</a>
+      <a href="{site_base}/transcript-{deck['id']}.html">Read the transcript</a>
+    </div>
+  </div>
+</article>""")
 
     all_recorded = sum(len((manifest.get("decks", {}).get(d, {}) or {}).get("slides", {})) for d in DECK_IDS)
     all_slides = sum(len(d["slides"]) for d in decks)
     status = ("Every slide is narrated." if all_recorded >= all_slides else
-              f"{all_recorded} of {all_slides} slides narrated so far. "
-              "Generate the rest with <code>make narration</code>.")
+              f"{all_recorded} of {all_slides} slides narrated so far.")
     return f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Product Studio — narrated course</title>
+<meta name="description" content="Build, ship and sell three kinds of AI product. Nine narrated modules with captions and transcripts.">
+<link rel="preload" href="{site_base}/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{site_base}/assets/player.css">
 </head>
 <body class="index">
-<header class="index-header">
-  <h1>AI Product Studio</h1>
-  <p>Build, ship and sell three kinds of AI product. Nine modules, narrated, with captions and transcripts.</p>
-  <p class="index-status">{status} Total listening time: {int(grand_total // 60)} minutes.</p>
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">Course</span></a>
+    <p class="eyebrow">Nine modules · 233 slides</p>
+    <h1>Build, ship and sell three kinds of AI product.</h1>
+    <p class="site-lede">Every module is narrated slide by slide, with captions, a readable transcript
+      and a deck you can present. Built from three production repositories, and verified with the same
+      evidence discipline it teaches.</p>
+    <ul class="site-facts">
+      <li>9 modules · 233 slides</li>
+      <li>{int(grand_total // 60)} minutes of narration</li>
+      <li>Captions on every slide</li>
+      <li>{status}</li>
+    </ul>
+  </div>
 </header>
-<main>
-  <ol class="deck-list">
+<main class="site-main">
+  <div class="section-heading">
+    <h2>Open a module</h2>
+    <span class="section-note">Each deck plays one slide at a time. Press play when you are ready.</span>
+  </div>
+  <div class="room-grid">
 {chr(10).join(cards)}
-  </ol>
-  <section class="index-notes">
+  </div>
+  <section class="how-to">
     <h2>How to use this site</h2>
     <ul>
-      <li>Every deck plays slide by slide. Narration never autoplays — press play when you are ready.</li>
-      <li>Captions are on by default and can be turned off; the transcript is one click away on every slide.</li>
-      <li>Prefer reading? Every deck has a <strong>Transcript</strong> link in its toolbar, and the
+      <li>Narration never autoplays — press <strong>Play narration</strong> on any deck.</li>
+      <li>Captions are on by default. The full transcript is behind <strong>Transcript</strong>, and the
           <a href="{site_base}/transcripts/ALL.md">complete transcript</a> covers all nine modules in one file.</li>
-      <li>Keyboard: <kbd>→</kbd>/<kbd>Space</kbd> next, <kbd>←</kbd> previous, <kbd>Home</kbd>/<kbd>End</kbd> first/last, <kbd>Esc</kbd> close.</li>
-      <li>The speaker notes under each slide are the presenter version; the narration is the learner version.</li>
+      <li><strong>Present ↗</strong> goes full screen for a room; <strong>Read all</strong> turns the deck
+          into one scrolling document; <strong>Sources &amp; notes</strong> opens the presenter notes.</li>
+      <li>Keyboard: <kbd>→</kbd>/<kbd>Space</kbd> next, <kbd>←</kbd> previous, <kbd>Home</kbd>/<kbd>End</kbd>
+          first/last, <kbd>Esc</kbd> close.</li>
+      <li>Printing a deck prints one 16:9 slide per page.</li>
     </ul>
   </section>
+  <p class="index-footnote">Speaker notes are the presenter's version; the narration is the learner's.
+    Recordings currently use a free preview voice and say so wherever they appear — the released voice
+    is recorded separately and the words do not change.</p>
 </main>
 </body>
 </html>

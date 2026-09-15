@@ -21,7 +21,30 @@ recordings is still fully readable, and the player says so instead of failing.
 | `narration.json` | `06-production/narration/manifest.json` | No — copied at build time |
 | `assets/audio/…` | `generate_narration.py` | No — generated (see the narration README) |
 | `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
+| `assets/fonts/source-sans-3.woff2` | Source Sans 3, SIL OFL 1.1 (licence travels with it) | **Yes** |
 | `build_site.py`, `check_player.py` | hand-written | **Yes** |
+
+## Design system
+
+The presentation layer is ported from **ai_qe**, the third case study, because that site is the one
+this course holds up as its own standard for publishing claims a skeptic can audit. What was borrowed,
+and what was deliberately changed, is written down rather than implied:
+
+| Borrowed | Detail |
+|---|---|
+| Typeface | Source Sans 3, self-hosted `woff2`, `font-display: swap`, preloaded |
+| Palette | navy `#152e40` · teal `#096d69` · mint `#85d5c4` · ink `#405563` · paper `#fcfcfa` on `#eaf0ec` |
+| The 16:9 master | `--frame-width: min(100vw - 32px, (100dvh - chrome - narration) * 16/9)`, `.slide { aspect-ratio: 16/9 }` |
+| Container-query type | slide type is sized in `cqw`, so it scales with the frame instead of the viewport |
+| Kicker + title | `M0.1 — Three archetypes` renders as kicker `M0.1` and title `Three archetypes`, exactly ai_qe's `02 / Strategic target state` |
+| Source footer | every slide carries a footer with the deck tag, a transcript link and `NN / NN` |
+| Modes | presentation (full screen), reading view, notes drawer, one 16:9 slide per printed page |
+| Chapter grouping | `data-chapter` per slide; the picker is grouped with `<optgroup>` |
+
+Changed for this course: proof slides (`<!-- _class: proof -->`) get a dark, accented treatment so the
+evidence slides change the deck's rhythm; the vocabulary is limited to what these decks contain
+(bullets, tables, code, takeaways, pillars, metrics); and the honesty badge for the preview voice keeps
+its own light-theme styling because it must be legible wherever it appears.
 
 ## Transcripts
 
@@ -49,6 +72,38 @@ Transcripts verified: 10 documents match the approved scripts (22,239 words)
 ```
 
 ## Page structure
+
+Each deck page is a 48px header, the 16:9 frame, a fixed navigation strip, and a notes dialog.
+
+```
+deck page
+├── header        brand · module · slide meta · Play narration · Present ↗ · Read all
+│                 Sources & notes · Transcript · voice chip
+├── main.slides   one <section class="slide"> per slide
+│                 ├── .kicker      M0.1, Type 1, Lab M0 (falls back to "M0 · Orientation")
+│                 ├── h2#slide-N-title
+│                 ├── .slide-content
+│                 └── footer        deck tag / slide transcript / 01 / 19
+├── nav           ← → · live status · chapter-grouped slide picker
+└── dialog        speaker notes for the current slide
+```
+
+Slide variants: `slide-cover` (slide 1, always), `slide-proof` (from `_class: proof`).
+
+### Modes
+
+| Mode | Control | Behaviour |
+|---|---|---|
+| One slide at a time | default | `goTo()` hides every other slide; the narration panel sits below the frame |
+| Presentation | **Present ↗** or <kbd>P</kbd> | full screen, dark chrome, trimmed header; <kbd>Esc</kbd> leaves it |
+| Reading | **Read all** | every slide as one scrolling document, 1200px measure |
+| Notes | **Sources & notes** or <kbd>N</kbd> | dialog with the current slide's presenter notes |
+| Print | <kbd>⌘P</kbd> | one 16:9 slide per page (`@page 13.333in 7.5in`) |
+
+A deck without JavaScript still shows every slide in order, and the reading view has a CSS fallback so
+it works even if the script never runs.
+
+### Other pages
 
 Every generated deck page is:
 
@@ -101,6 +156,37 @@ Slides after the first are `hidden` so the page does not flash 233 slides before
 * Print output contains every slide, without the player chrome.
 
 ## Verifying the site
+
+`check_player.py` does two things: it drives the player's behaviour, and it **measures the rendered
+frame** rather than trusting the stylesheet. The second part exists because a design port can look
+right in source and still render wrong — and it caught exactly that during this work (the `@font-face`
+URL was copied from ai_qe's `/assets/css/` layout while our CSS sits in `/assets/`, so the font 404'd
+and silently fell back).
+
+The probe loads the deck in a same-origin iframe at a fixed 1600x1000 viewport, then asserts geometry
+and interaction:
+
+```
+$ python3 learner-site/check_player.py --deck m06 --measure
+{
+  "slideWidth": 1557, "slideHeight": 876, "ratio": 1.778, "aspectRatio": "16 / 9",
+  "overflowing": false,
+  "bodyFont": "\"Source Sans 3\", ...", "fontLoaded": true, "fontsStatus": "loaded",
+  "kicker": "AI Product Studio · Module 6 of 9",
+  "title": "The Expertise Product: Evidence, Routing, Editions",
+  "footer": "AI Product Studio / M6 · The Expertise Product / Slide transcript / 01 / 28",
+  "panelHeight": "124px", "coverSlide": true,
+  "chapters": 4, "optgroups": 4, "titleIds": 28, "footerLinks": 28,
+  "presentMode": true, "readingMode": true, "slidesVisibleWhileReading": 28,
+  "backToOneSlide": 1, "drawerOpen": true, "drawerHasNotes": true, "drawerClosed": true
+}
+```
+
+So every deck is checked for: the frame really is 16:9 and does not overflow, the typeface actually
+loaded, the kicker/title/footer exist on the current slide, the panel's height was given back to the
+frame, every slide has an anchored title and a transcript link, the picker is chapter-grouped, and
+Present / Read all / Sources & notes all change state correctly.
+
 
 ```bash
 python3 course/learner-site/check_player.py        # headless Chrome, no npm install

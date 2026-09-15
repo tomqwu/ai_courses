@@ -20,7 +20,7 @@ This repository is the product. The three repositories the course is built from 
 | **Understand the design** | [`course/01-design/positioning.md`](course/01-design/positioning.md) → [`curriculum.md`](course/01-design/curriculum.md) |
 | **Sell it** | [`course/04-sales/`](course/04-sales/) — publish-ready landing page, pricing, launch plan |
 | **Sell one archetype** | [`course/05-tracks/`](course/05-tracks/) — three standalone $199 bundles |
-| **Verify it** | `make -C course check` |
+| **Verify it** | `make -C course check` (or `bash course/check.sh`) |
 | **See the whole map** | [`course/README.md`](course/README.md) — the detailed package map |
 
 ## Repository layout
@@ -80,6 +80,13 @@ make -C course test                # 45 unit tests (caption engine + TTS provide
 make -C course check               # the full gate — see below
 ```
 
+`make` on macOS is itself an Xcode shim and refuses to run until you accept the Xcode licence
+(`sudo xcodebuild -license accept`). The gate therefore also runs without it:
+
+```bash
+bash course/check.sh               # identical steps, no make required
+```
+
 Recording the release voice needs an ElevenLabs key and spends real quota:
 
 ```bash
@@ -104,7 +111,9 @@ validate_narration                 233/233 recordings: exists, duration ±0.2s, 
                                    captions == transcript == approved script word for word
 transcripts                        10 documents match the approved scripts
 build_site --check                 9 decks built; fails if a committed transcript is stale
-check_player --all                 headless browser: panel visible, captions parsed, deep links
+check_player --all                 headless browser: the 16:9 frame is measured (ratio,
+                                   overflow, font loaded), panel visible, captions
+                                   parsed, deep links, Present/Read all/notes all work
 verify.py                          artifacts · rubrics · bundles · decks · sales claims ·
                                    narration contract · learner site · 1,048 file pointers
 ```

@@ -31,6 +31,13 @@
     status: document.querySelector('.slide-status'),
     message: document.querySelector('.deck-message'),
     nav: document.querySelector('.deck-navigation'),
+    present: document.querySelector('[data-present]'),
+    reading: document.querySelector('[data-reading]'),
+    notes: document.querySelector('[data-notes]'),
+    drawer: document.querySelector('.deck-drawer'),
+    drawerMeta: document.querySelector('[data-drawer-meta]'),
+    drawerNotes: document.querySelector('[data-drawer-notes]'),
+    closeDrawer: document.querySelector('[data-close-drawer]'),
   };
 
   let entries = {};
@@ -164,8 +171,9 @@
     stop();
     cancelAdvance();
     index = clamped;
+    const reading = body.classList.contains('reading-view');
     slides.forEach((slide, i) => {
-      slide.hidden = i !== index;
+      slide.hidden = reading ? false : i !== index;
       if (i === index) {
         slide.setAttribute('aria-current', 'true');
         const title = slide.querySelector('h1, h2, h3')?.textContent?.trim()
@@ -411,6 +419,66 @@
     dialog.showModal();
   });
 
+  /* ------------------------------------------------- present, read, notes */
+
+  // Presentation mode: full screen, chrome trimmed, the slide centred. The frame maths in the
+  // stylesheet already give back the narration panel's height, so the slide stays 16:9 either way.
+  async function enterPresentation() {
+    body.classList.add('presentation-mode');
+    if (els.present) els.present.setAttribute('aria-pressed', 'true');
+    try {
+      if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch (_) { /* full screen is a bonus; the mode still applies without it */ }
+    announce('Presentation mode. Press Escape to leave.');
+  }
+
+  function leavePresentation() {
+    body.classList.remove('presentation-mode');
+    if (els.present) els.present.setAttribute('aria-pressed', 'false');
+  }
+
+  function togglePresentation() {
+    if (body.classList.contains('presentation-mode')) leavePresentation(); else enterPresentation();
+  }
+
+  if (els.present) els.present.addEventListener('click', togglePresentation);
+  document.addEventListener('fullscreenchange', () => {
+    // Leaving full screen with Esc must not strand the page in presentation styling.
+    if (!document.fullscreenElement) leavePresentation();
+  });
+
+  function setReading(on) {
+    body.classList.toggle('reading-view', on);
+    if (els.reading) els.reading.setAttribute('aria-pressed', String(on));
+    goTo(index, { scroll: false });
+    announce(on ? 'Reading view: every slide is shown.' : 'One slide at a time.');
+  }
+
+  if (els.reading) els.reading.addEventListener('click', () => setReading(!body.classList.contains('reading-view')));
+
+  function openNotes() {
+    if (!els.drawer || !slides[index]) return;
+    const slide = slides[index];
+    const source = slide.querySelector('.slide-notes-source');
+    const notes = source ? source.textContent.trim() : '';
+    if (els.drawerMeta) {
+      const heading = slide.querySelector('h2');
+      els.drawerMeta.textContent = [heading && heading.textContent.trim(),
+                                    `Slide ${index + 1} of ${slides.length}`]
+        .filter(Boolean).join(' · ');
+    }
+    if (els.drawerNotes) {
+      els.drawerNotes.textContent = notes || 'No speaker notes for this slide.';
+      els.drawerNotes.classList.toggle('drawer-empty', !notes);
+    }
+    els.drawer.showModal();
+  }
+
+  if (els.notes) els.notes.addEventListener('click', openNotes);
+  if (els.closeDrawer) els.closeDrawer.addEventListener('click', () => els.drawer.close());
+
   document.addEventListener('keydown', event => {
     if (document.querySelector('dialog[open]')) return;
     if (event.metaKey || event.ctrlKey || event.altKey) return;
@@ -420,6 +488,9 @@
     else if (event.key === 'ArrowLeft' || event.key === 'PageUp') { move(-1); event.preventDefault(); }
     else if (event.key === 'Home') { goTo(0); event.preventDefault(); }
     else if (event.key === 'End') { goTo(slides.length - 1); event.preventDefault(); }
+    else if (event.key === 'p' || event.key === 'P') { togglePresentation(); event.preventDefault(); }
+    else if (event.key === 'n' || event.key === 'N') { openNotes(); event.preventDefault(); }
+    else if (event.key === 'Escape') { leavePresentation(); }
   });
 
   window.addEventListener('beforeprint', () => slides.forEach(slide => { slide.hidden = false; }));
@@ -428,6 +499,7 @@
   /* ---------------------------------------------------------------- start */
 
   function start() {
+    body.classList.add('deck-ready');
     let resumeNote = '';
     try {
       const raw = localStorage.getItem(progressKey);

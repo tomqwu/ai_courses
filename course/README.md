@@ -17,6 +17,7 @@ course/
 ├── README.md                       ← you are here (package map)
 │   (repository front door: ../README.md)
 ├── Makefile                        ← narration · transcripts · site · serve · test · check
+├── check.sh                        ← the gate, runnable without make (macOS make needs the Xcode licence accepted)
 ├── 00-research/                    ← the deep research behind the course
 │   ├── 00-synthesis.md            ← the unified method (Spec-to-Ship Loop) drawn from all 3 repos
 │   ├── 01-listentome-deep-read.md ← architecture, privacy engineering, release discipline (with file pointers)
@@ -68,7 +69,8 @@ course/
 
 └── learner-site/                   ← the learner-facing build: one slide at a time, narrated
     ├── build_site.py              ← decks + narration manifest → static site (no framework)
-    ├── check_player.py            ← headless browser check (uses a browser already installed)
+    ├── check_player.py            ← headless browser check: measures the rendered 16:9 frame,
+    │                                 the loaded font and the Present/Read all/notes modes
     ├── transcripts/               ← committed transcripts: mNN.md × 9 + ALL.md
     └── assets/player.js · narration-media.js · player.css
 ```

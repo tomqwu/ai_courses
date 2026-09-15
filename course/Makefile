@@ -5,7 +5,7 @@
 #   make transcripts        regenerate the committed transcript documents
 #   make site               build the learner site from the decks + recordings
 #   make serve              build, then serve on http://localhost:8043
-#   make check              validate scripts, media, decks, the site build and the player
+#   make check              run check.sh: tests, scripts, media, site build, browser, verify
 #   make test               caption-engine and TTS-provider unit tests
 #
 # The learner site is generated: the deck Markdown and narration/scripts/*.json are the source of
@@ -44,12 +44,10 @@ test:
 	cd $(NARRATION) && $(PYTHON) test_captions.py
 	cd $(NARRATION) && $(PYTHON) test_providers.py
 
-check: test
-	$(PYTHON) $(NARRATION)/validate_narration.py --scripts-only
-	$(PYTHON) $(NARRATION)/validate_narration.py
-	$(PYTHON) $(SITE)/build_site.py --check
-	$(PYTHON) $(SITE)/check_player.py --all --print-skip
-	$(PYTHON) 06-production/verify.py
+# The gate lives in check.sh so it also runs where `make` itself is unavailable (on macOS
+# /usr/bin/make refuses to run until the Xcode licence is accepted).
+check:
+	bash check.sh
 
 # The browser check needs a built site; it skips with a note if no browser is installed.
 browser-check: site
