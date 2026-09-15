@@ -827,6 +827,16 @@ body.transcript .voice-badge { width: auto; margin: 14px 0 0; }
 }
 .path-kicker { color: var(--mint); font-size: var(--d-1); letter-spacing: .12em; text-transform: uppercase; font-weight: 650; }
 .path-cover h3 { margin: 0; font-size: var(--d-6); line-height: 1.14; letter-spacing: -.03em; color: inherit; }
+.path-medium {
+  align-self: flex-start; margin-top: 2px; padding: 3px 12px; border-radius: 999px;
+  background: var(--mint); color: var(--navy); font-size: var(--d-2); font-weight: 700;
+  letter-spacing: .04em;
+}
+.derived-mark {
+  display: inline-block; margin-left: 4px; padding: 0 6px; border-radius: 999px;
+  background: var(--wash); border: 1px solid var(--line);
+  color: var(--ink-soft); font-size: var(--d-1); letter-spacing: .06em; text-transform: uppercase;
+}
 .path-meta { color: var(--navy-ink-soft); font-size: var(--d-2); font-variant-numeric: tabular-nums; }
 .path-body { display: flex; flex-direction: column; flex: 1; gap: 12px; padding: 16px 18px 18px; }
 .path-promise { margin: 0; font-size: var(--d-3); line-height: 1.45; color: var(--ink); }
