@@ -283,7 +283,8 @@ def transcript_markdown(deck: dict, manifest: dict, provenance: dict) -> str:
     return "\n".join(out).rstrip() + "\n"
 
 
-def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
+def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str,
+                    text_only: bool = False) -> str:
     """The same transcript as a printable page on the site."""
     entries = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
     voice, preview = _deck_voice(deck["id"], manifest, provenance)
@@ -299,7 +300,10 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
             f'<p class="transcript-meta">{html.escape(meta)}</p>'
             f'<blockquote>{inline(slide["script_text"])}</blockquote></section>')
 
-    if preview and preview == len(entries):
+    if text_only:
+        note = ('<p class="voice-badge" role="note"><strong>Text-first copy.</strong> The narration '
+                'and captions are not published here. These are the approved words and are complete.</p>')
+    elif preview and preview == len(entries):
         note = ('<p class="voice-badge" role="note">Preview narration — a free local voice, not the '
                 'finished release recording. These are the approved words and do not change when the '
                 'release voice is recorded.</p>')
@@ -383,7 +387,8 @@ def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
             f'</section>')
 
 
-def page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
+def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
+         text_only: bool = False) -> str:
     deck_manifest = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     preview_count = sum(1 for e in deck_manifest.values()
@@ -392,18 +397,29 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
     is_preview = preview_count > 0
     total = round(sum(float(e.get("duration", 0) or 0) for e in deck_manifest.values()), 1)
     recorded = len(deck_manifest)
+    if text_only:
+        # The recordings exist but are not part of the published copy. The player must see no
+        # recordings at all, or it would offer a Play button that fetches files which are not there.
+        deck_manifest = {}
 
-    if is_preview and mixed:
+    if text_only:
+        voice_chip = '<span class="voice-chip is-text">text-first</span>'
+    elif is_preview and mixed:
         voice_chip = f'<span class="voice-chip is-preview">{preview_count} of {recorded} preview voice</span>'
     elif is_preview:
         voice_chip = '<span class="voice-chip is-preview">preview voice</span>'
     else:
         voice_chip = '<span class="voice-chip is-release">release voice</span>'
 
-    cover_note = (f'<strong>{len(deck["slides"])} slides · {recorded} narrated</strong>'
-                  f'<small>{int(total // 60)}m {int(total % 60)}s of narration with captions and transcript.'
-                  f'{" Free preview voice — the release recording is pending." if is_preview else ""}'
-                  f'</small>')
+    if text_only:
+        cover_note = (f'<strong>{len(deck["slides"])} slides</strong>'
+                      f'<small>Narration is not published with this copy; every slide carries a '
+                      f'complete transcript.</small>')
+    else:
+        cover_note = (f'<strong>{len(deck["slides"])} slides · {recorded} narrated</strong>'
+                      f'<small>{int(total // 60)}m {int(total % 60)}s of narration with captions and transcript.'
+                      f'{" Free preview voice — the release recording is pending." if is_preview else ""}'
+                      f'</small>')
     sections = "\n".join(
         slide_shell(deck, slide, deck_manifest.get(slide["id"]), site_base, cover_note)
         for slide in deck["slides"])
@@ -420,7 +436,11 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
             for s in slides) + '</optgroup>'
         for chapter, slides in groups)
 
-    if not is_preview:
+    if text_only:
+        badge = ('<p class="voice-badge" role="note"><strong>Text-first copy.</strong> The narration '
+                 'and captions are not published here, so there is no audio to play and Play '
+                 'narration is off. Every transcript is the complete approved narration.</p>')
+    elif not is_preview:
         badge = ""
     elif mixed:
         badge = (f'<p class="voice-badge" role="note">{preview_count} of {recorded} recordings on this '
@@ -445,7 +465,7 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str) -> str:
 <a class="skip-link" href="#slides">Skip to slides</a>
 <header class="deck-header">
   <a class="deck-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">{html.escape(deck['module_tag'])}</span></a>
-  <span class="deck-audience">{len(deck['slides'])} slides · {recorded} narrated · {int(total // 60)}m {int(total % 60)}s</span>
+  <span class="deck-audience">{len(deck['slides'])} slides{' · text-first copy' if text_only else f" · {recorded} narrated · {int(total // 60)}m {int(total % 60)}s"}</span>
   <div class="deck-tools">
     <button type="button" class="tool-primary" data-narration-start hidden aria-pressed="false">▶ Play narration</button>
     <button type="button" data-present aria-pressed="false" title="Full screen presentation">Present ↗</button>
@@ -488,7 +508,8 @@ shown below in order and remains readable.</p></noscript>
 """
 
 
-def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: str) -> str:
+def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: str,
+               text_only: bool = False) -> str:
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     cards = []
     grand_total = 0.0
@@ -498,7 +519,9 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
         grand_total += total
         preview = any(prov_by_audio.get(e.get("audio"), {}).get("basis") == "sentence-measured-preview"
                       for e in entries.values())
-        if preview:
+        if text_only:
+            chip = '<span class="voice-chip is-text">text-first</span>'
+        elif preview:
             chip = '<span class="voice-chip is-preview">preview voice</span>'
         else:
             chip = '<span class="voice-chip is-release">release voice</span>'
@@ -514,11 +537,11 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
   <a class="room-cover" href="{site_base}/{deck['id']}.html">
     <span class="room-audience">Module {int(deck['id'][1:])} · {len(deck['slides'])} slides</span>
     <h3>{html.escape(short)}</h3>
-    <span class="room-number">{int(total // 60)}m {int(total % 60)}s of narration</span>
+    <span class="room-number">{f"{len(deck['slides'])} slides" if text_only else f"{int(total // 60)}m {int(total % 60)}s of narration"}</span>
     <span class="room-waves" aria-hidden="true">{waves}</span>
   </a>
   <div class="room-body">
-    <p class="room-meta">{len(entries)} narrated · captions · transcript {chip}</p>
+    <p class="room-meta">{"slides · transcript · print-ready" if text_only else f"{len(entries)} narrated · captions · transcript"} {chip}</p>
     <details><summary>See the slides</summary><ul>{outline}</ul></details>
     <div class="room-actions">
       <a class="btn-primary" href="{site_base}/{deck['id']}.html">Present this deck →</a>
@@ -531,6 +554,42 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     all_slides = sum(len(d["slides"]) for d in decks)
     status = ("Every slide is narrated." if all_recorded >= all_slides else
               f"{all_recorded} of {all_slides} slides narrated so far.")
+    if text_only:
+        lede = ("Every module is a deck you can present, read or print, with a complete transcript for "
+                "every slide. Built from three production repositories, and verified with the same "
+                "evidence discipline it teaches.")
+        facts = ("      <li>9 modules · 233 slides</li>\n"
+                 f"      <li>{all_slides} slide transcripts</li>\n"
+                 "      <li>Present · read · print</li>\n"
+                 "      <li>Design ported from ai_qe</li>")
+        section_note = "Each deck plays one slide at a time, or read and print it as a document."
+        first_howto = ('      <li><strong>Text-first copy:</strong> narration and captions are not '
+                       'published here, so the decks are read, presented and printed rather than '
+                       'played.</li>\n'
+                       '      <li>Every slide carries its transcript, and the\n'
+                       f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
+                       'covers all nine modules in one file.</li>')
+        footnote = ("Speaker notes are the presenter's version; the narration script is the learner's. "
+                    "The recordings exist but are not part of this published copy — the transcripts are "
+                    "the complete approved narration either way.")
+    else:
+        lede = ("Every module is narrated slide by slide, with captions, a readable transcript and a "
+                "deck you can present. Built from three production repositories, and verified with the "
+                "same evidence discipline it teaches.")
+        facts = ("      <li>9 modules · 233 slides</li>\n"
+                 f"      <li>{int(grand_total // 60)} minutes of narration</li>\n"
+                 "      <li>Captions on every slide</li>\n"
+                 f"      <li>{status}</li>")
+        section_note = "Each deck plays one slide at a time. Press play when you are ready."
+        first_howto = ('      <li>Narration never autoplays — press <strong>Play narration</strong> on '
+                       'any deck.</li>\n'
+                       '      <li>Captions are on by default. The full transcript is behind '
+                       '<strong>Transcript</strong>, and the\n'
+                       f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
+                       'covers all nine modules in one file.</li>')
+        footnote = ("Speaker notes are the presenter's version; the narration is the learner's. "
+                    "Recordings currently use a free preview voice and say so wherever they appear — the "
+                    "released voice is recorded separately and the words do not change.")
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -547,21 +606,16 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     <a class="site-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">Course</span></a>
     <p class="eyebrow">Nine modules · 233 slides</p>
     <h1>Build, ship and sell three kinds of AI product.</h1>
-    <p class="site-lede">Every module is narrated slide by slide, with captions, a readable transcript
-      and a deck you can present. Built from three production repositories, and verified with the same
-      evidence discipline it teaches.</p>
+    <p class="site-lede">{lede}</p>
     <ul class="site-facts">
-      <li>9 modules · 233 slides</li>
-      <li>{int(grand_total // 60)} minutes of narration</li>
-      <li>Captions on every slide</li>
-      <li>{status}</li>
+{facts}
     </ul>
   </div>
 </header>
 <main class="site-main">
   <div class="section-heading">
     <h2>Open a module</h2>
-    <span class="section-note">Each deck plays one slide at a time. Press play when you are ready.</span>
+    <span class="section-note">{section_note}</span>
   </div>
   <div class="room-grid">
 {chr(10).join(cards)}
@@ -569,9 +623,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
   <section class="how-to">
     <h2>How to use this site</h2>
     <ul>
-      <li>Narration never autoplays — press <strong>Play narration</strong> on any deck.</li>
-      <li>Captions are on by default. The full transcript is behind <strong>Transcript</strong>, and the
-          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> covers all nine modules in one file.</li>
+{first_howto}
       <li><strong>Present ↗</strong> goes full screen for a room; <strong>Read all</strong> turns the deck
           into one scrolling document; <strong>Sources &amp; notes</strong> opens the presenter notes.</li>
       <li>Keyboard: <kbd>→</kbd>/<kbd>Space</kbd> next, <kbd>←</kbd> previous, <kbd>Home</kbd>/<kbd>End</kbd>
@@ -579,9 +631,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       <li>Printing a deck prints one 16:9 slide per page.</li>
     </ul>
   </section>
-  <p class="index-footnote">Speaker notes are the presenter's version; the narration is the learner's.
-    Recordings currently use a free preview voice and say so wherever they appear — the released voice
-    is recorded separately and the words do not change.</p>
+  <p class="index-footnote">{footnote}</p>
 </main>
 </body>
 </html>
@@ -594,6 +644,11 @@ def main(argv=None) -> int:
     parser.add_argument("--check", action="store_true", help="build into a temp dir and report only")
     parser.add_argument("--site-base", default=".",
                         help="prefix for asset URLs; '.' works from file:// and any subpath")
+    parser.add_argument("--out", metavar="DIR",
+                        help="build into DIR instead of in place (used when publishing)")
+    parser.add_argument("--no-narration", action="store_true",
+                        help="publish text-first: the player is told there are no recordings, so "
+                             "no Play button offers files that are not in the published copy")
     args = parser.parse_args(argv)
 
     manifest = load_manifest()
@@ -601,27 +656,45 @@ def main(argv=None) -> int:
     scripts = load_scripts()
     decks = [parse_deck(deck_id, scripts["decks"]) for deck_id in DECK_IDS]
 
-    target = Path("/tmp/aps-site-check") if args.check else SITE_ROOT
+    if args.check:
+        target = Path("/tmp/aps-site-check")
+    elif args.out:
+        target = Path(args.out).expanduser().resolve()
+    else:
+        target = SITE_ROOT
     target.mkdir(parents=True, exist_ok=True)
     if args.check:
         shutil.rmtree(target, ignore_errors=True)
         target.mkdir(parents=True)
-    write_json(target / "narration.json", manifest)
+    # What the *player* is told. In a text-first publish this is deliberately empty: the recordings
+    # exist, but offering them would mean offering files the published copy does not contain.
+    player_manifest = {"decks": {}} if args.no_narration else manifest
+    write_json(target / "narration.json", player_manifest)
 
     for deck in decks:
         (target / f"{deck['id']}.html").write_text(
-            page(deck, manifest, provenance, args.site_base), encoding="utf-8")
+            page(deck, manifest, provenance, args.site_base, text_only=args.no_narration),
+            encoding="utf-8")
         (target / f"transcript-{deck['id']}.html").write_text(
-            transcript_page(deck, manifest, provenance, args.site_base), encoding="utf-8")
+            transcript_page(deck, manifest, provenance, args.site_base, text_only=args.no_narration),
+            encoding="utf-8")
     (target / "index.html").write_text(
-        index_page(decks, manifest, provenance, args.site_base), encoding="utf-8")
+        index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration),
+        encoding="utf-8")
 
     # The transcripts are committed as Markdown, so a check must prove the committed copies still
     # match what the scripts say rather than quietly regenerating them.
     # Always the committed location: a check must compare against what is in the repository, not
     # against a copy it just wrote.
     transcript_dir = SITE_ROOT / "transcripts"
-    if not args.check:
+    if args.out:
+        # Publishing must not rewrite the repository's committed transcripts: they are the source of
+        # truth and the gate has already validated them. Copy them into the published copy instead.
+        published = target / "transcripts"
+        published.mkdir(parents=True, exist_ok=True)
+        for path in sorted(transcript_dir.glob("*.md")):
+            shutil.copy2(path, published / path.name)
+    elif not args.check:
         transcript_dir.mkdir(parents=True, exist_ok=True)
     drift = []
     for deck in decks:
@@ -631,7 +704,7 @@ def main(argv=None) -> int:
             on_disk = out.read_text(encoding="utf-8") if out.is_file() else None
             if on_disk != text:
                 drift.append(f"transcripts/{out.name}")
-        else:
+        elif not args.out:
             out.write_text(text, encoding="utf-8")
         # A transcript that does not say exactly what the script says is a bug, not a formatting
         # difference: assert it here so it can never be committed wrong.
@@ -664,7 +737,7 @@ def main(argv=None) -> int:
     if args.check:
         if not out.is_file() or out.read_text(encoding="utf-8") != all_text:
             drift.append(f"transcripts/{out.name}")
-    else:
+    elif not args.out:
         out.write_text(all_text, encoding="utf-8")
 
     if args.check and drift:
@@ -677,7 +750,8 @@ def main(argv=None) -> int:
     recorded = sum(len((manifest.get("decks", {}).get(d, {}) or {}).get("slides", {}))
                    for d in scripts["decks"])
     transcript_words = sum(len(s["script_text"].split()) for d in decks for s in d["slides"])
-    print(f"site written to {target}")
+    print(f"site written to {target}"
+          f"{' (text-first: no recordings published)' if args.no_narration else ''}")
     print(f"  decks: {len(decks)} · slides: {total_slides} · scripted: {scripted} · recorded: {recorded}")
     print(f"  transcripts: {len(decks)} decks · {transcript_words:,} words"
           f"{' (verified against the approved scripts)' if args.check else ''}")

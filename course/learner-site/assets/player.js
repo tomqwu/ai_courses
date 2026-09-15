@@ -546,11 +546,12 @@
       const deck = (manifest.decks || {})[deckId];
       entries = (deck && deck.slides) || {};
       if (els.start) {
-        els.start.hidden = false;
-        els.start.disabled = !Object.keys(entries).length;
-        els.start.title = Object.keys(entries).length
+        const hasEntries = Object.keys(entries).length > 0;
+        els.start.hidden = !hasEntries;
+        els.start.disabled = !hasEntries;
+        els.start.title = hasEntries
           ? 'Play this deck with narration; captions and transcript are available'
-          : 'No recordings are available for this deck yet';
+          : 'No recordings are published with this copy';
       }
       start();
     })

@@ -7,16 +7,19 @@
 #   make serve              build, then serve on http://localhost:8043
 #   make check              run check.sh: tests, scripts, media, site build, browser, verify
 #   make test               caption-engine and TTS-provider unit tests
+#   make publish            publish the built site to the gh-pages branch (text-first)
+#   make publish-audio      publish it with the recordings, so narration plays live
 #
 # The learner site is generated: the deck Markdown and narration/scripts/*.json are the source of
-# truth, and nothing under learner-site/ except the player assets is committed.
+# truth, and nothing under learner-site/ except the player assets is committed. Publishing is how the
+# built site reaches GitHub Pages — see publish_site.py.
 
 PYTHON ?= python3
 NARRATION := 06-production/narration
 SITE := learner-site
 PORT ?= 8043
 
-.PHONY: narration narration-preview narration-plan site serve check test browser-check
+.PHONY: narration narration-preview narration-plan site serve check test browser-check publish
 
 narration-plan:
 	$(PYTHON) $(NARRATION)/generate_narration.py plan
@@ -43,6 +46,14 @@ serve: site
 test:
 	cd $(NARRATION) && $(PYTHON) test_captions.py
 	cd $(NARRATION) && $(PYTHON) test_providers.py
+
+# Publish the built site to the gh-pages branch. Text-first by default: no audio is published, so
+# nothing 404s and Play narration is off. Add the recordings with `make publish-audio`.
+publish:
+	$(PYTHON) publish_site.py
+
+publish-audio:
+	$(PYTHON) publish_site.py --with-audio
 
 # The gate lives in check.sh so it also runs where `make` itself is unavailable (on macOS
 # /usr/bin/make refuses to run until the Xcode licence is accepted).

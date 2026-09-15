@@ -18,6 +18,7 @@ course/
 │   (repository front door: ../README.md)
 ├── Makefile                        ← narration · transcripts · site · serve · test · check
 ├── check.sh                        ← the gate, runnable without make (macOS make needs the Xcode licence accepted)
+├── publish_site.py                 ← builds the site and pushes it to the gh-pages branch
 ├── 00-research/                    ← the deep research behind the course
 │   ├── 00-synthesis.md            ← the unified method (Spec-to-Ship Loop) drawn from all 3 repos
 │   ├── 01-listentome-deep-read.md ← architecture, privacy engineering, release discipline (with file pointers)

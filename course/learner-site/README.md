@@ -155,6 +155,38 @@ Slides after the first are `hidden` so the page does not flash 233 slides before
 * Reduced-motion users get no smooth scrolling and a shorter auto-advance beat.
 * Print output contains every slide, without the player chrome.
 
+## Publishing
+
+The site is generated and gitignored, so GitHub Pages cannot serve the repository as-is — it needs a
+build. `course/publish_site.py` builds it and pushes the result to a `gh-pages` branch, which keeps the
+generated HTML out of `main`:
+
+```bash
+python3 course/publish_site.py                 # text-first (default)
+python3 course/publish_site.py --with-audio    # include the recordings so narration plays
+python3 course/publish_site.py --dry-run       # build and stage, do not push
+```
+
+The gate runs first and the publish is refused unless it is green.
+
+**The published copy is text-first by default.** The 233 recordings exist, but they are ~62 MB and
+throwaway until the release voice is recorded, so the published copy tells the player there are no
+recordings: `narration.json` is written empty, the narration panel and the Play button stay hidden
+and no `data-audio` attribute is emitted. That is not cosmetic — it means **nothing 404s** and no
+button offers a file the copy does not contain. The decks, the full design, all 233 transcripts and the
+print stylesheet work either way.
+
+```
+text-first   36 files, 1.1 MB
+with audio  269 files, ~63 MB
+```
+
+Switch to audio — for example once the release voice is recorded — with one command:
+
+```bash
+python3 course/publish_site.py --with-audio
+```
+
 ## Verifying the site
 
 `check_player.py` does two things: it drives the player's behaviour, and it **measures the rendered

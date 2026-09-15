@@ -99,6 +99,22 @@ Generated artifacts — audio (~62 MB), the rendered HTML and the site manifest 
 They are one command to rebuild, and shipping placeholder audio in version control is worse than not
 shipping it.
 
+## The course online
+
+The learner site is published to GitHub Pages from a `gh-pages` branch, because the repository cannot
+serve the generated HTML itself:
+
+```bash
+python3 course/publish_site.py                 # publish text-first (36 files, ~1 MB, no audio)
+python3 course/publish_site.py --with-audio    # publish with the recordings so narration plays
+```
+
+The published copy is **text-first**: the decks, the full ai_qe design, every transcript and the print
+stylesheet all work, but the player is told there are no recordings, so nothing 404s and no Play button
+offers an audio file the copy does not contain. Add the recordings — for example once the release voice
+is recorded — with `--with-audio`. Either way the gate runs first and the publish is refused unless it
+is green.
+
 ## Verification
 
 `make -C course check` is the single gate, and it runs in order:

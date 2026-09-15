@@ -619,6 +619,7 @@ body.presentation-mode { background: var(--navy-deep); }
   letter-spacing: .02em;
 }
 .voice-chip.is-preview { background: var(--proof-bg); color: #7a4f13; border: 1px solid #e3c98f; }
+.voice-chip.is-text { background: #eef2f0; border-color: #c2cec9; color: #4d625e; }
 .voice-chip.is-release { background: #e3efe9; color: #0b5b58; border: 1px solid #a9cec2; }
 
 /* The honesty badge: present wherever a recording is not the release voice. */
