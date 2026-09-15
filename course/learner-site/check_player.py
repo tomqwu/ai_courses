@@ -213,7 +213,7 @@ function next() {
       try { results.push({ page: page, audit: apsAuditContrast(f.contentWindow, f.contentDocument) }); }
       catch (e) { results.push({ page: page, error: String(e) }); }
       document.body.removeChild(f); next();
-    }, 900);
+    }, 700);
   };
   document.body.appendChild(f);
 }
@@ -412,7 +412,10 @@ def check_pages(browser: str, port: int) -> list[str]:
     page.write_text(PAGES_PROBE_TEMPLATE.replace("/*CONTRAST*/", CONTRAST_JS)
                                          .replace("__PAGES__", json.dumps(pages)), encoding="utf-8")
     try:
-        dom = dump_dom(browser, f"http://127.0.0.1:{port}/{PAGES_PROBE_PAGE}", budget_ms=20000)
+        # Each page is given a settle window; the budget has to scale with the page count or the
+        # probe is cut off mid-run and reports nothing readable.
+        budget = 6000 + 1200 * len(pages)
+        dom = dump_dom(browser, f"http://127.0.0.1:{port}/{PAGES_PROBE_PAGE}", budget_ms=budget)
     finally:
         page.unlink(missing_ok=True)
     match = re.search(r'<pre id="out">(.*?)</pre>', dom, re.S)
@@ -477,7 +480,14 @@ def check_units() -> list[str]:
     units_by_deck = {d: SP.module_units(B.parse_deck(d)) for d in B.DECK_IDS}
     for track in SP.TRACKS:
         measured = track.get("measured") or {}
-        if track["status"] != "built" or not measured:
+        if track["status"] != "built":
+            continue
+        if not measured:
+            # No course-wide total is stated in this bundle map, so there is nothing to cross-check
+            # against. Assert only that the model produces a sane, non-empty path.
+            included_any = SP.track_units(track, units_by_deck)
+            if not any(u["kind"] == "segment" for u in included_any):
+                problems.append(f"{track['slug']}: no teaching segments in the path")
             continue
         included = SP.track_units(track, units_by_deck)
         segments = sum(1 for u in included if u["kind"] == "segment")
@@ -492,7 +502,8 @@ def check_units() -> list[str]:
             if got != want:
                 problems.append(f"{track['slug']}: model gives {got} {label}, "
                                 f"bundle-map.md states {want}")
-    for name in ("paths.html", "path-on-device-app.html"):
+    for name in ["paths.html"] + [t["page"] for t in SP.TRACKS
+                                  if t["status"] == "built" and t["page"]]:
         if not (SITE_ROOT / name).exists():
             problems.append(f"{name}: missing")
     return problems

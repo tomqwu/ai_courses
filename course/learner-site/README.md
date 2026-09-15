@@ -199,12 +199,41 @@ returns 404 and the browse page is client-rendered, so the mechanics could not b
 inventing a points economy and calling it "the Azure framework" would be slop. Badges and an
 Achievements surface are documented; what they *do* is not.
 
+### Sorted by product type
+
+The three paths are the three **product types** the course is built from, named in the bundle maps as
+Type 1/2/3 and each anchored to a real product:
+
+| Path | You build | Product type | Case study |
+|---|---|---|---|
+| On-Device AI Apps | an **app** | Type 1 · AI with an app | ListenToMe (Swift/macOS) |
+| Spec-Driven AI SaaS | a **web service** | Type 2 · AI with the web | SignUpFlow (FastAPI) |
+| Expertise as a Product | a **content product** — a learning site, a presentation, a sales pitch | Type 3 · AI with content | ai_qe (116-slide narrated briefing) |
+
+The third is the least obvious and the most literal: `ai_qe` is a narrated, routed, editioned learning
+product, and this site is built on the same port. Its bundle map lists the case-study files a Type 3
+builder actually opens — the four claim levels, the benchmark records carrying date/sample/method/unit,
+the immutable release editions, the phased pilot with sponsor-signed gates, and the executive
+presentation script.
+
 ### Status
 
-One path is built end to end as a first slice: **On-Device AI Apps** — paths index, path page, and
-module pages for its six modules. The other three paths appear on the index with an explicit
-*"page not built yet"* chip and link to the module list rather than to a page that does not exist.
-The remaining work is extracting their `bundle-map.md` tables into the same `exclude`/`partial` shape.
+Three of the four paths are built end to end: paths index, a path page for the On-Device, SaaS and
+Expertise tracks, and module pages for all nine modules. The full studio course is not a separate page
+because it *is* the module index, and its card says so rather than pretending to be one.
+
+The three paths differ in ways the model has to respect rather than smooth over:
+
+- **On-Device** keeps Lab M7 (steps 1–5) and Quiz M7 — 5 quizzes.
+- **SaaS** excludes Lab M7 *and* Quiz M7, because the week-6 capstone worksheet replaces the lab. Same
+  17 segments as On-Device, but **4 quizzes, not 5**.
+- **Expertise** is the only path that keeps **M8.3 and Quiz M8** — but the capstone and Lab M8 are the
+  *Type 3 row only*, so both are marked partial rather than excluded.
+
+Only the first two state a course-wide total in their bundle map ("17 of 27 teaching segments · 4 of 8
+full labs · …"), so only those two are cross-checked by the gate. The Expertise map states none, so its
+counts are derived from its own rows and the page labels them **derived** rather than quoting a total
+that does not exist.
 
 
 ## Transcripts

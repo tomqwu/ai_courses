@@ -184,7 +184,8 @@ TRACKS = [
     {
         "slug": "aps",
         "title": "The full studio course",
-        "kicker": "All three archetypes",
+        "medium": "All three types",
+        "kicker": "All three product types",
         "promise": "Build, ship and sell all three kinds of AI product — and finish with a scored "
                    "capstone, a launch arc and a defensible price.",
         "core": ["m00", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08"],
@@ -196,9 +197,11 @@ TRACKS = [
         "page": None,  # the full course is the module index itself
     },
     {
+        # Type 1 — the product is an app. Case study: ListenToMe (Swift/macOS).
         "slug": "on-device-app",
         "title": "On-Device AI Apps",
-        "kicker": "Track 1 · Type 1",
+        "medium": "App",
+        "kicker": "Type 1 · AI with an app",
         "promise": "Ship a local-first AI app whose privacy claims are enforced in code and proven "
                    "by tests.",
         "core": ["m00", "m01", "m02", "m03"],
@@ -220,38 +223,78 @@ TRACKS = [
         "level": "Beginner to intermediate",
         "role": "iOS / macOS engineer · Indie developer",
         "subject": "Local-first AI · Privacy engineering",
+        # Quoted from bundle-map.md: "17 of 27 teaching segments · 4 of 8 full labs ·
+        # 5 of 9 quizzes (40 of 72 questions)". The model is asserted against these.
         "measured": {"segments": (17, 27), "labs": (4, 8), "quizzes": (5, 9), "questions": (40, 72)},
+        "counts_source": "bundle-map.md",
         "status": "built",
         "page": "path-on-device-app.html",
     },
     {
+        # Type 2 — the product is a web service. Case study: SignUpFlow (FastAPI).
         "slug": "spec-driven-saas",
         "title": "Spec-Driven AI SaaS",
-        "kicker": "Track 2 · Type 2",
+        "medium": "Web",
+        "kicker": "Type 2 · AI with the web",
         "promise": "A spec folder that survives a stranger test, and acceptance evidence that "
                    "survives a skeptical auditor.",
         "core": ["m00", "m01", "m04", "m05"],
-        "slice": {"m07": "Monetization slice", "m08": "Launch slice"},
+        # The launch slice here has NO lab and NO quiz — the week-6 capstone worksheet replaces
+        # Lab M7, and Quiz M7/M8 are excluded. That is why this path has 4 quizzes, not 5.
+        "slice": {
+            "m07": {"note": "Segments M7.1–M7.3 · no lab, no quiz",
+                    "exclude": ["lab", "quiz"], "partial": []},
+            "m08": {"note": "Segments M8.1–M8.2 only",
+                    "exclude": ["M8.3", "lab", "quiz"], "partial": []},
+        },
+        "excluded": [
+            ("M2 · M3 — the On-Device track", "m02", "m03"),
+            ("M6 — the Expertise track", "m06", None),
+            ("M8.3 capstone, Lab M7/M8 and Quiz M7/M8", "m08", None),
+        ],
         "price": "$199",
         "level": "Intermediate",
         "role": "Backend engineer · SaaS builder",
         "subject": "Multi-tenant security · Acceptance evidence",
-        "status": "outline",
+        # Quoted from bundle-map.md: "4 modules in full + 1 cross-module slice ...; 17 of 27 lesson
+        # segments; 4 labs; 4 of 9 quizzes (32 of 72 questions)".
+        "measured": {"segments": (17, 27), "labs": (4, 8), "quizzes": (4, 9), "questions": (32, 72)},
+        "counts_source": "bundle-map.md",
+        "status": "built",
         "page": "path-spec-driven-saas.html",
     },
     {
+        # Type 3 — the product is content: a learning product, a presentation, or a sales pitch.
+        # Case study: ai_qe, whose own 116-slide narrated briefing site is this same shape.
         "slug": "expertise-product",
         "title": "Expertise as a Product",
-        "kicker": "Track 3 · Type 3",
+        "medium": "Content",
+        "kicker": "Type 3 · AI with content",
         "promise": "Every published claim carries a date, sample, method, unit and level — and the "
                    "funnel sells a measurement, not a promise.",
         "core": ["m00", "m01", "m06"],
-        "slice": {"m07": "Monetization slice", "m08": "Launch slice"},
+        # Unlike the other two, this path keeps M8.3 and Quiz M8 — but the capstone and the lab are
+        # the Type 3 row only, so both are marked partial rather than excluded.
+        "slice": {
+            "m07": {"note": "Segments M7.1–M7.3 · Lab M7 for the Type 3 offer only · Quiz M7",
+                    "exclude": [], "partial": ["lab"]},
+            "m08": {"note": "M8.1–M8.3 · capstone is the Type 3 row only · Quiz M8",
+                    "exclude": [], "partial": ["M8.3", "lab"]},
+        },
+        "excluded": [
+            ("M2 · M3 — the On-Device track", "m02", "m03"),
+            ("M4 · M5 — the Spec-Driven SaaS track", "m04", "m05"),
+            ("The Type 1 / Type 2 capstone and lab rows", "m08", None),
+        ],
         "price": "$199",
         "level": "Intermediate",
-        "role": "Consultant · Domain expert",
-        "subject": "Evidence products · Content as code",
-        "status": "outline",
+        "role": "Consultant · Domain expert · Educator",
+        "subject": "Evidence products · Learning and sales content",
+        # No total is stated anywhere in this bundle map, so none is asserted. The counts are
+        # derived from its own rows and labelled as derived rather than quoted.
+        "measured": None,
+        "counts_source": "derived from bundle-map.md rows (no course-wide total is stated there)",
+        "status": "built",
         "page": "path-expertise-product.html",
     },
 ]
@@ -355,21 +398,29 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
     for track in tracks:
         units = track_units(track, units_by_deck)
         minutes = track_minutes(track, units_by_deck, seconds)
-        live = track["page"] and track["status"] == "built"
-        status = ('<span class="voice-chip is-release">path page live</span>' if live
-                  else '<span class="voice-chip is-text">first slice — page not built yet</span>')
-        href = (f"{site_base}/{track['page']}" if live else f"{site_base}/index.html")
-        target = "Open this path" if live else "Browse the modules"
+        live = bool(track["page"]) and track["status"] == "built"
+        if live:
+            status = '<span class="voice-chip is-release">path page</span>'
+            href, target = f"{site_base}/{track['page']}", "Open this path"
+        elif track["status"] == "full":
+            # The full course is not a page that failed to build — it is the module index itself.
+            status = '<span class="voice-chip is-release">all nine modules</span>'
+            href, target = f"{site_base}/index.html", "Browse all modules"
+        else:
+            status = '<span class="voice-chip is-text">page not built yet</span>'
+            href, target = f"{site_base}/index.html", "Browse the modules"
         modules = len(track["core"]) + len(track.get("slice") or {})
         cards.append(f"""<article class="path-card">
   <a class="path-cover" href="{href}">
     <span class="path-kicker">{html.escape(track['kicker'])}</span>
     <h3>{html.escape(track['title'])}</h3>
+    <span class="path-medium">{html.escape(track['medium'])}</span>
     <span class="path-meta">{modules} modules · {len(units)} units · {fmt_minutes(minutes)} of narration</span>
   </a>
   <div class="path-body">
     <p class="path-promise">{html.escape(track['promise'])}</p>
-    {_at_a_glance([("Level", track["level"]), ("Role", track["role"]), ("Price", track["price"])])}
+    {_at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
+                   ("Role", track["role"]), ("Price", track["price"])])}
     <p class="path-status">{status}</p>
     <a class="btn-primary" href="{href}">{target} →</a>
   </div>
@@ -382,10 +433,12 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
     {_crumbs(site_base, [("Course home", f"{site_base}/index.html"), ("Learning paths", None)])}
     <p class="eyebrow">Learning paths</p>
     <h1>Four ways into the same method.</h1>
-    <p class="site-lede">Every path is a sequence of modules drawn from one course, in the order the
-      work has to be done. The full studio course teaches all three archetypes; the three track paths
-      each teach one, using the same lessons, labs and quizzes — nothing is rewritten or watered down,
-      and each path says exactly what it leaves out.</p>
+    <p class="site-lede">The three products this course is built from are three <em>types</em> of AI
+      product — an <strong>app</strong>, a <strong>web service</strong>, and a
+      <strong>content product</strong> like a learning site, a presentation or a sales pitch. Each
+      track path teaches one of those types end to end; the full studio course teaches all three. The
+      method is identical in every path — same lessons, labs and quizzes, nothing rewritten or watered
+      down — and each path states exactly what it leaves out.</p>
     <ul class="site-facts">
       <li>{len(tracks)} paths</li>
       <li>9 modules · {total_units} units</li>
@@ -395,7 +448,7 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
 </header>
 <main class="site-main">
   <div class="section-heading">
-    <h2>Choose a path</h2>
+    <h2>Choose by what you want to build</h2>
     <span class="section-note">A unit is one lesson segment, a lab, or a knowledge check — the level
       at which you actually sit down and learn something.</span>
   </div>
@@ -446,19 +499,31 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
                                  "slice", spec))
 
     measured = track.get("measured") or {}
-    counts = ""
-    if measured:
-        rows = "".join(
-            f"<tr><th scope=\"row\">{label}</th><td>{got} of {total}</td></tr>"
-            for label, (got, total) in (
-                ("Teaching segments", measured["segments"]),
-                ("Full labs", measured["labs"]),
-                ("Quizzes", measured["quizzes"]),
-                ("Quiz questions", measured["questions"]),
-            ))
-        counts = f"""<section class="path-section">
+    included = track_units(track, units_by_deck)
+    derived = {
+        "segments": sum(1 for u in included if u["kind"] == "segment"),
+        "labs": sum(1 for u in included if u["kind"] == "lab" and u["inclusion"] == "full"),
+        "quizzes": sum(1 for u in included if u["kind"] == "quiz"),
+        "questions": 8 * sum(1 for u in included if u["kind"] == "quiz"),
+    }
+    labels = (("Teaching segments", "segments"), ("Full labs", "labs"),
+              ("Quizzes", "quizzes"), ("Quiz questions", "questions"))
+
+    def cell(key: str) -> str:
+        got = derived[key]
+        if measured and key in measured:
+            return f"{got} of {measured[key][1]}"
+        return f"{got} <span class=\"derived-mark\">derived</span>"
+
+    rows = "".join(f'<tr><th scope="row">{label}</th><td>{cell(key)}</td></tr>'
+                   for label, key in labels)
+    source = track.get("counts_source", "the bundle map")
+    note = (f'Counted from {html.escape(source)}.'
+            if measured else
+            f'{html.escape(source)} — so these are counted from the rows, not quoted from a total.')
+    counts = f"""<section class="path-section">
     <h2>What this path includes</h2>
-    <p class="section-note">Counted from the bundle map, not estimated.</p>
+    <p class="section-note">{note}</p>
     <table class="counts-table">
       <caption>This path compared with the full studio course</caption>
       <thead><tr><th scope="col">Item</th><th scope="col">In this path</th></tr></thead>
@@ -484,7 +549,8 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
     <p class="eyebrow">Learning path · {len(track['core']) + len(track.get('slice') or {})} modules · {len(units)} units</p>
     <h1>{html.escape(track['title'])}</h1>
     <p class="site-lede">{html.escape(track['promise'])}</p>
-    {_at_a_glance([("Level", track["level"]), ("Role", track["role"]),
+    {_at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
+                   ("Role", track["role"]),
                    ("Subject", track.get("subject", "AI product engineering")),
                    ("Duration", f"{fmt_minutes(minutes)} of narration + lab time"),
                    ("Price", track["price"])])}
