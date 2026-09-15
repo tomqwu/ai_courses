@@ -45,6 +45,7 @@
   --proof-bg: #fdf6e6;
   --proof-line: #e3c98f;
   --focus: #ba7128;
+  --white: #ffffff;
 
   /* Document pages (index, transcripts) run on a tighter ratio than the slides: UI text does not
      support 1.25 steps. Seven sizes replace the twenty that had accumulated here. */
@@ -108,7 +109,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
 }
-.skip-link { position: absolute; left: 1rem; top: -100px; z-index: 40; background: #fff; padding: .5rem; }
+.skip-link { position: absolute; left: 1rem; top: -100px; z-index: 40; background: var(--white); padding: .5rem; }
 .skip-link:focus { top: .5rem; }
 
 @media (prefers-reduced-motion: reduce) {
@@ -160,11 +161,11 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .deck-tools .tool-primary {
   background: var(--teal-bright);
   border-color: var(--teal-bright);
-  color: #fff;
+  color: var(--white);
   font-weight: 650;
 }
 .deck-tools .tool-primary[aria-pressed="true"] { background: var(--navy-soft); border-color: var(--navy-soft); }
-.deck-tools [aria-pressed="true"]:not(.tool-primary) { background: var(--navy-soft); border-color: var(--navy-soft); color: #fff; }
+.deck-tools [aria-pressed="true"]:not(.tool-primary) { background: var(--navy-soft); border-color: var(--navy-soft); color: var(--white); }
 
 /* ─────────────────────────────────────────────────────────────── slides ──
  *
@@ -213,9 +214,32 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   aspect-ratio: 16 / 9;
   padding: var(--s5) var(--s6);
   background: var(--paper);
-  border: 1px solid var(--line);
+  border: 1px solid var(--c-rule);
   box-shadow: 0 1px 2px color-mix(in srgb, var(--navy) 5%, transparent);
   overflow: hidden;
+
+  /* ── component colours, resolved per slide kind ───────────────────────────────────────────────
+     Components reference these semantic names, never a palette token directly. That closes a whole
+     bug class: previously every light-theme component colour needed a matching hand-written
+     `.slide-proof` override, so each new component was one forgotten override away from invisible
+     text. Two had already been forgotten — inline `code` on the cover rendered at 1.16:1, and
+     `blockquote` on a proof slide at 2.31:1. The slide kind now redefines the tokens once. */
+  --c-ink: var(--ink);
+  --c-ink-soft: var(--ink-soft);
+  --c-ink-strong: var(--navy);
+  --c-accent: var(--teal);
+  --c-rule: var(--line);
+  --c-rule-soft: var(--line-soft);
+  --c-surface: var(--wash);
+  --c-surface-ink: var(--ink);
+  --c-code-bg: var(--wash);
+  --c-code-rule: var(--line-soft);
+  --c-code-ink: var(--ink);
+  --c-quote-ink: var(--ink-soft);
+  --c-quote-rule: var(--teal);
+  --c-pre-bg: var(--navy);
+  --c-pre-ink: var(--navy-ink);
+  color: var(--c-ink);
 }
 .deck-ready .slide { margin-bottom: 0; }
 
@@ -225,7 +249,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   flex-direction: column;
   min-height: 0;
   padding-right: var(--s4);
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--c-rule);
   justify-content: space-between;
 }
 .slide-rail .rail-head { display: flex; flex-direction: column; }
@@ -233,7 +257,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   margin: 0 0 var(--s1);
   font-size: var(--t-chrome);
   font-weight: 700;
-  color: var(--teal);
+  color: var(--c-accent);
   text-transform: uppercase;
   letter-spacing: .14em;
   line-height: 1.2;
@@ -243,14 +267,14 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   font-size: var(--t-chrome);
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--c-ink-soft);
   line-height: 1.2;
 }
 .slide-rail .rail-module {
   margin: 0;
   font-size: var(--t-small);
   line-height: 1.3;
-  color: var(--ink-soft);
+  color: var(--c-ink-soft);
   text-wrap: pretty;
 }
 .slide-rail .rail-foot {
@@ -259,22 +283,22 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   gap: var(--s1);
   padding-top: var(--s2);
   font-size: var(--t-chrome);
-  color: var(--ink-soft);
+  color: var(--c-ink-soft);
 }
 .slide-rail .slide-number {
   font-variant-numeric: tabular-nums;
   letter-spacing: .1em;
-  color: var(--ink);
+  color: var(--c-ink-strong);
   font-weight: 650;
 }
 .slide-rail .rail-link {
-  color: var(--teal);
+  color: var(--c-accent);
   text-decoration: none;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--c-rule);
   padding-bottom: 2px;
   align-self: flex-start;
 }
-.slide-rail .rail-link:hover { border-bottom-color: var(--teal); }
+.slide-rail .rail-link:hover { border-bottom-color: var(--c-accent); }
 
 .slide-body {
   display: flex;
@@ -289,7 +313,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -.035em;
-  color: var(--navy);
+  color: var(--c-ink-strong);
   max-width: 26ch;
   text-wrap: balance;
 }
@@ -304,7 +328,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   margin: 0;
   font-size: var(--t-lead);
   line-height: 1.42;
-  color: var(--ink);
+  color: var(--c-ink);
   max-width: 54ch;
   text-wrap: pretty;
 }
@@ -329,8 +353,9 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .slide-content code {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   font-size: .9em;
-  background: var(--wash);
-  border: 1px solid var(--line-soft);
+  background: var(--c-code-bg);
+  border: 1px solid var(--c-code-rule);
+  color: var(--c-code-ink);
   border-radius: 3px;
   padding: .06em .32em;
   overflow-wrap: anywhere;
@@ -338,95 +363,93 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .slide-content pre {
   margin: 0;
   padding: var(--s3) var(--s4);
-  background: var(--navy);
-  color: var(--navy-ink);
+  background: var(--c-pre-bg);
+  color: var(--c-pre-ink);
   border-radius: 5px;
   overflow: auto;
   font-size: var(--t-small);
   line-height: 1.5;
 }
 .slide-content pre code { background: none; border: 0; padding: 0; color: inherit; }
+.slide a { color: var(--c-accent); text-decoration-color: var(--c-rule); }
 .slide-content blockquote {
   margin: 0;
   padding: var(--s1) 0 var(--s1) var(--s4);
-  border-left: 3px solid var(--mint);
-  color: var(--ink-soft);
+  border-left: 3px solid var(--c-quote-rule);
+  color: var(--c-quote-ink);
+}
+
+/* Dark slide kinds — proof slides and the cover — redefine the component colours in one place. */
+.slide-proof, .slide-cover {
+  --c-ink: var(--navy-ink);
+  --c-ink-soft: var(--navy-ink-soft);
+  --c-ink-strong: var(--paper);
+  --c-accent: var(--mint);
+  --c-rule: var(--navy-line);
+  --c-rule-soft: var(--navy-line);
+  --c-surface: var(--navy-code);
+  --c-surface-ink: var(--paper);
+  --c-code-bg: var(--navy-code);
+  --c-code-rule: var(--navy-line);
+  --c-code-ink: var(--navy-ink);
+  --c-quote-ink: var(--navy-ink);
+  --c-quote-rule: var(--mint);
+  --c-pre-bg: var(--navy-deep);
+  --c-pre-ink: var(--navy-ink);
 }
 
 /* Proof slides: the decks' evidence slides get a deliberate change of rhythm. */
-.slide-proof { background: var(--navy); border-color: var(--navy); color: var(--navy-ink); }
-.slide-proof .slide-rail { border-color: var(--navy-line); }
-.slide-proof .kicker { color: var(--mint); }
-.slide-proof .rail-brand, .slide-proof .rail-module, .slide-proof .rail-foot { color: var(--navy-ink-soft); }
-.slide-proof .slide-number { color: #fff; }
-.slide-proof .rail-link { color: var(--mint); border-bottom-color: var(--navy-line); }
-.slide-proof h2, .slide-proof h3, .slide-proof .lede { color: #fff; }
-.slide-proof a { color: var(--mint); }
-.slide-proof code { background: var(--navy-code); border-color: var(--navy-line); color: var(--navy-ink); }
+.slide-proof { background: var(--navy); border-color: var(--navy); }
 
 /* Cover: slide 1 keeps the same grammar — rail plus one centred body block — at display size. */
-.slide-cover { background: var(--navy); border-color: var(--navy); color: var(--navy-ink); }
-.slide-cover .slide-rail { border-color: var(--navy-line); }
-.slide-cover .kicker { color: var(--mint); }
-.slide-cover .rail-brand, .slide-cover .rail-module, .slide-cover .rail-foot { color: var(--navy-ink-soft); }
-.slide-cover .slide-number { color: #fff; }
-.slide-cover .rail-link { color: var(--mint); border-bottom-color: var(--navy-line); }
+.slide-cover { background: var(--navy); border-color: var(--navy); }
 .slide-cover h2 {
-  color: #fff;
   font-size: var(--t-display);
   line-height: 1.02;
   letter-spacing: -.045em;
   max-width: 20ch;
 }
-.slide-cover .lede { color: var(--navy-ink); }
-.slide-cover .cover-meta {
-  max-width: 46ch;
-  font-size: var(--t-small);
-  color: var(--navy-ink-soft);
-}
+.slide-cover .cover-meta { max-width: 46ch; font-size: var(--t-small); color: var(--c-ink-soft); }
 .slide-cover .cover-meta strong {
   display: block;
   margin-bottom: var(--s1);
   font-size: var(--t-body);
   font-weight: 650;
-  color: #fff;
+  color: var(--c-ink-strong);
 }
 .slide-cover .cover-meta small { display: block; font-size: var(--t-chrome); }
 
 /* Content components the decks use. */
 .takeaway {
-  background: var(--wash);
-  border-left: 3px solid var(--teal);
+  background: var(--c-surface);
+  color: var(--c-surface-ink);
+  border-left: 3px solid var(--c-accent);
   padding: var(--s2) var(--s3);
   font-size: var(--t-body);
   margin-bottom: var(--s3);
 }
-.slide-proof .takeaway { background: var(--navy-code); border-color: var(--mint); }
 .three-up { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); }
 .two-up { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); }
-.pillar { border-top: 2px solid var(--teal); padding-top: var(--s2); }
+.pillar { border-top: 2px solid var(--c-accent); padding-top: var(--s2); }
 .pillar h3 { margin-top: 0; margin-bottom: var(--s1); }
 .pillar p, .pillar li { font-size: var(--t-body); }
-.slide-proof .pillar { border-color: var(--navy-line); }
 .step {
   display: block;
-  color: var(--teal);
+  color: var(--c-accent);
   font-size: var(--t-chrome);
   font-weight: 650;
   letter-spacing: .04em;
   margin-bottom: var(--s2);
 }
-.slide-proof .step { color: var(--mint); }
 .metric {
   display: block;
   font-size: var(--t-metric);
   line-height: 1;
   font-weight: 600;
   letter-spacing: -.04em;
-  color: var(--teal);
+  color: var(--c-accent);
   margin-bottom: var(--s1);
 }
-.slide-proof .metric { color: var(--mint); }
 
 .slide table, .spec-table {
   width: 100%;
@@ -435,21 +458,19 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   font-size: var(--t-small);
 }
 .slide table th, .spec-table th {
-  color: var(--teal);
+  color: var(--c-accent);
   text-transform: uppercase;
   letter-spacing: .06em;
   font-size: var(--t-chrome);
   font-weight: 650;
   padding: 0 var(--s2) var(--s1) 0;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--c-rule);
 }
 .slide table td, .spec-table td {
   padding: var(--s1) var(--s2) var(--s1) 0;
   vertical-align: top;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--c-rule);
 }
-.slide-proof table th { color: var(--mint); border-color: var(--navy-line); }
-.slide-proof table td { border-color: var(--navy-rule); }
 
 /* ────────────────────────────────────────────────────────── navigation ── */
 
@@ -519,14 +540,14 @@ body.presentation-mode { background: var(--navy-deep); }
   border-color: var(--navy-mid);
 }
 .presentation-mode .deck-brand, .presentation-mode .slide-proof h2,
-.presentation-mode .slide-cover h2 { color: #fff; }
+.presentation-mode .slide-cover h2 { color: var(--white); }
 .presentation-mode .deck-brand .brand-destination,
 .presentation-mode .deck-audience, .presentation-mode .slide-status { color: var(--navy-ink-soft); }
 .presentation-mode .slide {
   background: var(--paper);
   color: var(--ink);
   border-color: var(--line);
-  box-shadow: 0 12px 48px #0003;
+  box-shadow: 0 12px 48px color-mix(in srgb, var(--navy-deep) 20%, transparent);
 }
 .presentation-mode .slide-proof, .presentation-mode .slide-cover { color: var(--navy-ink); }
 .presentation-mode .deck-tools button:not(.tool-primary),
@@ -559,7 +580,7 @@ body.presentation-mode { background: var(--navy-deep); }
   padding: 2px 12px;
   background: var(--navy-soft);
   border-radius: 4px;
-  color: #fff;
+  color: var(--white);
   font-size: 17px;
   font-weight: 550;
   line-height: 1.25;
@@ -580,7 +601,7 @@ body.presentation-mode { background: var(--navy-deep); }
   min-height: 32px;
   padding: 3px 9px;
   font-size: 13px;
-  background: #fff;
+  background: var(--white);
   color: var(--navy-soft);
   border: 1px solid var(--navy-ink-soft);
   border-radius: 4px;
@@ -590,10 +611,10 @@ body.presentation-mode { background: var(--navy-deep); }
   min-width: 92px;
   background: var(--teal-bright);
   border-color: var(--teal-bright);
-  color: #fff;
+  color: var(--white);
   font-weight: 650;
 }
-.narration-controls [data-cc][aria-pressed="true"] { color: #fff; background: var(--navy-soft); border-color: var(--navy-soft); }
+.narration-controls [data-cc][aria-pressed="true"] { color: var(--white); background: var(--navy-soft); border-color: var(--navy-soft); }
 .narration-seek { flex: 1; min-width: 60px; display: block; }
 .narration-seek input {
   display: block; width: 100%; min-height: 32px; margin: 0;
@@ -650,7 +671,7 @@ body.presentation-mode { background: var(--navy-deep); }
 
 .site-header { background: var(--navy); color: var(--line); padding: 40px 0 34px; }
 .site-header .wrap, .site-main { width: min(1180px, calc(100vw - 40px)); margin: 0 auto; }
-.site-brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; text-decoration: none; }
+.site-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--white); font-weight: 700; text-decoration: none; }
 .site-brand .brand-mark { width: 30px; height: 30px; }
 .site-brand .brand-destination { font-weight: 400; color: var(--navy-ink-soft); margin-left: 6px; font-size: var(--d-2); }
 .eyebrow {
@@ -662,7 +683,7 @@ body.presentation-mode { background: var(--navy-deep); }
   text-transform: uppercase;
 }
 .site-header h1 {
-  color: #fff;
+  color: var(--white);
   font-size: clamp(2rem, 4.4vw, 3.4rem);
   line-height: 1.04;
   letter-spacing: -.04em;
@@ -696,10 +717,10 @@ body.presentation-mode { background: var(--navy-deep); }
   min-height: 130px;
   padding: 18px;
   background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-  color: #fff;
+  color: var(--white);
 }
 .room-audience { color: var(--mint); font-size: var(--d-1); letter-spacing: .12em; text-transform: uppercase; font-weight: 650; }
-.room-cover h3 { font-size: var(--d-6); line-height: 1.14; letter-spacing: -.03em; }
+.room-cover h3 { font-size: var(--d-6); line-height: 1.14; letter-spacing: -.03em; color: inherit; }
 .room-number { font-size: var(--d-2); color: var(--navy-ink-soft); font-variant-numeric: tabular-nums; }
 .room-waves { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
 .room-waves span { width: 3px; border-radius: 2px; background: var(--mint); opacity: .75; }
@@ -715,7 +736,7 @@ body.presentation-mode { background: var(--navy-deep); }
 .room-actions .btn-primary {
   background: var(--teal-bright);
   border-color: var(--teal-bright);
-  color: #fff;
+  color: var(--white);
   font-weight: 650;
   text-decoration: none;
   padding: .45rem .9rem;
@@ -757,7 +778,7 @@ body.transcript .voice-badge { width: auto; margin: 14px 0 0; }
 .how-to kbd {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: .85em;
-  background: #fff;
+  background: var(--white);
   border: 1px solid var(--line);
   border-bottom-width: 2px;
   border-radius: 4px;
@@ -857,7 +878,6 @@ body.transcript main { padding-bottom: 80px; }
     align-items: baseline;
     gap: var(--s1) var(--s3);
   }
-  .slide-proof .slide-rail, .slide-cover .slide-rail { border-bottom-color: var(--navy-line); }
   .slide-body { justify-content: flex-start; }
   .slide-body h2, .slide-cover h2 { max-width: none; }
   .slide-content p, .slide-content li { max-width: none; }
@@ -885,7 +905,7 @@ body.transcript main { padding-bottom: 80px; }
 
 @page { size: 13.333in 7.5in; margin: 0; }
 @media print {
-  body, body.presentation-mode { background: #fff; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  body, body.presentation-mode { background: var(--white); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .deck-header, .deck-navigation, .deck-message, .narration-panel, .skip-link,
   .narration-transcript, .deck-drawer { display: none !important; }
   .slides, .reading-view .slides { width: 100% !important; margin: 0; }
