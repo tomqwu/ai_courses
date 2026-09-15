@@ -147,7 +147,11 @@ function measure() {
     kicker: text('.slide:not([hidden]) .kicker'),
     title: text('.slide:not([hidden]) h2'),
     footer: text('.slide:not([hidden]) .slide-footer'),
-    panelHeight: w.getComputedStyle(d.body).getPropertyValue('--narration-height').trim(),
+    panelHeight: w.getComputedStyle(d.documentElement).getPropertyValue('--narration-height').trim(),
+    panelBottom: Math.round(d.querySelector('.narration-panel').getBoundingClientRect().bottom),
+    panelTop: Math.round(d.querySelector('.narration-panel').getBoundingClientRect().top),
+    navTop: Math.round(d.querySelector('.deck-navigation').getBoundingClientRect().top),
+    viewportHeight: w.innerHeight,
     present: !!d.querySelector('[data-present]'),
     reading: !!d.querySelector('[data-reading]'),
     notes: !!d.querySelector('[data-notes]'),
@@ -260,6 +264,14 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         problems.append(f"{deck_id}: slide footer has no 'NN / NN' number ({data['footer']!r})")
     if float(data["panelHeight"].replace("px", "") or 0) <= 0:
         problems.append(f"{deck_id}: the frame did not give back space for the narration panel")
+    # Presence is not visibility: a panel pushed below the fold is unusable, and the frame maths
+    # silently failing to read --narration-height is exactly how that happens.
+    if data["panelTop"] < 0 or data["panelBottom"] > data["viewportHeight"] + 1:
+        problems.append(f"{deck_id}: the narration panel is off-screen "
+                        f"({data['panelTop']}..{data['panelBottom']} in a {data['viewportHeight']}px viewport)")
+    if data["panelBottom"] > data["navTop"] + 1:
+        problems.append(f"{deck_id}: the narration panel ({data['panelBottom']}) runs under the "
+                        f"navigation strip ({data['navTop']})")
     for control in ("present", "reading", "notes", "drawer"):
         if not data[control]:
             problems.append(f"{deck_id}: {control} control is missing from the deck chrome")

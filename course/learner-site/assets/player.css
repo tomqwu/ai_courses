@@ -35,10 +35,13 @@
   --focus: #ba7128;
   --narration-height: 0px;
   --narration-gap: 12px;
+  /* Header + badge + nav + gaps. player.js replaces this with a measurement; the number here is
+     only the no-JavaScript fallback. */
+  --chrome-height: 112px;
   /* One 16:9 master, constrained by width and height, giving back the space the narration panel
      occupies — so a narrated slide still fits above the panel at 16:9. */
   --frame-width: min(calc(100vw - 32px),
-                     calc((100dvh - 112px - var(--narration-height, 0px) - var(--narration-gap)) * 16 / 9));
+                     calc((100dvh - var(--chrome-height) - var(--narration-height, 0px)) * 16 / 9));
 }
 
 * { box-sizing: border-box; }
@@ -394,10 +397,8 @@ html.js .deck-page:not(.deck-ready) .deck-header { min-height: 48px; }
 .reading-view .slide-content { overflow: visible; }
 .reading-view .deck-nav-controls, .reading-view .slide-picker-label { display: none; }
 
-.deck-page.presentation-mode {
-  --frame-width: min(calc(100vw - 24px),
-                     calc((100dvh - 86px - var(--narration-height, 0px) - var(--narration-gap)) * 16 / 9));
-}
+.deck-page.presentation-mode { --frame-width: min(calc(100vw - 24px),
+                     calc((100dvh - var(--chrome-height) - var(--narration-height, 0px)) * 16 / 9)); }
 body.presentation-mode { background: var(--navy-deep); }
 .presentation-mode .deck-header, .presentation-mode .deck-navigation {
   background: var(--navy-deep);
@@ -428,7 +429,7 @@ body.presentation-mode { background: var(--navy-deep); }
 
 .narration-panel {
   width: var(--frame-width);
-  margin: var(--narration-gap) auto 0;
+  margin: var(--narration-gap) auto;
   padding: 8px 12px 6px;
   background: var(--paper);
   border: 1px solid #b9ceca;
@@ -622,7 +623,7 @@ body.presentation-mode { background: var(--navy-deep); }
 
 /* The honesty badge: present wherever a recording is not the release voice. */
 .voice-badge {
-  width: var(--frame-width);
+  width: min(1200px, calc(100vw - 32px));
   margin: 10px auto 0;
   padding: 9px 14px;
   background: var(--proof-bg);

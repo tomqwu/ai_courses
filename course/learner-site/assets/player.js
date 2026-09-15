@@ -119,12 +119,30 @@
   }
   const ui = buildPanel();
 
+  // Everything between the top of the page and the bottom of the navigation strip, except the
+  // slide itself: the header, the honesty badge, their margins, the panel gap and the nav. It is
+  // measured rather than assumed because the badge only appears on preview decks, and a wrong
+  // constant silently pushes the narration controls under the navigation strip.
+  function fitChrome() {
+    const root = document.documentElement;
+    const slidesEl = document.querySelector('.slides');
+    const gap = parseFloat(getComputedStyle(root).getPropertyValue('--narration-gap')) || 12;
+    const navHeight = els.nav ? els.nav.getBoundingClientRect().height : 0;
+    const slidesTop = slidesEl ? slidesEl.getBoundingClientRect().top : 0;
+    const value = `${Math.ceil(slidesTop + gap * 2 + navHeight)}px`;  // gap above and below the panel
+    if (root.style.getPropertyValue('--chrome-height') !== value) {
+      root.style.setProperty('--chrome-height', value);
+    }
+  }
+
   function reservePanelHeight() {
     if (!panelEl) return;
+    const root = document.documentElement;
     const height = panelEl.hidden ? '0px' : `${Math.ceil(panelEl.getBoundingClientRect().height)}px`;
-    if (body.style.getPropertyValue('--narration-height') !== height) {
-      body.style.setProperty('--narration-height', height);
+    if (root.style.getPropertyValue('--narration-height') !== height) {
+      root.style.setProperty('--narration-height', height);
     }
+    fitChrome();
   }
 
   const announce = message => { ui.status.textContent = message; };
@@ -426,6 +444,7 @@
   async function enterPresentation() {
     body.classList.add('presentation-mode');
     if (els.present) els.present.setAttribute('aria-pressed', 'true');
+    requestAnimationFrame(reservePanelHeight);
     try {
       if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
         await document.documentElement.requestFullscreen();
@@ -437,6 +456,7 @@
   function leavePresentation() {
     body.classList.remove('presentation-mode');
     if (els.present) els.present.setAttribute('aria-pressed', 'false');
+    requestAnimationFrame(reservePanelHeight);
   }
 
   function togglePresentation() {
@@ -444,6 +464,7 @@
   }
 
   if (els.present) els.present.addEventListener('click', togglePresentation);
+  window.addEventListener('resize', () => requestAnimationFrame(reservePanelHeight));
   document.addEventListener('fullscreenchange', () => {
     // Leaving full screen with Esc must not strand the page in presentation styling.
     if (!document.fullscreenElement) leavePresentation();

@@ -169,23 +169,34 @@ and interaction:
 ```
 $ python3 learner-site/check_player.py --deck m06 --measure
 {
-  "slideWidth": 1557, "slideHeight": 876, "ratio": 1.778, "aspectRatio": "16 / 9",
+  "slideWidth": 1228, "slideHeight": 691, "ratio": 1.778, "aspectRatio": "16 / 9",
   "overflowing": false,
-  "bodyFont": "\"Source Sans 3\", ...", "fontLoaded": true, "fontsStatus": "loaded",
+  "fontLoaded": true, "fontsStatus": "loaded",
   "kicker": "AI Product Studio · Module 6 of 9",
   "title": "The Expertise Product: Evidence, Routing, Editions",
   "footer": "AI Product Studio / M6 · The Expertise Product / Slide transcript / 01 / 28",
-  "panelHeight": "124px", "coverSlide": true,
-  "chapters": 4, "optgroups": 4, "titleIds": 28, "footerLinks": 28,
+  "panelHeight": "124px", "panelTop": 812, "panelBottom": 936, "navTop": 948, "viewportHeight": 1000,
+  "coverSlide": true, "chapters": 4, "optgroups": 4, "titleIds": 28, "footerLinks": 28,
   "presentMode": true, "readingMode": true, "slidesVisibleWhileReading": 28,
   "backToOneSlide": 1, "drawerOpen": true, "drawerHasNotes": true, "drawerClosed": true
 }
 ```
 
+This is not ceremony. It has caught four bugs that all rendered wrong while looking right in source:
+
+| Bug | What the measurement showed |
+|---|---|
+| `@font-face` URL | copied from ai_qe's `/assets/css/` layout while our CSS sits in `/assets/`, so the font 404'd and silently fell back to a system sans |
+| **Read all** | switched the class but left every other slide `hidden` — 1 slide visible when 28 should be |
+| Narration panel | pushed to 897..1021 in a 900px viewport: the controls were **off-screen**, because `--frame-width` is declared on `:root` and a `var()` inside a custom property is substituted where that property is declared, so setting `--narration-height` on `<body>` never reached the frame maths |
+| Chrome budget | the honesty badge adds ~49px that a hardcoded `112px` constant did not know about, so the panel ran under the navigation strip |
+
+The fourth is why `--chrome-height` is measured by the player rather than assumed.
+
 So every deck is checked for: the frame really is 16:9 and does not overflow, the typeface actually
-loaded, the kicker/title/footer exist on the current slide, the panel's height was given back to the
-frame, every slide has an anchored title and a transcript link, the picker is chapter-grouped, and
-Present / Read all / Sources & notes all change state correctly.
+loaded, the kicker/title/footer exist on the current slide, **the narration panel is inside the
+viewport and clear of the navigation strip**, every slide has an anchored title and a transcript link,
+the picker is chapter-grouped, and Present / Read all / Sources & notes all change state correctly.
 
 
 ```bash
