@@ -22,3 +22,6 @@ course/06-production/slides/out/
 course/learner-site/*.html
 course/learner-site/narration.json
 course/learner-site/assets/audio/
+
+# Design-review screenshots (regenerate, don't commit)
+course/learner-site/_review/

@@ -146,7 +146,8 @@ function measure() {
     fontsStatus: d.fonts.status,
     kicker: text('.slide:not([hidden]) .kicker'),
     title: text('.slide:not([hidden]) h2'),
-    footer: text('.slide:not([hidden]) .slide-footer'),
+    rail: text('.slide:not([hidden]) .slide-rail'),
+    railNum: text('.slide:not([hidden]) .slide-number'),
     panelHeight: w.getComputedStyle(d.documentElement).getPropertyValue('--narration-height').trim(),
     panelBottom: Math.round(d.querySelector('.narration-panel').getBoundingClientRect().bottom),
     panelTop: Math.round(d.querySelector('.narration-panel').getBoundingClientRect().top),
@@ -160,7 +161,83 @@ function measure() {
     chapters: Object.keys(chapters).length,
     optgroups: d.querySelectorAll('optgroup').length,
     titleIds: d.querySelectorAll('.slide h2[id$="-title"]').length,
-    footerLinks: d.querySelectorAll('.slide-footer a').length
+    railLinks: d.querySelectorAll('.slide-rail a').length,
+    rails: d.querySelectorAll('.slide-rail').length,
+    spine: (function () {
+      var r = d.querySelector('.slide-rail');
+      if (!r) return '';
+      return w.getComputedStyle(r).borderRightWidth;
+    })(),
+    // ── the design system's own rules, asserted so they cannot drift again ──
+    // Measured across EVERY slide, not just the visible one: in deck-ready mode only slide 1 is
+    // visible, so measuring that alone would mean the whole check inspected nothing but covers,
+    // and any content slide could drift unnoticed.
+    system: (function () {
+      var slides = Array.prototype.slice.call(d.querySelectorAll('.slide'));
+      var was = slides.map(function (s) { return s.hidden; });
+      slides.forEach(function (s) { s.hidden = false; });
+      var worst = { typeScale: [], textColours: [], spacing: [], slide: '' };
+      slides.forEach(function (s) {
+        var ts = {}, tc = {}, sp = {};
+        [s].concat(Array.prototype.slice.call(s.querySelectorAll('*'))).forEach(function (e) {
+          var cs = w.getComputedStyle(e);
+          if (cs.display === 'none' || cs.visibility === 'hidden') return;    // unrendered
+          var hasText = !!e.textContent.trim();
+          if (hasText && !e.children.length) ts[Math.round(parseFloat(cs.fontSize) * 10) / 10] = 1;
+          if (hasText) tc[cs.color] = 1;
+          ['marginTop', 'marginBottom', 'paddingTop', 'paddingBottom', 'gap'].forEach(function (k) {
+            var v = cs[k];
+            if (!v || v === '0px' || v === 'normal') return;
+            var n = parseFloat(v);
+            if (!isFinite(n) || n === 0) return;      // 'auto' resolves to NaN once laid out
+            sp[Math.round(n * 10) / 10] = 1;
+          });
+        });
+        var n = Object.keys(ts).length + Object.keys(tc).length + Object.keys(sp).length;
+        var best = worst.typeScale.length + worst.textColours.length + worst.spacing.length;
+        if (n > best) {
+          worst = { typeScale: Object.keys(ts).map(Number),
+                    textColours: Object.keys(tc),
+                    spacing: Object.keys(sp).map(Number),
+                    slide: s.id };
+        }
+      });
+      slides.forEach(function (s, i) { s.hidden = was[i]; });
+      return worst;
+    })(),
+    // ── composition, measured across every slide ──
+    composition: (function () {
+      var slides = Array.prototype.slice.call(d.querySelectorAll('.slide'));
+      var was = slides.map(function (s) { return s.hidden; });
+      slides.forEach(function (s) { s.hidden = false; });
+      var out = [];
+      slides.forEach(function (s) {
+        var body = s.querySelector('.slide-body');
+        if (!body) return;
+        // Measure the CONTENT extent, not the body box: the body is a stretch-aligned grid item, so
+        // its box always fills the cell and any measurement of it would be trivially centred.
+        var kids = Array.prototype.slice.call(body.children)
+                     .filter(function (e) { return e.getClientRects().length; });
+        if (!kids.length) return;
+        var sb = s.getBoundingClientRect();
+        var first = kids[0].getBoundingClientRect();
+        var last = kids[kids.length - 1].getBoundingClientRect();
+        var h2 = s.querySelector('h2'), txt = s.querySelector('.slide-content p, .slide-content li');
+        var num = s.querySelector('.slide-number');
+        out.push({
+          id: s.id,
+          above: Math.round(first.top - sb.top),
+          below: Math.round(sb.bottom - last.bottom),
+          contentH: Math.round(last.bottom - first.top),
+          frameH: Math.round(sb.height),
+          title: h2 ? parseFloat(w.getComputedStyle(h2).fontSize) : 0,
+          body: txt ? parseFloat(w.getComputedStyle(txt).fontSize) : 0,
+          chrome: num ? parseFloat(w.getComputedStyle(num).fontSize) : 0
+        });
+      });
+      slides.forEach(function (s, i) { s.hidden = was[i]; });
+      return out;
+    })()
   });
 }
 
@@ -260,8 +337,40 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         problems.append(f"{deck_id}: the current slide has no kicker")
     if not data["title"]:
         problems.append(f"{deck_id}: the current slide has no title")
-    if not re.search(r"\d{2} / \d{2}", data["footer"]):
-        problems.append(f"{deck_id}: slide footer has no 'NN / NN' number ({data['footer']!r})")
+    if not re.search(r"\d{2} / \d{2}", data["railNum"]):
+        problems.append(f"{deck_id}: slide rail has no 'NN / NN' number ({data['railNum']!r})")
+    if data["rails"] != slide_count:
+        problems.append(f"{deck_id}: {data['rails']} slides carry the editorial rail, expected {slide_count}")
+    if not data["spine"] or float(data["spine"].replace("px", "") or 0) <= 0:
+        problems.append(f"{deck_id}: the rail has no spine rule (border-right is {data['spine']!r})")
+    sysd = data["system"]
+    worst = sysd["slide"]
+    if len(sysd["typeScale"]) > 8:
+        problems.append(f"{deck_id}: {len(sysd['typeScale'])} distinct type sizes on {worst}, "
+                        f"expected <= 8 — the scale has drifted: {sorted(sysd['typeScale'], reverse=True)}")
+    if len(sysd["textColours"]) > 8:
+        problems.append(f"{deck_id}: {len(sysd['textColours'])} distinct text colours on {worst}, "
+                        f"expected <= 8: {sysd['textColours']}")
+    if len(sysd["spacing"]) > 14:
+        problems.append(f"{deck_id}: {len(sysd['spacing'])} distinct spacing values on {worst}, "
+                        f"expected <= 14: {sorted(sysd['spacing'], reverse=True)}")
+    comp = data["composition"]
+    thin = [c for c in comp if c["body"] and c["title"] / c["body"] < 2.5]
+    if thin:
+        c = thin[0]
+        problems.append(f"{deck_id}/{c['id']}: title/body is {c['title'] / c['body']:.2f}x, "
+                        f"below the 2.5x hierarchy floor ({len(thin)} slide(s) affected)")
+    small = [c for c in comp if c["frameH"] and c["chrome"] / c["frameH"] < 0.02]
+    if small:
+        c = small[0]
+        problems.append(f"{deck_id}/{c['id']}: rail chrome is "
+                        f"{c['chrome'] / c['frameH'] * 100:.2f}% of the frame height, below the 2% "
+                        f"floor that survives a projector ({len(small)} slide(s) affected)")
+    off = [c for c in comp if abs(c["above"] - c["below"]) > max(24, c["frameH"] * 0.06)]
+    if off:
+        c = max(off, key=lambda x: abs(x["above"] - x["below"]))
+        problems.append(f"{deck_id}: {len(off)}/{len(comp)} slides are not optically centred; "
+                        f"worst {c['id']} ({c['above']}px above, {c['below']}px below)")
     if float(data["panelHeight"].replace("px", "") or 0) <= 0:
         problems.append(f"{deck_id}: the frame did not give back space for the narration panel")
     # Presence is not visibility: a panel pushed below the fold is unusable, and the frame maths
@@ -279,8 +388,8 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         problems.append(f"{deck_id}: slide 1 is not styled as the cover")
     if data["titleIds"] != slide_count:
         problems.append(f"{deck_id}: {data['titleIds']} slides have an anchored title, expected {slide_count}")
-    if data["footerLinks"] != slide_count:
-        problems.append(f"{deck_id}: {data['footerLinks']} slides link to their transcript, "
+    if data["railLinks"] != slide_count:
+        problems.append(f"{deck_id}: {data['railLinks']} slides link to their transcript, "
                         f"expected {slide_count}")
     if data["optgroups"] < 2:
         problems.append(f"{deck_id}: the slide picker is not grouped into chapters")

@@ -345,17 +345,32 @@ BRAND_MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" fo
               '</svg>')
 
 
-def slide_footer(deck: dict, slide: dict, site_base: str) -> str:
-    """One footer for every slide: what this is, where to read it, and where you are."""
+def slide_rail(deck: dict, slide: dict, site_base: str) -> str:
+    """The spine: what this is, where you are, and where to read it.
+
+    The rail spans the full frame height on purpose. The layout audit found the content area a median
+    45% filled with the text sitting in the top-left corner of a large empty frame — leftover
+    whitespace. A full-height spine frames that space instead, and the body block is optically
+    centred against it.
+    """
     total = len(deck["slides"])
-    return (f'<footer class="slide-footer">'
-            f'<span class="deck-tag">AI Product Studio <span class="footer-divider">/</span> '
-            f'{html.escape(deck["module_tag"])}</span>'
-            f'<span class="footer-divider" aria-hidden="true">/</span>'
-            f'<a href="{site_base}/transcript-{deck["id"]}.html#{slide["id"]}">Slide transcript</a>'
-            f'<span class="footer-divider" aria-hidden="true">/</span>'
+    # A running head, as a book would carry one: every page but the title page.
+    brand = "" if slide["cover"] else '<p class="rail-brand">AI Product Studio</p>'
+    # When a slide has no segment kicker the parser falls back to the module tag; don't print it twice.
+    module = ("" if slide["kicker"] == deck["module_tag"]
+              else f'<p class="rail-module">{html.escape(deck["module_tag"])}</p>')
+    return (f'<div class="slide-rail">'
+            f'<div class="rail-head">'
+            f'<p class="kicker">{html.escape(slide["kicker"])}</p>'
+            f'{brand}'
+            f'{module}'
+            f'</div>'
+            f'<div class="rail-foot">'
             f'<span class="slide-number" aria-label="Slide {slide["number"]} of {total}">'
-            f'{slide["number"]:02d} / {total:02d}</span></footer>')
+            f'{slide["number"]:02d} / {total:02d}</span>'
+            f'<a class="rail-link" '
+            f'href="{site_base}/transcript-{deck["id"]}.html#{slide["id"]}">Slide transcript</a>'
+            f'</div></div>')
 
 
 def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
@@ -371,18 +386,20 @@ def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
         media = (f' data-audio="{html.escape(manifest_entry["audio"], quote=True)}"'
                  f' data-captions="{html.escape(manifest_entry["captions"], quote=True)}"'
                  f' data-duration="{manifest_entry.get("duration", "")}"')
-    content = f'<div class="slide-content">{slide["html"]}</div>'
-    body = (f'<div class="cover-grid">{content}<aside class="cover-note">{cover_note}</aside></div>'
-            if slide["cover"] else content)
+    # The body is one block, centred in the frame: title, content, and — on the cover — the
+    # standing metadata about the deck.
+    cover_meta = f'<p class="lede cover-meta">{cover_note}</p>' if slide["cover"] else ""
     # Speaker notes travel with the slide so the drawer can read them without a second request.
     notes = html.escape(slide["notes"]) if slide["notes"] else ""
     return (f'<section class="{" ".join(classes)}" id="{slide["id"]}" data-number="{slide["number"]}"'
             f' data-chapter="{html.escape(slide["chapter"], quote=True)}"'
             f'{media}{hidden} aria-roledescription="slide" aria-labelledby="{slide["id"]}-title">'
-            f'<p class="kicker">{html.escape(slide["kicker"])}</p>'
+            f'{slide_rail(deck, slide, site_base)}'
+            f'<div class="slide-body">'
             f'<h2 id="{slide["id"]}-title">{inline(slide["title"])}</h2>'
-            f'{body}'
-            f'{slide_footer(deck, slide, site_base)}'
+            f'<div class="slide-content">{slide["html"]}</div>'
+            f'{cover_meta}'
+            f'</div>'
             f'<div class="slide-notes-source" hidden>{notes}</div>'
             f'</section>')
 

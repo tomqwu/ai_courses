@@ -37,7 +37,7 @@ and what was deliberately changed, is written down rather than implied:
 | The 16:9 master | `--frame-width: min(100vw - 32px, (100dvh - chrome - narration) * 16/9)`, `.slide { aspect-ratio: 16/9 }` |
 | Container-query type | slide type is sized in `cqw`, so it scales with the frame instead of the viewport |
 | Kicker + title | `M0.1 — Three archetypes` renders as kicker `M0.1` and title `Three archetypes`, exactly ai_qe's `02 / Strategic target state` |
-| Source footer | every slide carries a footer with the deck tag, a transcript link and `NN / NN` |
+| Source footer | every slide carries a full-height left spine — kicker, running head, module tag, `NN / NN`, transcript link |
 | Modes | presentation (full screen), reading view, notes drawer, one 16:9 slide per printed page |
 | Chapter grouping | `data-chapter` per slide; the picker is grouped with `<optgroup>` |
 
@@ -45,6 +45,41 @@ Changed for this course: proof slides (`<!-- _class: proof -->`) get a dark, acc
 evidence slides change the deck's rhythm; the vocabulary is limited to what these decks contain
 (bullets, tables, code, takeaways, pillars, metrics); and the honesty badge for the preview voice keeps
 its own light-theme styling because it must be legible wherever it appears.
+
+### The editorial rail
+
+The first port was faithful to ai_qe's *chrome* but not to its *composition*, and an audit of the built
+site found why it read flat. Measured across all 233 slides:
+
+| Measured | Before | After |
+|---|---|---|
+| Content block as a share of the frame's inner height | 45%, top-aligned in the corner | **59%, optically centred** (164px above, 164px below) |
+| Distinct type sizes in use | 11, including four inside 18–21px | **one 1.25 scale** |
+| Distinct spacing values | 17, all fractional (`41.77`, `23.34`, `6.76`…) | **one 8pt grid in `cqw`** |
+| Distinct hex colours in the stylesheet | 48, ≈20 of them outside the token block | **25 named tokens, zero literals outside the block** |
+| Title / body size ratio | 2.29× | **2.61×** |
+| Slide-chrome text as a share of frame height | 1.47% — dies on a projector | **2.40%** |
+| Slides whose content shape is one bullet list | 143 / 233 = 61% (79% bullet-only) | unchanged — a content problem, not a CSS one |
+
+The rail is the structural half of the fix: a spine running the full frame height gives the empty half
+of the frame an edge to sit against, and the body block is centred against it. **This composes the
+whitespace rather than eliminating it.** The content is still thin — a median 36 words per slide — and
+no layout makes 36 words fill a 16:9 frame. Making the deck *look* full would mean inventing content,
+which this course does not do.
+
+The scale lives in `.slides` as custom properties (`--t-chrome` … `--t-display`, `--s1` … `--s8`).
+Below 700px the mobile block redefines those tokens to `rem` values — one breakpoint, one place, which
+is what stops container-query type from rendering 5px chrome on a phone. The index and transcript pages
+run on a tighter seven-step document scale (`--d-1` … `--d-7`) because 1.25 steps are too coarse for UI
+text; they previously used twenty sizes, nine of them inside 11–15px.
+
+`check_player.py` now asserts the system's own rules so it cannot drift back: ≤8 type sizes, ≤8 text
+colours and ≤14 spacing values on any slide; title/body ≥2.5×; chrome ≥2% of frame height; every slide
+optically centred; and a rail with a real spine rule on all 233. These are measured across **every**
+slide — an earlier version measured only the visible one, which in deck-ready mode is always the cover,
+so any content slide could have drifted unnoticed. Centring is measured on the *content extent*, not
+the body box: the body is a stretch-aligned grid item, so measuring its box would be trivially centred.
+
 
 ## Transcripts
 

@@ -109,11 +109,18 @@ python3 course/publish_site.py                 # publish text-first (36 files, ~
 python3 course/publish_site.py --with-audio    # publish with the recordings so narration plays
 ```
 
-The published copy is **text-first**: the decks, the full ai_qe design, every transcript and the print
+The published copy is **text-first**: the decks, the full design system, every transcript and the print
 stylesheet all work, but the player is told there are no recordings, so nothing 404s and no Play button
 offers an audio file the copy does not contain. Add the recordings — for example once the release voice
 is recorded — with `--with-audio`. Either way the gate runs first and the publish is refused unless it
 is green.
+
+The slide layout is an **editorial rail** — a full-height left spine carrying the kicker, running head,
+module tag, slide number and transcript link, with the title and content centred against it. It replaced
+a footer-based layout that an audit of all 233 slides showed was 45% filled, top-aligned in the corner,
+and running on an 11-size type scale with 17 unsystematic spacing values and 48 hex colours. The rail
+composes that whitespace instead of filling it, and `check_player.py` now asserts the system's own rules
+so it cannot drift back. `course/learner-site/README.md` has the measured before/after.
 
 The live copy is text-first, so it makes no sound and offers no Play button: it is a deck you read,
 present, print and search, with the full design and all 233 transcripts. That is a deliberate limit of
