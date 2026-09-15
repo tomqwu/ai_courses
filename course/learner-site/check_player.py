@@ -114,6 +114,113 @@ def reset_progress(browser: str, port: int) -> None:
         page.unlink(missing_ok=True)
 
 
+CONTRAST_JS = r"""
+function apsAuditContrast(w, d) {
+  function parse(c) {
+    var m = String(c).match(/rgba?\(([^)]+)\)/);
+    if (m) { var p = m[1].split(',').map(parseFloat); return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 }; }
+    var h = String(c).match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (h) { var x = h[1];
+      if (x.length === 3) { x = x[0]+x[0]+x[1]+x[1]+x[2]+x[2]; }
+      return { r: parseInt(x.slice(0,2),16), g: parseInt(x.slice(2,4),16), b: parseInt(x.slice(4,6),16), a: 1 }; }
+    return null;
+  }
+  function stops(img) {
+    var out = [], m, re = /rgba?\([^)]+\)|#[0-9a-f]{3,8}/gi;
+    while ((m = re.exec(img))) { var c = parse(m[0]); if (c) out.push(c); }
+    return out;
+  }
+  // Walk ancestors to the first painted surface, compositing translucent layers. Gradients are
+  // resolved to their colour stops and judged by the WORST stop, so a gradient can never hide a
+  // failure. Getting this wrong is how navy-on-navy shipped as 1.00:1 on the landing page.
+  function effBg(el) {
+    var stack = [], n = el;
+    while (n && n.nodeType === 1) {
+      var cs = w.getComputedStyle(n);
+      if (cs.backgroundImage && cs.backgroundImage !== 'none') {
+        var st = stops(cs.backgroundImage);
+        if (st.length) return { stops: st };
+      }
+      var c = parse(cs.backgroundColor);
+      if (c && c.a > 0) { stack.push(c); if (c.a >= 1) break; }
+      n = n.parentElement;
+    }
+    if (!stack.length) return { stops: [{ r: 255, g: 255, b: 255, a: 1 }] };
+    var base = stack[stack.length - 1];
+    for (var i = stack.length - 2; i >= 0; i--) {
+      var c = stack[i];
+      base = { r: c.r*c.a + base.r*(1-c.a), g: c.g*c.a + base.g*(1-c.a),
+               b: c.b*c.a + base.b*(1-c.a), a: 1 };
+    }
+    return { stops: [base] };
+  }
+  function lum(c) { function f(v) { v /= 255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); }
+    return 0.2126*f(c.r) + 0.7152*f(c.g) + 0.0722*f(c.b); }
+  function ratio(a, b) { var la = lum(a), lb = lum(b), hi = Math.max(la, lb), lo = Math.min(la, lb);
+    return (hi + 0.05) / (lo + 0.05); }
+  var slides = Array.prototype.slice.call(d.querySelectorAll('.slide'));
+  var was = slides.map(function (s) { return s.hidden; });
+  slides.forEach(function (s) { s.hidden = false; });
+  var bad = [], measured = 0;
+  var walker = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    var node = walker.currentNode;
+    if (!node.textContent.trim()) continue;
+    var el = node.parentElement;
+    if (!el) continue;
+    var cs = w.getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) continue;
+    if (!el.getClientRects().length) continue;
+    var fg = parse(cs.color);
+    if (!fg || fg.a === 0) continue;
+    var bg = effBg(el);
+    var size = parseFloat(cs.fontSize), weight = parseInt(cs.fontWeight, 10) || 400;
+    var large = size >= 24 || (size >= 18.66 && weight >= 700);
+    var need = large ? 3.0 : 4.5;
+    var worst = Infinity, worstBg = null;
+    bg.stops.forEach(function (s) { var r = ratio(fg, s); if (r < worst) { worst = r; worstBg = s; } });
+    measured++;
+    if (worst < need - 0.005) {
+      var sel = el.tagName.toLowerCase();
+      if (el.className && typeof el.className === 'string') {
+        sel += '.' + el.className.trim().split(/\s+/).slice(0, 2).join('.');
+      }
+      bad.push({ sel: sel, text: node.textContent.trim().slice(0, 44), colour: cs.color,
+                 background: 'rgb(' + Math.round(worstBg.r) + ',' + Math.round(worstBg.g) + ',' + Math.round(worstBg.b) + ')',
+                 ratio: Math.round(worst * 100) / 100, need: need, size: cs.fontSize });
+    }
+  }
+  slides.forEach(function (s, i) { s.hidden = was[i]; });
+  return { measured: measured, failures: bad };
+}
+"""
+
+PAGES_PROBE_PAGE = "_aps_pages_probe.html"
+PAGES_PROBE_TEMPLATE = (r"""<!doctype html><meta charset=utf-8><title>pages probe</title>
+<pre id="out">pending</pre>
+<script>
+/*CONTRAST*/
+var pages = __PAGES__;
+var results = [], i = 0;
+function next() {
+  if (i >= pages.length) { document.getElementById("out").textContent = JSON.stringify(results); return; }
+  var page = pages[i++];
+  var f = document.createElement("iframe");
+  f.style.cssText = "width:1600px;height:1000px;border:0";
+  f.src = page;
+  f.onload = function () {
+    setTimeout(function () {
+      try { results.push({ page: page, audit: apsAuditContrast(f.contentWindow, f.contentDocument) }); }
+      catch (e) { results.push({ page: page, error: String(e) }); }
+      document.body.removeChild(f); next();
+    }, 900);
+  };
+  document.body.appendChild(f);
+}
+next();
+</script>
+""")
+
 PROBE_PAGE = "_aps_layout_probe.html"
 PROBE_TEMPLATE = r"""<!doctype html><meta charset=utf-8><title>probe</title>
 <iframe id="frame" src="__DECK__.html" style="width:1600px;height:1000px;border:0"></iframe>
@@ -206,6 +313,7 @@ function measure() {
       return worst;
     })(),
     // ── composition, measured across every slide ──
+    contrast: apsAuditContrast(w, d),
     composition: (function () {
       var slides = Array.prototype.slice.call(d.querySelectorAll('.slide'));
       var was = slides.map(function (s) { return s.hidden; });
@@ -280,10 +388,53 @@ document.getElementById('frame').addEventListener('load', function () {
 """
 
 
+def write_probe(deck_id: str) -> str:
+    """The deck probe with the shared contrast auditor injected."""
+    return (PROBE_TEMPLATE.replace("function measure() {", CONTRAST_JS + "\nfunction measure() {", 1)
+                         .replace("__DECK__", deck_id))
+
+
+def check_pages(browser: str, port: int) -> list[str]:
+    """Contrast on the pages that are not decks — the landing page and the transcripts.
+
+    The landing page is where an invisible-heading bug actually shipped: a global
+    `h1, h2, h3 { color: navy }` beat the element colour on a navy gradient, so every module
+    title rendered at 1.00:1. The deck probe could never have caught it.
+    """
+    pages = ["index.html"] + sorted(p.name for p in SITE_ROOT.glob("transcript-*.html"))
+    pages = [p for p in pages if (SITE_ROOT / p).exists()]
+    if not pages:
+        return []
+    page = SITE_ROOT / PAGES_PROBE_PAGE
+    page.write_text(PAGES_PROBE_TEMPLATE.replace("/*CONTRAST*/", CONTRAST_JS)
+                                         .replace("__PAGES__", json.dumps(pages)), encoding="utf-8")
+    try:
+        dom = dump_dom(browser, f"http://127.0.0.1:{port}/{PAGES_PROBE_PAGE}", budget_ms=20000)
+    finally:
+        page.unlink(missing_ok=True)
+    match = re.search(r'<pre id="out">(.*?)</pre>', dom, re.S)
+    if not match:
+        return ["pages: contrast probe did not report"]
+    try:
+        results = json.loads(html_lib.unescape(match.group(1)))
+    except ValueError:
+        return ["pages: unreadable contrast probe output"]
+    problems: list[str] = []
+    for r in results:
+        if r.get("error"):
+            problems.append(f"{r['page']}: contrast probe failed ({r['error']})")
+            continue
+        for b in (r.get("audit") or {}).get("failures") or []:
+            problems.append(f"{r['page']}: text below WCAG AA — {b['ratio']}:1 (needs {b['need']}) "
+                            f"{b['sel']} colour {b['colour']} on {b['background']} ({b['size']}): "
+                            f"{b['text']!r}")
+    return problems
+
+
 def measure_deck(browser: str, port: int, deck_id: str) -> dict:
     """Render the probe and return the raw measurements (used by --measure)."""
     page = SITE_ROOT / PROBE_PAGE
-    page.write_text(PROBE_TEMPLATE.replace("__DECK__", deck_id), encoding="utf-8")
+    page.write_text(write_probe(deck_id), encoding="utf-8")
     try:
         dom = dump_dom(browser, f"http://127.0.0.1:{port}/{PROBE_PAGE}", budget_ms=4000)
     finally:
@@ -306,7 +457,7 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
     invariants the design depends on.
     """
     page = SITE_ROOT / PROBE_PAGE
-    page.write_text(PROBE_TEMPLATE.replace("__DECK__", deck_id), encoding="utf-8")
+    page.write_text(write_probe(deck_id), encoding="utf-8")
     try:
         dom = dump_dom(browser, f"http://127.0.0.1:{port}/{PROBE_PAGE}", budget_ms=4000)
     finally:
@@ -343,6 +494,14 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         problems.append(f"{deck_id}: {data['rails']} slides carry the editorial rail, expected {slide_count}")
     if not data["spine"] or float(data["spine"].replace("px", "") or 0) <= 0:
         problems.append(f"{deck_id}: the rail has no spine rule (border-right is {data['spine']!r})")
+    con = data.get("contrast") or {}
+    bad = con.get("failures") or []
+    for b in sorted(bad, key=lambda x: x["ratio"])[:4]:
+        problems.append(f"{deck_id}: text below WCAG AA — {b['ratio']}:1 (needs {b['need']}) "
+                        f"{b['sel']} colour {b['colour']} on {b['background']} ({b['size']}): "
+                        f"{b['text']!r}")
+    if len(bad) > 4:
+        problems.append(f"{deck_id}: {len(bad) - 4} further contrast failures")
     sysd = data["system"]
     worst = sysd["slide"]
     if len(sysd["typeScale"]) > 8:
@@ -523,6 +682,7 @@ def main(argv=None) -> int:
             print(f"  {'ok  ' if not found else 'FAIL'} {deck_id}  "
                   f"({len(scripts[deck_id]['slides'])} slides, {len(recorded)} narrated)")
             problems.extend(found)
+        problems.extend(check_pages(browser, port))
     finally:
         httpd.shutdown()
 

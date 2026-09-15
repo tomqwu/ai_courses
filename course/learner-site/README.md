@@ -73,12 +73,51 @@ is what stops container-query type from rendering 5px chrome on a phone. The ind
 run on a tighter seven-step document scale (`--d-1` … `--d-7`) because 1.25 steps are too coarse for UI
 text; they previously used twenty sizes, nine of them inside 11–15px.
 
-`check_player.py` now asserts the system's own rules so it cannot drift back: ≤8 type sizes, ≤8 text
+`check_player.py` asserts the system's own rules so they cannot drift back: ≤8 type sizes, ≤8 text
 colours and ≤14 spacing values on any slide; title/body ≥2.5×; chrome ≥2% of frame height; every slide
-optically centred; and a rail with a real spine rule on all 233. These are measured across **every**
-slide — an earlier version measured only the visible one, which in deck-ready mode is always the cover,
-so any content slide could have drifted unnoticed. Centring is measured on the *content extent*, not
-the body box: the body is a stretch-aligned grid item, so measuring its box would be trivially centred.
+optically centred; a rail with a real spine rule on all 233; and **no text below WCAG AA**. These are
+measured across **every** slide — an earlier version measured only the visible one, which in deck-ready
+mode is always the cover, so any content slide could have drifted unnoticed. Centring is measured on the
+*content extent*, not the body box: the body is a stretch-aligned grid item, so measuring its box would
+be trivially centred.
+
+### Colour is resolved per slide kind, not per override
+
+The first version of the rail wired each component colour by hand and then hand-wrote a `.slide-proof`
+override for each one. That is a bug factory: every new component is one forgotten override away from
+invisible text, and two were already forgotten — inline `code` on the cover rendered at **1.16:1**, and
+`blockquote` on a proof slide at **2.31:1**. Neither was caught, because the checker had no contrast
+assertion at all.
+
+Components now reference semantic names (`--c-ink`, `--c-rule`, `--c-surface`, `--c-code-bg`,
+`--c-accent`, …) and the slide *kind* redefines them once:
+
+```css
+.slide-proof, .slide-cover { --c-ink: var(--navy-ink); --c-accent: var(--mint); … }
+```
+
+No `.slide-proof <component>` colour override remains. Every colour in the stylesheet is a named token —
+including `--white` — and `check_player.py` fails on any hex literal of any length outside the token
+block. An earlier claim of "zero literals outside the block" was only true for six-digit hexes; nineteen
+`#fff` and a `#0003` had gone uncounted.
+
+### The contrast audit
+
+`apsAuditContrast` walks every text node in the rendered page, composites its real background by walking
+ancestors through translucent layers, resolves gradient backgrounds to their stops and judges the text
+against the **worst** stop, then applies the WCAG AA threshold (4.5:1, or 3:1 for large text). It runs
+over all 233 slides plus the deck chrome, and over the landing page and all ten transcript pages — the
+pages the deck probe can never see.
+
+That last part matters: the landing page was shipping an invisible-heading bug. A global
+`h1, h2, h3 { color: var(--navy) }` beat the element colour on `.room-cover`'s navy gradient, so **every
+module card title rendered at 1.00:1**. It predates the rail (it is in `8cd140f`), and no amount of
+reading the CSS caught it — it took a rendered-text audit. The audit is verified to fire: reintroducing
+the bug fails the check with all nine titles named.
+
+Still unmeasured by it: text inside `<dialog>` elements that are closed (the drawer and the transcript
+modal are `display: none` until opened), and any text over a photographic background.
+
 
 
 ## Transcripts
