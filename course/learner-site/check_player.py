@@ -268,7 +268,8 @@ function measure() {
     chapters: Object.keys(chapters).length,
     optgroups: d.querySelectorAll('optgroup').length,
     titleIds: d.querySelectorAll('.slide h2[id$="-title"]').length,
-    railLinks: d.querySelectorAll('.slide-rail a').length,
+    railLinks: d.querySelectorAll('.slide-rail a[href*="transcript-"]').length,
+    moduleLinks: d.querySelectorAll('.slide-rail a[href*="module-"]').length,
     rails: d.querySelectorAll('.slide-rail').length,
     spine: (function () {
       var r = d.querySelector('.slide-rail');
@@ -401,7 +402,9 @@ def check_pages(browser: str, port: int) -> list[str]:
     `h1, h2, h3 { color: navy }` beat the element colour on a navy gradient, so every module
     title rendered at 1.00:1. The deck probe could never have caught it.
     """
-    pages = ["index.html"] + sorted(p.name for p in SITE_ROOT.glob("transcript-*.html"))
+    pages = ["index.html", "paths.html"]
+    for pattern in ("path-*.html", "module-*.html", "transcript-*.html"):
+        pages += sorted(p.name for p in SITE_ROOT.glob(pattern))
     pages = [p for p in pages if (SITE_ROOT / p).exists()]
     if not pages:
         return []
@@ -428,6 +431,70 @@ def check_pages(browser: str, port: int) -> list[str]:
             problems.append(f"{r['page']}: text below WCAG AA — {b['ratio']}:1 (needs {b['need']}) "
                             f"{b['sel']} colour {b['colour']} on {b['background']} ({b['size']}): "
                             f"{b['text']!r}")
+    return problems
+
+
+def check_units() -> list[str]:
+    """Assert the learning-path unit model still covers every slide exactly once.
+
+    The path pages, the module pages and their completion tracking are all derived from
+    `site_paths.module_units`. A deck edit that moves a segment boundary would silently re-group a
+    unit — and a unit that swallowed or dropped a slide would never show up in a browser check,
+    because the deck itself would still render all 233 slides perfectly.
+    """
+    sys.path.insert(0, str(SITE_ROOT))
+    import build_site as B                                                      # noqa: PLC0415
+    import site_paths as SP                                                     # noqa: PLC0415
+
+    problems: list[str] = []
+    total = 0
+    for deck_id in B.DECK_IDS:
+        deck = B.parse_deck(deck_id)
+        units = SP.module_units(deck)
+        slides = len(deck["slides"])
+        total += len(units)
+        covered = sum(u["slides"] for u in units)
+        if covered != slides:
+            problems.append(f"{deck_id}: units cover {covered} of {slides} slides")
+        if units and (units[0]["first"] != 1 or units[-1]["last"] != slides):
+            problems.append(f"{deck_id}: unit ranges do not span the deck")
+        kinds = [u["kind"] for u in units]
+        for required in ("intro", "lab", "quiz", "summary"):
+            if required not in kinds:
+                problems.append(f"{deck_id}: no {required} unit")
+        if kinds.count("segment") != 3:
+            problems.append(f"{deck_id}: {kinds.count('segment')} segment units, expected 3")
+        # A path page must never link a module page that the build did not write.
+        if not (SITE_ROOT / f"module-{deck_id}.html").exists() and deck_id in {
+                d for tr in SP.TRACKS if tr["status"] == "built"
+                for d in list(tr["core"]) + list(tr.get("slice") or {})}:
+            problems.append(f"{deck_id}: in a built path but has no module page")
+    if total != 63:
+        problems.append(f"unit model yields {total} units, expected 63")
+    # Independent cross-check: the unit model derives 17 segments for the On-Device path from the
+    # decks alone, while `bundle-map.md` states "17 of 27 teaching segments" by hand. If a deck
+    # edit changes a boundary, the two stop agreeing — which is the whole point of asserting it.
+    units_by_deck = {d: SP.module_units(B.parse_deck(d)) for d in B.DECK_IDS}
+    for track in SP.TRACKS:
+        measured = track.get("measured") or {}
+        if track["status"] != "built" or not measured:
+            continue
+        included = SP.track_units(track, units_by_deck)
+        segments = sum(1 for u in included if u["kind"] == "segment")
+        labs = sum(1 for u in included if u["kind"] == "lab" and u["inclusion"] == "full")
+        quizzes = sum(1 for u in included if u["kind"] == "quiz")
+        partial_labs = sum(1 for u in included if u["kind"] == "lab" and u.get("partial"))
+        if partial_labs and measured["labs"][0] + partial_labs > len(included):
+            problems.append(f"{track['slug']}: {partial_labs} partial lab(s) with no full lab")
+        for label, got, want in (("segments", segments, measured["segments"][0]),
+                                 ("labs", labs, measured["labs"][0]),
+                                 ("quizzes", quizzes, measured["quizzes"][0])):
+            if got != want:
+                problems.append(f"{track['slug']}: model gives {got} {label}, "
+                                f"bundle-map.md states {want}")
+    for name in ("paths.html", "path-on-device-app.html"):
+        if not (SITE_ROOT / name).exists():
+            problems.append(f"{name}: missing")
     return problems
 
 
@@ -547,6 +614,9 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         problems.append(f"{deck_id}: slide 1 is not styled as the cover")
     if data["titleIds"] != slide_count:
         problems.append(f"{deck_id}: {data['titleIds']} slides have an anchored title, expected {slide_count}")
+    if data["moduleLinks"] != slide_count:
+        problems.append(f"{deck_id}: {data['moduleLinks']} slides link to their module overview, "
+                        f"expected {slide_count}")
     if data["railLinks"] != slide_count:
         problems.append(f"{deck_id}: {data['railLinks']} slides link to their transcript, "
                         f"expected {slide_count}")
@@ -682,6 +752,7 @@ def main(argv=None) -> int:
             print(f"  {'ok  ' if not found else 'FAIL'} {deck_id}  "
                   f"({len(scripts[deck_id]['slides'])} slides, {len(recorded)} narrated)")
             problems.extend(found)
+        problems.extend(check_units())
         problems.extend(check_pages(browser, port))
     finally:
         httpd.shutdown()

@@ -370,6 +370,8 @@ def slide_rail(deck: dict, slide: dict, site_base: str) -> str:
             f'{slide["number"]:02d} / {total:02d}</span>'
             f'<a class="rail-link" '
             f'href="{site_base}/transcript-{deck["id"]}.html#{slide["id"]}">Slide transcript</a>'
+            f'<a class="rail-link" '
+            f'href="{site_base}/module-{deck["id"]}.html">Module overview</a>'
             f'</div></div>')
 
 
@@ -627,6 +629,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     <ul class="site-facts">
 {facts}
     </ul>
+    <p class="header-nav"><a href="{site_base}/paths.html">Browse the four learning paths →</a></p>
   </div>
 </header>
 <main class="site-main">
@@ -698,6 +701,30 @@ def main(argv=None) -> int:
     (target / "index.html").write_text(
         index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration),
         encoding="utf-8")
+
+    # ── learning paths ────────────────────────────────────────────────────────────────────────────
+    # The Microsoft Learn hierarchy (path -> module -> unit) built on the content that already
+    # exists. Paths are built one at a time; `status` on each track decides what gets a real page,
+    # so a path that has not been built cannot link to a page that does not exist.
+    import site_paths as SP                                                       # noqa: PLC0415
+    units_by_deck = {deck["id"]: SP.module_units(deck) for deck in decks}
+    seconds = SP.unit_seconds(units_by_deck, manifest)
+    decks_by_id = {deck["id"]: deck for deck in decks}
+    built_tracks = [t for t in SP.TRACKS if t["status"] == "built"]
+    built_modules = {d for t in built_tracks for d in list(t["core"]) + list(t.get("slice") or {})}
+    for deck_id in sorted(built_modules):
+        owner = next((t for t in built_tracks
+                      if deck_id in t["core"] or deck_id in (t.get("slice") or {})), None)
+        (target / f"module-{deck_id}.html").write_text(
+            SP.module_page(decks_by_id[deck_id], units_by_deck[deck_id], seconds, args.site_base,
+                           BRAND_MARK, owner, args.no_narration), encoding="utf-8")
+    (target / "paths.html").write_text(
+        SP.paths_page(SP.TRACKS, units_by_deck, seconds, args.site_base, BRAND_MARK),
+        encoding="utf-8")
+    for track in built_tracks:
+        (target / track["page"]).write_text(
+            SP.path_page(track, decks_by_id, units_by_deck, seconds, args.site_base, BRAND_MARK,
+                         built_modules), encoding="utf-8")
 
     # The transcripts are committed as Markdown, so a check must prove the committed copies still
     # match what the scripts say rather than quietly regenerating them.

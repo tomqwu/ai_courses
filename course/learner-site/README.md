@@ -120,6 +120,93 @@ modal are `display: none` until opened), and any text over a photographic backgr
 
 
 
+## Learning paths
+
+The site was nine decks in a grid: one order, no entry point for anyone who did not want all of it.
+Microsoft Learn solves this with a four-level hierarchy — **career path → learning path → module →
+unit** — and one fixed unit grammar inside every module:
+
+```
+Introduction → content units → Exercise → Knowledge check → Summary
+```
+
+This course already had every level of that. It just never surfaced one, and the mapping is exact:
+
+| Microsoft Learn | Here | Count |
+|---|---|---|
+| Career path | an archetype entry point | 4 paths |
+| Learning path | a track bundle in `05-tracks/` | 3 + the full course |
+| Module | `m00`–`m08` | 9 |
+| Unit | a lesson segment, lab, quiz, intro or recap | **63** |
+| Exercise | `Lab M#` | 9 |
+| Knowledge check | `Quiz M#` (8 questions each) | 9 · 72 questions |
+| Summary | the recap + discussion prompt | 9 |
+
+A unit is a **lesson segment**, not a slide: 63 units over 233 slides averages 3.7 slides a unit, which
+sits inside Microsoft's 3–10 minute unit size, while a single slide averages 34 seconds and would be
+a meaningless thing to mark complete.
+
+### The unit model is derived, and asserted
+
+`site_paths.module_units()` partitions each deck, and the boundary rules are read off the course's own
+structure rather than invented:
+
+- slides 1–2 are the cover and the objectives in **all nine decks**, so they are the Introduction;
+- a slide whose *title* opens `Lab M#`, `Quiz M#` or `Recap` starts an Exercise, knowledge check or
+  Summary — matched on the title, because the deck chrome deliberately falls back to the module tag
+  for these and never shows `Quiz M#` as a kicker;
+- a slide whose kicker is `M#.#` starts that segment;
+- a module that marks fewer segments than it declares still opens segment 1 at the first content
+  slide. `m08` has no `M8.1` heading anywhere in its source — without this rule, five minutes of
+  segment-one content would have been filed as the Introduction.
+
+`check_player.py` asserts the result covers all 233 slides **exactly once**, that every module has an
+intro, three segments, a lab, a quiz and a summary, and that the total is 63.
+
+It then cross-checks the model against a number written by hand: `bundle-map.md` states the On-Device
+path is *"17 of 27 teaching segments · 4 of 8 full labs · 5 of 9 quizzes"*. The model derives 17
+segments, 4 full labs and 5 quizzes from the decks alone. Two independent sources agreeing is worth
+more than either one being internally consistent.
+
+### A path must not claim what it does not teach
+
+The first version of the path page listed all seven M8 units, including `M8.3`, `Lab M8` and
+`Quiz M8` — every one of which the bundle map explicitly excludes — and counted their narration in the
+path total. Slice modules now carry an explicit `exclude` list and mark the rows: M8 reads
+**"4 of 7 units · 10.3 min"**, with the three excluded units struck through and labelled *not in this
+path*, and M7's lab is labelled *part only* because the path includes steps 1–5.
+
+### Durations are measured, not estimated
+
+This is the one place the implementation deliberately beats the model it copies. Microsoft Learn shows
+an estimated duration per unit; every duration here is summed from the narration manifest's real
+per-slide durations. Lab units show **both**: the narration seconds *and* the lab's hands-on time,
+quoted from the module's own source, because a lab is hours of work whose narration is one slide.
+`site_paths.lab_time()` reads it from `lab.md` where stated and falls back to the deck front matter
+otherwise, and never infers a number from narration.
+
+### Progress is local and says so
+
+The module page has a checkbox per unit and a progress bar, stored in `localStorage` under
+`aps.progress.v1`. There are no accounts on this site, so the page states plainly that progress is
+stored in one browser and follows you nowhere. Showing a percentage that silently resets on another
+device would be a lie told by a progress bar.
+
+### Not adopted
+
+The gamification layer — XP, levels, trophies, streaks. `learn.microsoft.com/en-us/training/achievements/`
+returns 404 and the browse page is client-rendered, so the mechanics could not be verified, and
+inventing a points economy and calling it "the Azure framework" would be slop. Badges and an
+Achievements surface are documented; what they *do* is not.
+
+### Status
+
+One path is built end to end as a first slice: **On-Device AI Apps** — paths index, path page, and
+module pages for its six modules. The other three paths appear on the index with an explicit
+*"page not built yet"* chip and link to the module list rather than to a page that does not exist.
+The remaining work is extracting their `bundle-map.md` tables into the same `exclude`/`partial` shape.
+
+
 ## Transcripts
 
 Every deck has a transcript, committed as Markdown rather than generated HTML:

@@ -126,6 +126,15 @@ The live copy is text-first, so it makes no sound and offers no Play button: it 
 present, print and search, with the full design and all 233 transcripts. That is a deliberate limit of
 the published copy, not a defect of the course — and it is stated on the page itself.
 
+The site is organised as **learning paths**, the hierarchy Microsoft Learn uses — learning path →
+module → unit — with each module following the same unit grammar (Introduction → three lesson segments
+→ Exercise → Knowledge check → Summary). This course already had every level; it just never surfaced
+one. The 233 slides resolve into **63 units**, and `check_player.py` asserts that partition covers every
+slide exactly once and agrees with the counts written by hand in `05-tracks/` — while the durations it
+shows are measured from the narration manifest rather than estimated. One path (On-Device AI Apps) is
+built end to end as the first slice; the other three link to the module list rather than to a page that
+does not exist yet. See [`course/learner-site/README.md`](course/learner-site/README.md).
+
 ## Verification
 
 `make -C course check` is the single gate, and it runs in order:

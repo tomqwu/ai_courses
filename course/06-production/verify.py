@@ -231,7 +231,9 @@ def check_narration() -> list[str]:
 def check_learner_site() -> list[str]:
     """Only meaningful once the site is built; an unbuilt site is a note, not a failure."""
     site = ROOT / "learner-site"
-    pages = sorted(site.glob("m*.html"))
+    # Deck pages only: `m00.html`..`m08.html`. A bare `m*.html` also matches the learning-path
+    # module pages (`module-m02.html`), which are not decks and have no narration script.
+    pages = sorted(site.glob("m[0-9][0-9].html"))
     if not pages:
         return []
     problems = []
