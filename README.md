@@ -101,8 +101,8 @@ shipping it.
 
 ## The course online
 
-The learner site is published to GitHub Pages from a `gh-pages` branch, because the repository cannot
-serve the generated HTML itself:
+**<https://tomqwu.github.io/ai_courses/>** — published from a `gh-pages` branch, because the repository
+cannot serve the generated HTML itself:
 
 ```bash
 python3 course/publish_site.py                 # publish text-first (36 files, ~1 MB, no audio)
@@ -114,6 +114,10 @@ stylesheet all work, but the player is told there are no recordings, so nothing 
 offers an audio file the copy does not contain. Add the recordings — for example once the release voice
 is recorded — with `--with-audio`. Either way the gate runs first and the publish is refused unless it
 is green.
+
+The live copy is text-first, so it makes no sound and offers no Play button: it is a deck you read,
+present, print and search, with the full design and all 233 transcripts. That is a deliberate limit of
+the published copy, not a defect of the course — and it is stated on the page itself.
 
 ## Verification
 

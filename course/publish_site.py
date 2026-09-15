@@ -83,29 +83,43 @@ def stage_site(stage: Path, with_audio: bool) -> None:
 
 
 def publish(stage: Path, branch: str, remote: str, dry_run: bool, message: str) -> bool:
-    """Commit the staged site onto `branch` and push it. Returns True if something was pushed."""
+    """Commit the staged site onto `branch` and push it. Returns True if something was pushed.
+
+    The commit is assembled with `commit-tree` rather than by checking out the branch. That keeps the
+    deploy branch out of the local repository entirely: no orphan checkout, no local ref to go stale,
+    and no way for a half-finished publish to leave a branch behind (which is exactly what an earlier
+    `checkout --orphan` version did).
+    """
     git("fetch", remote, branch, check=False)
-    has_branch = git("rev-parse", "--verify", "--quiet", f"refs/remotes/{remote}/{branch}",
-                     check=False).returncode == 0
-    base = f"{remote}/{branch}" if has_branch else "HEAD"
+    remote_ref = f"refs/remotes/{remote}/{branch}"
+    base = git("rev-parse", "--verify", "--quiet", remote_ref, check=False).stdout.strip() or None
 
     work = Path(tempfile.mkdtemp(prefix="aps-publish-"))
     try:
-        git("worktree", "add", "--detach", str(work), base)
-        if not has_branch:
-            git("checkout", "--orphan", branch, cwd=work)
+        git("worktree", "add", "--detach", str(work), base or "HEAD")
         clear_directory(work)
         shutil.copytree(stage, work, dirs_exist_ok=True)
         git("add", "-A", cwd=work)
-        status = git("status", "--porcelain", cwd=work)
-        if has_branch and not status.stdout.strip():
-            print("· nothing changed since the last publish")
-            return False
-        git("commit", "-m", message, cwd=work)
+
+        tree = git("write-tree", cwd=work).stdout.strip()
+        if base:
+            base_tree = git("rev-parse", f"{base}^{{tree}}").stdout.strip()
+            if tree == base_tree:
+                print("· nothing changed since the last publish")
+                return False
+
+        # A root commit for the first publish; a child of the previous one afterwards, so the
+        # deploy branch keeps a real history without inheriting the source repository's.
+        commit_args = ["commit-tree", tree]
+        if base:
+            commit_args += ["-p", base]
+        commit_args += ["-m", message]
+        commit = git(*commit_args, cwd=work).stdout.strip()
+
         if dry_run:
-            print(f"· dry run — a commit is staged on {branch} but was not pushed")
+            print(f"· dry run — {commit[:10]} was built for {branch} but not pushed")
             return False
-        git("push", "--force", remote, f"HEAD:refs/heads/{branch}")
+        git("push", "--force", remote, f"{commit}:refs/heads/{branch}")
         return True
     finally:
         git("worktree", "remove", "--force", str(work), check=False)
