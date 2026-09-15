@@ -119,6 +119,55 @@ Still unmeasured by it: text inside `<dialog>` elements that are closed (the dra
 modal are `display: none` until opened), and any text over a photographic background.
 
 
+## Declared diagrams
+
+A content audit of all 233 slides found the display language was the weak layer, not the substance:
+79% of slides were bullet lists, 61% were *exactly* "heading + one bullet list", and there were **zero
+images or SVGs in the entire course**. Where structure was needed, it was hand-typed: 13 slides encoded
+flows as text arrows, and the two slides that needed real drawings — the Spec-to-Ship Loop and the
+ListenToMe pipeline — faked them with `│` and `▼` box characters. The method loop had even *lost an
+arrow to a line wrap* (`3. BUILD 4. VALIDATE`), which nobody noticed because a wrapped text diagram was
+the house style.
+
+The fix is a **`_diagram:` directive** in the slide Markdown, next to `_class:`. It upgrades the next
+list at that position into one of five components — `flow`, `loop`, `steps`, `grid`, `stack` — and the
+**words are frozen**: the nodes are the author's own bullets, only the arrangement is declared. The
+source stays a valid Markdown list, so Marp still renders it, and the narration (the approved source for
+anything spoken) stays true because the same words are displayed.
+
+Thirteen slides carry diagrams: the Spec-to-Ship Loop (`loop`), the spec-kit pipeline's eight commands
+(`flow`), the ListenToMe two-layer architecture (`stack`), the decision anatomy, three grids (the
+archetypes, the three defenses, the three enforcers), and five numbered procedures (`steps`).
+
+What the gate asserts, so this cannot regress:
+
+- **Every declared diagram renders** — `_diagram: flow` in the source must produce exactly one
+  `diagram-flow` component in the built slide.
+- **No hand-typed diagrams come back** — box-drawing characters anywhere in a slide fail the check, and
+  so does a chain of three or more `→` arrows in a single text block outside a diagram component. One
+  arrow in a bullet ("command → result") is legitimate notation; a four-stage chain in prose is a
+  diagram trying to escape.
+- Objectives and recaps that *rehearse* a chain already drawn elsewhere in the deck are allowlisted in
+  the check, with the reason recorded next to each entry.
+- **Every diagram fits its frame** — `check_diagram_geometry` opens each diagram slide by deep link and
+  measures the component against the 16:9 frame, which clips overflow invisibly. This assertion is not
+  hypothetical: the first build of `steps` overflowed m07's eight-section slide by 287px, and a subtler
+  grid bug (the caption landing on its own implicit grid row) doubled every labelled row.
+- **Diagram slides get the contrast audit** — the deck probe audits slide 1 (a cover, no diagram), so
+  the geometry probe runs `apsAuditContrast` on every diagram slide at its real layout.
+
+Two content findings from the audit, deliberately **not** auto-fixed because both would desync approved
+narration: the m02 objectives slide names five pipeline stages while the architecture slide teaches six
+(`store` is missing from the objective), and the player's resume-from-localStorage beats `#slide-N`
+deep links, so a returning learner clicking a unit's "Open →" lands at their saved position instead.
+
+The word-freeze was verified mechanically: every converted slide's rendered word multiset was compared
+before and after. Six slides changed by documented design — the m00 loop drops its duplicated hand-typed
+stage line, the m02 stack names the three seam positions the narration already names
+(AudioCapturing/Transcribing/LLMProvider), the two `steps` labs render "Step N" as numerals, and three
+label/caption splits consume a separator character. Everything else is byte-identical word-for-word.
+
+
 
 ## Learning paths
 

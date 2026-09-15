@@ -4,7 +4,8 @@
 Checks per deck:
   * `marp: true` and `theme: aps` in the front matter
   * slide count inside the 18-28 band
-  * <= 6 bullets per slide
+  * <= 6 bullets per slide (a list declared `_diagram:` is component nodes, not bullets —
+    its items are still word-checked)
   * <= 10 words per bullet
   * a `<!-- NOTES: ... -->` speaker note on every slide
   * at least one PROOF slide (marked with the `proof` class or the word "Proof")
@@ -22,6 +23,34 @@ MAX_BULLETS = 6
 MAX_BULLET_WORDS = 10
 MIN_SLIDES, MAX_SLIDES = 18, 28
 BULLET_RE = re.compile(r"^\s{0,3}[-*+]\s+(.*\S)\s*$")
+OL_RE = re.compile(r"^\s{0,3}\d+\.\s+(.*\S)\s*$")
+DIAGRAM_DIRECTIVE = re.compile(r"<!--\s*_diagram\s*:\s*\w+\s*-->")
+
+
+def extract_diagram_list(slide: str) -> tuple[list[str], str]:
+    """Pull the list a `_diagram:` directive upgrades out of the bullet count.
+
+    The bullet budget exists to stop prose walls; an eight-command pipeline rendered as one
+    flow component is not a wall. The items are still word-checked, and the learner-site gate
+    asserts the declared component renders and fits its frame — a directive with no list, or
+    a wall relabelled as a diagram, fails elsewhere.
+    """
+    m = DIAGRAM_DIRECTIVE.search(slide)
+    if not m:
+        return [], slide
+    lines = slide[m.end():].splitlines()
+    j = 0
+    while j < len(lines) and not lines[j].strip():
+        j += 1
+    k = j
+    items: list[str] = []
+    while k < len(lines) and (BULLET_RE.match(lines[k]) or OL_RE.match(lines[k])):
+        match = BULLET_RE.match(lines[k]) or OL_RE.match(lines[k])
+        items.append(match.group(1))
+        k += 1
+    if not items:
+        return [], slide
+    return items, slide[:m.start()] + "\n".join(lines[k:])
 
 
 def split_slides(text: str) -> tuple[dict[str, str], list[str]]:
@@ -85,12 +114,13 @@ def lint(path: Path) -> list[str]:
             problems.append(f"slide {i} ({title}): no `<!-- NOTES: ... -->` speaker note")
 
         prose = strip_code_fences(slide)
+        diagram_items, prose = extract_diagram_list(prose)
         bullets = [m.group(1) for m in (BULLET_RE.match(l) for l in prose.splitlines()) if m]
         if len(bullets) > MAX_BULLETS:
             problems.append(
                 f"slide {i} ({title}): {len(bullets)} bullets (max {MAX_BULLETS})"
             )
-        for b in bullets:
+        for b in bullets + diagram_items:
             # strip inline code/markup before counting words
             plain = re.sub(r"[`*_\[\]()#>]", " ", b)
             words = [w for w in plain.split() if any(c.isalnum() for c in w)]

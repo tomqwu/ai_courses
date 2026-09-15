@@ -125,6 +125,13 @@ title: M6 — The Expertise Product: Evidence, Routing, Editions
 - `ai_qe/research/reviews/site-audit-2026-09-06.md`
 - 14 findings: four high, nine medium, one lower
 - R01 is the site's own conflicting base-case economics
+
+<!-- _diagram: flow -->
+
+- finding
+- response
+- verification
+
 - Remediation maps finding → response → verification
 - Refusals stay published too
 - Skeptics stop asking "should I believe you?"

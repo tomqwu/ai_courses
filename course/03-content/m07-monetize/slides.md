@@ -279,6 +279,8 @@ Pointer: `ai_qe/_data/engagement.json`; `ai_qe/index.md`; `ai_qe/discovery.md`
 
 ## Sales-page anatomy: eight sections
 
+<!-- _diagram: steps -->
+
 1. Transformation headline — the outcome
 2. Who it's for — and who it isn't
 3. Problem and stakes
@@ -342,11 +344,14 @@ Pointer: `ai_qe/_data/engagement.json`; `ai_qe/index.md`; `ai_qe/discovery.md`
 ## Lab M7 — Price and position your product
 
 - Goal: priced, packaged, positioned offer
-- Step 1 sourced pricing table, ≥5 rows
-- Step 2 decision worksheet, rationale ≥150 words
-- Step 3 one-liner plus clause mapping
-- Step 4 packaging page with exclusions
-- Step 5 three objections, answered
+
+<!-- _diagram: steps -->
+
+- sourced pricing table, ≥5 rows
+- decision worksheet, rationale ≥150 words
+- one-liner plus clause mapping
+- packaging page with exclusions
+- three objections, answered
 
 **Pass gate:** every checklist item objectively verifiable.
 

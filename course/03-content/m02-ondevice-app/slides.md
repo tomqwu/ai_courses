@@ -31,14 +31,13 @@ title: M2 — The On-Device AI App: Architecture
 
 ## M2.1 — One pipeline, two layers
 
-```
-mic (.you) · system audio (.others)
-        │  PCM chunks
-        ▼
-  capture → transcribe → store → context → prompt → route
-        │        seam          seam              seam
-     App/ glue                 Core (pure)
-```
+<!-- _diagram: stack -->
+
+- mic (.you) · system audio (.others)
+- PCM chunks
+- capture → transcribe → store → context → prompt → route
+- seam: capture · transcribe · prompt
+- App/ glue · Core (pure)
 
 <!-- NOTES: Read this left to right once, then say the split out loud: everything in `App/` touches hardware; everything in `Sources/ListenToMeCore` is pure. The three seams are `AudioCapturing`, `Transcribing`, and `LLMProvider`. The reason this matters is testability: the pipeline is fully runnable in a unit test against mocks. Hold the diagram; we now walk each layer. (75 seconds; next slide is capture.) -->
 

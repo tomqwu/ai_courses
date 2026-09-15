@@ -137,6 +137,13 @@ Pointer: `SignUpFlow/AGENTS.md`, "House style" and "Safety"
 - Observation recorded in `docs/research-log.md`.
 - Tested on at least one real change.
 - Only then promoted into `AGENTS.md`.
+
+<!-- _diagram: flow -->
+
+- `pending`
+- `extracted`
+- `promoted`
+
 - Source row moves `pending → extracted → promoted`.
 - If it generalizes, upstream it to `GenAI_Common`.
 
@@ -146,9 +153,17 @@ Pointer: `SignUpFlow/AGENTS.md`, "House style" and "Safety"
 
 ## Segment M1.2 — The spec-kit pipeline
 
-- `/speckit.constitution` → `/speckit.specify` → `/speckit.clarify`
-- → `/speckit.plan` → `/speckit.checklist` → `/speckit.tasks`
-- → `/speckit.analyze` → `/speckit.implement`
+<!-- _diagram: flow -->
+
+- `/speckit.constitution`
+- `/speckit.specify`
+- `/speckit.clarify`
+- `/speckit.plan`
+- `/speckit.checklist`
+- `/speckit.tasks`
+- `/speckit.analyze`
+- `/speckit.implement`
+
 - Output: a folder of artifacts under `specs/`.
 - 17 spec folders exist in SignUpFlow today.
 

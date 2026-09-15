@@ -31,9 +31,12 @@ title: M0 — Orientation: Three Products, One Method
 
 ## M0.1 — Three archetypes, one method
 
+<!-- _diagram: grid -->
+
 - Type 1: native on-device AI app
 - Type 2: spec-driven AI SaaS
 - Type 3: expertise content product
+
 - Different technical centers of gravity
 - Same method behind all three
 - You learn the method once, three times
@@ -96,10 +99,7 @@ title: M0 — Orientation: Three Products, One Method
 
 ## M0.2 — The Spec-to-Ship Loop
 
-```
-1. STUDY   → 2. SPEC   → 3. BUILD
-4. VALIDATE → 5. RELEASE → 6. PROVE
-```
+<!-- _diagram: loop -->
 
 - Study: research, competition, positioning
 - Spec: what an agent can execute

@@ -59,7 +59,14 @@ Each command consumes the previous one's output.
 ## Proof: `research.md` — decisions with receipts
 
 - 8 numbered decisions, same anatomy each
-- Decision → Options → Rationale → Implementation
+
+<!-- _diagram: flow -->
+
+- Decision
+- Options
+- Rationale
+- Implementation
+
 - Decision 1: Redis, rejecting in-memory outright
 - Decision 2: TOTP over SMS
 

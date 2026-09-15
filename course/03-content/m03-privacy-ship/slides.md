@@ -89,9 +89,12 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 
 ## Three defenses around the check
 
+<!-- _diagram: grid -->
+
 - **Host check** — loopback only, before any prompt
 - **Per-request verification** — re-run `/api/show` every request
 - **Redirect rejection** — a 3xx kills the request
+
 - Localhost, 127.0.0.1, and ::1 only
 - Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:99-119`
 

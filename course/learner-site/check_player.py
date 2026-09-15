@@ -221,6 +221,55 @@ next();
 </script>
 """)
 
+DIAGRAM_PROBE_PAGE = "_aps_diagram_probe.html"
+DIAGRAM_PROBE_TEMPLATE = r"""<!doctype html><meta charset=utf-8><title>diagram probe</title>
+<pre id="out">pending</pre>
+<script>
+/*CONTRAST*/
+var CASES = __CASES__;
+var results = [], i = 0, f = null;
+function next() {
+  if (i >= CASES.length) { document.getElementById("out").textContent = JSON.stringify(results); return; }
+  var c = CASES[i++], deck = c[0], n = c[1];
+  try { localStorage.clear(); } catch (e) {}   // the player resumes from localStorage and that
+                                                // beats the deep link — start each case clean
+  if (f) document.body.removeChild(f);
+  f = document.createElement("iframe");
+  f.style.cssText = "width:1600px;height:1000px;border:0";
+  f.src = "/" + deck + ".html?g=" + n + "#slide-" + n;
+  f.done = false;
+  f.onload = function () {
+    if (f.done) { return; }   // ignore the about:blank load; measure the real document only
+    f.done = true;
+    setTimeout(function () {
+      try {
+        var d = f.contentDocument, out = { deck: deck, slide: n };
+        var slide = d.querySelector(".slide:not([hidden])");
+        if (!slide) { out.error = "no visible slide"; results.push(out); next(); return; }
+        var sb = slide.getBoundingClientRect();
+        out.visibleId = slide.id;
+        out.overflowing = slide.scrollHeight > slide.clientHeight + 2;
+        // The deck contrast audit sees slide 1 (a cover, no diagram); these slides carry the
+        // diagrams, so they get audited here, at their real layout.
+        out.contrast = apsAuditContrast(f.contentWindow, f.contentDocument);
+        out.diagrams = [];
+        Array.prototype.forEach.call(slide.querySelectorAll(".diagram"), function (dg) {
+          var r = dg.getBoundingClientRect();
+          out.diagrams.push({ kind: dg.className.split(" ")[1] || dg.className,
+            h: Math.round(r.height),
+            insideFrame: r.bottom <= sb.bottom + 1 && r.right <= sb.right + 1 });
+        });
+        results.push(out);
+      } catch (e) { results.push({ deck: deck, slide: n, error: String(e) }); }
+      next();
+    }, 500);
+  };
+  document.body.appendChild(f);
+}
+next();
+</script>
+"""
+
 PROBE_PAGE = "_aps_layout_probe.html"
 PROBE_TEMPLATE = r"""<!doctype html><meta charset=utf-8><title>probe</title>
 <iframe id="frame" src="__DECK__.html" style="width:1600px;height:1000px;border:0"></iframe>
@@ -437,6 +486,63 @@ def check_pages(browser: str, port: int) -> list[str]:
     return problems
 
 
+def check_diagram_geometry(browser: str, port: int) -> list[str]:
+    """A declared diagram must fit its slide frame.
+
+    The frames are 16:9 with overflow hidden, so an oversized diagram is silently clipped —
+    invisible content, not a style bug. This is measured, not assumed: every slide that
+    declares a diagram is opened by deep link and its component measured against the frame
+    box in a real layout.
+    """
+    sys.path.insert(0, str(SITE_ROOT))
+    import build_site as B                                                      # noqa: PLC0415
+    cases = []
+    for deck_id in B.DECK_IDS:
+        for slide in B.parse_deck(deck_id)["slides"]:
+            if slide.get("diagram"):
+                cases.append([deck_id, slide["number"]])
+    if not cases:
+        return []
+    page = SITE_ROOT / DIAGRAM_PROBE_PAGE
+    page.write_text(DIAGRAM_PROBE_TEMPLATE.replace("/*CONTRAST*/", CONTRAST_JS)
+                                         .replace("__CASES__", json.dumps(cases)),
+                    encoding="utf-8")
+    try:
+        dom = dump_dom(browser, f"http://127.0.0.1:{port}/{DIAGRAM_PROBE_PAGE}", budget_ms=40000)
+    finally:
+        page.unlink(missing_ok=True)
+    match = re.search(r'<pre id="out">(.*?)</pre>', dom, re.S)
+    if not match:
+        return ["diagram geometry: probe did not report"]
+    try:
+        results = json.loads(html_lib.unescape(match.group(1)))
+    except ValueError:
+        return ["diagram geometry: unreadable probe output"]
+    by_case = {(r.get("deck"), r.get("slide")): r for r in results}
+    problems: list[str] = []
+    for deck_id, n in cases:
+        r = by_case.get((deck_id, n))
+        if not r or r.get("error"):
+            problems.append(f"{deck_id} slide-{n}: geometry probe failed "
+                            f"({(r or {}).get('error', 'missing')})")
+            continue
+        if r.get("visibleId") != f"slide-{n}":
+            problems.append(f"{deck_id} slide-{n}: probe measured {r.get('visibleId')}, "
+                            f"not the requested slide")
+        for d in r.get("diagrams", []):
+            if not d.get("insideFrame") or r.get("overflowing"):
+                problems.append(f"{deck_id} slide-{n}: {d.get('kind')} does not fit the slide "
+                                f"frame ({d.get('h')}px tall — the frame clips it)")
+        bad = (r.get("contrast") or {}).get("failures") or []
+        for b in sorted(bad, key=lambda x: x["ratio"])[:3]:
+            problems.append(f"{deck_id} slide-{n}: text below WCAG AA — {b['ratio']}:1 "
+                            f"(needs {b['need']}) {b['sel']} colour {b['colour']} on "
+                            f"{b['background']} ({b['size']}): {b['text']!r}")
+        if len(bad) > 3:
+            problems.append(f"{deck_id} slide-{n}: {len(bad) - 3} further contrast failures")
+    return problems
+
+
 def check_units() -> list[str]:
     """Assert the learning-path unit model still covers every slide exactly once.
 
@@ -536,6 +642,38 @@ def check_units() -> list[str]:
         if len(SP.paths_for_module(deck_id)) != 3:
             problems.append(f"{deck_id}: expected in all 3 built paths, "
                             f"found {len(SP.paths_for_module(deck_id))}")
+
+    # Declared diagrams: a slide that declares one must render it, and the hand-typed disease
+    # this replaces must not come back — no box-drawing characters anywhere, and no slide may
+    # encode a flow as three or more text arrows outside a diagram component.
+    box_chars = set("│▼┌└┐┘├")
+    for deck_id in B.DECK_IDS:
+        deck = B.parse_deck(deck_id)
+        for slide in deck["slides"]:
+            h = slide.get("html", "")
+            sid = f"{deck_id} {slide['id']}"
+            bad = sorted(set(h) & box_chars)
+            if bad:
+                problems.append(f"{sid}: hand-typed box-drawing {bad} — draw it, declare it, "
+                                f"or leave it as prose")
+            outside = re.sub(r'<(ol|ul) class="diagram[^"]*">.*?</\1>', "", h, flags=re.S)
+            # Per text block, not per slide: one arrow in a bullet is legitimate notation
+            # ("command → result"); a chain of four-plus stages in one bullet is a diagram
+            # trying to escape as prose. Objectives and recaps that REHEARSE a chain already
+            # drawn as a diagram elsewhere in the deck are allowlisted, with the reason.
+            rehearsal = {("m01", "slide-24"): "recap restates the flow drawn on m01 slide-12",
+                         ("m02", "slide-2"): "objective rehearses the stack drawn on m02 slide-3",
+                         ("m04", "slide-2"): "objective rehearses the flow drawn on m01 slide-12"}
+            for block in re.split(r"</li>|</p>", outside):
+                if block.count("→") >= 3 and (deck_id, slide["id"]) not in rehearsal:
+                    problems.append(f"{sid}: {block.count('→')} text arrows in one block "
+                                    f"outside a diagram — a flow encoded as prose")
+            kind = slide.get("diagram")
+            if kind:
+                needle = ("diagram-flow diagram-loop" if kind == "loop"
+                          else f"diagram diagram-{kind}")
+                if h.count(needle) != 1:
+                    problems.append(f"{sid}: _diagram:{kind} declared but not rendered")
     return problems
 
 
@@ -794,6 +932,7 @@ def main(argv=None) -> int:
                   f"({len(scripts[deck_id]['slides'])} slides, {len(recorded)} narrated)")
             problems.extend(found)
         problems.extend(check_units())
+        problems.extend(check_diagram_geometry(browser, port))
         problems.extend(check_pages(browser, port))
     finally:
         httpd.shutdown()

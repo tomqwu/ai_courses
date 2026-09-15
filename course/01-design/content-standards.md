@@ -71,6 +71,9 @@ Each `03-content/mNN-slug/` folder contains, in addition to the existing `lesson
   ```
 - Slide separator: `---` on its own line. Headings: `##` for the slide title.
 - **≤ 6 bullets per slide, ≤ 10 words per bullet.** Slides are prompts for the presenter, not prose.
+  A list declared with a `<!-- _diagram: … -->` directive is exempt from the bullet count — it renders
+  as component nodes (flow, loop, steps, grid, stack), not a bullet wall — but every item in it is still
+  word-checked, and the learner-site gate asserts the declared component renders and fits its slide frame.
 - Required slide sequence: title (module, promise, duration), "By the end you can…" objectives,
   one slide per segment sub-topic, at least one **proof slide** per segment carrying the repo file
   pointer *on the slide*, lab slide (`Lab M#` goal + pass gate), quiz slide, recap, discussion prompt.

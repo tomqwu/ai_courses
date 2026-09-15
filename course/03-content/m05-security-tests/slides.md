@@ -44,6 +44,8 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 
 ## M5.1 — Three mechanical enforcers
 
+<!-- _diagram: grid -->
+
 1. `verify_org_member` — foreign org → `403`
 2. `get_current_user` — reload by id **and** `org_id`
 3. `get_current_admin_user` — admin gate → `403`
@@ -183,6 +185,8 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 
 ## M5.2 — The six-step change protocol
 
+<!-- _diagram: steps -->
+
 1. Update the route's policy entry.
 2. Filter by tenant **in the query itself**.
 3. Add real-JWT tests for five actor kinds.
@@ -297,10 +301,14 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 ## Lab M5 — Isolate and accept
 
 - **Build:** three tables, JWT, `org_id` on every row.
-- **Step 1:** isolation tests + forbidden write leaves DB unchanged.
-- **Step 2:** qualifications prove no admin rights (403).
-- **Step 3:** route policy + drift test; red first.
-- **Step 4:** fixture + manifest + validator; red first.
+
+<!-- _diagram: steps -->
+
+- isolation tests + forbidden write leaves DB unchanged.
+- qualifications prove no admin rights (403).
+- route policy + drift test; red first.
+- fixture + manifest + validator; red first.
+
 - **Pass gate:** all negative paths green; both induced failures recorded.
 
 `03-content/m05-security-tests/lab.md` · `SignUpFlow/tests/playbooks/examples/food-bank.json`

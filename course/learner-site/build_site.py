@@ -37,7 +37,9 @@ KICKER_RE = re.compile(
 DECK_LABEL_RE = re.compile(r"^(M\d+)\s*—\s*(.+)$")
 
 NOTES_RE = re.compile(r"<!--\s*NOTES:(.*?)-->", re.DOTALL)
-DIRECTIVE_RE = re.compile(r"<!--\s*(_class|_footer|_paginate|_header)\s*:\s*([^>]*?)\s*-->")
+DIRECTIVE_RE = re.compile(r"<!--\s*(_class|_footer|_paginate|_header|_diagram)\s*:\s*([^>]*?)\s*-->")
+OTHER_DIRECTIVE_RE = re.compile(r"<!--\s*(_class|_footer|_paginate|_header)\s*:\s*[^>]*?-->")
+DIAGRAM_AT = re.compile(r"<!--\s*_diagram\s*:\s*([^>]*?)\s*-->")
 FENCE_RE = re.compile(r"^```")
 INLINE_CODE = re.compile(r"`([^`]+)`")
 BOLD = re.compile(r"\*\*([^*]+)\*\*")
@@ -57,7 +59,67 @@ def inline(text: str) -> str:
     return out
 
 
-def render_blocks(lines: list[str]) -> str:
+LABEL_CAPTION = re.compile(r"^(.*?)(?::\s+|\s+—\s+)(.*)$", re.DOTALL)
+
+
+def _label_caption(raw: str) -> tuple[str, str]:
+    """`Study: research…` and `**Host check** — loopback…` both split into node label + caption."""
+    m = LABEL_CAPTION.match(raw.strip())
+    return (m.group(1).strip(), m.group(2).strip()) if m else (raw.strip(), "")
+
+
+def render_diagram(kind: str, items: list[str], ordered: bool) -> str:
+    """Render a slide's own list as a diagram component.
+
+    The words are frozen — they come from the same bullets the author wrote — only the
+    arrangement is declared. `flow`/`loop` chain the items; `steps` stacks them numbered;
+    `grid` lays parallel items out as cards; `stack` keeps row order and draws the
+    connectors the hand-typed ASCII was faking (│ ▼) with CSS.
+    """
+    if kind in ("flow", "loop"):
+        nodes = []
+        for raw in items:
+            label, caption = _label_caption(raw)
+            cap = (f'<span class="d-caption">{inline(caption)}</span>' if caption else "")
+            nodes.append(f'<li class="d-node"><span class="d-label">{inline(label)}</span>{cap}</li>')
+        extra = " diagram-loop" if kind == "loop" else ""
+        return f'<ol class="diagram diagram-flow{extra}">' + "".join(nodes) + "</ol>"
+    if kind == "steps":
+        rows = []
+        for raw in items:
+            label, caption = _label_caption(raw)
+            # Inline, not under: eight labelled rows stack twice as tall when the caption
+            # wraps to its own line, and the slide frame is 16:9 with overflow hidden.
+            cap = (f'<span class="d-caption"> — {inline(caption)}</span>' if caption else "")
+            # One grid cell for the whole step body: two sibling spans would put the caption
+            # on its own implicit grid row, doubling the height of every labelled step.
+            rows.append(f'<li><span class="d-step-body">'
+                        f'<span class="d-label">{inline(label)}</span>{cap}'
+                        f"</span></li>")
+        return '<ol class="diagram diagram-steps">' + "".join(rows) + "</ol>"
+    if kind == "grid":
+        cards = []
+        for raw in items:
+            label, caption = _label_caption(raw)
+            cap = (f'<p class="d-caption">{inline(caption)}</p>' if caption else "")
+            cards.append(f'<li class="d-card"><span class="d-label">{inline(label)}</span>{cap}</li>')
+        return '<ul class="diagram diagram-grid">' + "".join(cards) + "</ul>"
+    if kind == "stack":
+        rows = []
+        for raw in items:
+            if " → " in raw:
+                chips = "".join(f'<span class="d-chip">{inline(c.strip())}</span>'
+                                for c in raw.split("→"))
+                rows.append(f'<li class="d-row d-chain">{chips}</li>')
+            elif raw.strip().lower().startswith("seam"):
+                rows.append(f'<li class="d-row d-seam">{inline(raw)}</li>')
+            else:
+                rows.append(f'<li class="d-row">{inline(raw)}</li>')
+        return '<ul class="diagram diagram-stack">' + "".join(rows) + "</ul>"
+    raise SystemExit(f"unknown diagram kind: {kind}")
+
+
+def render_blocks(lines: list[str], diagram: str = "") -> str:
     """Render the block subset: fenced code, tables, quotes, lists, headings, paragraphs."""
     out: list[str] = []
     i = 0
@@ -108,10 +170,14 @@ def render_blocks(lines: list[str]) -> str:
                 m = re.match(pattern, lines[i])
                 if not m:
                     break
-                items.append(inline(m.group(1)))
+                items.append(m.group(1))
                 i += 1
-            tag = "ol" if ordered else "ul"
-            out.append(f"<{tag}>" + "".join(f"<li>{item}</li>" for item in items) + f"</{tag}>")
+            if diagram:
+                out.append(render_diagram(diagram, items, ordered))
+                diagram = ""
+            else:
+                tag = "ol" if ordered else "ul"
+                out.append(f"<{tag}>" + "".join(f"<li>{inline(item)}</li>" for item in items) + f"</{tag}>")
             continue
         heading = re.match(r"^(#{1,4})\s+(.*)$", stripped)
         if heading:
@@ -167,12 +233,23 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
         notes_match = NOTES_RE.search(raw)
         notes = notes_match.group(1).strip() if notes_match else ""
         classes = [m.group(2) for m in DIRECTIVE_RE.finditer(raw) if m.group(1) == "_class"]
-        body = NOTES_RE.sub("", DIRECTIVE_RE.sub("", raw)).strip()
+        diagram = next((m.group(2).strip() for m in DIRECTIVE_RE.finditer(raw)
+                        if m.group(1) == "_diagram"), "")
+        # _diagram survives the strip so its position is known: it upgrades the next list at
+        # that point in the slide, not the first list on the slide.
+        body = NOTES_RE.sub("", OTHER_DIRECTIVE_RE.sub("", raw)).strip()
         title_match = re.search(r"^#{1,4}\s+(.*)$", body, re.MULTILINE)
         raw_title = title_match.group(1).strip() if title_match else f"Slide {index}"
         # The heading becomes the slide's own chrome, so keep it out of the rendered body.
         content_body = re.sub(r"^#{1,4}\s+.*$", "", body, count=1, flags=re.MULTILINE).strip()
-        rendered = render_blocks(content_body.splitlines())
+        d_match = DIAGRAM_AT.search(content_body)
+        if d_match:
+            head = content_body[:d_match.start()].strip()
+            tail = content_body[d_match.end():].strip()
+            rendered = ((render_blocks(head.splitlines()) + "\n") if head else "") \
+                + render_blocks(tail.splitlines(), diagram=d_match.group(1).strip())
+        else:
+            rendered = render_blocks(content_body.splitlines())
         cover = index == 1
         if cover:
             # The opening slide is a title slide: the deck's own name, not a section label.
@@ -196,6 +273,7 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
             "chapter": chapter,
             "cover": cover,
             "classes": classes,
+            "diagram": diagram,
             "notes": notes,
             "html": rendered,
             "script_text": script_text,
