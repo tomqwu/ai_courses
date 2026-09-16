@@ -1334,80 +1334,80 @@
         "slide-5": {
           "audio": "/assets/audio/aps-1.0.0/m04/slide-5.mp3",
           "captions": "/assets/audio/aps-1.0.0/m04/slide-5.vtt",
-          "transcript": "Research settles technology, and it does so with receipts. This file is nine hundred sixty-five lines holding eight numbered decisions, each with the same anatomy: the decision, the options evaluated with pros and cons, the rationale, then implementation details. Decision one chooses Redis and rejects in-memory outright, because in-memory counters are lost on restart and are not shared across API instances. Decision two chooses TOTP, time-based one-time passwords, over SMS, because NIST special publication 800-63B deprecates SMS and SIM-swap attacks are well documented. Here is the rule to steal: a decision without a rejected alternative is a preference, not a decision.",
+          "transcript": "Research settles technology, and it does so with receipts. This file is nine hundred sixty-five lines holding eight numbered decisions, each with the same anatomy: the decision, the options evaluated with pros and cons, the rationale, then implementation details. The exhibit is the real first decision, verbatim: Decision 1, Rate Limiting Infrastructure, use Redis for rate limit storage, not in-memory. That is the shape every decision follows, and the consistency is the point — a new engineer can read any one of the eight and know exactly how the argument was made. Decision two chooses TOTP over SMS the same way: options, evidence, a verdict you can audit.",
           "title": "Proof: `research.md` — decisions with receipts",
-          "duration": 43.37,
-          "sha256": "f3294a6c44bfe6c2dc6f90580f482f6d87242baa2732182d45afa541fe66dc39",
+          "duration": 41.113,
+          "sha256": "5ae5893ec9357c2a457ca355bdc9d304c14ce9c1ec86d14c78e9b577051e2cec",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
           "cues": 10,
-          "words": 101
+          "words": 108
         },
         "slide-7": {
           "audio": "/assets/audio/aps-1.0.0/m04/slide-7.mp3",
           "captions": "/assets/audio/aps-1.0.0/m04/slide-7.vtt",
-          "transcript": "The contract folder is where WHAT and HOW first meet. This feature has six contracts, and together they run to four thousand six hundred sixty-one lines: rate limiting, the two-factor API, audit logging, CSRF, session, and password reset. Look at the rate-limiting config table's first row: a POST to the login endpoint, a five minute window, five attempts, per IP, with a fifteen minute lockout — the same five, five, fifteen from the acceptance scenario, now with a scope and a key format attached. That is what a contract is for. If you write one artifact carefully in the lab, make it the contract.",
+          "transcript": "The contract folder is where WHAT and HOW first meet. This feature has six contracts, and together they run to four thousand six hundred sixty-one lines: rate limiting, the two-factor API, audit logging, CSRF, session, and password reset. The exhibit is the rate-limiting config table's first rows, and the numbers should look familiar: a POST to the login endpoint, a five-minute window, five attempts, per IP, fifteen-minute lockout. The contract repeats the spec's numbers rather than inventing its own — that is what makes them checkable. Each contract also carries the key schema, the error keys, a test sketch, and benchmarks.",
           "title": "Proof: `contracts/` — six seams",
-          "duration": 38.177,
-          "sha256": "b6e12b3cccf3418b29d4c9ec8b081a82b3562acebc4805bd642aced2aa9729c3",
+          "duration": 39.231,
+          "sha256": "521274b2246705b6a574a6a3008f5e4c3a2e07961208937da35d32fb4d0cbd27",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 104
+          "cues": 11,
+          "words": 101
         },
         "slide-4": {
           "audio": "/assets/audio/aps-1.0.0/m04/slide-4.mp3",
           "captions": "/assets/audio/aps-1.0.0/m04/slide-4.vtt",
-          "transcript": "The spec file owns the WHAT. In the security-hardening spec you will find eight user stories, six of them P1 and two P2, forty-four functional requirements all phrased System MUST, seven edge cases, and twelve success criteria. Open story one: given a user attempts to log in, when they fail authentication five times within five minutes, then further login attempts are blocked for fifteen minutes. Those numbers, five, five, and fifteen, will reappear in a functional requirement, in a contract config row, and in a test assertion. That recurrence is the point. And the spec names no technology at all.",
+          "transcript": "The spec file owns the WHAT, and now it is on the slide. In the security-hardening spec you will find eight user stories, six of them P1 and two P2, forty-four functional requirements all phrased System MUST, seven edge cases, and twelve success criteria. Read the two exhibits: a requirement line — the system must enforce rate limits on authentication endpoints, blocking requests after five failed attempts within five minutes per IP — and the first story's scenario, given a user attempts to log in, when they fail authentication five times within five minutes, then further login attempts are blocked for fifteen minutes. The same numbers appear in both, and zero technologies are named — no Redis, no SQL anywhere in the spec.",
           "title": "Proof: `spec.md` owns WHAT",
-          "duration": 37.491,
-          "sha256": "043751dac37b22565c71e04e731d05febe973de626fd44e4593d5dde81b5625e",
+          "duration": 44.104,
+          "sha256": "55c7618a3611410bf91737fb9852e90fc0f4dfeca3bac1d621fccdeb19564511",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 10,
-          "words": 100
+          "cues": 11,
+          "words": 123
         },
         "slide-8": {
           "audio": "/assets/audio/aps-1.0.0/m04/slide-8.mp3",
           "captions": "/assets/audio/aps-1.0.0/m04/slide-8.vtt",
-          "transcript": "The quickstart is six hundred forty-three lines of timed deployment with exact commands, plus prerequisites and troubleshooting. The requirements checklist is fifty lines and grades three groups: Content Quality, Requirement Completeness, and Feature Readiness. Its first rule bans implementation details, and it ends with a verdict of all checks passed and a quality score of one hundred percent. Hold that number. In a few slides I will show you a count in this very file that is wrong, and the one hundred percent did not catch it. A self-graded gate tells you what its author believed; only reading it against the spec tells you what is true.",
+          "transcript": "The quickstart is six hundred forty-three lines of timed deployment with exact commands, plus prerequisites, a verification checklist, and troubleshooting. The requirements checklist is fifty lines and grades three groups: Content Quality, Requirement Completeness, and Feature Readiness. Its first rule bans implementation details — a spec-quality rule, enforced by a checklist. And the verdict is on the slide, verbatim: all checks passed, quality score one hundred percent, all checklist items passed. It was validated on October twenty-second, twenty twenty-five, generated by the speckit checklist command. The grade is a gate output, not a self-assessment in a README.",
           "title": "Proof: the gate and the quickstart",
-          "duration": 35.927,
-          "sha256": "5542d831aa10810ab67e9f71565c623d7380e982d0184044fa5af38c727a12b9",
+          "duration": 41.503,
+          "sha256": "890eed7b2eb3f0cb4fb5fc13c8fb9388860e586507aff21923dd61a34a80b3d7",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
           "cues": 10,
-          "words": 107
+          "words": 97
         },
         "slide-6": {
           "audio": "/assets/audio/aps-1.0.0/m04/slide-6.mp3",
           "captions": "/assets/audio/aps-1.0.0/m04/slide-6.vtt",
-          "transcript": "The plan owns the HOW, and it opens with a gate. The Constitution Check walks the project's seven principles and gives each one a verdict, ending with the line Constitution Violations: NONE and an empty Complexity Tracking table, which the template says to fill only when violations exist. Every file the plan touches is annotated as new or modify. Then the honest absence: this feature has no data-model file, because security infrastructure spans many entities, and the plan says so. Six other specs do have one. The template defines the full set of artifacts, but each feature decides what earns its keep.",
+          "transcript": "The plan owns the HOW, and it opens with a gate that is now on the slide, verbatim. Constitution Check, gate: must pass before Phase 0 research, re-check after Phase 1 design. The check walks the project's seven principles and gives each one a verdict, ending with the line Constitution Violations: NONE and a Complexity Justification marked not applicable because there are no violations to justify. The template says to fill the Complexity Tracking table only when violations exist, which is why it is empty here. Every file the plan touches is annotated NEW or MODIFY. One honest absence: there is no data-model.md in this plan, because security spans entities rather than adding one.",
           "title": "Proof: `plan.md` — HOW, plus one absence",
-          "duration": 36.218,
-          "sha256": "0a27745cd4030fcb3d95d13f0f6e95658f84199af5909b09d9a0a456b90bbc55",
+          "duration": 41.443,
+          "sha256": "0650766e8470a00ae36946783306fbde9e88f5740ec17547e9912dad64698835",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
           "cues": 10,
-          "words": 102
+          "words": 114
         },
         "slide-9": {
           "audio": "/assets/audio/aps-1.0.0/m04/slide-9.mp3",
           "captions": "/assets/audio/aps-1.0.0/m04/slide-9.vtt",
-          "transcript": "Here is the honest gap in the exemplar. This feature was specced down to four thousand lines of contracts and never generated a task breakdown; its plan's Next Steps still lists that command as Phase 2. So read the real format from the template: checkboxes with an ID, an optional parallel marker, and a story tag. The parallel marker flags work that can run at the same time, the story tag ties each task to a story, and the template requires exact file paths in descriptions. One real line reads: T017, parallel, story one, implement the create wizard state method in the onboarding service file. Every task names a file.",
+          "transcript": "Here is the honest gap in the exemplar, now flanked by the real format. This feature was specced down to four thousand lines of contracts and never generated a task breakdown; its plan's Next Steps still lists that command as Phase 2. So read the real format from the tasks on the slide, which come from the onboarding feature: checkboxes with an ID, an optional parallel marker, a story tag, and exact file paths. T017 creates a method in api/services/onboarding_service.py — the task names the file it will touch before any code exists. That is what makes a plan executable by a fresh session: no archaeology, just pointers.",
           "title": "Proof: `tasks.md` — Phase 2, and the gap",
-          "duration": 38.838,
-          "sha256": "c3ed1cc2f9e8530606dba9a0fa67ced57601e7635b3e13cc95cf6c4f74bad799",
+          "duration": 38.801,
+          "sha256": "6d01b0ac7a4513ea84ba2c75be8514527490e186d7ef3e3452d531da484145b0",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 10,
-          "words": 110
+          "cues": 9,
+          "words": 108
         },
         "slide-10": {
           "audio": "/assets/audio/aps-1.0.0/m04/slide-10.mp3",
@@ -1657,7 +1657,7 @@
           "words": 107
         }
       },
-      "duration": 1080.15
+      "duration": 1096.32
     },
     "m05": {
       "label": "M5 — Multi-Tenant Security & the Acceptance Gate",
