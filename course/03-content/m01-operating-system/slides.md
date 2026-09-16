@@ -62,6 +62,15 @@ title: M1 — The AI Product Operating System
 | `.github/copilot-instructions.md` | 119 | Copilot restatement |
 
 Pointers: `SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md`,
+```markdown
+# SignUpFlow Constitution
+
+> A roster and scheduling system with email/SMS notifications.
+
+## Version
+1.1.0
+```
+
 `SignUpFlow/CLAUDE.md`, `SignUpFlow/.github/copilot-instructions.md`
 
 <!-- NOTES: Open these four files in your own clone and count. The constitution is 79 lines, AGENTS.md is 177, CLAUDE.md is 143, and the Copilot file is 119 — all under the ~200-line cap the house style sets. The lesson gives this as a table you can verify with wc -l. Why it matters: a rule file an agent cannot hold in context is a rule file it will not follow. Transition: short is necessary, not sufficient — the rules must also be checkable. Timing: 3 minutes. -->
@@ -196,6 +205,13 @@ Pointer: `SignUpFlow/AGENTS.md`, "House style" and "Safety"
 - Real gate: `SignUpFlow/specs/014-security-hardening/plan.md`
 - Real checklist: `.../014-security-hardening/checklists/requirements.md`
 - Spec 014 has **no** `tasks.md`.
+
+```markdown
+- [ ] T027 [US1] Implement POST /api/sms/send endpoint per contracts/sms-api.md
+  in api/routers/sms.py
+- [ ] T028 [P] [US1] Implement GET /api/sms/messages endpoint (message history)
+  per contracts/sms-api.md in api/routers/sms.py
+```
 
 <!-- NOTES: Proof, not description. There are seventeen folders under SignUpFlow/specs/. The task line "T027 [US1] Implement POST /api/sms/send endpoint per contracts/sms-api.md in api/routers/sms.py" is a real line from spec 019. The Constitution Check gate sentence is real in spec 014's plan. And note the honesty detail from the deep-read: spec 014 has no tasks.md. A folder that stops at planning is a legitimate state, and the record says so rather than inventing a file. Transition: how a story becomes executable. Timing: 3 minutes. -->
 

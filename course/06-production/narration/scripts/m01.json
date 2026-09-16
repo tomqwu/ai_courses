@@ -19,7 +19,7 @@
     },
     "slide-5": {
       "title": "Proof: the stack, with real line counts",
-      "text": "These lengths are real, and you can check them yourself. The constitution is seventy-nine lines. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow."
+      "text": "These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is seventy-nine lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow."
     },
     "slide-6": {
       "title": "House style: a rule must be verifiable",
@@ -55,7 +55,7 @@
     },
     "slide-14": {
       "title": "Proof: the artifacts are real files",
-      "text": "This is proof, not description. Seventeen folders sit under the SignUpFlow specs directory. One real task line from spec nineteen reads: implement the POST /api/sms/send endpoint per the SMS API contract, in api/routers/sms.py. The Constitution Check gate sentence is real in spec fourteen's plan. And note the honesty detail: spec fourteen has no tasks file at all. A folder that stops at planning is a legitimate state, and the record says so rather than inventing a file that is not there."
+      "text": "This is proof, not description — and the real task lines are now on the slide. Seventeen folders sit under the SignUpFlow specs directory. Spec nineteen's task list reads: T027, implement POST /api/sms/send endpoint per contracts/sms-api.md in api/routers/sms.py — and T028 right below it, the message-history endpoint. The Constitution gate lives in spec fourteen's plan. And spec fourteen has no tasks file at all. A folder that stops at planning is a legitimate state, and the record says so rather than inventing a file that is not there."
     },
     "slide-15": {
       "title": "Story → scenario → task",

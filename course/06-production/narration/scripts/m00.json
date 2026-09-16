@@ -27,7 +27,7 @@
     },
     "slide-7": {
       "title": "Production-grade means proof you can open",
-      "text": "Here is the definition this course runs on: production-grade means a shipped artifact with proof you can open and verify. The on-device app shows a 96% core-coverage badge in its README. The spec-driven SaaS shows the line 1,464 passed, 21 skipped in a validation playbook. The expertise product shows a fourteen-finding self-audit. Every asset is a file, dated or machine-checkable, and none of them is a testimonial. A finished claim in a README, or a repository merely existing, is not evidence, and your labs are graded against this same bar."
+      "text": "Here is the definition this course runs on: production-grade means a shipped artifact with proof you can open and verify — and all three proofs are now on the slide, verbatim. The on-device app shows a ninety-six percent core-coverage badge in its README. The spec-driven SaaS shows the line 1,464 passed, 21 skipped, dated. The expertise product carries a fourteen-finding self-audit, reviewed edition one point two one. Every asset is a file, dated or machine-checkable, and none of them is a testimonial. A finished claim in a README, or a repository merely existing, is not evidence, and your labs are graded against this same bar."
     },
     "slide-8": {
       "title": "M0.2 — The Spec-to-Ship Loop",

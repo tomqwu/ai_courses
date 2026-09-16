@@ -88,15 +88,15 @@
         "slide-7": {
           "audio": "/assets/audio/aps-1.0.0/m00/slide-7.mp3",
           "captions": "/assets/audio/aps-1.0.0/m00/slide-7.vtt",
-          "transcript": "Here is the definition this course runs on: production-grade means a shipped artifact with proof you can open and verify. The on-device app shows a 96% core-coverage badge in its README. The spec-driven SaaS shows the line 1,464 passed, 21 skipped in a validation playbook. The expertise product shows a fourteen-finding self-audit. Every asset is a file, dated or machine-checkable, and none of them is a testimonial. A finished claim in a README, or a repository merely existing, is not evidence, and your labs are graded against this same bar.",
+          "transcript": "Here is the definition this course runs on: production-grade means a shipped artifact with proof you can open and verify — and all three proofs are now on the slide, verbatim. The on-device app shows a ninety-six percent core-coverage badge in its README. The spec-driven SaaS shows the line 1,464 passed, 21 skipped, dated. The expertise product carries a fourteen-finding self-audit, reviewed edition one point two one. Every asset is a file, dated or machine-checkable, and none of them is a testimonial. A finished claim in a README, or a repository merely existing, is not evidence, and your labs are graded against this same bar.",
           "title": "Production-grade means proof you can open",
-          "duration": 34.197,
-          "sha256": "789848e23abfb82e69661e075063948fc02db28639120af5405eb2c86296f253",
+          "duration": 38.84,
+          "sha256": "422d61da91ad5f6570d12ae70b2b0623becb2179927d1732e088c1fe1751184b",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 90
+          "cues": 9,
+          "words": 105
         },
         "slide-8": {
           "audio": "/assets/audio/aps-1.0.0/m00/slide-8.mp3",
@@ -255,7 +255,7 @@
           "words": 87
         }
       },
-      "duration": 597.45
+      "duration": 602.1
     },
     "m01": {
       "label": "M1 — The AI Product Operating System",
@@ -289,15 +289,15 @@
         "slide-5": {
           "audio": "/assets/audio/aps-1.0.0/m01/slide-5.mp3",
           "captions": "/assets/audio/aps-1.0.0/m01/slide-5.vtt",
-          "transcript": "These lengths are real, and you can check them yourself. The constitution is seventy-nine lines. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.",
+          "transcript": "These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is seventy-nine lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.",
           "title": "Proof: the stack, with real line counts",
-          "duration": 27.77,
-          "sha256": "a07581c2ea08290f72c54046f7c572142ccc0092214e36d456650aac3b380d8e",
+          "duration": 37.337,
+          "sha256": "14978efca3bb441e204096ff6f30eb8edf9e858fef056233437f8e969c688fd3",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 81
+          "cues": 10,
+          "words": 110
         },
         "slide-2": {
           "audio": "/assets/audio/aps-1.0.0/m01/slide-2.mp3",
@@ -432,15 +432,15 @@
         "slide-14": {
           "audio": "/assets/audio/aps-1.0.0/m01/slide-14.mp3",
           "captions": "/assets/audio/aps-1.0.0/m01/slide-14.vtt",
-          "transcript": "This is proof, not description. Seventeen folders sit under the SignUpFlow specs directory. One real task line from spec nineteen reads: implement the POST /api/sms/send endpoint per the SMS API contract, in api/routers/sms.py. The Constitution Check gate sentence is real in spec fourteen's plan. And note the honesty detail: spec fourteen has no tasks file at all. A folder that stops at planning is a legitimate state, and the record says so rather than inventing a file that is not there.",
+          "transcript": "This is proof, not description — and the real task lines are now on the slide. Seventeen folders sit under the SignUpFlow specs directory. Spec nineteen's task list reads: T027, implement POST /api/sms/send endpoint per contracts/sms-api.md in api/routers/sms.py — and T028 right below it, the message-history endpoint. The Constitution gate lives in spec fourteen's plan. And spec fourteen has no tasks file at all. A folder that stops at planning is a legitimate state, and the record says so rather than inventing a file that is not there.",
           "title": "Proof: the artifacts are real files",
-          "duration": 31.094,
-          "sha256": "0f78c9ad1af3dd465d7173ccc770e126368f1b803d17d5feb1a5b4e96c3836a7",
+          "duration": 35.484,
+          "sha256": "77669b5cff2672676d897bc481cf88f7280276cd5a4fa7f9beacdfac676c658b",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 81
+          "cues": 9,
+          "words": 88
         },
         "slide-15": {
           "audio": "/assets/audio/aps-1.0.0/m01/slide-15.mp3",
@@ -586,7 +586,7 @@
           "words": 78
         }
       },
-      "duration": 849.99
+      "duration": 863.95
     },
     "m02": {
       "label": "M2 — The On-Device AI App: Architecture",

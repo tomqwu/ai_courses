@@ -350,7 +350,11 @@ fence is invisible evidence, not a style bug.
 | m06 — Expertise product | **deepened** | 4: METR + Peng benchmark records verbatim, the `document-manifest.json` M02 `"unavailable"` entry, the `Makefile` check target, a `narration-review.json` retained verdict with its reason |
 | m07 — Monetize | **deepened** | 3: the competition-analysis header convention (dated + approximately/reportedly), the §C research line with the 70–85% rule and the Zoom-records verdict, the cost-floor arithmetic from the sales doc |
 | m08 — Launch | **deepened** | 3: the landing page's own headline + isn't-list, the launch plan's deliverability prerequisites + verified checkbox, the founding-cohort trade line ($990 in exchange for a testimonial and feedback) |
-| m00, m01 | pending, ordered by audit | |
+| m00 — Orientation | **deepened** | 1: the three proof lines verbatim — the 96% coverage badge, "1,464 passed, 21 skipped", the dated site-audit header (Reviewed edition 1.2.1) |
+| m01 — Operating system | **deepened** | 2: the constitution's own head (one sentence of purpose, version 1.1.0), spec 019's T027/T028 task lines with contracts and file paths |
+
+**Pass complete: 9/9 modules deepened, 33 exhibits on the slides, 30 scripts rewritten to walk
+their evidence, all preview recordings re-synthesized, manifest 233/233 at every step.**
 
 m03 discipline notes: the awk gate and the CI job are exhibits with one elision each, marked `# …` /
 verbatim lines around it. The `isVerifiedLocal` guard and `RejectRedirects` delegate reflowed
