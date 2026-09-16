@@ -2048,28 +2048,28 @@
         "slide-5": {
           "audio": "/assets/audio/aps-1.0.0/m06/slide-5.mp3",
           "captions": "/assets/audio/aps-1.0.0/m06/slide-5.vtt",
-          "transcript": "Read two records and the difference becomes visible. The METR entry says AI-allowed issues took nineteen percent longer, with a confidence interval from plus two to plus thirty-nine percent, across two hundred and forty-six real issues. Developers expected twenty-four percent faster and afterwards believed twenty percent faster. Two entries down, Peng reports fifty-five point eight percent faster, with ninety-five freelancers on one synthetic task, and that work was vendor-affiliated. METR was independent. Both results are real, and the record structure refuses to average them.",
+          "transcript": "Read two records and the difference becomes visible, and both are now on the slide. The METR entry says AI-allowed issues took nineteen percent longer, with a confidence interval from plus two to plus thirty-nine percent, across two hundred and forty-six real issues. Developers expected twenty-four percent faster, and afterwards believed twenty percent faster — the measured record and the perception point in opposite directions. The Peng entry says fifty-five point eight percent faster, with ninety-five freelancers on one synthetic task. Both records are measured, not self-reported — but one is independent and one is vendor-affiliated, and each record's Supports line states which claim it can carry.",
           "title": "Benchmark records, side by side",
-          "duration": 34.489,
-          "sha256": "137ed26a61764de09dab1e8189f1eb4da6216e9d74bbe18a4595abefd784ac51",
+          "duration": 40.076,
+          "sha256": "16b42689eff7b85f68f42740654bcd0e0ef613ebb164cdcb0aa21bea2d026783",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 84
+          "cues": 11,
+          "words": 107
         },
         "slide-7": {
           "audio": "/assets/audio/aps-1.0.0/m06/slide-7.mp3",
           "captions": "/assets/audio/aps-1.0.0/m06/slide-7.vtt",
-          "transcript": "Three files exist only to record where content came from. The document manifest lists eleven retrievals, each with a URL, a retrieval date, a status and a SHA-256 hash of the downloaded file. Entry M02 is the McKinsey PDF, and its status is unavailable, with the reason recorded word for word: the read operation timed out. A spotless manifest is suspicious. A manifest that logs its own failure is checkable, because you can re-run the retrieval. Even images have provenance: the visual-provenance file records that the two hero illustrations are conceptual, not photographs of deployed systems, and it keeps the prompts.",
+          "transcript": "Three files exist only to record where content came from, and the manifest's honest failure is now on the slide. The document manifest lists eleven retrievals, each with a URL, a retrieval date, a status, and a SHA-256 hash of the downloaded file. Entry M02 is the McKinsey PDF, and its status is unavailable, with the reason recorded word for word: the read operation timed out. Read the JSON. A manifest that only logged successes would be a brochure; a logged failure proves the manifest is real. And images are covered too — visual-provenance.md gives even images provenance.",
           "title": "Provenance manifests",
-          "duration": 39.516,
-          "sha256": "8264dc9dc2660b27411774ddde3d0893fd47548b51378fa3cf8fa86fcb52598c",
+          "duration": 37.063,
+          "sha256": "bba0f4da2fee645a3f16864c26cf7e826be8993603e1df5bf22d1179904207e4",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
           "cues": 10,
-          "words": 101
+          "words": 98
         },
         "slide-6": {
           "audio": "/assets/audio/aps-1.0.0/m06/slide-6.mp3",
@@ -2256,15 +2256,15 @@
         "slide-21": {
           "audio": "/assets/audio/aps-1.0.0/m06/slide-21.mp3",
           "captions": "/assets/audio/aps-1.0.0/m06/slide-21.vtt",
-          "transcript": "Content needs tests, so the check target is models, build, site, browser. The models step runs the npm tests, the Python unit tests, narration validation with require-complete, and contract validation. The browser step runs five CI-identical groups — playback, flows, site, models and architecture — in both Chromium and WebKit, at three viewports: twelve eighty by seven twenty, nineteen twenty by ten eighty, and three seventy-five by eight twelve. A slide that overflows a projector viewport fails like a unit test. And the link check does not treat a successful HTTP response as evidence that a claim is correct.",
+          "transcript": "Content needs tests, so the check target is models, build, site, browser — and the Makefile line is now on the slide, four words that everything hangs off. The models step runs the npm tests, the Python unit tests, narration validation with require-complete, and contract validation. The browser step runs five CI-identical groups — playback, flows, site, models and architecture — in both Chromium and WebKit, at three viewports: 1280 by 720, 1920 by 1080, and 375 by 812. An overflowing slide fails like a unit test. Links are checked too, and a 200 alone is not proof.",
           "title": "`make check` — content needs tests",
-          "duration": 39.461,
-          "sha256": "b75f3e32eb1c477474846e3450a7615f19a9fe0d5abd67019d56ed5bbf913b67",
+          "duration": 42.882,
+          "sha256": "8edd0250017ea32a3215b88cae6553aa817e2a17803e68fbd99db1c75a908d6b",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
           "cues": 9,
-          "words": 99
+          "words": 98
         },
         "slide-23": {
           "audio": "/assets/audio/aps-1.0.0/m06/slide-23.mp3",
@@ -2282,15 +2282,15 @@
         "slide-22": {
           "audio": "/assets/audio/aps-1.0.0/m06/slide-22.mp3",
           "captions": "/assets/audio/aps-1.0.0/m06/slide-22.vtt",
-          "transcript": "One hundred and sixteen slides carry recorded narration, so a silent slide edit would desynchronize the voice from the slide. The narration-review tool hashes each rendered slide together with its script, its recording and its caption-flow definitions. If a destination changes, you must make a deliberate retained or refreshed decision, with a specific reason, recorded in the review data. Here is the line to carry into your own pipeline: never reset the baseline to silence a stale-review failure. Resetting the baseline does not fix the drift; it rubber-stamps the drift you just erased.",
+          "transcript": "One hundred and sixteen slides carry recorded narration, so a silent slide edit would desynchronize the voice from the slide. The narration-review tool hashes each rendered slide together with its script, its recording, and its caption-flow definitions, and every verdict lives in a JSON file like the entry on the slide: a decision, and a reason written in full sentences. If a destination changes, you must make a deliberate choice — retained or refreshed — and record why. Never reset the baseline to silence a stale-review failure: a baseline reset rubber-stamps the drift you erased.",
           "title": "Hash-gate the media",
-          "duration": 34.014,
-          "sha256": "d80a3589c1de34ac4bb04dce95ec680b18a5cc9bc73b2fb19c63f9e40244f89a",
+          "duration": 34.548,
+          "sha256": "b8f3ad777730763e1ecc20a843c151a47a628af0c78e603c0d4d74aa8790ccba",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 10,
-          "words": 93
+          "cues": 9,
+          "words": 95
         },
         "slide-24": {
           "audio": "/assets/audio/aps-1.0.0/m06/slide-24.mp3",
@@ -2358,7 +2358,7 @@
           "words": 88
         }
       },
-      "duration": 967.89
+      "duration": 974.98
     },
     "m07": {
       "label": "M7 — Monetize: Pricing, Packaging, Positioning",

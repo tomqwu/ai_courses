@@ -65,6 +65,21 @@ title: M6 — The Expertise Product: Evidence, Routing, Editions
 - Peng: 55.8% faster, 95 freelancers, one synthetic task
 - Both measured — one independent, one vendor-affiliated
 
+```markdown
+### METR, "Measuring the Impact of Early-2025 AI on Experienced Open-Source
+Developer Productivity", 10 Jul 2025
+
+**Finding:** AI-allowed issues took 19% longer (CI +2% to +39%); developers
+expected 24% faster and afterwards believed 20% faster
+**Supports:** Task efficiency (negative)
+
+### Peng et al., "The Impact of AI on Developer Productivity: Evidence from
+GitHub Copilot", 13 Feb 2023
+
+**Finding:** 55.8% faster (71.2 vs 160.9 minutes; CI 21% to 89%)
+**Supports:** Task efficiency
+```
+
 <!-- NOTES: Read one record end to end. The METR entry says AI-allowed issues took nineteen percent longer, with a confidence interval of plus two to plus thirty-nine percent; developers expected twenty-four percent faster and afterwards believed twenty percent faster. Supports: task efficiency, negative. Caveats: sixteen experienced maintainers on repositories they know well, two hundred forty-six real issues, measured by screen recording, independent non-profit. Two entries down, Peng: fifty-five point eight percent faster, ninety-five freelancers, one synthetic task, vendor-affiliated. Both are real. The record structure refuses to average them. Timing: 5 minutes. Transition: research gets logged before it reaches a slide. -->
 
 ---
@@ -90,6 +105,16 @@ title: M6 — The Expertise Product: Evidence, Routing, Editions
 - Reason recorded: "The read operation timed out"
 - A logged failure proves the manifest is real
 - `ai_qe/research/visual-provenance.md` — even images have provenance
+
+```json
+{
+  "id": "M02",
+  "url": "https://www.mckinsey.com/…/the-ai-revolution-in-software-development_final.pdf",
+  "retrieved": "2026-09-05",
+  "status": "unavailable",
+  "reason": "The read operation timed out"
+}
+```
 
 <!-- NOTES: Open the manifest and find entry M02. Eleven retrievals are listed, each with a URL, a retrieval date, a status and a SHA-256 hash for the downloaded file. M02 is the McKinsey PDF, and its status is unavailable, with the reason recorded verbatim: the read operation timed out. A spotless manifest is suspicious. A manifest that logs its own failure is checkable, because you can re-run the retrieval. Then open visual-provenance dot md: the two hero illustrations are conceptual editorial illustrations, not photographs of deployed systems, and the prompts are recorded. Timing: 4 minutes. Transition: now label the level of every number. -->
 
@@ -298,6 +323,13 @@ research_edition: "1.7.0"
 - An overflowing slide fails like a unit test
 - Links are checked; a 200 is not proof
 
+```make
+check: models build site browser
+models:
+	npm test
+	node --test tools/readiness-model.test.cjs tools/narration-review.test.cjs
+```
+
 <!-- NOTES: `ai_qe/Makefile` defines check as models, build, site, browser. Models runs the npm tests, the Python unit tests, narration validation with require-complete, and contract validation. Build runs Jekyll and finalize. Browser runs five CI-identical groups declared in `tools/qa-groups.json` — playback, flows, site, models, architecture — in both Chromium and WebKit at three viewports: twelve eighty by seven twenty, nineteen twenty by ten eighty, and three seventy-five by eight twelve. One more line to keep: the link check does not treat a successful HTTP response as evidence a claim is correct. Timing: 4 minutes. Transition: media needs its own gate. -->
 
 ---
@@ -309,6 +341,14 @@ research_edition: "1.7.0"
 - Reasons are recorded in `assets/data/narration-review.json`
 - "Never reset the baseline to silence a stale-review failure"
 - A baseline reset rubber-stamps the drift you erased
+
+```json
+"slide:industry-evp/slide-18": {
+  "decision": "retained",
+  "reason": "The title now frames the same three narrated strategic choices
+    as a closing decision. …"
+}
+```
 
 <!-- NOTES: One hundred sixteen slides carry recorded narration, so a silent slide edit would desynchronize the voice from the slide. `tools/narration-review.cjs` hashes each rendered slide together with its script, recording and caption-flow definitions. A changed destination requires a deliberate retained or refreshed decision with a specific reason, committed to `assets/data/narration-review.json`. Then the line to tattoo on your pipeline, from `CONTRIBUTING.md`: never reset the baseline to silence a stale-review failure. Resetting converts a drift alarm into a rubber stamp. Timing: 4 minutes. Transition: now the commercial end. -->
 
