@@ -63,6 +63,21 @@ title: M2 — The On-Device AI App: Architecture
 | `Transcribing` | partials and finals | SpeechAnalyzer, WhisperKit |
 | `LLMProvider` | streamed text | Ollama HTTP client |
 
+```swift
+public protocol AudioCapturing: Sendable {
+    var statusUpdates: AsyncStream<CaptureStatus> { get }
+    var chunks: AsyncStream<AudioChunk> { get }
+    func start() async throws
+    func stop()
+}
+public protocol LLMProvider: Sendable {
+    var id: String { get }
+    func stream(_ request: LLMRequest) -> AsyncThrowingStream<String, Error>
+}
+```
+
+`ListenToMe/Sources/ListenToMeCore/Capture.swift:4` · `LLMProvider.swift:4`
+
 <!-- NOTES: A seam is a protocol the pure core owns and the platform side implements. Core never names AVFoundation or Ollama; it only names these three protocols. That inversion is what lets the test suite inject mocks. The pay-off: if we add a fourth transcription engine tomorrow, nothing below the `Transcribing` protocol changes — not the store, not the prompts, not the router. (75 seconds; next we look inside the transcription seam.) -->
 
 ---
@@ -87,6 +102,15 @@ title: M2 — The On-Device AI App: Architecture
 - Always keeps the newest, even over budget.
 - Default budget: 4,000 characters.
 - Recap and action items get 100,000.
+
+```swift
+public func buildContext(from store: ConversationStore, notes: String?,
+                         maxChars: Int = 4000, summary: String? = nil,
+                         responseLanguage: String? = nil, references: String? = nil,
+                         personaGuidance: String? = nil) -> PromptContext
+```
+
+`ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12`
 
 <!-- NOTES: `apply(_:)` appends finals and replaces partials. The window function walks utterances newest-first, keeping each while it fits, and always includes the most recent one even if it alone exceeds the budget — the window is never empty (`ConversationStore.swift:56-67`). The default is 4,000 characters (`ContextEngine.swift:12`), but `MeetingSession.transcriptBudget(for:)` raises recap and action-item prompts to 100,000 because they must cover the whole conversation (`MeetingSession.swift:419-427`). (85 seconds; a quick word on segmentation.) -->
 
@@ -113,6 +137,20 @@ title: M2 — The On-Device AI App: Architecture
 - Guarantee: never an empty context.
 - Default 4,000 chars — `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12`.
 - Why it pays: 96% core coverage, 95% floor.
+
+```swift
+public func recentContext(maxChars: Int) -> [TranscriptSegment] {
+    var total = 0
+    var collected: [TranscriptSegment] = []
+    for segment in utterances.reversed() {
+        // Always include the most recent; otherwise stop before exceeding the budget.
+        if !collected.isEmpty && total + segment.text.count > maxChars { break }
+        total += segment.text.count
+        collected.append(segment)
+    }
+    return collected.reversed()
+}
+```
 
 <!-- NOTES: This is the first proof slide. Open the file and read the loop aloud rather than trusting these bullets. The point of the proof slide in this course is that every claim has a file pointer you can open, and that the pointer resolves. The 96% coverage badge and the 95% floor in `scripts/check-coverage.sh` are downstream consequences of this kind of layering. (70 seconds; transition to routing.) -->
 
@@ -152,6 +190,17 @@ title: M2 — The On-Device AI App: Architecture
 - `"gemini-2.5-flash"` contains `"mini"`.
 - Token check rejects it; substring accepts it.
 - One wrong check misroutes a whole family.
+
+```swift
+static func tokens(_ model: String) -> [String] {
+    model.lowercased().split(whereSeparator: { "-:./ ".contains($0) }).map(String.init)
+}
+static func hasMarker(_ model: String, _ marker: String) -> Bool {
+    tokens(model).contains { $0.hasPrefix(marker) }
+}
+```
+
+`ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:7-18`
 
 <!-- NOTES: `ModelRanking.swift:13-18` documents this: token-prefix matching, not raw substring, rejects cross-token false hits like gemini containing mini. A raw `contains("mini")` would rank every Gemini model as fast, and your Quick defaults would be quietly wrong for an entire model family — with no test failing unless you wrote the near-miss test. TinyCopilot's `test_gemini_is_not_demoted_as_mini` is exactly that test. (70 seconds; now cancellation.) -->
 
@@ -251,6 +300,16 @@ title: M2 — The On-Device AI App: Architecture
 - `.incomplete` — lines ended without `done: true`.
 - `.empty` — completed with no visible text.
 - Truncation can never finish as success.
+
+```swift
+public enum OllamaStreamError: LocalizedError {
+    case server(String)
+    case incomplete
+    case empty
+}
+```
+
+`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:159-168`
 
 <!-- NOTES: `Sources/ListenToMeCore/OllamaProvider.swift:120-139` reads NDJSON lines; the line source is injectable so tests feed canned lines. The loop tracks `completed` and `producedContent` at lines 67-83. Three typed cases live at lines 159-170, each with a user-facing message. This design is a scar, not a guess: the September 2026 review found the old provider let truncated streams finish as success — gap G06, P0 — while the project showed 215 passing core tests and 97.24% coverage. (85 seconds; proof slide.) -->
 

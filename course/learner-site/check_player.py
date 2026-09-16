@@ -499,7 +499,9 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
     cases = []
     for deck_id in B.DECK_IDS:
         for slide in B.parse_deck(deck_id)["slides"]:
-            if slide.get("diagram"):
+            # Diagrams and code exhibits both carry the substance, and the frame clips silently
+            # either way — both get opened and measured.
+            if slide.get("diagram") or "<pre>" in slide.get("html", ""):
                 cases.append([deck_id, slide["number"]])
     if not cases:
         return []

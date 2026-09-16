@@ -1,8 +1,8 @@
 {
   "edition": "aps-1.0.0",
   "complete": true,
-  "voice": "ElevenLabs / Chris — Charming, Down-to-Earth",
-  "provider": "ElevenLabs",
+  "voice": "macOS say / Samantha (preview)",
+  "provider": "macOS say",
   "decks": {
     "m00": {
       "label": "M0 — Orientation: Three Products, One Method",
@@ -646,41 +646,41 @@
         "slide-7": {
           "audio": "/assets/audio/aps-1.0.0/m02/slide-7.mp3",
           "captions": "/assets/audio/aps-1.0.0/m02/slide-7.vtt",
-          "transcript": "ConversationStore is the single source of truth. It keeps a log of finals plus one current partial. Applying a result appends finals and replaces partials. The context window walks utterances newest-first, keeping each one while it fits, and it always keeps the newest even if that one alone exceeds the budget, so the window is never empty. The default budget is 4,000 characters, but recap and action-item prompts get 100,000, because they have to cover the whole conversation.",
+          "transcript": "ConversationStore is the single source of truth. It keeps a log of finals plus one current partial, and applying a result appends finals and replaces the partial. The context window walks utterances newest-first, keeping each while it fits, and always keeps the newest even if that one alone exceeds the budget, so the window is never empty. The code on this slide is the real signature from ContextEngine: buildContext takes the store, optional notes, and a maxChars budget that defaults to 4,000 characters. Recap and action-item prompts get 100,000, because they have to cover the whole conversation. Notice the budget is a parameter with a default at the call surface, not a constant buried in a function body — tests can see it and labs can vary it.",
           "title": "The store and its budget",
-          "duration": 28.758,
-          "sha256": "a3e8b4331a8384c9db3b664799a26d01698bc627f5a8ead4469c9f73f1d648ba",
+          "duration": 44.622,
+          "sha256": "00c241bcb06ee252b6abf81a3b65417fbe11797cb279f9d9e87e76267f5216bd",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 78
+          "cues": 12,
+          "words": 128
         },
         "slide-5": {
           "audio": "/assets/audio/aps-1.0.0/m02/slide-5.mp3",
           "captions": "/assets/audio/aps-1.0.0/m02/slide-5.vtt",
-          "transcript": "A seam is a protocol the pure core owns and the platform side implements, and the core declares three of them. AudioCapturing says what audio arrives, and the app provides AVAudioEngine and ScreenCaptureKit. Transcribing says partials and finals arrive, and the app provides SpeechAnalyzer or WhisperKit. LLMProvider says streamed text arrives, and the app provides an Ollama HTTP client. The core never names AVFoundation or Ollama; it only names these protocols, and that inversion is what lets the test suite inject mocks. Add a fourth transcription engine tomorrow, and nothing below the Transcribing protocol changes.",
+          "transcript": "A seam is a protocol the pure core owns and the platform side implements, and the core declares three of them. The table shows all three; the code shows two. AudioCapturing exposes a status stream, a chunk stream, and start and stop, and the app implements it with AVAudioEngine and ScreenCaptureKit. Transcribing says partials and finals arrive, implemented by SpeechAnalyzer or WhisperKit. LLMProvider is the smallest: an id and one streaming function returning an async throwing stream of strings, implemented by an Ollama HTTP client. The core never names AVFoundation or Ollama; it only names these protocols, and that inversion is what lets the test suite inject mocks. Add a fourth transcription engine tomorrow, and nothing below the Transcribing protocol changes.",
           "title": "Three protocol seams",
-          "duration": 37.502,
-          "sha256": "f748adb8f7f6d55a00df7a09b05400293cb68d80c93f6152e96cc7b2e9fc9f97",
+          "duration": 46.839,
+          "sha256": "137fcb78888a00040e4d7947909b4182678cc0706b82b08d7510eaac2722ac79",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 10,
-          "words": 95
+          "cues": 12,
+          "words": 121
         },
         "slide-9": {
           "audio": "/assets/audio/aps-1.0.0/m02/slide-9.mp3",
           "captions": "/assets/audio/aps-1.0.0/m02/slide-9.vtt",
-          "transcript": "This is the first proof slide, and it sets a pattern for the course. Every claim we make has a file pointer you can open, and that pointer resolves. The guarantee here is that the context window is never empty: the newest-first fit always keeps the most recent segment, even when it alone blows the budget. The default budget of 4,000 characters lives in ContextEngine. Open the file and read the loop yourself rather than trusting the bullets. The 96% core coverage badge and the 95% floor are downstream consequences of this kind of layering.",
+          "transcript": "This is the first proof slide, and it sets a pattern for the course: every claim we make has a file pointer you can open, and that pointer resolves. The loop is eleven lines. It walks utterances newest-first and breaks before exceeding the budget, but only once something is already collected. That is the entire guarantee, and it lives in the guard: the newest segment is always included, even when it alone blows the budget, so the context window is never empty. The default budget of 4,000 characters lives in ContextEngine. Read the loop rather than trusting the bullets — the comment in the source states exactly what to verify. The 96 percent core coverage badge and the 95 percent floor are downstream consequences of this kind of layering.",
           "title": "The newest segment always survives",
-          "duration": 32.017,
-          "sha256": "85191f9855c93bc91a86f128a99e99aacdafe5577265556920c8acff8cda4605",
+          "duration": 43.002,
+          "sha256": "a4090ab90dff71e0e0107fd18b97bf73d70d636e91ba432e40e6b7973f43b117",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 95
+          "cues": 11,
+          "words": 129
         },
         "slide-6": {
           "audio": "/assets/audio/aps-1.0.0/m02/slide-6.mp3",
@@ -737,15 +737,15 @@
         "slide-12": {
           "audio": "/assets/audio/aps-1.0.0/m02/slide-12.mp3",
           "captions": "/assets/audio/aps-1.0.0/m02/slide-12.vtt",
-          "transcript": "Here is a small check with a large blast radius. The router splits the model name into tokens and lets a marker match only at a token start. Look at gemini-2.5-flash: it contains the letters m-i-n-i, so a raw substring check would call it mini and rank it as fast. The token-prefix check rejects that hit, because mini is not a token in that name. One wrong check misroutes an entire model family, and no test fails unless you wrote the near-miss test. TinyCopilot ships exactly that test: test_gemini_is_not_demoted_as_mini.",
+          "transcript": "Here is a small check with a large blast radius. The router splits the model name into tokens, on the usual separators — dash, colon, dot, slash, space — and lets a marker match only at a token start. Look at gemini-2.5-flash: it contains the letters m-i-n-i, so a raw substring check would call it mini and rank it as fast. The token-prefix check rejects that hit, because mini is not a token in that name; hasPrefix runs against each token, never the raw string. One wrong check misroutes an entire model family, and no test fails unless you wrote the near-miss test. TinyCopilot ships exactly that test: test_gemini_is_not_demoted_as_mini. Both functions on the slide are pure — no I/O — which is what makes them fully unit-testable.",
           "title": "Token-prefix, not substring",
-          "duration": 32.03,
-          "sha256": "b1dc65747fa8758e12e673e23c89cbdd7cbda8c125e2a9cf17c769633515ccbb",
+          "duration": 46.746,
+          "sha256": "fd26c35b4f2d827d2fc6ae373c46f7b2bcccee157c79c3b84600755a21afeb56",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 89
+          "cues": 11,
+          "words": 127
         },
         "slide-13": {
           "audio": "/assets/audio/aps-1.0.0/m02/slide-13.mp3",
@@ -776,15 +776,15 @@
         "slide-20": {
           "audio": "/assets/audio/aps-1.0.0/m02/slide-20.mp3",
           "captions": "/assets/audio/aps-1.0.0/m02/slide-20.vtt",
-          "transcript": "Ollama streams newline-delimited JSON over the chat endpoint, and it can return HTTP 200 and then an error object inside the stream, so the provider types its failures. A server error is an in-stream error event. Incomplete means the lines ended without a done flag, and empty means the stream completed with no visible text. Each case carries a user-facing message, so truncation can never finish as success. This design is a scar, not a guess: a review found the old provider let truncated streams pass while two hundred and fifteen core tests were green and coverage sat above ninety-seven percent.",
+          "transcript": "Ollama streams newline-delimited JSON over the chat endpoint, and it can return HTTP 200 and then an error object inside the stream, so the provider types its failures as an enum with three cases. A server error is an in-stream error event. Incomplete means the lines ended without a done flag, and empty means the stream completed with no visible text. Each case carries a user-facing message, so truncation can never finish as success. Ollama's own API documentation now shows the final line of a stream carrying done: true plus a done reason such as stop — the provider trusts none of that until the answer is complete and non-empty. This design is a scar, not a guess: a review found the old provider let truncated streams pass while two hundred and fifteen core tests were green and coverage sat above ninety-seven percent.",
           "title": "Typed streaming errors",
-          "duration": 35.644,
-          "sha256": "6ff7a0b4648b6b8718cf849e32f74925e9fa697909895c0084266d8f53dfbd10",
+          "duration": 48.469,
+          "sha256": "522103ff3cd5673d67eec271bd0fa44716f49de0a939e563247c51b573788b59",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 101
+          "cues": 13,
+          "words": 143
         },
         "slide-16": {
           "audio": "/assets/audio/aps-1.0.0/m02/slide-16.mp3",
@@ -930,7 +930,7 @@
           "words": 82
         }
       },
-      "duration": 841.17
+      "duration": 904.9
     },
     "m03": {
       "label": "M3 — The On-Device AI App: Privacy, Testing, Shipping",

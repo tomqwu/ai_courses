@@ -315,6 +315,30 @@ counts are derived from its own rows and the page labels them **derived** rather
 that does not exist.
 
 
+## Evidence exhibits
+
+The depth audit that followed the diagram pass found the real cause of the "hello 101" feel: the
+depth was in the *spoken* layer (86–103 words a slide, real numbers, real files) while the visible
+face was a 36-word prompt — and the slides that teach a real Swift codebase showed **zero lines of
+code**. A slide that says "newest-first fit, budget-bounded window" and cites
+`ConversationStore.swift:56-67` without showing the loop is asking to be trusted.
+
+The fix is the **evidence exhibit**: the cited code, verbatim, on the slide — a code fence under the
+claims (fences were always exempt from the bullet budget; the budget is about prose, not proof). The
+pilot is module m02, five slides: the three protocol seams, the `buildContext` signature with its
+4,000-character default, the eleven-line `recentContext` loop whose guard is the "never empty"
+guarantee, the token-prefix matcher, and the three-case `OllamaStreamError` enum. The narration for
+those five slides was rewritten to walk the code, regenerated with the free local `say` preview
+voice, and the manifest re-verified — the release voice (#21) is still uncut, so this is the window
+in which scripts can change. The narration contract pins captions = transcript = script, so all
+three regenerate together; the gate's repo-pointer check now verifies the exhibit pointers resolve
+(1052 pointers).
+
+Two rules for exhibits, learned from the pilot: the code is **verbatim from the repo** (whitespace
+may reflow, tokens may not), and the fence joins the geometry gate — `check_diagram_geometry` opens
+every slide carrying a `<pre>` by deep link and measures it against the frame, because a clipped
+fence is invisible evidence, not a style bug.
+
 ## Transcripts
 
 Every deck has a transcript, committed as Markdown rather than generated HTML:
