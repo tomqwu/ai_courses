@@ -348,7 +348,8 @@ fence is invisible evidence, not a style bug.
 | m05 — Multi-tenant security | **deepened** | 5: `get_person_in_actor_org` 404 query, the grep-able P0 rule from `AGENTS.md`, `normalize_roles` refusals, the route-policy docstring + class set, the dated-evidence retirement banner |
 | m04 — Spec-driven SaaS | **deepened** | 6: `spec.md` FR-001 + story-1 GWT, `research.md` Decision 1, `plan.md` Constitution Check gate + NONE verdict, rate-limit contract table, checklist verdict `Quality Score: 100%`, `tasks.md` T017/T002 format |
 | m06 — Expertise product | **deepened** | 4: METR + Peng benchmark records verbatim, the `document-manifest.json` M02 `"unavailable"` entry, the `Makefile` check target, a `narration-review.json` retained verdict with its reason |
-| m07, m08, m00, m01 | pending, ordered by audit | |
+| m07 — Monetize | **deepened** | 3: the competition-analysis header convention (dated + approximately/reportedly), the §C research line with the 70–85% rule and the Zoom-records verdict, the cost-floor arithmetic from the sales doc |
+| m08, m00, m01 | pending, ordered by audit | |
 
 m03 discipline notes: the awk gate and the CI job are exhibits with one elision each, marked `# …` /
 verbatim lines around it. The `isVerifiedLocal` guard and `RejectRedirects` delegate reflowed

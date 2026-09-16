@@ -2405,15 +2405,15 @@
         "slide-4": {
           "audio": "/assets/audio/aps-1.0.0/m07/slide-4.mp3",
           "captions": "/assets/audio/aps-1.0.0/m07/slide-4.vtt",
-          "transcript": "This is the file where the pattern is recorded: the competition analysis document, holding 12 competitor rows dated August 2026. Note the header convention. Every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries the model, the price, and the channel, and commercial tiers run about $8 to $149 a month. This is not a summary; it is evidence you can audit. Copy the convention in Lab M7, so every price cell gets a source URL and a retrieval date.",
+          "transcript": "This is the file where the pattern is recorded: the competition analysis document, holding twelve competitor rows dated August 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.",
           "title": "The competitor table is your raw material",
-          "duration": 36.23,
-          "sha256": "bca722cf9590aed8e6b63b4037c3d70f0144b12fbd7f7e78a4d4f1fe83bd6d9d",
+          "duration": 36.094,
+          "sha256": "460d579e4b1047b97f99c3358515c4712f4711d06915e1e60a0fdb3716aaf52e",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 10,
-          "words": 102
+          "cues": 9,
+          "words": 105
         },
         "slide-6": {
           "audio": "/assets/audio/aps-1.0.0/m07/slide-6.mp3",
@@ -2548,28 +2548,28 @@
         "slide-14": {
           "audio": "/assets/audio/aps-1.0.0/m07/slide-14.mp3",
           "captions": "/assets/audio/aps-1.0.0/m07/slide-14.vtt",
-          "transcript": "Here is the rule that connects the two prices. Self-paced should be priced as 70 to 85% of the live cohort price, but only if it keeps projects plus async feedback or office hours plus community. Strip all three and the research verdict is blunt: a stack of Zoom recordings is not a self-paced course. A bare video library should not be sold at all. Generalize that test. A stack of features is not an app tier, and a stack of notes is not a briefing. The question that tests any package is: what can the buyer show for the money?",
+          "transcript": "Here is the rule that connects the two prices, and the research line is now on the slide. Self-paced should be priced as seventy to eighty-five percent of the live cohort price, but only if it keeps projects, async feedback or office hours, and community. Strip all three and the research verdict is blunt: a stack of Zoom recordings is not a self-paced course. A bare video library should not be sold at all — the sentence sits in the market research file with the percentages next to it, so the rule and its exception travel together. Ask what the buyer can show for the money, at every rung of the ladder.",
           "title": "The fraction-of-live-price rule",
-          "duration": 31.564,
-          "sha256": "810b980d8c2269dba1eb35f5d803cd170937fe59b0c8a5c15f18ca6f4c445798",
+          "duration": 34.121,
+          "sha256": "50a564b06cc9c1b886457c363944f8f6b87614e0da3036055f55bdc7e6ea490f",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 101
+          "cues": 8,
+          "words": 112
         },
         "slide-17": {
           "audio": "/assets/audio/aps-1.0.0/m07/slide-17.mp3",
           "captions": "/assets/audio/aps-1.0.0/m07/slide-17.vtt",
-          "transcript": "This is the course's own arithmetic. Walk the lines: the course-platform fee, community at about $49 a month or zero on Discord, and email at about $29 a month, giving roughly $80 to $130 a month in fixed cost plus per-enrollment fees. At the $399 self-paced tier, that is about two sales a month to break even. The transferable move is the order: floor, then comparator band, then value anchor, then price. A price below your floor is a subsidy. SignUpFlow's SQLite-in-dev, Postgres-in-prod ladder is the same discipline for a software product.",
+          "transcript": "This is the course's own arithmetic, and the line is now on the slide. Walk it: Maven's per-course fee on enrollment, Thinkific at about fifty-four a month or a Gumroad-only start, Circle at about forty-nine a month or zero on Discord, and email at about twenty-nine — roughly eighty to one hundred thirty dollars a month in fixed cost plus per-enrollment fees. At the three hundred ninety-nine dollar self-paced tier, that is about two sales a month to break even. A price below your floor is a subsidy: you fund every sale you make.",
           "title": "Compute the floor before the price",
-          "duration": 37.632,
-          "sha256": "0e08c0ba8156c871991d88a31627d3eab1b2e36e706a0b8605c7b35ab700d4f1",
+          "duration": 30.032,
+          "sha256": "8c2cca1a09b5abf458bfc2a5870fb39d836d4b4a40ae75389d091da54da2ad23",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 92
+          "cues": 8,
+          "words": 94
         },
         "slide-16": {
           "audio": "/assets/audio/aps-1.0.0/m07/slide-16.mp3",
@@ -2728,7 +2728,7 @@
           "words": 74
         }
       },
-      "duration": 952.85
+      "duration": 947.67
     },
     "m08": {
       "label": "M8 — Launch: Sales Page, Email Arc, Capstone",

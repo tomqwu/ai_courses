@@ -15,7 +15,7 @@
     },
     "slide-4": {
       "title": "The competitor table is your raw material",
-      "text": "This is the file where the pattern is recorded: the competition analysis document, holding 12 competitor rows dated August 2026. Note the header convention. Every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries the model, the price, and the channel, and commercial tiers run about $8 to $149 a month. This is not a summary; it is evidence you can audit. Copy the convention in Lab M7, so every price cell gets a source URL and a retrieval date."
+      "text": "This is the file where the pattern is recorded: the competition analysis document, holding twelve competitor rows dated August 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote."
     },
     "slide-5": {
       "title": "Recurring compute sets the model",
@@ -55,7 +55,7 @@
     },
     "slide-14": {
       "title": "The fraction-of-live-price rule",
-      "text": "Here is the rule that connects the two prices. Self-paced should be priced as 70 to 85% of the live cohort price, but only if it keeps projects plus async feedback or office hours plus community. Strip all three and the research verdict is blunt: a stack of Zoom recordings is not a self-paced course. A bare video library should not be sold at all. Generalize that test. A stack of features is not an app tier, and a stack of notes is not a briefing. The question that tests any package is: what can the buyer show for the money?"
+      "text": "Here is the rule that connects the two prices, and the research line is now on the slide. Self-paced should be priced as seventy to eighty-five percent of the live cohort price, but only if it keeps projects, async feedback or office hours, and community. Strip all three and the research verdict is blunt: a stack of Zoom recordings is not a self-paced course. A bare video library should not be sold at all — the sentence sits in the market research file with the percentages next to it, so the rule and its exception travel together. Ask what the buyer can show for the money, at every rung of the ladder."
     },
     "slide-15": {
       "title": "Marketplace vs own platform",
@@ -67,7 +67,7 @@
     },
     "slide-17": {
       "title": "Compute the floor before the price",
-      "text": "This is the course's own arithmetic. Walk the lines: the course-platform fee, community at about $49 a month or zero on Discord, and email at about $29 a month, giving roughly $80 to $130 a month in fixed cost plus per-enrollment fees. At the $399 self-paced tier, that is about two sales a month to break even. The transferable move is the order: floor, then comparator band, then value anchor, then price. A price below your floor is a subsidy. SignUpFlow's SQLite-in-dev, Postgres-in-prod ladder is the same discipline for a software product."
+      "text": "This is the course's own arithmetic, and the line is now on the slide. Walk it: Maven's per-course fee on enrollment, Thinkific at about fifty-four a month or a Gumroad-only start, Circle at about forty-nine a month or zero on Discord, and email at about twenty-nine — roughly eighty to one hundred thirty dollars a month in fixed cost plus per-enrollment fees. At the three hundred ninety-nine dollar self-paced tier, that is about two sales a month to break even. A price below your floor is a subsidy: you fund every sale you make."
     },
     "slide-18": {
       "title": "The worked example is this course",

@@ -54,6 +54,14 @@ Price it, package it, position it — from evidence.
 - Commercial tiers run about $8–149/mo
 - Read rows, never headlines
 
+```markdown
+# Competition Analysis
+
+_Last updated: 2026-08. All pricing and feature facts are stated as of 2026;
+where a detail could not be confirmed from a primary source, it is qualified
+with "approximately" or "reportedly."_
+```
+
 <!-- NOTES: Put the file on screen. Note the header convention: every price fact is stated as of 2026, and where a detail could not be confirmed from a primary source it is qualified "approximately" or "reportedly." That convention is the honesty mechanism you copy in Lab M7 Step 1 — every price cell gets a source URL and a retrieval date, and unconfirmed cells get the qualifier. Point at the twelve rows; this is not a summary, it is evidence you can audit. Timing: 3 minutes. Transition: now read the Price column against each row's cost structure. -->
 
 ---
@@ -193,6 +201,13 @@ Pointer: `ai_qe/_data/engagement.json`; `ai_qe/index.md`; `ai_qe/discovery.md`
 - Source: `course/00-research/02-course-market-research.md` §C
 - Ask what the buyer can show for the money
 
+```markdown
+- Self-paced should be priced as a fraction of the live cohort price: 70–85%
+  if it keeps projects + async feedback/office hours + community; a bare video
+  library shouldn't be sold at all ("a stack of Zoom recordings is not a
+  self-paced course").
+```
+
 <!-- NOTES: Read the rule exactly: self-paced should be priced as a fraction of the live cohort price, 70–85%, if it keeps projects plus async feedback or office hours plus community; a bare video library shouldn't be sold at all. The research's own phrasing is "a stack of Zoom recordings is not a self-paced course" — quote it. Then generalize it: a stack of features is not an app tier, and a stack of notes is not a briefing. The question that tests any package is: what can the buyer show for the money? Timing: 4 minutes. Transition: where you sell changes what you keep. -->
 
 ---
@@ -233,6 +248,15 @@ Pointer: `ai_qe/_data/engagement.json`; `ai_qe/index.md`; `ai_qe/discovery.md`
 - Fixed cost: ≈ $80–130/mo plus per-enrollment fees
 - Break-even at the $399 tier: ~2 sales/month
 - A price below your floor is a subsidy
+
+```markdown
+### Cost floor (month-1, lean)
+
+Maven (per-course fee on enrollment) + Thinkific ~$54/mo or Gumroad-only
+start + Circle ~$49/mo or Discord $0 + email ~$29/mo ≈ $80–130/mo
++ per-enrollment fees. Break-even at Studio tier: ~2 sales/month covers
+fixed costs.
+```
 
 <!-- NOTES: This is the course's own arithmetic, recorded in `course/04-sales/pricing-and-platforms.md` under cost floor. Walk the lines: course-platform fee, community ~$49/mo or zero on Discord, email ~$29/mo, giving roughly $80–130/month in fixed cost plus per-enrollment fees; at the $399 self-paced tier that is about two sales a month to break even. The transferable move is the order: floor, then comparator band, then value anchor, then price. SignUpFlow's SQLite-in-dev, PostgreSQL-in-prod ladder is the same discipline for a SaaS. Timing: 4 minutes. Transition: the course is the worked example. -->
 
