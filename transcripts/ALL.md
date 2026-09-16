@@ -5,7 +5,7 @@ Every word spoken in the course, in order. The words are the approved narration 
 - [M0 — Orientation: Three Products, One Method](#m00) — 19 slides, 9m 57s
 - [M1 — The AI Product Operating System](#m01) — 25 slides, 14m 9s
 - [M2 — The On-Device AI App: Architecture](#m02) — 26 slides, 15m 4s
-- [M3 — The On-Device AI App: Privacy, Testing, Shipping](#m03) — 27 slides, 14m 8s
+- [M3 — The On-Device AI App: Privacy, Testing, Shipping](#m03) — 27 slides, 14m 58s
 - [M4 — The Spec-Driven SaaS: From Idea to Executable Spec](#m04) — 28 slides, 18m 0s
 - [M5 — Multi-Tenant Security & the Acceptance Gate](#m05) — 25 slides, 16m 16s
 - [M6 — The Expertise Product: Evidence, Routing, Editions](#m06) — 28 slides, 16m 7s
@@ -476,7 +476,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 # M3 — The On-Device AI App: Privacy, Testing, Shipping
 ## Narration transcript
 
-**27 slides · 27 narrated · 14m 8s of audio**
+**27 slides · 27 narrated · 14m 58s of audio**
 
 **Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
 
@@ -504,9 +504,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 4 — Proof: the mode enum and its labels
 
-*28.1s · sentence-measured*
+*40.8s · sentence-measured*
 
-> Here is the proof, in ModelPrivacy.swift, lines three through thirteen. Four cases: off, local, apple, cloud. Four labels, each written to be true rather than to sell. The one to memorize is cloud. It does not say enhanced; it says it sends the transcript and context. The README section on AI processing mode carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud routing as a side effect of configuration.
+> Here is the proof, and now it is on the slide: the AIProcessingMode enum from ModelPrivacy.swift, lines three through thirteen. Four cases: off, local, apple, cloud. Four labels, each written to be true rather than to sell, and the code block is the enum itself. The one to memorize is cloud: it does not say enhanced; it says it sends the transcript and context. Read the labels on the slide — they are the strings the app actually ships. The README section on AI processing mode carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud without a deliberate, visible choice; the mode is the contract, and the label tells the truth about it.
 
 ### Slide 5 — A localhost URL proves nothing
 
@@ -522,9 +522,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 7 — Proof: `isVerifiedLocal` fails closed
 
-*36.6s · sentence-measured*
+*41.9s · sentence-measured*
 
-> This guard is at lines seventeen to twenty-four of ModelPrivacy.swift. It is a single guard clause. Parse the JSON, require the remote host and remote model fields to be absent, require the details format and the model info to be non-empty, and otherwise return false. Because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Say the trust boundary out loud: this verifies the daemon's self-description, not the daemon itself. The README states that honestly, and that honesty is itself a privacy feature, because it tells the user where the guarantee ends.
+> This guard is the exhibit on the slide: ModelPrivacy.swift, lines seventeen to twenty-four, one guard clause. Parse the JSON. Require the remote host and remote model fields to be absent. Require the details format and the model info to be non-empty. Otherwise return false — and because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Follow the guard line by line: every condition must hold for the function to say true, and any surprise says false. The trust boundary is the daemon's self-description, verified structurally. A localhost URL or a model name alone is insufficient — that is exactly what the doc comment states.
 
 ### Slide 8 — Three defenses around the check
 
@@ -534,9 +534,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 9 — Redirects refused
 
-*30.7s · sentence-measured*
+*34.3s · sentence-measured*
 
-> Most HTTP stacks follow redirects silently by default. That matters here, because even a server that passed the local metadata check could answer your chat request with a redirect to anywhere, and the stack would helpfully forward your meeting text along with it. ListenToMe refuses. A delegate sees any HTTP redirect, answers nil, and the request dies. The comment says why: never follow redirects with meeting text in local-only mode. Without this defense, the metadata check is defeated at the transport layer.
+> Most HTTP stacks follow redirects silently by default. That matters here, because even a server that passed the local metadata check could answer your chat request with a redirect to anywhere, and the stack would helpfully forward your meeting text along with it. ListenToMe refuses, and the refusal is on the slide: a small delegate class, RejectRedirects, whose redirection handler answers nil for every redirect, so the request dies instead of following. The class name is the policy — redirects are not an edge case to configure away; they are a channel your meeting text must never travel.
 
 ### Slide 10 — Fail closed by default
 
@@ -558,15 +558,15 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 13 — The 95% coverage floor
 
-*33.0s · sentence-measured*
+*43.9s · sentence-measured*
 
-> ListenToMe's continuous integration enforces a ninety-five percent line-coverage floor on the core package as a hard gate. The script runs the suite with coverage enabled, computes total line coverage, prints a per-file report so you can see where you stand, and exits non-zero below the threshold. Here is what that buys you: nobody adds untested logic to the core without either testing it or consciously arguing the floor down. Here is what it does not buy: correctness of what was never built, a working GUI, audio capture, or a first-run experience a human can survive.
+> ListenToMe's continuous integration enforces a ninety-five percent line-coverage floor on the core package as a hard gate, and the gate is now on the slide. The script takes the threshold as its first argument, runs the suite with coverage enabled, computes total line coverage through llvm-cov, prints a per-file report so you can see where you stand, and the awk comparison exits non-zero below the threshold — one line of arithmetic deciding whether the build passes. Here is what that buys you: nobody adds untested logic to the core without either testing it or consciously arguing for an exception. Here is what it does not buy: correctness, GUI behavior, audio quality, or the first-run experience. The floor is a floor, not a ceiling of proof.
 
 ### Slide 14 — Proof: the floor bites in CI
 
-*27.1s · sentence-measured*
+*34.9s · sentence-measured*
 
-> The coverage step sits in the continuous integration workflow at lines thirty-six to forty-two, and the logic lives in the script itself. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite with the coverage floor. The two build jobs also run a dependency-lock diff, so the artifact you test is built from locked dependencies. That is release discipline appearing early, in continuous integration, before anyone thinks about a release.
+> The coverage step sits in the continuous integration workflow at lines thirty-six to forty-two — the YAML on the slide is that step, and the logic lives in the script it calls. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite with the coverage floor. The two build jobs also run a dependency-lock diff, so the artifact you test is built from locked dependencies rather than whatever resolves that day. That is release discipline appearing in the pipeline, not in a document: the floor is invoked with a literal ninety-five in the job step, where every contributor can read it.
 
 ### Slide 15 — The contract test CI can't run
 
@@ -576,9 +576,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 16 — Proof: a test that skips, not hides
 
-*29.8s · sentence-measured*
+*39.1s · sentence-measured*
 
-> This test is OllamaContractE2ETests.swift, lines four to twenty-two. The test calls XCTSkipUnless on an environment variable, so a normal swift test run and continuous integration never touch the network. The make e2e target sets that gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses, and require that the content comes back non-empty. The gating pattern matters as much as the test itself.
+> This test is OllamaContractE2ETests.swift, lines four to twenty-two, and the skip is the exhibit: XCTSkipUnless on an environment variable, so a normal swift test run and continuous integration never touch the network — the test is skipped loudly, with a message that says how to run it, not hidden behind a silent pass. The make e2e target sets that gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses, and require non-empty streamed content. Skipped is a state CI reports honestly; a test that cannot run in CI but can run on your Mac is still worth shipping.
 
 ### Slide 17 — The tier only a human can run
 
