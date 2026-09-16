@@ -10,7 +10,7 @@ Every word spoken in the course, in order. The words are the approved narration 
 - [M5 — Multi-Tenant Security & the Acceptance Gate](#m05) — 25 slides, 16m 32s
 - [M6 — The Expertise Product: Evidence, Routing, Editions](#m06) — 28 slides, 16m 14s
 - [M7 — Monetize: Pricing, Packaging, Positioning](#m07) — 28 slides, 15m 47s
-- [M8 — Launch: Sales Page, Email Arc, Capstone](#m08) — 27 slides, 14m 3s
+- [M8 — Launch: Sales Page, Email Arc, Capstone](#m08) — 27 slides, 14m 21s
 
 <a id="m00"></a>
 
@@ -1357,7 +1357,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 # M8 — Launch: Sales Page, Email Arc, Capstone
 ## Narration transcript
 
-**27 slides · 27 narrated · 14m 3s of audio**
+**27 slides · 27 narrated · 14m 21s of audio**
 
 **Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
 
@@ -1391,9 +1391,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 5 — Proof: the course's own page maps row for row
 
-*32.2s · sentence-measured*
+*40.7s · sentence-measured*
 
-> Open the course's landing page beside this and check each row. The headline is one falsifiable sentence: ship three real AI products. The for and is-not lists are explicit. The problem section names three things that are always missing, and the curriculum table lists abilities rather than topics. The bio names Tom Wu and three repositories with checkable numbers you can go open. Section six is three reserved testimonial slots with an honesty note, and section eight shows three tiers with the same enroll call to action repeated at the top, middle, and bottom.
+> Open the course's landing page beside this and check each row — and the headline and the is-not list are now on the slide. The headline is one falsifiable sentence: ship three real AI products, learn from code that actually shipped. The for and is-not lists are explicit — not for you if you have never written code, want prompt-engineering trivia, or need an enterprise compliance curriculum. The problem section names three things that are always missing, and the curriculum table lists abilities rather than topics. The proof section is three named repos with checkable numbers. The testimonial section has three reserved slots — reserved, not filled — a real-objection FAQ, three tiers, and one CTA.
 
 ### Slide 6 — Section 4 is where technical pages fail
 
@@ -1463,15 +1463,15 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 17 — Proof: deliverability is upstream of every number
 
-*30.2s · sentence-measured*
+*38.5s · sentence-measured*
 
-> No math survives the spam folder, so this work comes before the sequence is queued, not after the first weak send. Configure SPF, DKIM, and DMARC before the first email. Gmail and Yahoo enforce this for bulk senders, so it is an infrastructure requirement now, not a best practice. Test-send to a Gmail address and to a corporate address, because the two filter differently. Scrub hard bounces and keep the list opt-in only. A spam-folder email has an open rate of zero.
+> No math survives the spam folder, so this work comes before the sequence is queued, not after the first weak send — and the prerequisite lines are now on the slide, verbatim from the launch plan. Configure SPF, DKIM, and DMARC before the first email. Gmail and Yahoo enforce this for bulk senders, so it is an infrastructure requirement now, not a best practice. Test-send to a Gmail and a corporate address — the checklist says verified, not assumed. Scrub hard bounces and keep the list opt-in only. A spam-folder email has an open rate of zero, and every percentage in the sequence is downstream of that checkbox.
 
 ### Slide 18 — The beta-discount trade
 
-*32.6s · sentence-measured*
+*33.7s · sentence-measured*
 
-> Email six needs a before, after, result testimonial, and you have no buyers yet. So you trade cohort one's discount for proof. The course's own founding tier is nine hundred ninety dollars against one thousand four hundred ninety, and the trade is stated on the page: a testimonial plus a feedback session, agreed at checkout. That is honest pricing, because the buyer knows what the discount buys. A discount with no stated reason trains buyers to wait for the next one. The cautionary tale is the marketplace spiral down to nine dollars ninety-nine.
+> Email six needs a before, after, result testimonial, and you have no buyers yet. So you trade cohort one's discount for proof. The course's own founding tier is nine hundred ninety dollars against one thousand four hundred ninety, and the trade is now on the slide, stated on the page exactly as the learner should state theirs: founding cohort, nine ninety, in exchange for a testimonial and feedback. The discount has a reason and a receipt; a discount with no reason trains buyers to wait. The cautionary tale is in the research: Udemy's nine-ninety-nine spiral.
 
 ### Slide 19 — M8.3 — The capstone contract
 
