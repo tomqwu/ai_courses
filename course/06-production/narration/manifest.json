@@ -2788,15 +2788,15 @@
         "slide-5": {
           "audio": "/assets/audio/aps-1.0.0/m08/slide-5.mp3",
           "captions": "/assets/audio/aps-1.0.0/m08/slide-5.vtt",
-          "transcript": "Open the course's landing page beside this and check each row. The headline is one falsifiable sentence: ship three real AI products. The for and is-not lists are explicit. The problem section names three things that are always missing, and the curriculum table lists abilities rather than topics. The bio names Tom Wu and three repositories with checkable numbers you can go open. Section six is three reserved testimonial slots with an honesty note, and section eight shows three tiers with the same enroll call to action repeated at the top, middle, and bottom.",
+          "transcript": "Open the course's landing page beside this and check each row — and the headline and the is-not list are now on the slide. The headline is one falsifiable sentence: ship three real AI products, learn from code that actually shipped. The for and is-not lists are explicit — not for you if you have never written code, want prompt-engineering trivia, or need an enterprise compliance curriculum. The problem section names three things that are always missing, and the curriculum table lists abilities rather than topics. The proof section is three named repos with checkable numbers. The testimonial section has three reserved slots — reserved, not filled — a real-objection FAQ, three tiers, and one CTA.",
           "title": "Proof: the course's own page maps row for row",
-          "duration": 32.153,
-          "sha256": "f5b7a582f2534c46962cf305af74eadcf2628dfc4835735e0c621ced69f4507e",
+          "duration": 40.672,
+          "sha256": "ee0dcb4f0e185af9f8977e1ed24ed015c2e55905c28bbe62bb2a596b1495dda8",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 94
+          "cues": 11,
+          "words": 116
         },
         "slide-7": {
           "audio": "/assets/audio/aps-1.0.0/m08/slide-7.mp3",
@@ -2944,15 +2944,15 @@
         "slide-17": {
           "audio": "/assets/audio/aps-1.0.0/m08/slide-17.mp3",
           "captions": "/assets/audio/aps-1.0.0/m08/slide-17.vtt",
-          "transcript": "No math survives the spam folder, so this work comes before the sequence is queued, not after the first weak send. Configure SPF, DKIM, and DMARC before the first email. Gmail and Yahoo enforce this for bulk senders, so it is an infrastructure requirement now, not a best practice. Test-send to a Gmail address and to a corporate address, because the two filter differently. Scrub hard bounces and keep the list opt-in only. A spam-folder email has an open rate of zero.",
+          "transcript": "No math survives the spam folder, so this work comes before the sequence is queued, not after the first weak send — and the prerequisite lines are now on the slide, verbatim from the launch plan. Configure SPF, DKIM, and DMARC before the first email. Gmail and Yahoo enforce this for bulk senders, so it is an infrastructure requirement now, not a best practice. Test-send to a Gmail and a corporate address — the checklist says verified, not assumed. Scrub hard bounces and keep the list opt-in only. A spam-folder email has an open rate of zero, and every percentage in the sequence is downstream of that checkbox.",
           "title": "Proof: deliverability is upstream of every number",
-          "duration": 30.166,
-          "sha256": "9f414699f050a4585751414a858fc09bbccda8067f5ab292223808a7dcf4927c",
+          "duration": 38.456,
+          "sha256": "150430c825b36a5e87a3be0a886f13b217b88c9c5ec9bdf89b665aca59f4d66f",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 82
+          "cues": 10,
+          "words": 108
         },
         "slide-19": {
           "audio": "/assets/audio/aps-1.0.0/m08/slide-19.mp3",
@@ -2983,15 +2983,15 @@
         "slide-18": {
           "audio": "/assets/audio/aps-1.0.0/m08/slide-18.mp3",
           "captions": "/assets/audio/aps-1.0.0/m08/slide-18.vtt",
-          "transcript": "Email six needs a before, after, result testimonial, and you have no buyers yet. So you trade cohort one's discount for proof. The course's own founding tier is nine hundred ninety dollars against one thousand four hundred ninety, and the trade is stated on the page: a testimonial plus a feedback session, agreed at checkout. That is honest pricing, because the buyer knows what the discount buys. A discount with no stated reason trains buyers to wait for the next one. The cautionary tale is the marketplace spiral down to nine dollars ninety-nine.",
+          "transcript": "Email six needs a before, after, result testimonial, and you have no buyers yet. So you trade cohort one's discount for proof. The course's own founding tier is nine hundred ninety dollars against one thousand four hundred ninety, and the trade is now on the slide, stated on the page exactly as the learner should state theirs: founding cohort, nine ninety, in exchange for a testimonial and feedback. The discount has a reason and a receipt; a discount with no reason trains buyers to wait. The cautionary tale is in the research: Udemy's nine-ninety-nine spiral.",
           "title": "The beta-discount trade",
-          "duration": 32.638,
-          "sha256": "656a46354288e7420245792d465e1fa788716df1303253e6385737cbf77f7508",
+          "duration": 33.745,
+          "sha256": "378dbe8dab4fc71d2db63e800a4194fdaf150fa9a5367774fe934334e8d686c4",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
           "cues": 8,
-          "words": 93
+          "words": 95
         },
         "slide-21": {
           "audio": "/assets/audio/aps-1.0.0/m08/slide-21.mp3",
@@ -3085,7 +3085,7 @@
           "words": 77
         }
       },
-      "duration": 843.67
+      "duration": 861.58
     }
   }
 }

@@ -68,6 +68,15 @@ title: M8 — Launch: Sales Page, Email Arc, Capstone
 | 5 | Tom Wu: three named repos with checkable numbers |
 | 6–8 | Three reserved testimonial slots, real-objection FAQ, three tiers, one CTA |
 
+```markdown
+# Ship three real AI products. Learn from code that actually shipped.
+
+**This isn't for you if you:**
+- Haven't written code before (start with a general programming course first)
+- Want prompt-engineering trivia or "AI side hustle" content with no building
+- Need an enterprise AI-governance compliance curriculum
+```
+
 Pointers: `04-sales/landing-page.md` · `00-research/02-course-market-research.md` §E
 
 <!-- NOTES: Open the landing page beside this slide and check each row. The headline is one falsifiable sentence. The for and isn't lists are explicit. The problem section names three missing things, and the curriculum table lists abilities, not topics. The bio names three repos with numbers you can go open. Section six is three reserved slots with an honesty note, and section eight shows three tiers with the same enroll call to action repeated at top, middle, and bottom. Transition: two of those rows need a second look. Timing: 3 minutes. -->
@@ -242,6 +251,13 @@ expected revenue = list × open × click × page conversion × price
 - Scrub hard bounces; keep the list opt-in only.
 - A spam-folder email has an open rate of zero.
 
+```markdown
+> Deliverability prerequisites: SPF, DKIM, DMARC configured before the
+> first send; list is opt-in only.
+
+- [ ] SPF/DKIM/DMARC verified (send test to Gmail + a corporate address)
+```
+
 Pointers: `04-sales/launch-plan.md` ops checklist · `00-research/02-course-market-research.md` §E
 
 <!-- NOTES: No math survives the spam folder, so this comes before the sequence is queued, not after the first weak send. The launch plan's operations checklist has the concrete items: verify SPF, DKIM, and DMARC, then send test messages to a Gmail address and a corporate address because the two filter differently. Keep the list opt-in only and scrub hard bounces. The research section E notes that Gmail and Yahoo enforce this for bulk senders, so this is an infrastructure requirement now, not a best practice. Transition: where testimonials come from before anyone has bought. Timing: 3 minutes. -->
@@ -256,6 +272,13 @@ Pointers: `04-sales/launch-plan.md` ops checklist · `00-research/02-course-mark
 - Agreement at checkout: testimonial plus feedback.
 - A discount with no reason trains buyers to wait.
 - Cautionary tale: Udemy's $9.99 spiral (§D).
+
+```markdown
+### Studio Live (8-week cohort) — **$1,490**
+Everything in Studio · weekly 90-minute workshops (I do / We do / You do) ·
+instructor code review on 3 labs · capstone review + demo day · cohort channel.
+*Founding cohort: $990 in exchange for a testimonial and feedback.*
+```
 
 <!-- NOTES: Email six needs a before/after/result testimonial, and you have no buyers. The research endorses the trade: run cohort one at a discount explicitly exchanged for a testimonial and a feedback session, agreed at checkout. The course's own founding tier is $990 against $1,490, and the trade is stated on the page. That is honest pricing, because the buyer knows what the discount buys. The cautionary tale is the marketplace flash-sale pattern: a discount with no stated reason trains buyers to wait for the next one. Transition: the capstone, and the contract that keeps it small. Timing: 3 minutes. -->
 

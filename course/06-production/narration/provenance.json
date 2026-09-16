@@ -3099,25 +3099,6 @@
       "note": "Local preview voice generated on this machine; not the release voice."
     },
     {
-      "audio": "/assets/audio/aps-1.0.0/m08/slide-5.mp3",
-      "sha256": "f5b7a582f2534c46962cf305af74eadcf2628dfc4835735e0c621ced69f4507e",
-      "provider": "macOS say",
-      "basis": "sentence-measured-preview",
-      "voice": "macOS say / Samantha (preview)",
-      "caption_method": "sentence-measured",
-      "generated_at": "2026-09-14T20:41:15Z",
-      "received_at": "2026-09-14T20:41:15Z",
-      "receipt": {
-        "provider": "macOS say",
-        "voice": "Samantha",
-        "rate": 175,
-        "sentences": 6,
-        "gap_seconds": 0.28
-      },
-      "evidence": null,
-      "note": "Local preview voice generated on this machine; not the release voice."
-    },
-    {
       "audio": "/assets/audio/aps-1.0.0/m08/slide-7.mp3",
       "sha256": "5340ce4628ee78afaec285aeae3b11270ec1c1dbdda3bb5df883a265bc3d1bdd",
       "provider": "macOS say",
@@ -3308,25 +3289,6 @@
       "note": "Local preview voice generated on this machine; not the release voice."
     },
     {
-      "audio": "/assets/audio/aps-1.0.0/m08/slide-17.mp3",
-      "sha256": "9f414699f050a4585751414a858fc09bbccda8067f5ab292223808a7dcf4927c",
-      "provider": "macOS say",
-      "basis": "sentence-measured-preview",
-      "voice": "macOS say / Samantha (preview)",
-      "caption_method": "sentence-measured",
-      "generated_at": "2026-09-14T20:41:31Z",
-      "received_at": "2026-09-14T20:41:31Z",
-      "receipt": {
-        "provider": "macOS say",
-        "voice": "Samantha",
-        "rate": 175,
-        "sentences": 6,
-        "gap_seconds": 0.28
-      },
-      "evidence": null,
-      "note": "Local preview voice generated on this machine; not the release voice."
-    },
-    {
       "audio": "/assets/audio/aps-1.0.0/m08/slide-19.mp3",
       "sha256": "c897ed609bf0b27551215903a4eff9db8c0fc7ad7895ab093c8facfa58a46475",
       "provider": "macOS say",
@@ -3359,25 +3321,6 @@
         "voice": "Samantha",
         "rate": 175,
         "sentences": 5,
-        "gap_seconds": 0.28
-      },
-      "evidence": null,
-      "note": "Local preview voice generated on this machine; not the release voice."
-    },
-    {
-      "audio": "/assets/audio/aps-1.0.0/m08/slide-18.mp3",
-      "sha256": "656a46354288e7420245792d465e1fa788716df1303253e6385737cbf77f7508",
-      "provider": "macOS say",
-      "basis": "sentence-measured-preview",
-      "voice": "macOS say / Samantha (preview)",
-      "caption_method": "sentence-measured",
-      "generated_at": "2026-09-14T20:41:35Z",
-      "received_at": "2026-09-14T20:41:35Z",
-      "receipt": {
-        "provider": "macOS say",
-        "voice": "Samantha",
-        "rate": 175,
-        "sentences": 6,
         "gap_seconds": 0.28
       },
       "evidence": null,
@@ -4424,6 +4367,63 @@
         "voice": "Samantha",
         "rate": 175,
         "sentences": 5,
+        "gap_seconds": 0.28
+      },
+      "evidence": null,
+      "note": "Local preview voice generated on this machine; not the release voice."
+    },
+    {
+      "audio": "/assets/audio/aps-1.0.0/m08/slide-18.mp3",
+      "sha256": "378dbe8dab4fc71d2db63e800a4194fdaf150fa9a5367774fe934334e8d686c4",
+      "provider": "macOS say",
+      "basis": "sentence-measured-preview",
+      "voice": "macOS say / Samantha (preview)",
+      "caption_method": "sentence-measured",
+      "generated_at": "2026-09-16T19:39:24Z",
+      "received_at": "2026-09-16T19:39:24Z",
+      "receipt": {
+        "provider": "macOS say",
+        "voice": "Samantha",
+        "rate": 175,
+        "sentences": 5,
+        "gap_seconds": 0.28
+      },
+      "evidence": null,
+      "note": "Local preview voice generated on this machine; not the release voice."
+    },
+    {
+      "audio": "/assets/audio/aps-1.0.0/m08/slide-17.mp3",
+      "sha256": "150430c825b36a5e87a3be0a886f13b217b88c9c5ec9bdf89b665aca59f4d66f",
+      "provider": "macOS say",
+      "basis": "sentence-measured-preview",
+      "voice": "macOS say / Samantha (preview)",
+      "caption_method": "sentence-measured",
+      "generated_at": "2026-09-16T19:39:25Z",
+      "received_at": "2026-09-16T19:39:25Z",
+      "receipt": {
+        "provider": "macOS say",
+        "voice": "Samantha",
+        "rate": 175,
+        "sentences": 6,
+        "gap_seconds": 0.28
+      },
+      "evidence": null,
+      "note": "Local preview voice generated on this machine; not the release voice."
+    },
+    {
+      "audio": "/assets/audio/aps-1.0.0/m08/slide-5.mp3",
+      "sha256": "ee0dcb4f0e185af9f8977e1ed24ed015c2e55905c28bbe62bb2a596b1495dda8",
+      "provider": "macOS say",
+      "basis": "sentence-measured-preview",
+      "voice": "macOS say / Samantha (preview)",
+      "caption_method": "sentence-measured",
+      "generated_at": "2026-09-16T19:39:25Z",
+      "received_at": "2026-09-16T19:39:25Z",
+      "receipt": {
+        "provider": "macOS say",
+        "voice": "Samantha",
+        "rate": 175,
+        "sentences": 6,
         "gap_seconds": 0.28
       },
       "evidence": null,
