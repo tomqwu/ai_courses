@@ -2,8 +2,8 @@
 
 Every word spoken in the course, in order. The words are the approved narration scripts; they match the captions word for word and do not change when the release voice is recorded.
 
-- [M0 — Orientation: Three Products, One Method](#m00) — 19 slides, 9m 57s
-- [M1 — The AI Product Operating System](#m01) — 25 slides, 14m 9s
+- [M0 — Orientation: Three Products, One Method](#m00) — 19 slides, 10m 2s
+- [M1 — The AI Product Operating System](#m01) — 25 slides, 14m 23s
 - [M2 — The On-Device AI App: Architecture](#m02) — 26 slides, 15m 4s
 - [M3 — The On-Device AI App: Privacy, Testing, Shipping](#m03) — 27 slides, 14m 58s
 - [M4 — The Spec-Driven SaaS: From Idea to Executable Spec](#m04) — 28 slides, 18m 16s
@@ -17,7 +17,7 @@ Every word spoken in the course, in order. The words are the approved narration 
 # M0 — Orientation: Three Products, One Method
 ## Narration transcript
 
-**19 slides · 19 narrated · 9m 57s of audio**
+**19 slides · 19 narrated · 10m 2s of audio**
 
 **Voice:** mixed — 18 of 19 recordings are preview audio; the rest were recorded separately. The words below are the approved narration.
 
@@ -63,9 +63,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 7 — Production-grade means proof you can open
 
-*34.2s · sentence-measured*
+*38.8s · sentence-measured*
 
-> Here is the definition this course runs on: production-grade means a shipped artifact with proof you can open and verify. The on-device app shows a 96% core-coverage badge in its README. The spec-driven SaaS shows the line 1,464 passed, 21 skipped in a validation playbook. The expertise product shows a fourteen-finding self-audit. Every asset is a file, dated or machine-checkable, and none of them is a testimonial. A finished claim in a README, or a repository merely existing, is not evidence, and your labs are graded against this same bar.
+> Here is the definition this course runs on: production-grade means a shipped artifact with proof you can open and verify — and all three proofs are now on the slide, verbatim. The on-device app shows a ninety-six percent core-coverage badge in its README. The spec-driven SaaS shows the line 1,464 passed, 21 skipped, dated. The expertise product carries a fourteen-finding self-audit, reviewed edition one point two one. Every asset is a file, dated or machine-checkable, and none of them is a testimonial. A finished claim in a README, or a repository merely existing, is not evidence, and your labs are graded against this same bar.
 
 ### Slide 8 — M0.2 — The Spec-to-Ship Loop
 
@@ -144,7 +144,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 # M1 — The AI Product Operating System
 ## Narration transcript
 
-**25 slides · 25 narrated · 14m 9s of audio**
+**25 slides · 25 narrated · 14m 23s of audio**
 
 **Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
 
@@ -178,9 +178,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 5 — Proof: the stack, with real line counts
 
-*27.8s · sentence-measured*
+*37.3s · sentence-measured*
 
-> These lengths are real, and you can check them yourself. The constitution is seventy-nine lines. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.
+> These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is seventy-nine lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.
 
 ### Slide 6 — House style: a rule must be verifiable
 
@@ -232,9 +232,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 14 — Proof: the artifacts are real files
 
-*31.1s · sentence-measured*
+*35.5s · sentence-measured*
 
-> This is proof, not description. Seventeen folders sit under the SignUpFlow specs directory. One real task line from spec nineteen reads: implement the POST /api/sms/send endpoint per the SMS API contract, in api/routers/sms.py. The Constitution Check gate sentence is real in spec fourteen's plan. And note the honesty detail: spec fourteen has no tasks file at all. A folder that stops at planning is a legitimate state, and the record says so rather than inventing a file that is not there.
+> This is proof, not description — and the real task lines are now on the slide. Seventeen folders sit under the SignUpFlow specs directory. Spec nineteen's task list reads: T027, implement POST /api/sms/send endpoint per contracts/sms-api.md in api/routers/sms.py — and T028 right below it, the message-history endpoint. The Constitution gate lives in spec fourteen's plan. And spec fourteen has no tasks file at all. A folder that stops at planning is a legitimate state, and the record says so rather than inventing a file that is not there.
 
 ### Slide 15 — Story → scenario → task
 
