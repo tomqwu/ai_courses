@@ -977,15 +977,15 @@
         "slide-4": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-4.mp3",
           "captions": "/assets/audio/aps-1.0.0/m03/slide-4.vtt",
-          "transcript": "Here is the proof, in ModelPrivacy.swift, lines three through thirteen. Four cases: off, local, apple, cloud. Four labels, each written to be true rather than to sell. The one to memorize is cloud. It does not say enhanced; it says it sends the transcript and context. The README section on AI processing mode carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud routing as a side effect of configuration.",
+          "transcript": "Here is the proof, and now it is on the slide: the AIProcessingMode enum from ModelPrivacy.swift, lines three through thirteen. Four cases: off, local, apple, cloud. Four labels, each written to be true rather than to sell, and the code block is the enum itself. The one to memorize is cloud: it does not say enhanced; it says it sends the transcript and context. Read the labels on the slide — they are the strings the app actually ships. The README section on AI processing mode carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud without a deliberate, visible choice; the mode is the contract, and the label tells the truth about it.",
           "title": "Proof: the mode enum and its labels",
-          "duration": 28.144,
-          "sha256": "a704f92d16137d743746540ac509442a7ffb706289e33ba193b0402ed7195d5b",
+          "duration": 40.809,
+          "sha256": "c7e8897ca4c3fdafb759ee3b34a97541c2fb53f9014c30bf9e279613236f156c",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 78
+          "cues": 10,
+          "words": 122
         },
         "slide-3": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-3.mp3",
@@ -1003,15 +1003,15 @@
         "slide-7": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-7.mp3",
           "captions": "/assets/audio/aps-1.0.0/m03/slide-7.vtt",
-          "transcript": "This guard is at lines seventeen to twenty-four of ModelPrivacy.swift. It is a single guard clause. Parse the JSON, require the remote host and remote model fields to be absent, require the details format and the model info to be non-empty, and otherwise return false. Because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Say the trust boundary out loud: this verifies the daemon's self-description, not the daemon itself. The README states that honestly, and that honesty is itself a privacy feature, because it tells the user where the guarantee ends.",
+          "transcript": "This guard is the exhibit on the slide: ModelPrivacy.swift, lines seventeen to twenty-four, one guard clause. Parse the JSON. Require the remote host and remote model fields to be absent. Require the details format and the model info to be non-empty. Otherwise return false — and because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Follow the guard line by line: every condition must hold for the function to say true, and any surprise says false. The trust boundary is the daemon's self-description, verified structurally. A localhost URL or a model name alone is insufficient — that is exactly what the doc comment states.",
           "title": "Proof: `isVerifiedLocal` fails closed",
-          "duration": 36.557,
-          "sha256": "5732943352c47e7fa40736fcb26fdfc8998d5adfb2ddf208fbb19b7cdaa18552",
+          "duration": 41.904,
+          "sha256": "22c681b033fab6e2cbb0eebe6ac8067cc0ba984e3d5be4ef8ee316f7a2ffe130",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 98
+          "cues": 11,
+          "words": 111
         },
         "slide-6": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-6.mp3",
@@ -1055,54 +1055,54 @@
         "slide-9": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-9.mp3",
           "captions": "/assets/audio/aps-1.0.0/m03/slide-9.vtt",
-          "transcript": "Most HTTP stacks follow redirects silently by default. That matters here, because even a server that passed the local metadata check could answer your chat request with a redirect to anywhere, and the stack would helpfully forward your meeting text along with it. ListenToMe refuses. A delegate sees any HTTP redirect, answers nil, and the request dies. The comment says why: never follow redirects with meeting text in local-only mode. Without this defense, the metadata check is defeated at the transport layer.",
+          "transcript": "Most HTTP stacks follow redirects silently by default. That matters here, because even a server that passed the local metadata check could answer your chat request with a redirect to anywhere, and the stack would helpfully forward your meeting text along with it. ListenToMe refuses, and the refusal is on the slide: a small delegate class, RejectRedirects, whose redirection handler answers nil for every redirect, so the request dies instead of following. The class name is the policy — redirects are not an edge case to configure away; they are a channel your meeting text must never travel.",
           "title": "Redirects refused",
-          "duration": 30.71,
-          "sha256": "a4b9643c99ae366487064f641d8db9bc6b5553442d47726b6e422bf5d0374c13",
+          "duration": 34.341,
+          "sha256": "82f8ff11d5db90221c8e6080ae6862c65754e5b626b0e656350202e1be87c22f",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 82
+          "cues": 9,
+          "words": 98
         },
         "slide-14": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-14.mp3",
           "captions": "/assets/audio/aps-1.0.0/m03/slide-14.vtt",
-          "transcript": "The coverage step sits in the continuous integration workflow at lines thirty-six to forty-two, and the logic lives in the script itself. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite with the coverage floor. The two build jobs also run a dependency-lock diff, so the artifact you test is built from locked dependencies. That is release discipline appearing early, in continuous integration, before anyone thinks about a release.",
+          "transcript": "The coverage step sits in the continuous integration workflow at lines thirty-six to forty-two — the YAML on the slide is that step, and the logic lives in the script it calls. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite with the coverage floor. The two build jobs also run a dependency-lock diff, so the artifact you test is built from locked dependencies rather than whatever resolves that day. That is release discipline appearing in the pipeline, not in a document: the floor is invoked with a literal ninety-five in the job step, where every contributor can read it.",
           "title": "Proof: the floor bites in CI",
-          "duration": 27.101,
-          "sha256": "5df6ed467b382e2029b98aabc1e33134a753a25a958c49d7101efc56c555255b",
+          "duration": 34.88,
+          "sha256": "e530b00365d681ee73c43508b8c0d7cba4274644c65894e5a57c74237438fd3d",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 77
+          "cues": 9,
+          "words": 108
         },
         "slide-13": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-13.mp3",
           "captions": "/assets/audio/aps-1.0.0/m03/slide-13.vtt",
-          "transcript": "ListenToMe's continuous integration enforces a ninety-five percent line-coverage floor on the core package as a hard gate. The script runs the suite with coverage enabled, computes total line coverage, prints a per-file report so you can see where you stand, and exits non-zero below the threshold. Here is what that buys you: nobody adds untested logic to the core without either testing it or consciously arguing the floor down. Here is what it does not buy: correctness of what was never built, a working GUI, audio capture, or a first-run experience a human can survive.",
+          "transcript": "ListenToMe's continuous integration enforces a ninety-five percent line-coverage floor on the core package as a hard gate, and the gate is now on the slide. The script takes the threshold as its first argument, runs the suite with coverage enabled, computes total line coverage through llvm-cov, prints a per-file report so you can see where you stand, and the awk comparison exits non-zero below the threshold — one line of arithmetic deciding whether the build passes. Here is what that buys you: nobody adds untested logic to the core without either testing it or consciously arguing for an exception. Here is what it does not buy: correctness, GUI behavior, audio quality, or the first-run experience. The floor is a floor, not a ceiling of proof.",
           "title": "The 95% coverage floor",
-          "duration": 32.95,
-          "sha256": "7a588163302f7667d53e8d7b998028d75de120821954eb19c7508c9f12f90dcd",
+          "duration": 43.9,
+          "sha256": "210b5c29e998d5330d7ffcf9a599e60e2d9ec8da60590f4678e77b3b879d8533",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 8,
-          "words": 95
+          "cues": 10,
+          "words": 125
         },
         "slide-16": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-16.mp3",
           "captions": "/assets/audio/aps-1.0.0/m03/slide-16.vtt",
-          "transcript": "This test is OllamaContractE2ETests.swift, lines four to twenty-two. The test calls XCTSkipUnless on an environment variable, so a normal swift test run and continuous integration never touch the network. The make e2e target sets that gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses, and require that the content comes back non-empty. The gating pattern matters as much as the test itself.",
+          "transcript": "This test is OllamaContractE2ETests.swift, lines four to twenty-two, and the skip is the exhibit: XCTSkipUnless on an environment variable, so a normal swift test run and continuous integration never touch the network — the test is skipped loudly, with a message that says how to run it, not hidden behind a silent pass. The make e2e target sets that gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses, and require non-empty streamed content. Skipped is a state CI reports honestly; a test that cannot run in CI but can run on your Mac is still worth shipping.",
           "title": "Proof: a test that skips, not hides",
-          "duration": 29.818,
-          "sha256": "a03cdc374852acfb14a0bd2319cd23aabed125d07a7c2566cdf9d6dcda8a4f0b",
+          "duration": 39.117,
+          "sha256": "fdcc855ebb43b0977a1be1cfec8cc344c7acf2183b865ea4788217f2bc87f6c0",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 7,
-          "words": 80
+          "cues": 9,
+          "words": 115
         },
         "slide-15": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-15.mp3",
@@ -1287,7 +1287,7 @@
           "words": 79
         }
       },
-      "duration": 848.65
+      "duration": 898.32
     },
     "m04": {
       "label": "M4 — The Spec-Driven SaaS: From Idea to Executable Spec",

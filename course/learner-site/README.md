@@ -339,6 +339,20 @@ may reflow, tokens may not), and the fence joins the geometry gate — `check_di
 every slide carrying a `<pre>` by deep link and measures it against the frame, because a clipped
 fence is invisible evidence, not a style bug.
 
+### Exhibit pass, per module
+
+| Module | Status | Exhibits |
+|---|---|---|
+| m02 — On-device app: architecture | **deepened** (86c9b8c) | 5: protocol seams, `buildContext` signature, `recentContext` loop, token-prefix matcher, `OllamaStreamError` enum |
+| m03 — On-device app: privacy, testing, shipping | **deepened** | 6: `AIProcessingMode` enum + labels, `isVerifiedLocal` fail-closed guard, `RejectRedirects` delegate, coverage-floor gate (awk), the CI core job, the `XCTSkipUnless` e2e test |
+| m05 — Multi-tenant security | next by severity (83 unexhibited pointers) | |
+| m04, m06, m07, m08, m00, m01 | pending, ordered by audit | |
+
+m03 discipline notes: the awk gate and the CI job are exhibits with one elision each, marked `# …` /
+verbatim lines around it. The `isVerifiedLocal` guard and `RejectRedirects` delegate reflowed
+whitespace only. All six scripts walked their code and the preview voice re-recorded them
+sentence-measured; manifest 233/233 re-verified; gate green.
+
 ## Transcripts
 
 Every deck has a transcript, committed as Markdown rather than generated HTML:

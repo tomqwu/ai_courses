@@ -48,6 +48,20 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 - "Adding a key alone does not switch modes"
 - Pointer: `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`
 
+```swift
+public enum AIProcessingMode: String, CaseIterable, Sendable {
+    case off, local, apple, cloud
+    public var label: String {
+        switch self {
+        case .off: return "AI off — transcript only"
+        case .local: return "Local Ollama models only"
+        case .apple: return "Apple Intelligence — on this device"
+        case .cloud: return "Ollama Cloud — sends transcript and context"
+        }
+    }
+}
+```
+
 <!-- NOTES: Open ModelPrivacy.swift on screen and read lines three to thirteen. Four cases, four honest labels. The one to memorize is cloud: it does not say "enhanced"; it says it sends the transcript and context. The README section "AI processing mode" carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud routing as a side effect of configuration. Timing: three minutes. Transition: why the obvious shortcut fails. -->
 
 ---
@@ -83,6 +97,18 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 - Trusts the daemon's self-description only
 - Pointer: `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17-24`
 
+```swift
+public static func isVerifiedLocal(_ data: Data) -> Bool {
+    guard let info = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+          info["remote_host"] == nil, info["remote_model"] == nil,
+          let details = info["details"] as? [String: Any],
+          let format = details["format"] as? String, !format.isEmpty,
+          let modelInfo = info["model_info"] as? [String: Any],
+          !modelInfo.isEmpty else { return false }
+    return true
+}
+```
+
 <!-- NOTES: Show lines seventeen to twenty-four. One guard clause: parse the JSON, require remote_host and remote_model to be absent, require details.format non-empty, require model_info non-empty, else return false. Because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Say the trust boundary out loud: this verifies the daemon's self-description, not the daemon. The README states it honestly. Timing: three minutes. Transition: the three defenses around this check. -->
 
 ---
@@ -108,6 +134,17 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 - Delegate answers `nil` on any redirect
 - Otherwise your meeting text is forwarded silently
 - Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:151-157`
+
+```swift
+private final class RejectRedirects: NSObject, URLSessionTaskDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask,
+                    willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest,
+                    completionHandler: @escaping @Sendable (URLRequest?) -> Void) {
+        completionHandler(nil)
+    }
+}
+```
 
 <!-- NOTES: Redirect following is silent by default in most HTTP stacks. Even a verified-local server could answer /api/chat with a 3xx to anywhere, and the stack would helpfully forward your meeting text. The delegate refuses: on any HTTP redirect it answers nil and the request dies. The comment says why: never follow redirects with meeting text in local-only mode. Without this defense, the metadata check is defeated at the transport layer. Timing: two minutes. Transition: fail-closed defaults. -->
 
@@ -159,6 +196,16 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 - Buys: no untested core logic without an argument
 - Doesn't buy: correctness, GUI, audio, first run
 
+```bash
+THRESHOLD="${1:-95}"
+swift test --enable-code-coverage
+# … compute total line coverage via llvm-cov into PCT …
+awk -v pct="$PCT" -v thr="$THRESHOLD" 'BEGIN { exit !(pct + 0 >= thr + 0) }' || {
+  echo "FAIL: coverage ${PCT}% is below the ${THRESHOLD}% floor" >&2
+  exit 1
+}
+```
+
 <!-- NOTES: ListenToMe's CI enforces a ninety-five percent line-coverage floor on ListenToMeCore as a hard gate. The script runs the suite with coverage enabled, computes total line coverage, prints a per-file report, and exits non-zero below the threshold. Say what it buys: nobody adds untested logic to the core without testing it or consciously arguing the floor down. Say what it does not buy: correctness of what was never built, a working GUI, audio capture, or a first-run experience a human can survive. Timing: three minutes. Transition: the script in CI. -->
 
 ---
@@ -169,6 +216,16 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 - Fails non-zero below the floor
 - Three CI jobs plus a dependency-lock diff
 - Pointers: `ListenToMe/scripts/check-coverage.sh`; `ListenToMe/.github/workflows/ci.yml:36-42`
+
+```yaml
+  core:
+    name: ListenToMeCore tests + coverage
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ListenToMeCore test suite with a 95% coverage floor
+        run: ./scripts/check-coverage.sh 95
+```
 
 <!-- NOTES: Open the CI workflow at lines thirty-six to forty-two and show the coverage step, then open the script itself. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite plus the coverage floor. The two build jobs additionally run a dependency-lock diff, so the artifact you test is built from locked dependencies. Release discipline appears early. Timing: three minutes. Transition: the test CI cannot run. -->
 
@@ -192,6 +249,17 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 - `make e2e` sets the gate and picks a model
 - Assertion: non-empty streamed content for a fixed prompt
 - Pointer: `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22`
+
+```swift
+final class OllamaContractE2ETests: XCTestCase {
+    func testRealOllamaStreamingProducesContent() async throws {
+        let env = ProcessInfo.processInfo.environment
+        try XCTSkipUnless(
+            env["LTM_E2E"] == "1",
+            "e2e only: set LTM_E2E=1 and run a local Ollama (use `make e2e`)"
+        )
+        let model = env["LTM_E2E_MODEL"] ?? "llama3.1"
+```
 
 <!-- NOTES: Open OllamaContractE2ETests.swift lines four to twenty-two. The test calls XCTSkipUnless on the environment variable, so normal swift test and CI never touch the network; make e2e sets the gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses and require non-empty content. The gating pattern matters as much as the test. Timing: three minutes. Transition: the tier only a human can run. -->
 
