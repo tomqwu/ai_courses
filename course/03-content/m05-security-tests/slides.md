@@ -82,6 +82,17 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 - Uniform `403` would confirm existence.
 - An attacker with an account could map your id space.
 
+```python
+def get_person_in_actor_org(person_id: str, actor: Person, db: Session) -> Person:
+    """Load a person only through the authenticated actor's tenant."""
+    person = db.query(Person).filter(
+        Person.id == person_id, Person.org_id == actor.org_id
+    ).first()
+    if person is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Person not found")
+    return person
+```
+
 `SignUpFlow/api/dependencies.py:61-66` · `docs/API_AUTHORIZATION.md:23`
 
 <!-- NOTES: This is the anti-enumeration mechanism, and it is one query shape. `get_person_in_actor_org` loads the target row with both the id and the actor's org in the WHERE clause, and raises 404 when nothing matches. So a foreign person and a nonexistent person produce the same answer: a miss. If a foreign id returned 403 — "exists, but not yours" — an attacker with a perfectly valid account could walk your id space and map which resources exist. Availability routes apply the same pattern: same-tenant peers get 403, foreign or absent people get 404. The lesson is not which code is philosophically correct; it is that an undocumented status code is an unspecified information channel. Transition: how does anyone get into a tenant in the first place? -->
@@ -110,6 +121,15 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 - `SignUpFlow/api/dependencies.py:78-121` — tenant-bound reload.
 - `SignUpFlow/docs/API_AUTHORIZATION.md:21-24` — the four status rows.
 
+```text
+## Multi-tenancy and auth (project-critical)
+
+- Every database query MUST filter by `org_id`. Use `verify_org_member(person, org_id)`
+  from `api/dependencies.py` to enforce org isolation.
+- …
+- A missing `org_id` filter is a cross-tenant data leak. Treat it as a P0 bug.
+```
+
 <!-- NOTES: This is the proof slide for segment M5.1, so write these five pointers into your evidence log now — they are the provenance for everything you claim in the lab. The pattern to learn: rule in the baseline, mechanism in the dependency, contract in the authorization doc, and a test for each. When you write your own project's tenancy section, you are copying this four-part shape, not the prose. One caution: a log line that warns about a missing filter is observability; the filter in the query is the control. Transition: now the two vocabularies that share one JSON array. -->
 
 ---
@@ -135,6 +155,26 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 - Anything else → qualification.
 - `"ADMIN"` → "is an ambiguous permission role".
 - Two permission roles → "Select exactly one account access role".
+
+```python
+def normalize_roles(roles: Iterable[str]) -> list[str]:
+    """Validate an admin-selected role array and make account access explicit."""
+    values = list(roles)
+    permission_roles: list[str] = []
+    qualifications: list[str] = []
+    for value in values:
+        if value in PERMISSION_ROLES:
+            if value not in permission_roles:
+                permission_roles.append(value)
+            continue
+        if value.casefold() in PERMISSION_ROLES:
+            raise ValueError(f"{value!r} is an ambiguous permission role")
+        qualifications.append(value)
+    if len(permission_roles) > 1:
+        raise ValueError("Select exactly one account access role")
+    return build_roles(
+        permission_roles[0] if permission_roles else "volunteer", qualifications)
+```
 
 `SignUpFlow/api/roles.py:38-53`
 
@@ -179,6 +219,20 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 - `SignUpFlow/api/roles.py:38-53` — normalization refusals.
 - `SignUpFlow/docs/playbooks/church.md:19` — volunteer + `worship_leader`.
 
+```python
+"""Reviewed authentication policy for every mounted API operation.
+
+The policy is deliberately keyed by FastAPI operation name. A unit test compares
+this mapping with the live route table, so a new API route cannot ship without an
+explicit public, token, member, or administrator classification.
+"""
+
+PUBLIC_OPERATIONS = {
+    "api_info", "api_redirect", "check_email", "health_check", "login",
+    "readiness_check", "signup",
+}
+```
+
 <!-- NOTES: Proof slide for M5.2. Count the classes yourself when you open the file — five sets, 143 operations total. The six-step protocol at lines 59 to 76 of the authorization doc is what you will write into your own contribution guide: change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin and foreign admin, assert forbidden writes leave the database unchanged, refresh the OpenAPI snapshot, then run the matrix and scheduling regressions locally. The protocol closes with the rule that kills the shortcut: do not use the tenancy warning listener as authorization. Transition: step four is the one teams skip, and M5.3 is about proving things like it. -->
 
 ---
@@ -221,6 +275,15 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 - `:36` — complete unit tier: "399 passed, 21 skipped".
 - `:3` — reclassified 2026-09-13 as historical reference.
 - `docs/TESTING.md` remains the current policy.
+
+```text
+# Acceptance evidence - 2026-09-12
+
+> Historical reference. Reclassified on 2026-09-13; the original observations,
+> counts, timing estimates, commands, and CI proposals below are retained as
+> historical context, not current policy or live test status. Use the
+> [current testing and merge guide](../TESTING.md) and the repository README instead.
+```
 
 `SignUpFlow/docs/playbooks/validation.md`
 

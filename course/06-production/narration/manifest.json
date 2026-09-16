@@ -1717,28 +1717,28 @@
         "slide-6": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-6.mp3",
           "captions": "/assets/audio/aps-1.0.0/m05/slide-6.vtt",
-          "transcript": "Enumeration dies with one query shape. get_person_in_actor_org loads the target row with both the id and the actor's organization in the WHERE clause, and raises 404 when nothing matches. So a foreign person and a nonexistent person produce the same answer: a miss. That matters, because a 403 would say exists, but not yours, and an attacker with a perfectly valid account could then walk your id space and map which resources exist. Availability routes apply the same pattern: same-tenant peers get 403, foreign or absent people get 404. An undocumented status code is an unspecified information channel.",
+          "transcript": "Enumeration dies with one query shape, and the query is now on the slide. get_person_in_actor_org loads the target row with both the id and the actor's organization in the WHERE clause, and raises 404 when nothing matches. So a foreign person and a nonexistent person produce the same answer: a miss. That matters, because a 403 would say exists, but not yours, and an attacker with a perfectly valid account could then walk your id space and map which of your resources exist. Read the exhibit: the filter carries both conditions, the miss raises, and nothing else in the function can leak existence.",
           "title": "M5.1 — Enumeration dies at `404`",
-          "duration": 37.746,
-          "sha256": "531a88e2bcdc6cce7e57aa2e7e38a8ef2d08861f4a40ecee3ccefcece3eec988",
+          "duration": 35.088,
+          "sha256": "d70fd5971124a03fe20baeac2c75475901fbd45c4cc43a63d71ede99c07eaa84",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 98
+          "cues": 8,
+          "words": 103
         },
         "slide-8": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-8.mp3",
           "captions": "/assets/audio/aps-1.0.0/m05/slide-8.vtt",
-          "transcript": "This is the proof slide for segment M5.1, so write these five pointers into your evidence log now: the P0 rule and its classification, the membership and actor-organization lookup, the tenant-bound reload, and the four status rows. They are your provenance for everything you claim in the lab. The pattern to learn is the shape: rule in the baseline, mechanism in the dependency, contract in the authorization doc, and a test for each. When you write your own tenancy section, copy that four-part shape, not the prose. One caution: a log line that warns about a missing filter is observability, while the filter in the query is the control.",
+          "transcript": "This is the proof slide for segment M5.1, so write these five pointers into your evidence log now: the P0 rule and its classification, the membership and actor-organization lookup, the tenant-bound reload, and the four status rows. They are your provenance for everything you claim in the lab. And the rule itself is now on the slide, exactly as it lives in the baseline document — the grep target: every database query MUST filter by org_id, and a missing filter is a cross-tenant data leak, a P0 bug. The pattern to learn is the shape: rule in the baseline, mechanism in the dependency, contract in the authorization doc, and a test for each.",
           "title": "Proof M5.1 — the rule you can grep",
-          "duration": 37.67,
-          "sha256": "cd2e917de43546e170d7004ca3a71ae520525440ad3cc653bef6dca5f95b2dfd",
+          "duration": 38.402,
+          "sha256": "dad6b8afcf0c2e7e987f86d1bdd06e23e63c70b9c7911b85499cf813e0e825f2",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
           "cues": 9,
-          "words": 109
+          "words": 113
         },
         "slide-7": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-7.mp3",
@@ -1795,15 +1795,15 @@
         "slide-13": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-13.mp3",
           "captions": "/assets/audio/aps-1.0.0/m05/slide-13.vtt",
-          "transcript": "This is the proof slide for M5.2. Count the classes yourself when you open the file: five sets, 143 operations total. The six-step protocol is what you will write into your own contribution guide. Change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin, and foreign admin actors, assert that forbidden writes leave the database unchanged, refresh the OpenAPI snapshot and the generated client, then run the matrix and scheduling regressions locally. The protocol closes with the rule that kills the shortcut: do not use the tenancy warning listener as authorization.",
+          "transcript": "This is the proof slide for M5.2, and the exhibit is the policy file's own docstring: reviewed authentication policy for every mounted API operation, deliberately keyed by FastAPI operation name, because a unit test compares this mapping with the live route table — so a new API route cannot ship without an explicit public, token, member, or administrator classification. Count the classes yourself when you open the file: five sets, 143 operations total. The six-step protocol is what you will write into your own contribution guide. Change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin, and foreign admin actors, assert that forbidden writes leave the database unchanged, and refresh the OpenAPI snapshot.",
           "title": "Proof M5.2 — matrix + gate + protocol",
-          "duration": 41.45,
-          "sha256": "ae7cfd9eda7e05f01fb580eea3c594b5f1a094a04d75d89829aa9180dc7107ed",
+          "duration": 51.677,
+          "sha256": "3cb45cf8e19d7467eed457fd073981892a8ddeb42802b020d71c1d23090f92f9",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 10,
-          "words": 102
+          "cues": 11,
+          "words": 124
         },
         "slide-12": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-12.mp3",
@@ -1821,15 +1821,15 @@
         "slide-10": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-10.mp3",
           "captions": "/assets/audio/aps-1.0.0/m05/slide-10.vtt",
-          "transcript": "The policy is not prose; it is executable. In roles.py, normalize_roles sorts an admin-supplied array. Exact matches to the permission roles set are permission roles, and everything else is treated as a qualification. But the drift cases fail loudly. A case-folded collision like uppercase ADMIN raises, because it is an ambiguous permission role. And if the array carries two permission roles, the function raises with the message: select exactly one account access role. That is the design principle. Drifted input fails loudly instead of escalating quietly, because a silent normalization is how a qualification quietly becomes a privilege.",
+          "transcript": "The policy is not prose; it is executable, and now it is on the slide. In roles.py, normalize_roles takes an admin-supplied array and makes account access explicit, as its docstring says. Exact matches to the permission roles set are permission roles; everything else is treated as a qualification. But the drift cases fail loudly, and both refusals are visible in the exhibit. A case-folded collision like uppercase ADMIN raises: it is an ambiguous permission role. And if the array carries two permission roles, the function raises with the message select exactly one account access role. Those refusals are what make the vocabulary safe: drift can never silently become a permission.",
           "title": "M5.2 — Drifted input fails loudly",
-          "duration": 38.164,
-          "sha256": "b37081bdff27c0967f0f62e87862f46ee0932651c412979036ac5806c4962183",
+          "duration": 40.26,
+          "sha256": "c583b7607ccf152e6aab371d9fef41010fd0467748938aa4194d489bac1091ea",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
           "cues": 11,
-          "words": 98
+          "words": 110
         },
         "slide-14": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-14.mp3",
@@ -1847,15 +1847,15 @@
         "slide-16": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-16.mp3",
           "captions": "/assets/audio/aps-1.0.0/m05/slide-16.vtt",
-          "transcript": "Here is the number you may quote, and exactly how to quote it. In the validation playbook, dated the twelfth of September 2026, the recorded full-suite evidence is 1,464 passed and 21 skipped across the backend, web, contract, and browser suites. The complete unit tier alone was 399 passed and 21 skipped. Now read the banner: that file was reclassified the next day as historical reference, not current policy or live test status, and the testing document is current. Evidence with a date is evidence. Evidence with a date and a retirement plan is discipline. Never quote the 1,464 as today's status.",
+          "transcript": "Here is the number you may quote, and exactly how to quote it. In the validation playbook, dated the twelfth of September 2026, the recorded full-suite evidence is 1,464 passed and 21 skipped across the backend, web, contract, and browser suites. The complete unit tier alone was 399 passed and 21 skipped. Now read the banner on the slide, verbatim from the file: historical reference, reclassified the next day, the original observations and counts retained as historical context, not current policy or live test status — use the current testing and merge guide instead. That banner is the mechanism to copy: evidence gets a date, evidence gets retired, and the retirement is visible in the document itself.",
           "title": "Proof M5.3 — dated evidence, with a retirement plan",
-          "duration": 41.118,
-          "sha256": "a3f6859afbcee1de6b43f00dea9dc14fee6f02ccfe705a206775c80dfa428495",
+          "duration": 46.546,
+          "sha256": "cfcab94fe49eec27688aabb47ec3e65dd7bf07694c12fd0baf3c75614aed709c",
           "voice": "macOS say / Samantha (preview)",
           "provider": "macOS say",
           "caption_method": "sentence-measured",
-          "cues": 9,
-          "words": 102
+          "cues": 10,
+          "words": 117
         },
         "slide-15": {
           "audio": "/assets/audio/aps-1.0.0/m05/slide-15.mp3",
@@ -1988,7 +1988,7 @@
           "words": 109
         }
       },
-      "duration": 976.79
+      "duration": 992.62
     },
     "m06": {
       "label": "M6 — The Expertise Product: Evidence, Routing, Editions",

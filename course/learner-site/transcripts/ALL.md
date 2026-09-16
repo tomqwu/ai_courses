@@ -7,7 +7,7 @@ Every word spoken in the course, in order. The words are the approved narration 
 - [M2 — The On-Device AI App: Architecture](#m02) — 26 slides, 15m 4s
 - [M3 — The On-Device AI App: Privacy, Testing, Shipping](#m03) — 27 slides, 14m 58s
 - [M4 — The Spec-Driven SaaS: From Idea to Executable Spec](#m04) — 28 slides, 18m 0s
-- [M5 — Multi-Tenant Security & the Acceptance Gate](#m05) — 25 slides, 16m 16s
+- [M5 — Multi-Tenant Security & the Acceptance Gate](#m05) — 25 slides, 16m 32s
 - [M6 — The Expertise Product: Evidence, Routing, Editions](#m06) — 28 slides, 16m 7s
 - [M7 — Monetize: Pricing, Packaging, Positioning](#m07) — 28 slides, 15m 52s
 - [M8 — Launch: Sales Page, Email Arc, Capstone](#m08) — 27 slides, 14m 3s
@@ -832,7 +832,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 # M5 — Multi-Tenant Security & the Acceptance Gate
 ## Narration transcript
 
-**25 slides · 25 narrated · 16m 16s of audio**
+**25 slides · 25 narrated · 16m 32s of audio**
 
 **Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
 
@@ -872,9 +872,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 6 — M5.1 — Enumeration dies at `404`
 
-*37.7s · sentence-measured*
+*35.1s · sentence-measured*
 
-> Enumeration dies with one query shape. get_person_in_actor_org loads the target row with both the id and the actor's organization in the WHERE clause, and raises 404 when nothing matches. So a foreign person and a nonexistent person produce the same answer: a miss. That matters, because a 403 would say exists, but not yours, and an attacker with a perfectly valid account could then walk your id space and map which resources exist. Availability routes apply the same pattern: same-tenant peers get 403, foreign or absent people get 404. An undocumented status code is an unspecified information channel.
+> Enumeration dies with one query shape, and the query is now on the slide. get_person_in_actor_org loads the target row with both the id and the actor's organization in the WHERE clause, and raises 404 when nothing matches. So a foreign person and a nonexistent person produce the same answer: a miss. That matters, because a 403 would say exists, but not yours, and an attacker with a perfectly valid account could then walk your id space and map which of your resources exist. Read the exhibit: the filter carries both conditions, the miss raises, and nothing else in the function can leak existence.
 
 ### Slide 7 — M5.1 — Growth is invitation-only
 
@@ -884,9 +884,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 8 — Proof M5.1 — the rule you can grep
 
-*37.7s · sentence-measured*
+*38.4s · sentence-measured*
 
-> This is the proof slide for segment M5.1, so write these five pointers into your evidence log now: the P0 rule and its classification, the membership and actor-organization lookup, the tenant-bound reload, and the four status rows. They are your provenance for everything you claim in the lab. The pattern to learn is the shape: rule in the baseline, mechanism in the dependency, contract in the authorization doc, and a test for each. When you write your own tenancy section, copy that four-part shape, not the prose. One caution: a log line that warns about a missing filter is observability, while the filter in the query is the control.
+> This is the proof slide for segment M5.1, so write these five pointers into your evidence log now: the P0 rule and its classification, the membership and actor-organization lookup, the tenant-bound reload, and the four status rows. They are your provenance for everything you claim in the lab. And the rule itself is now on the slide, exactly as it lives in the baseline document — the grep target: every database query MUST filter by org_id, and a missing filter is a cross-tenant data leak, a P0 bug. The pattern to learn is the shape: rule in the baseline, mechanism in the dependency, contract in the authorization doc, and a test for each.
 
 ### Slide 9 — M5.2 — Two vocabularies, one array
 
@@ -896,9 +896,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 10 — M5.2 — Drifted input fails loudly
 
-*38.2s · sentence-measured*
+*40.3s · sentence-measured*
 
-> The policy is not prose; it is executable. In roles.py, normalize_roles sorts an admin-supplied array. Exact matches to the permission roles set are permission roles, and everything else is treated as a qualification. But the drift cases fail loudly. A case-folded collision like uppercase ADMIN raises, because it is an ambiguous permission role. And if the array carries two permission roles, the function raises with the message: select exactly one account access role. That is the design principle. Drifted input fails loudly instead of escalating quietly, because a silent normalization is how a qualification quietly becomes a privilege.
+> The policy is not prose; it is executable, and now it is on the slide. In roles.py, normalize_roles takes an admin-supplied array and makes account access explicit, as its docstring says. Exact matches to the permission roles set are permission roles; everything else is treated as a qualification. But the drift cases fail loudly, and both refusals are visible in the exhibit. A case-folded collision like uppercase ADMIN raises: it is an ambiguous permission role. And if the array carries two permission roles, the function raises with the message select exactly one account access role. Those refusals are what make the vocabulary safe: drift can never silently become a permission.
 
 ### Slide 11 — M5.2 — The authorization matrix, made executable
 
@@ -914,9 +914,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 13 — Proof M5.2 — matrix + gate + protocol
 
-*41.5s · sentence-measured*
+*51.7s · sentence-measured*
 
-> This is the proof slide for M5.2. Count the classes yourself when you open the file: five sets, 143 operations total. The six-step protocol is what you will write into your own contribution guide. Change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin, and foreign admin actors, assert that forbidden writes leave the database unchanged, refresh the OpenAPI snapshot and the generated client, then run the matrix and scheduling regressions locally. The protocol closes with the rule that kills the shortcut: do not use the tenancy warning listener as authorization.
+> This is the proof slide for M5.2, and the exhibit is the policy file's own docstring: reviewed authentication policy for every mounted API operation, deliberately keyed by FastAPI operation name, because a unit test compares this mapping with the live route table — so a new API route cannot ship without an explicit public, token, member, or administrator classification. Count the classes yourself when you open the file: five sets, 143 operations total. The six-step protocol is what you will write into your own contribution guide. Change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin, and foreign admin actors, assert that forbidden writes leave the database unchanged, and refresh the OpenAPI snapshot.
 
 ### Slide 14 — M5.2 — The six-step change protocol
 
@@ -932,9 +932,9 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 ### Slide 16 — Proof M5.3 — dated evidence, with a retirement plan
 
-*41.1s · sentence-measured*
+*46.5s · sentence-measured*
 
-> Here is the number you may quote, and exactly how to quote it. In the validation playbook, dated the twelfth of September 2026, the recorded full-suite evidence is 1,464 passed and 21 skipped across the backend, web, contract, and browser suites. The complete unit tier alone was 399 passed and 21 skipped. Now read the banner: that file was reclassified the next day as historical reference, not current policy or live test status, and the testing document is current. Evidence with a date is evidence. Evidence with a date and a retirement plan is discipline. Never quote the 1,464 as today's status.
+> Here is the number you may quote, and exactly how to quote it. In the validation playbook, dated the twelfth of September 2026, the recorded full-suite evidence is 1,464 passed and 21 skipped across the backend, web, contract, and browser suites. The complete unit tier alone was 399 passed and 21 skipped. Now read the banner on the slide, verbatim from the file: historical reference, reclassified the next day, the original observations and counts retained as historical context, not current policy or live test status — use the current testing and merge guide instead. That banner is the mechanism to copy: evidence gets a date, evidence gets retired, and the retirement is visible in the document itself.
 
 ### Slide 17 — M5.3 — Playbook acceptance: test the failure mode
 

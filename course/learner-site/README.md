@@ -345,7 +345,7 @@ fence is invisible evidence, not a style bug.
 |---|---|---|
 | m02 — On-device app: architecture | **deepened** (86c9b8c) | 5: protocol seams, `buildContext` signature, `recentContext` loop, token-prefix matcher, `OllamaStreamError` enum |
 | m03 — On-device app: privacy, testing, shipping | **deepened** | 6: `AIProcessingMode` enum + labels, `isVerifiedLocal` fail-closed guard, `RejectRedirects` delegate, coverage-floor gate (awk), the CI core job, the `XCTSkipUnless` e2e test |
-| m05 — Multi-tenant security | next by severity (83 unexhibited pointers) | |
+| m05 — Multi-tenant security | **deepened** | 5: `get_person_in_actor_org` 404 query, the grep-able P0 rule from `AGENTS.md`, `normalize_roles` refusals, the route-policy docstring + class set, the dated-evidence retirement banner |
 | m04, m06, m07, m08, m00, m01 | pending, ordered by audit | |
 
 m03 discipline notes: the awk gate and the CI job are exhibits with one elision each, marked `# …` /
