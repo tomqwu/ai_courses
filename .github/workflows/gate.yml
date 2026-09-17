@@ -36,7 +36,7 @@ jobs:
 
       - name: Chromium for the browser check (check_player.py finds it under ~/.cache/ms-playwright)
         run: |
-          python -m pip install --quiet playwright
+          python -m pip install --quiet playwright cryptography
           python -m playwright install --with-deps chromium
 
       - name: Case-study repositories at their pinned commits
