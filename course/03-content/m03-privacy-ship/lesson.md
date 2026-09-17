@@ -54,11 +54,11 @@ return true
 
 Note what this does *not* claim. The README states the trust boundary honestly: local-only mode "trusts the installed local Ollama service and its metadata" (`ListenToMe/README.md`, "Privacy"). You are verifying the daemon's self-description, not auditing the daemon — an honest trust boundary is itself a privacy feature, because it tells the user where the guarantee ends.
 
-**Three defenses around the metadata check.** In local-only mode, `OllamaProvider` layers enforcement before every `/api/chat` request (`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:99-119`):
+**Three defenses around the metadata check.** In local-only mode, `OllamaProvider` layers enforcement before every `/api/chat` request (`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157`):
 
 1. **Host check.** The base URL's host must be `localhost`, `127.0.0.1`, or `::1` — anything else throws before a byte of prompt is written.
 2. **Per-request verification.** It POSTs `/api/show` for the selected model and requires HTTP 200 *plus* `ModelPrivacy.isVerifiedLocal(metadata)` — re-verified on every request, so switching models mid-session or a daemon whose model list changes cannot skip the check.
-3. **Redirect rejection.** The request runs on a URLSession with a `RejectRedirects` delegate: on any HTTP redirect, the delegate answers `nil`, killing the request. The comment says why: "Never follow redirects with meeting text in local-only mode" (`OllamaProvider.swift:99-103, 151-157`). Without this, even a verified-local server could answer `/api/chat` with a 3xx to anywhere, and the HTTP stack would helpfully forward your meeting text — silently.
+3. **Redirect rejection.** The request runs on a URLSession with a `RejectRedirects` delegate: on any HTTP redirect, the delegate answers `nil`, killing the request. The comment says why: "Never follow redirects with meeting text in local-only mode" (`OllamaProvider.swift:138-142, 208-214`). Without this, even a verified-local server could answer `/api/chat` with a 3xx to anywhere, and the HTTP stack would helpfully forward your meeting text — silently.
 
 Fail closed also shapes *defaults*: `ModelRanking.roleDefaults` filters `:cloud` models out of automatic selection entirely, and cloud is auto-picked only when no local chat model exists — i.e., when the user set a cloud key and opted in (`ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:72-77`). Underneath it all sits one product principle: "Anything that would send data off-device **by default** is out of scope" (`ListenToMe/CLAUDE.md`).
 
@@ -66,9 +66,9 @@ Fail closed also shapes *defaults*: `ModelRanking.roleDefaults` filters `:cloud`
 
 | Claim you might make | Engineering that actually enforces it |
 |---|---|
-| "Your transcript never leaves your Mac" | `AIProcessingMode.local` + localhost-only host check + per-request `/api/show` verification (`OllamaProvider.swift:99-119`) |
+| "Your transcript never leaves your Mac" | `AIProcessingMode.local` + localhost-only host check + per-request `/api/show` verification (`OllamaProvider.swift:138-157`) |
 | "Cloud aliases can't sneak in as local" | `ModelPrivacy.isVerifiedLocal`: `remote_host`/`remote_model` absent, `format`/`model_info` present — fail closed (`ModelPrivacy.swift:15-24`) |
-| "Meeting text can't be silently forwarded" | `RejectRedirects` delegate refuses every HTTP redirect in local-only mode (`OllamaProvider.swift:151-157`) |
+| "Meeting text can't be silently forwarded" | `RejectRedirects` delegate refuses every HTTP redirect in local-only mode (`OllamaProvider.swift:138-142, 208-214`) |
 | "Adding an API key never changes your privacy" | Mode is an explicit user setting; keys are stored but routing is untouched (`README.md`, "AI processing mode") |
 | "Local by default" | `ModelRanking.roleDefaults` filters `:cloud` from auto-selection (`ModelRanking.swift:72-77`) |
 | "We're honest about where data goes" | Truthful labels, incl. "Ollama Cloud — sends transcript and context"; README states the trust boundary ("trusts the installed local Ollama service and its metadata") |

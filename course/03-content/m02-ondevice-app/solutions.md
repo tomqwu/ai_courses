@@ -168,7 +168,7 @@ Listener summary, a Quick answer, and a Deep answer. The text varies by model; w
 | Six modules re-implemented | `make lab-m2` exits 0 |
 | Red captured per module | Six ImportError captures (exit 4) in the evidence log |
 | Coverage floor 90 | `make lab-m2` prints `Required test coverage of 90% reached` |
-| M3 behavior preserved | `make lab-m3` prints `49 passed` |
+| Privacy tests preserved | `tests/test_privacy.py` unmodified; its 31 tests are inside `make lab-m2`'s 191 |
 | Router matches the spec | `pytest tests/test_model_router.py -q` → 40 passed |
 | Typed stream errors | `pytest tests/test_ollama_provider.py -q` → 18 passed |
 | Cancellation proven | `pytest tests/test_copilot.py::TestSetModel -q` green |

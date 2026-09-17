@@ -122,9 +122,9 @@ public static func isVerifiedLocal(_ data: Data) -> Bool {
 - **Redirect rejection** — a 3xx kills the request
 
 - Localhost, 127.0.0.1, and ::1 only
-- Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:99-119`
+- Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157`
 
-<!-- NOTES: In local-only mode three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or ::1; anything else throws before a byte of prompt is written. Second, the provider posts /api/show and requires HTTP 200 plus a verified-local metadata result; re-verified every request, so switching models mid-session cannot skip the check. Third, redirects. Open OllamaProvider.swift lines ninety-nine to one hundred nineteen. Timing: three minutes. Transition: why redirects matter. -->
+<!-- NOTES: In local-only mode three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or ::1; anything else throws before a byte of prompt is written. Second, the provider posts /api/show and requires HTTP 200 plus a verified-local metadata result; re-verified every request, so switching models mid-session cannot skip the check. Third, redirects. Open OllamaProvider.swift lines one hundred thirty-eight to one hundred fifty-seven. Timing: three minutes. Transition: why redirects matter. -->
 
 ---
 
@@ -133,7 +133,7 @@ public static func isVerifiedLocal(_ data: Data) -> Bool {
 - Request runs with `RejectRedirects`
 - Delegate answers `nil` on any redirect
 - Otherwise your meeting text is forwarded silently
-- Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:151-157`
+- Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`
 
 ```swift
 private final class RejectRedirects: NSObject, URLSessionTaskDelegate {

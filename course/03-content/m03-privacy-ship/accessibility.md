@@ -63,7 +63,8 @@ rather than a phonetic guess.
   session can complete the lab from the handout plus `lesson.md`.
 - **Two-outcome labs are an equity feature.** A machine with only `:cloud` aliases is not a
   deficient machine. Local-only mode correctly rejects everything there, and the documented
-  alternative is the mocked-stream contract test plus a written daemon note. No student is blocked
+  record is a written daemon note — and the contract test still runs, because it is a contract
+  test, not a privacy test. No student is blocked
   by hardware, and no student should feel pressure to weaken a privacy check to "get the lab
   working."
 - **Screen-reader path.** Every repository reference in this module is written as inline code with

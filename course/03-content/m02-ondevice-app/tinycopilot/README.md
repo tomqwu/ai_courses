@@ -3,8 +3,9 @@
 A compact, fully working Python re-implementation of the core architecture of
 [ListenToMe](https://github.com/tomqwu/ListenToMe) — a free, open-source, fully on-device
 meeting copilot for macOS/iOS (Swift). TinyCopilot mirrors ListenToMe's
-`Sources/ListenToMeCore` design in ~460 lines of Python so the same ideas run on
-macOS, Linux, and Windows with nothing but Python and Ollama.
+`Sources/ListenToMeCore` design in 460 Python statements (1,079 source lines under
+`src/tinycopilot/`) so the same ideas run on macOS, Linux, and Windows with nothing
+but Python and Ollama.
 
 **How the course uses this repo:** *the tests are the spec; the reference implementation
 is the answer key.* In Lab M2 you run the suite once to see it green, then delete the
@@ -42,6 +43,8 @@ make lab-m2    # unit suite + coverage floor ≥90  (Module 2 pass gate)
 make lab-m3    # privacy + streaming hardening suite (Module 3 pass gate)
 make e2e       # real-LLM contract test (needs LAB_E2E=1 and a reachable daemon)
 make demo      # scripted meeting through Listener → Quick → Deep
+make m3-start  # Lab M3 step 0: park privacy.py + its tests + the contract test; COV_FLOOR -> 0
+make m3-restore  # bring the reference Lab M3 solution back; COV_FLOOR -> 90
 ```
 
 ## Verified status (as shipped)

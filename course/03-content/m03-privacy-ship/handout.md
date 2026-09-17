@@ -39,7 +39,7 @@ python -m pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q
 
 - `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13, 15-24` — modes, truthful labels,
   the fail-closed `isVerifiedLocal` guard.
-- `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:99-119, 151-157` — host check,
+- `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157, 208-214` — host check,
   per-request verification, `RejectRedirects`.
 - `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:72-77` — local-first auto-selection.
 - `ListenToMe/scripts/check-coverage.sh` + `ListenToMe/.github/workflows/ci.yml:36-42` — the floor.
@@ -55,14 +55,15 @@ python -m pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q
    local daemon — with remote compute.
 2. **Fail-open hides in missing keys.** If a missing `details` dict skips the check instead of
    rejecting, you have built the anti-pattern.
-3. **Your daemon decides the lab's flavor.** With only `:cloud` aliases, local-only mode correctly
-   rejects everything. Document it; do not weaken the checks.
+3. **Your daemon decides Step 1's flavor.** With only `:cloud` aliases, local-only mode correctly
+   rejects everything. Document it; do not weaken the checks. Step 0 is `make m3-start`: the
+   shipped answer is parked and `make lab-m3` goes red — record that first.
 
 ## You're done when…
 
 - ☐ A mocked `/api/show` with `remote_host` is rejected in local-only mode, with the red run recorded first.
 - ☐ Missing `format`/`model_info` fails closed; a non-loopback host raises; a 3xx is refused.
-- ☐ `LAB_E2E` contract test passes with output recorded — or the only-cloud daemon case is documented plus a mocked-stream contract test.
+- ☐ `LAB_E2E` contract test passes with output recorded — on whatever chat model the router picks, `:cloud` aliases included; it is a contract test, not a privacy test.
 - ☐ Coverage floor: both the failure run and the success run recorded.
 - ☐ `docs/competition.md` has ≥5 rows, ≥6 columns, per-cell sources or `unverified`.
 - ☐ The one-liner's every clause names the column that proves it.

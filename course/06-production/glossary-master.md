@@ -138,7 +138,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Lead product** *(M8)* — The free asset that builds the list before the arc runs; the course uses a 30-minute AI product teardown. *Where:* `04-sales/launch-plan.md` (the free lead product).
 - **Local model** *(M0)* — A model whose weights run on your machine. In M0 the example is `qwen3:0.6b`; the point of pulling one is that no API key and no cloud bill are involved. — `course/03-content/m00-orientation/lesson.md`
 - **Local-first defaults — auto-selection that filters cloud aliases out first** *(M2)* — Cloud is chosen only when no local model exists. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:76-94`.
-- **LOCAL_HOSTS / loopback allowlist** *(M3)* — The only hosts local-only mode trusts: `localhost`, `127.0.0.1`, `::1`. Anything else throws before a prompt is written — `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:106-108`.
+- **LOCAL_HOSTS / loopback allowlist** *(M3)* — The only hosts local-only mode trusts: `localhost`, `127.0.0.1`, `::1`. Anything else throws before a prompt is written — `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:145-147`.
 - **Loop journal** *(M0)* — The single file, started in M0.2, where a student records one line per loop stage touched by each action step. — `course/03-content/m00-orientation/lesson.md`
 ### M
 
@@ -174,7 +174,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 ### R
 
 - **Ralph loop** *(M4)* — The constitution's Context A: an agent picks the highest-priority incomplete spec, completes *all* acceptance criteria, and reports `<promise>DONE</promise>`. — `SignUpFlow/.specify/memory/constitution.md`.
-- **Redirect refusal (`RejectRedirects`)** *(M3)* — A transport that refuses every 3xx instead of following it, so meeting text can never be silently forwarded — the Swift URLSession delegate is `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:151-157`; the Python twin builds httpx with `follow_redirects=False` and raises on 3xx in `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
+- **Redirect refusal (`RejectRedirects`)** *(M3)* — A transport that refuses every 3xx instead of following it, so meeting text can never be silently forwarded — the Swift URLSession delegate is `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`; the Python twin builds httpx with `follow_redirects=False` and raises on 3xx in `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
 - **Reputation funnel** *(M7)* — The marketing surface a free or open-source product runs on: code, README, coverage badge, published competitor analysis, support, and a Pro tier. Lives in `course/01-design/curriculum.md`, M7.1.
 - **Research log** *(M6)* — The dated intake queue where a claim enters before it can reach a page: Question / Checked / Outcome / Changed. Lives in `ai_qe/docs/research-log.md`.
 - **Reserved testimonial slot** *(M8)* — A labeled, empty testimonial placeholder with an honesty note, used instead of inventing social proof. The course's page reserves three in before/after/result format. *Where:* `04-sales/landing-page.md` (testimonials).

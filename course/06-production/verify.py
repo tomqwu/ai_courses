@@ -4,7 +4,8 @@
 Checks
   1. every module (M0-M8) has all 8 artifacts
   2. every artifact is inside its length band
-  3. every repo file pointer in the package resolves on disk
+  3. every repo file pointer in the package resolves on disk, and every `:N` / `:N-M`
+     line range lies inside the file it points at
   4. rubric weights sum to 100 in each lab-rubrics.md
   5. bundles each ship their 5 files
   6. no deck is missing Marp front matter or speaker notes (delegates detail to deck_lint.py)
@@ -13,7 +14,8 @@ Checks
 
 Usage:
   python3 verify.py                # full report, exit 1 on any failure
-  python3 verify.py --pointers     # pointer audit only
+  python3 verify.py --pointers     # pointer audit only: paths + line ranges, e.g.
+                                   #   "pointers checked: N (M line ranges verified)"
 """
 from __future__ import annotations
 
@@ -46,7 +48,13 @@ BUNDLES = ["on-device-app", "spec-driven-saas", "expertise-product"]
 BUNDLE_FILES = ["README.md", "syllabus.md", "sales-page.md", "pricing.md", "bundle-map.md"]
 
 CASE_REPOS = ("ListenToMe", "SignUpFlow", "ai_qe")
-POINTER_RE = re.compile(r"`((?:ListenToMe|SignUpFlow|ai_qe)/[^`\s]+)`")
+# A pointer is `<repo>/<path>` optionally followed by `:<lines>`, where <lines> is one or more
+# comma-separated `N` or `N-M` ranges (`:15-24`, `:57,61`, `:99-103, 151-157`). The optional
+# trailing group lets a space-separated second range stay inside one pointer.
+POINTER_RE = re.compile(
+    r"`((?:ListenToMe|SignUpFlow|ai_qe)/[^`\s]+(?:,\s*\d+(?:[-\u2013]\d+)?)*)`"
+)
+LINE_RANGE_RE = re.compile(r"^(\d+)(?:[-\u2013](\d+))?$")
 WEIGHT_RE = re.compile(r"\b(\d{1,3})\s*%")
 # A table row that looks like a rubric weight row: contains a % and a criterion-ish phrase
 RUBRIC_ROW_RE = re.compile(r"^\|.+\|\s*(?:\*\*)?(\d{1,3})\s*%\s*(?:\*\*)?\s*\|")
@@ -77,9 +85,42 @@ def check_artifacts() -> list[str]:
     return problems
 
 
-def check_pointers(files: list[Path] | None = None) -> tuple[int, list[str]]:
+def parse_line_ranges(suffix: str) -> list[tuple[int, int]] | None:
+    """`15-24` -> [(15, 24)]; `57,61` -> [(57, 57), (61, 61)]. None when the suffix is not a
+    line spec at all (an anchor or a symbol name), so the caller checks the path only."""
+    suffix = suffix.split("#")[0].strip().rstrip(",.;")
+    if not suffix:
+        return None
+    ranges: list[tuple[int, int]] = []
+    for part in suffix.split(","):
+        m = LINE_RANGE_RE.match(part.strip())
+        if not m:
+            return None
+        lo = int(m.group(1))
+        hi = int(m.group(2)) if m.group(2) else lo
+        ranges.append((lo, hi))
+    return ranges
+
+
+def _label(f: Path) -> str:
+    """Report paths relative to course/ when they are inside it, verbatim otherwise."""
+    try:
+        return str(f.relative_to(ROOT))
+    except ValueError:
+        return str(f)
+
+
+def check_pointers(files: list[Path] | None = None) -> tuple[int, int, list[str]]:
+    """Every pointer's path must exist; every `:N` / `:N-M` must lie inside the file.
+
+    Returns (pointers checked, line ranges checked, problems). A range is in bounds when
+    1 <= N <= M <= line count of the file — a pointer into a directory, or past the end of the
+    file, is reported. Line counts are cached per file.
+    """
     problems: list[str] = []
     checked = 0
+    ranges_checked = 0
+    line_counts: dict[Path, int] = {}
     if files is None:
         files = sorted(
             p for p in ROOT.rglob("*.md")
@@ -89,11 +130,32 @@ def check_pointers(files: list[Path] | None = None) -> tuple[int, list[str]]:
         text = f.read_text(encoding="utf-8")
         for m in POINTER_RE.finditer(text):
             raw = m.group(1)
-            path = raw.split(":")[0].split("#")[0]
+            path, _, suffix = raw.partition(":")
+            path = path.split("#")[0]
             checked += 1
-            if not (REPO / path).exists():
-                problems.append(f"{f.relative_to(ROOT)}: MISSING POINTER {raw}")
-    return checked, problems
+            target = REPO / path
+            if not target.exists():
+                problems.append(f"{_label(f)}: MISSING POINTER {raw}")
+                continue
+            ranges = parse_line_ranges(suffix)
+            if not ranges:
+                continue
+            if target.is_dir():
+                problems.append(f"{_label(f)}: LINE RANGE ON A DIRECTORY {raw}")
+                continue
+            if target not in line_counts:
+                line_counts[target] = len(
+                    target.read_text(encoding="utf-8", errors="replace").splitlines()
+                )
+            n = line_counts[target]
+            for lo, hi in ranges:
+                ranges_checked += 1
+                if not (1 <= lo <= hi <= n):
+                    problems.append(
+                        f"{_label(f)}: OUT OF RANGE {raw} "
+                        f"(lines {lo}-{hi}; file has {n} lines)"
+                    )
+    return checked, ranges_checked, problems
 
 
 WEIGHT_HEADERS = {
@@ -271,8 +333,8 @@ def check_learner_site() -> list[str]:
 
 def main(argv: list[str]) -> int:
     if "--pointers" in argv:
-        checked, problems = check_pointers()
-        print(f"pointers checked: {checked}")
+        checked, ranges, problems = check_pointers()
+        print(f"pointers checked: {checked} ({ranges} line ranges verified)")
         for p in problems:
             print("  " + p)
         return 1 if problems else 0
@@ -297,9 +359,9 @@ def main(argv: list[str]) -> int:
             print(f"    … and {len(problems) - 25} more")
         failed += len(problems)
 
-    checked, problems = check_pointers()
+    checked, ranges, problems = check_pointers()
     status = "PASS" if not problems else f"FAIL ({len(problems)})"
-    print(f"[{status}] Repo file pointers ({checked} checked)")
+    print(f"[{status}] Repo file pointers ({checked} checked, {ranges} line ranges verified)")
     for p in problems[:25]:
         print("    " + p)
     failed += len(problems)
