@@ -37,10 +37,30 @@
 | 4 | Released artifact — git tag with a version, or deployed URL; the link works | D2/D5 — the loop, closed |
 | 5 | Discipline artifact per archetype — local-only tests / tenant isolation + manifest / reconciled provenance | D4 |
 | 6 | Sales page draft — all 8 sections, one CTA, no unsourced claim | D5 Launch-readiness |
-| 7 | 5-email launch mini-arc — cart open, objection teardown, testimonial/proof, final call, post-launch survey | D5 |
+| 7 | 5-email launch mini-arc — cart open, objection teardown, testimonial/proof, final call, post-launch survey — plus the SPF/DKIM/DMARC answers from the deliverability gate | D5 |
 | 8 | Demo — 5 minutes, recorded or live, in the four-beat structure | D5 |
 
 The **5-email mini-arc** is the capstone-scale cut of the course's 7 (`04-sales/launch-plan.md`), with warmup omitted or reused from your M8.2 draft: **(1) cart open** — the offer, price, guarantee; **(2) objection teardown** — your four real objections answered plainly; **(3) testimonial/proof** — before/after/result only if real, else a walkthrough of your own repo evidence; **(4) final call** — short, with a real deadline; **(5) post-launch survey** — what stopped you: price, time, or level.
+
+### Deliverability gate (before the arc is queued)
+
+Segment M8.2's rule — configure SPF, DKIM and DMARC *before the first send*, because Gmail and Yahoo enforce them for bulk senders — is checked by querying your own sending domain's DNS, not by trusting the email platform's dashboard. Run all three and paste the answers into the evidence record (`04-sales/launch-plan.md`, operations checklist):
+
+```bash
+dig +short TXT <your-domain>                          # SPF
+dig +short TXT <selector>._domainkey.<your-domain>    # DKIM (selector comes from your sender)
+dig +short TXT _dmarc.<your-domain>                   # DMARC
+```
+
+A passing answer is a returned TXT record, not an empty line:
+
+| Record | What a passing answer contains |
+|---|---|
+| SPF | **Exactly one** record starting `v=spf1`, with your sending platform's `include:`, ending `-all` (reject) or `~all` (softfail). Two SPF records is a fail — receivers treat it as permerror. |
+| DKIM | `v=DKIM1` with a non-empty `p=` public key, at the selector your sending platform gives you. An empty `p=` is a revoked key. |
+| DMARC | **One** record at `_dmarc.<domain>` starting `v=DMARC1;` with an explicit policy `p=none`, `p=quarantine` or `p=reject`, plus an `rua=mailto:` report address so you see the failures. |
+
+No `dig` on your machine (it is not installed everywhere): `nslookup -type=TXT _dmarc.<your-domain>` answers the same question. An empty answer for any of the three means "not configured," whatever the dashboard says — fix it before you queue the sequence, because no math survives the spam folder. Then send the two test messages (a Gmail address and a corporate address, which filter differently) and record where each landed.
 
 ## Rubric scoring instructions
 
@@ -86,6 +106,7 @@ Keep also: the plan post and its peer reply, the demo recording link, both score
 - [ ] Discipline artifact present and passing (Type 3: provenance reconciles)
 - [ ] Sales page: 8 sections, one CTA, word target set by price, no unsourced claim
 - [ ] 5 emails drafted; one CTA each; the deadline real
+- [ ] Deliverability verified on the sending domain before the arc is queued: `dig +short TXT _dmarc.<domain>` returns a `v=DMARC1;` record with an explicit `p=`, SPF returns exactly one `v=spf1` record ending `-all`/`~all`, DKIM returns a `v=DKIM1` key with a non-empty `p=`; the three answers and both test sends (Gmail + corporate) are in the evidence record
 - [ ] Demo recorded (≤5:30) or delivered live, ending on the limits
 - [ ] Evidence record complete + self-score ≥80% (nothing below 3) + peer score exchanged
 

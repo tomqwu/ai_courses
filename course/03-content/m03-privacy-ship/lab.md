@@ -4,7 +4,7 @@
 
 ## Goal
 
-Take TinyCopilot from "works" to "trustworthy and shippable." You will add a fail-closed local-only mode and red-team it with your own tests, run a real-LLM contract test outside CI, wire a coverage floor into your test target, and produce a sourced comparison table that doubles as your positioning statement. Everything ListenToMe proves in Swift, you prove in Python.
+Take TinyCopilot from "works" to "trustworthy and shippable." You will add a fail-closed local-only mode and red-team it with your own tests, run a real-LLM contract test outside CI, wire a coverage floor into your test target, tag and checksum a built artifact so "done" means what Segment M3.3 says it means, and produce a sourced comparison table that doubles as your positioning statement. Everything ListenToMe proves in Swift, you prove in Python.
 
 ## Prerequisites
 
@@ -59,6 +59,29 @@ Produce `docs/competition.md` for **your** product idea:
 - **Qualify uncertain claims** exactly as ListenToMe does — "approximately," "reportedly" (`ListenToMe/docs/competition-analysis.md:3`).
 - **Derive a one-line positioning statement** and annotate each clause with the column that proves it, the way the "free / open-source / fully on-device / bring your own model" clauses trace to Price, On-device?, and Multi-model/BYO columns (`competition-analysis.md:70-80`).
 
+## Step 5 — Tag and checksum the artifact (~15 min)
+
+Segment M3.3's Definition of Done ends one rung past green tests: a tag at the exact source commit, an artifact built from it, and the artifact's checksum verified again on the copy a user would receive (`ListenToMe/docs/RELEASING.md:33-36`; `ListenToMe/AGENTS.md:65-68, 93-94`). Rehearse those rungs on TinyCopilot. If your copy still lives inside the course clone, move it into a repository of its own first (`cp -r` it out and `git init`) — a tag belongs to the product's history, not the course's.
+
+**Two commands, one job.** macOS ships `shasum`; most Linux distributions ship coreutils' `sha256sum` and not `shasum`. They print the same 64-hex digest and the same `OK`/`FAILED` lines, so use whichever your machine has and say which one you used:
+
+| | Write the manifest | Verify against it |
+|---|---|---|
+| macOS | `shasum -a 256 <file> \| tee SHA256SUMS` | `shasum -a 256 -c SHA256SUMS` |
+| Linux | `sha256sum <file> \| tee SHA256SUMS` | `sha256sum -c SHA256SUMS` |
+
+1. **Tag the commit you tested.** Commit the Step 1–3 work (floor at 90, `make lab-m2` and `make lab-m3` green), then:
+   ```bash
+   git tag -a v0.1.0 -m "Lab M3: privacy hardening, contract test, coverage floor"
+   git describe --tags --exact-match      # must print v0.1.0 — HEAD is the tagged commit
+   git rev-parse v0.1.0^{commit}          # record this SHA
+   ```
+   The version matches `pyproject.toml` (`version = "0.1.0"`); a tag that disagrees with the package version is the first thing a reviewer catches.
+2. **Build the artifact from that commit.** `python3 -m pip install build` once, then `python3 -m build`. It writes `dist/tinycopilot-0.1.0-py3-none-any.whl` and `dist/tinycopilot-0.1.0.tar.gz`; the wheel is your release artifact. Confirm it contains what you tested: `python3 -m zipfile -l dist/tinycopilot-0.1.0-py3-none-any.whl` must list `tinycopilot/privacy.py`.
+3. **Checksum it.** From inside `dist/`, so the manifest names the bare file and not `dist/…`: `sha256sum tinycopilot-0.1.0-py3-none-any.whl | tee SHA256SUMS` (or the `shasum -a 256` form). Copy the printed line into the evidence log verbatim — the 64-hex digest is the claim.
+4. **Verify the copy, not the original.** Stand in for "download the hosted asset": copy the wheel and `SHA256SUMS` into a fresh directory outside the repo and run the `-c` form there. It must print `tinycopilot-0.1.0-py3-none-any.whl: OK`. Then corrupt that copy on purpose (`printf x >> tinycopilot-0.1.0-py3-none-any.whl`) and re-run — record the `FAILED` line and the exit 1 too. A check that has never failed proves nothing (Module 1's rule, again).
+5. **Say what rung you reached.** In the evidence log, record the tag, the commit SHA, which checksum tool you used, the digest line, the `OK` and `FAILED` lines, and the honest status: *candidate — built and checksum-verified locally, not published*. Publishing (`git push origin v0.1.0` to a public repo, then re-downloading the asset) is Lab M8's release step; until then, the ListenToMe rule applies — "never describe blocked work as released" (`ListenToMe/AGENTS.md:80-82`).
+
 ## Acceptance checklist (all must pass)
 
 1. ☐ Step 0 recorded: the `make m3-start` output and the red `make lab-m3` run (`ModuleNotFoundError`, exit 4) precede everything else in the evidence log.
@@ -70,10 +93,11 @@ Produce `docs/competition.md` for **your** product idea:
 7. ☐ Coverage floor enforced: `COV_FLOOR` back at 90, both the failure run and the success run recorded.
 8. ☐ `competition.md` has ≥5 rows, ≥6 columns, per-cell sources or "unverified" marks.
 9. ☐ Positioning one-liner derived and specific: every clause traceable to a table column.
+10. ☐ Tag and checksum recorded: `v0.1.0` at the tested commit (`git describe --tags --exact-match`), the wheel's SHA-256 line, an `OK` from the `-c` re-check on a copy outside the repo, a `FAILED` from the deliberately corrupted copy, the tool you used (`sha256sum` or `shasum -a 256`), and the rung named as *candidate, not published*.
 
 ## Evidence to record
 
-Use the Module 1 format (commands, counts, date, environment, limitations, head SHA) plus: the Step 0 red run, which daemon case you hit in Step 1 (local model or only-cloud aliases), the red-team test output, both coverage runs (failure and success), and the `LAB_E2E` run *and* its skip message.
+Use the Module 1 format (commands, counts, date, environment, limitations, head SHA) plus: the Step 0 red run, which daemon case you hit in Step 1 (local model or only-cloud aliases), the red-team test output, both coverage runs (failure and success), the `LAB_E2E` run *and* its skip message, and the Step 5 tag + checksum block (tag, commit SHA, digest line, `OK`, `FAILED`, rung).
 
 ## Stretch goals
 

@@ -376,7 +376,12 @@ def parse_quiz(text: str, deck_id: str) -> dict:
                 break
         if matched:
             continue
-        if current_key is not None and s and not s.startswith("#"):
+        if s.startswith("#"):
+            # A new section (e.g. the objective -> assessment map printed after the key) ends the
+            # entry being continued; its lines are not part of the previous answer's rationale.
+            current_key = None
+            continue
+        if current_key is not None and s:
             keys[current_key]["rationale"] += " " + s
 
     problems = []
