@@ -79,6 +79,28 @@ class TestPointerLint(unittest.TestCase):
         self.assertEqual(report["pointers"], 1)
         self.assertEqual(report["problems"], [])
 
+    def test_routes_slugs_and_timezones_are_not_mistaken_for_pointers(self):
+        write(self.root, "docs/guide.md",
+              "`/v1/things` and `/solutions/{id}/export` and `America/Toronto` and `owner/repo`.")
+        report = PL.lint([self.root / "docs"], self.root)
+        self.assertEqual(report["pointers"], 0)
+        self.assertEqual(report["problems"], [])
+
+    def test_an_extensionless_token_counts_when_it_resolves_to_a_directory(self):
+        (self.root / "src" / "pkg").mkdir(parents=True, exist_ok=True)
+        write(self.root, "docs/guide.md", "See `src/pkg` and `src/gone`.")
+        report = PL.lint([self.root / "docs"], self.root)
+        # The directory that exists was a pointer; the one that does not is indistinguishable from
+        # a slug, so it is neither counted nor reported.
+        self.assertEqual(report["pointers"], 1)
+        self.assertEqual(report["problems"], [])
+
+    def test_an_extensionless_token_with_a_line_reference_is_always_a_pointer(self):
+        write(self.root, "docs/guide.md", "See `src/gone:3`.")
+        report = PL.lint([self.root / "docs"], self.root)
+        self.assertEqual(len(report["problems"]), 1)
+        self.assertIn("no such file", report["problems"][0]["problem"])
+
     def test_code_fences_and_urls_are_not_mistaken_for_pointers(self):
         write(self.root, "docs/guide.md", "`https://example.com/a/b` is a link.")
         report = PL.lint([self.root / "docs"], self.root)

@@ -12,7 +12,7 @@ and expensive to discover from a reader's complaint:
 | `facts_drift.py` | A number stated as fact was true when written and is not true now | `python3 facts_drift.py --facts facts.json --docs docs/` |
 | `agents_audit.py` | An agent rule file grew past reading, or filled with advice nobody can check | `python3 agents_audit.py AGENTS.md` |
 
-Requires Python 3.11 or newer. Run the tests with `python3 test_aps_tools.py` — 19 tests, no
+Requires Python 3.11 or newer. Run the tests with `python3 test_aps_tools.py` — 22 tests, no
 dependencies.
 
 ## pointer_lint.py — every claim carries a pointer, and every pointer resolves
@@ -41,11 +41,22 @@ repositories cloned beside it:
 
 ```
 $ python3 aps-tools/pointer_lint.py --base . --roots ListenToMe,SignUpFlow,ai_qe course
-1130 pointer(s) in 161 file(s), 275 line range(s) checked against .
+1183 pointer(s) in 162 file(s), 339 line range(s) checked against .
 ```
 
 A line range is the part people skip, and it is the part that rots fastest: a file that gains ten
 lines at the top silently invalidates every line number below it while the file itself still exists.
+
+**What counts as a pointer.** A backticked token with a slash is not always a path: `/v1/things` is
+a route, `America/Toronto` is a timezone, `owner/repo` is a repository. A token is linted when its
+last segment has an extension, when it ends in a slash, or when it carries a line reference. An
+extensionless token that resolves to a real directory is linted too; one that does not is left
+alone, because nothing distinguishes a broken directory pointer from a slug. Add a line reference
+or a trailing slash when you want one checked either way.
+
+Run it on a repository that has never been linted and expect findings. On one of this course's own
+case studies, 81 of 283 pointers in `docs/` do not resolve from the repository root — most are
+written relative to the document that contains them, which is a convention worth knowing you have.
 
 ## facts_drift.py — the numbers are re-derived, not remembered
 

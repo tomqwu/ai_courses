@@ -32,6 +32,13 @@ from pathlib import Path
 POINTER_RE = re.compile(r"`([^`\s]+/[^`\s]+?(?::\d+(?:[-–]\d+)?(?:,\s*\d+(?:[-–]\d+)?)*)?)`")
 RANGE_RE = re.compile(r"^(\d+)(?:[-–](\d+))?$")
 SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv", "dist", "build", ".mypy_cache"}
+# A backticked token with a slash in it is not always a path. These are the shapes that reliably
+# are not one, and reporting them as broken pointers is how a linter loses its reader:
+#   /v1/things, /solutions/{id}/export   an API route, not a file on disk
+#   America/Toronto, owner/repo          a timezone, a repository slug
+# A token counts as a pointer when its last segment has an extension, when it ends in a slash (a
+# directory written as one), or when it carries a line reference — never when it is templated.
+TEMPLATE_RE = re.compile(r"[{}<>*?]")
 
 
 def parse_ranges(suffix: str) -> list[tuple[int, int]]:
@@ -45,6 +52,19 @@ def parse_ranges(suffix: str) -> list[tuple[int, int]]:
         end = int(match.group(2) or match.group(1))
         out.append((start, end))
     return out
+
+
+def looks_like_path(token: str, suffix: str = "") -> bool:
+    """Is this backticked token a file path, rather than a route, a slug or a timezone?"""
+    if not token or token.startswith(("/", "http://", "https://", "mailto:", "~")):
+        return False
+    if TEMPLATE_RE.search(token):
+        return False
+    if suffix and parse_ranges(suffix):
+        return True                       # an explicit line reference means a file
+    if token.endswith("/"):
+        return True                       # a directory, written as one
+    return "." in token.rsplit("/", 1)[-1]
 
 
 def markdown_files(targets: list[Path]) -> list[Path]:
@@ -85,12 +105,19 @@ def lint(targets: list[Path], base: Path, roots: set[str] | None = None) -> dict
                 raw = match.group(1)
                 path_part, _, suffix = raw.partition(":")
                 path_part = path_part.split("#")[0]
+                definite = looks_like_path(path_part, suffix)
+                target = (base / path_part).resolve()
+                if not definite:
+                    # Ambiguous: `owner/repo`, `America/Toronto` and `some/dir` are the same shape.
+                    # If it resolves, it was a pointer and it is fine; if it does not, there is no
+                    # way to tell a broken pointer from a slug, so it is not reported as either.
+                    if not target.exists():
+                        continue
                 if roots is not None and path_part.split("/")[0] not in roots:
                     continue
                 if path_part.startswith(("http", "https", "mailto")):
                     continue
                 checked += 1
-                target = (base / path_part).resolve()
                 record = {"doc": str(doc), "line": lineno, "pointer": raw}
                 if not target.exists():
                     problems.append({**record, "problem": "no such file"})
