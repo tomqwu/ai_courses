@@ -32,6 +32,14 @@ step "learner site build"         "$PYTHON" learner-site/build_site.py --check
 step "browser check"              "$PYTHON" learner-site/check_player.py --all --print-skip
 step "package verification"       "$PYTHON" 06-production/verify.py
 
+# The pinned facts are re-derived from the case-study clones. Without the clones the step cannot
+# run, so it says how to get them and does not fail — the same posture as the pointer check.
+if [ -d ../ListenToMe ] && [ -d ../SignUpFlow ] && [ -d ../ai_qe ]; then
+  step "facts re-derived (strict)"  "$PYTHON" 06-production/check_facts.py --strict
+else
+  printf '\n── facts re-derived (strict)\n   skipped: clone ListenToMe, SignUpFlow and ai_qe beside course/ to run it\n'
+fi
+
 printf '\n'
 if [ "$failures" -ne 0 ]; then
   printf 'GATE FAILED: %d step(s) did not pass\n' "$failures"

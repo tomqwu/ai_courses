@@ -50,6 +50,27 @@ CHROME_CANDIDATES = [
 
 
 def find_browser() -> str | None:
+    """A Chrome/Chromium binary: an explicit path first, then Playwright's cache, then the usual places.
+
+    `CHROME_PATH` is the escape hatch for any runner; `PLAYWRIGHT_BROWSERS_PATH` is what a Playwright
+    install (local or in CI) already sets, so a Linux runner with the Playwright Chromium needs no
+    extra configuration. Fixed paths alone made the gate silently skip on every Linux machine.
+    """
+    import os                                                                     # noqa: PLC0415
+    import glob                                                                   # noqa: PLC0415
+    explicit = os.environ.get("CHROME_PATH")
+    if explicit and Path(explicit).exists():
+        return explicit
+    pw_root = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
+    roots = [pw_root] if pw_root else []
+    roots += [str(Path.home() / ".cache" / "ms-playwright"), "/opt/pw-browsers"]
+    for root in roots:
+        for pattern in ("chromium-*/chrome-linux/chrome", "chromium-*/chrome-linux64/chrome",
+                        "chromium-*/chrome-mac*/Chromium.app/Contents/MacOS/Chromium",
+                        "chromium_headless_shell-*/chrome-linux/headless_shell"):
+            hits = sorted(glob.glob(str(Path(root) / pattern)))
+            if hits:
+                return hits[-1]
     for candidate in CHROME_CANDIDATES:
         if candidate and Path(candidate).exists():
             return candidate

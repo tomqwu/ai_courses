@@ -73,6 +73,13 @@ work without them.
 
 ## Quick start
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/tomqwu/ai_courses?quickstart=1)
+
+The devcontainer installs Python 3.11 with pytest, Poetry, Ollama with the lab model, clones the
+three case-study repos beside `course/`, and runs `make lab-m2` so the first thing you see is the
+gate going green. Every GitHub account has free Codespaces hours that cover the nine modules.
+
+
 ```bash
 make -C course narration-preview   # record the free local preview voice (~8 min, no API key)
 make -C course transcripts         # regenerate the committed transcripts
@@ -154,7 +161,10 @@ check_player --all                 headless browser: the 16:9 frame is measured 
                                    overflow, font loaded), panel visible, captions
                                    parsed, deep links, Present/Read all/notes all work
 verify.py                          artifacts · rubrics · bundles · decks · sales claims ·
-                                   narration contract · learner site · 1,048 file pointers
+                                   narration contract · learner site · every file pointer,
+                                   with :N-M line ranges checked against the file
+check_facts.py --strict            every pinned number re-derived from the clones; skipped
+                                   with a note when the clones are absent
 ```
 
 `verify.py` is the same evidence discipline the course teaches, applied to the course: every claim
