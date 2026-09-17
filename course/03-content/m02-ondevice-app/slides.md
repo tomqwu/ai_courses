@@ -12,7 +12,7 @@ title: M2 — The On-Device AI App: Architecture
 **Promise:** trace one real on-device pipeline, then rebuild its core.
 **Duration:** ~75 min lesson + ~3 h lab.
 
-<!-- NOTES: Welcome to Module 2. Today the abstraction ends: we open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs. Then in the lab you rebuild that core in Python as TinyCopilot until 191 tests pass. By the end of this module you will be able to point at a Swift file for every stage and defend each decision. (45 seconds; move to objectives.) -->
+<!-- NOTES: Welcome to Module 2. Today the abstraction ends: we open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs. Then in the lab you rebuild that core in Python as TinyCopilot until 201 tests pass. By the end of this module you will be able to point at a Swift file for every stage and defend each decision. (45 seconds; move to objectives.) -->
 
 ---
 
@@ -45,11 +45,16 @@ title: M2 — The On-Device AI App: Architecture
 
 ## Capture is thin on purpose
 
-- `App/DualChannelCapture.swift` taps mic and system audio.
-- Two channels: `.you`, `.others`.
-- Mono Float PCM → `AudioChunk`s.
+```swift
+/// Captures the local microphone (source `.you`) and system audio (source `.others`),
+/// converting both to mono Float PCM and emitting `AudioChunk`s.
+final class DualChannelCapture: NSObject, AudioCapturing, @unchecked Sendable {
+```
+
 - Speaker attribution for free — no diarization model.
 - Least testable code, so it is thinnest.
+
+`ListenToMe/App/DualChannelCapture.swift:8-10`
 
 <!-- NOTES: The header comment on `App/DualChannelCapture.swift:8` says both sources are converted to mono Float PCM and emitted as audio chunks. At line 102 the mic tap tags buffers `.you`; at line 212 the ScreenCaptureKit callback tags them `.others`. That one tag is why the app can label "You" versus "Others" without any diarization. Capture is hardware-bound, so it is kept as small as possible — a rule we will reuse in the lab. (70 seconds; move to the seams.) -->
 
@@ -84,11 +89,16 @@ public protocol LLMProvider: Sendable {
 
 ## Three engines, one seam
 
-- **SpeechAnalyzer** — default; one analyzer per source.
-- **SpeechRecognizer** — legacy; process-global limit.
-- **WhisperKit** — opt-in; batch, finalized segments only.
+| Engine | Status | What it trades |
+|---|---|---|
+| SpeechAnalyzer | default | one analyzer per source |
+| SpeechRecognizer | legacy | process-global limit |
+| WhisperKit | opt-in | batch, finalized segments only |
+
 - Apple Speech picks one language; no code-switching.
 - Add an engine; nothing downstream changes.
+
+`ListenToMe/Sources/ListenToMeCore/Transcriber.swift`
 
 <!-- NOTES: `Sources/ListenToMeCore/Transcriber.swift` defines `prepare()`, `feed(_:)`, `finish()`. The `prepare()` contract matters: warm up before audio so `feed` never blocks and the meeting's opening seconds are not dropped. `App/SpeechAnalyzerTranscriber.swift:6-39` notes one analyzer per source, unlike `SFSpeechRecognizer`. WhisperKit trades live partials for stronger multilingual quality — `App/MeetingView.swift:84` is why: Apple's on-device Speech selects one primary language. (80 seconds; next the store.) -->
 
@@ -118,11 +128,26 @@ public func buildContext(from store: ConversationStore, notes: String?,
 
 ## When the engine gives no partials
 
-- Core VAD is 37 lines.
-- `rms(of:)` measures frame energy.
-- Threshold 0.02, trailing silence 0.8 s.
+```swift
+public mutating func process(rms value: Float, at time: TimeInterval) -> Bool {
+    if value >= speechThreshold {
+        inSpeech = true
+        lastSpeechTime = time
+        return false
+    }
+    if inSpeech && (time - lastSpeechTime) >= silenceDuration {
+        inSpeech = false
+        return true
+    }
+    return false
+}
+```
+
+- Core VAD is 37 lines; defaults 0.02, 0.8 s.
 - Fires exactly once per utterance boundary.
 - No ML model — a threshold and a timer.
+
+`ListenToMe/Sources/ListenToMeCore/VAD.swift:25-36`
 
 <!-- NOTES: WhisperKit buffers audio, so something must decide where an utterance ends. `Sources/ListenToMeCore/VAD.swift` computes root-mean-square energy per frame and returns true exactly once, on the frame where trailing silence after speech first exceeds the silence duration. Verified by `Tests/ListenToMeCoreTests/VADTests.swift`. This is the module's recurring move: spend the cheap heuristic where a model would be overkill. (70 seconds; time for the proof slide.) -->
 
@@ -173,11 +198,18 @@ public func recentContext(maxChars: Int) -> [TranscriptSegment] {
 
 ## Local-first role defaults
 
-- `ModelRanking.roleDefaults(from:)` picks automatically.
-- Quick gets a fast marker — or lightest.
-- Deep gets a strong marker — or heaviest.
+`ModelRanking.roleDefaults(from:)` picks automatically.
+
+| Role | Curated markers | Else |
+|---|---|---|
+| Quick | flash, mini, nano, lite, small, fast | the lightest |
+| Deep | pro, reason, think, coder, code, ultra, max, large | the heaviest |
+| Listener | a second fast marker, not Quick's | the lightest left |
+
 - `:cloud` filtered out of auto-selection.
 - Cloud only when no local model exists.
+
+`ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:49-54`
 
 <!-- NOTES: The logic lives in `Sources/ListenToMeCore/ModelRanking.swift:76-94`, called from `App/MeetingView.swift:717`. Fast markers include flash, mini, nano, lite, small, fast; strong markers include pro, reason, think, coder, code, ultra, max, large. The local-first filter at lines 72-79 is a privacy default, not a speed one: an unpinned pane must never silently send a transcript to Ollama Cloud. The "good for" hints come from `describe(_:)` at lines 101-141. (80 seconds; now the subtle bug.) -->
 
@@ -232,11 +264,16 @@ static func hasMarker(_ model: String, _ marker: String) -> Bool {
 
 ## Three base prompts, three contracts
 
-- **Quick:** no preamble, answer in 1–3 sentences.
-- **Listener:** never invent owner, deadline, agreement, completion.
-- **Deep:** depth over brevity; no padding.
+| Base prompt | Its contract |
+|---|---|
+| Quick | no preamble, answer in 1–3 sentences |
+| Listener | never invent owner, deadline, agreement, completion |
+| Deep | depth over brevity; no padding |
+
 - Nine response actions layer on top.
 - Persona directives append to every role.
+
+`ListenToMe/Sources/ListenToMeCore/Prompt.swift`
 
 <!-- NOTES: Read the actual sentences in `Prompt.swift`: Quick at lines 65-71, Listener at 73-81, Deep at 83-88. The Listener contract exists because its summary feeds back into Quick and Deep prompts — one hallucinated owner would propagate everywhere, so it is blocked at the source. `systemWithDirectives` at lines 159-173 appends persona and language to every pane, so a preset like Interview shapes all three roles identically. (80 seconds; proof slide.) -->
 
@@ -270,11 +307,21 @@ static func hasMarker(_ model: String, _ marker: String) -> Bool {
 
 ## QuestionDetector: three rules
 
-- Ends in `?`.
-- *Starts with* an interrogative: what, why, how…
-- Contains a word-boundary phrase cue.
-- `"can you"`, `"any thoughts"`, `"walk me through"`.
+```swift
+if normalized.hasSuffix("?") { return true }
+for cue in leadingCues where normalized == cue || normalized.hasPrefix(cue + " ") {
+    return true
+}
+return phraseCues.contains { cue in
+    let pattern = "\\b" + NSRegularExpression.escapedPattern(for: cue) + "\\b"
+    return normalized.range(of: pattern, options: .regularExpression) != nil
+}
+```
+
+- Cues: `"can you"`, `"any thoughts"`, `"walk me through"`.
 - Near-misses must not fire: "however", "whatsapp".
+
+`ListenToMe/Sources/ListenToMeCore/QuestionDetector.swift:19-26`
 
 <!-- NOTES: The word "starts" is load-bearing: the interrogative rule applies only to the first token. Phrase cues are matched on word boundaries, so "many thoughts" never triggers "any thoughts", and "we cannot use your laptop" never triggers "can you". These near-misses are the tests students most often forget to write. In TinyCopilot, `test_question_detector.py` ships them for you — eight explicit near-miss strings. (70 seconds; the gate.) -->
 
@@ -331,12 +378,17 @@ public enum OllamaStreamError: LocalizedError {
 
 ## Budgets come from observation
 
-- Quick evaluation: `think: false`, temperature 0.
-- 3,072-token cap — chosen from a real truncation.
-- 5-second speech batches; 24-char eligibility.
-- 30-second / 16 KiB response caps.
-- Summary every 30 s, Deep every 60 s, serially.
+| Budget | Value |
+|---|---|
+| Quick evaluation | `think: false`, temperature 0 |
+| Output cap | 3,072 tokens — from a real truncation |
+| Speech batches | 5 s; 24-char eligibility |
+| Response caps | 30 s / 16 KiB |
+| Review spacing | Summary 30 s, Deep 60 s, serially |
+
 - Every number is a cost ceiling, not a feature.
+
+`ListenToMe/docs/SHARED-LIVE-SUMMARY.md`
 
 <!-- NOTES: `OllamaProvider.swift:49-51` forces `think: false`, temperature 0, and a 3,072-token cap for quick evaluations. Why 3,072? `docs/SHARED-LIVE-SUMMARY.md` line 66 records that live GLM testing exposed planning text despite `think: false`, exhausting the former 1,600-token budget halfway through valid JSON. The cap is the smallest budget that stopped an observed truncation. The shared live-summary engine is documented in the same file: batches, eligibility, caps, serialized reviews. (85 seconds; the lab.) -->
 
@@ -346,9 +398,14 @@ public enum OllamaStreamError: LocalizedError {
 
 - Delete six Python modules; re-implement TDD-style.
 - Tests are the spec; the reference is the answer key.
-- `make lab-m2` → 191 passed, 100% coverage.
-- Floor 90 enforced; `make lab-m3` → 49 passed.
-- `make demo` → three role outputs from a real model.
+
+| Command | Expected |
+|---|---|
+| `make lab-m2` | 201 passed, 100% coverage; floor 90 |
+| `make lab-m3` | 49 passed |
+| `make demo` | three role outputs from a real model |
+
+Guide: `course/03-content/m02-ondevice-app/lab.md`
 
 <!-- NOTES: Three hours. Six modules: conversation_store, question_detector, prompts, model_router, ollama_provider, copilot. Run the suite green first, read `copilot.py`, then delete one module at a time. Expect a collection error on deletion — that is the real red run — then read the test file for the per-test spec. Do not proceed to a green run without capturing the red one. Acceptance checklist is in `lab.md`. (75 seconds; quiz next.) -->
 
