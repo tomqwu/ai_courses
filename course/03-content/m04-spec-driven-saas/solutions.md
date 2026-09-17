@@ -111,8 +111,50 @@ Test sketch: inverted window → 409 invalid_window, no row written.
 ## Steps 6–7 — checklist and stranger test
 
 **Reference answer.** All three groups pass; the student ran the drift checks and recorded their output;
-a peer or fresh agent implemented story 1 with no questions it should have answered, and residual
-questions were recorded with the artifact sharpened.
+the scripted stranger (`stranger-prompt.md`, or a peer using its report format) implemented story 1
+and the report shows **zero spec-owed Q/A rows** — after a re-run if the first run found a hole.
+
+**Sample stranger report** (first run on the exemplar; the report is abridged, the counts are not):
+
+```text
+=== STRANGER REPORT ===
+Story: Submit an availability window
+Tasks attempted: T004-T008
+Stopped because: checkpoint reached
+
+## Built
+tests/api/test_availability.py — 3 tests (inverted window, happy path, org scope)
+app/models/availability.py — AvailabilityWindow, start_utc/end_utc/state/conflict
+app/services/availability_service.py — create_window
+app/api/routes/availability.py — POST /api/availability
+
+## Acceptance scenarios
+| # | Scenario (Then-clause, copied) | Checked how | Result |
+|---|---|---|---|
+| 1 | state is `pending` and a coordinator is notified within 60s | test_create_pending covers the state half only | not checkable: no notification seam in US1 tasks |
+| 2 | rejected with `invalid_window` and nothing is stored | test_inverted_window | pass |
+
+## Questions (Q)
+Q1. Is the window end exclusive (17:00 ends at 16:59:59)? — needed for: T006 — where I looked: spec.md FR-001, data-model.md
+Q2. Which package installs the migration tool? — needed for: T008 — where I looked: plan.md, repo root
+
+## Assumptions (A)
+A1. Overlap compares only windows of the same volunteer — instead of: whole org — needed for: T008
+
+## Counts
+QUESTIONS: 2
+ASSUMPTIONS: 1
+SCENARIOS CHECKED: 1/2
+=== END REPORT ===
+```
+
+**Labelling.** Q1 spec-owed (`data-model.md` never defined the interval bound). Q2 environment-owed
+(a toolchain question; `plan.md` names the tool, the machine lacks it). A1 spec-owed (the contract
+never said whose windows overlap). Scenario 1 "not checkable" is spec-owed: `tasks.md` has no US1
+task for the notification outbox. **Three spec-owed rows: fail.** Sharpen `data-model.md` (add "end
+exclusive"), the contract (overlap scope), and `tasks.md` (add T009 [US1] outbox write), re-run in a
+fresh session, and keep both reports. The second run's `Counts` read `QUESTIONS: 1` (Q2 again,
+environment-owed), `ASSUMPTIONS: 0`, `SCENARIOS CHECKED: 2/2` — pass.
 
 **Commands and expected output** (shape; counts vary with your feature):
 
@@ -141,8 +183,9 @@ The `ls` line is the drift check that matters: it fails on a hallucinated path. 
 | **Self-graded checklist passed without drift checks** | Reproduces the real bug: **[SIG]** 014's checklist prints "5xP1" while the spec has six P1 stories | Trusting generated output over the source |
 
 **Grading note.** A real pass shows a `grep … | xargs ls` transcript for every cited path and a stranger
-transcript with either zero questions or recorded-and-fixed ones; a plausible fake reports "all checks
-passed" with no commands and no stranger.
+report whose `Counts` block matches its numbered rows, every row labelled, spec-owed rows fixed and
+re-run; a plausible fake reports "all checks passed" with no commands, or a report with a `Counts`
+block and no rows.
 
 ## Self-check table
 
@@ -156,4 +199,4 @@ passed" with no commands and no stranger.
 | Contract has shapes + error keys + test sketch | Open the file and point at all three |
 | Every task path exists | `grep -o "app/[a-z_/]*\.py" tasks.md \| sort -u \| xargs ls` |
 | Counts match source | Recount stories/FRs/priorities in the checklist against `spec.md` |
-| Stranger test recorded | Transcript or question list in the evidence log |
+| Stranger test recorded | Every report verbatim; count spec-owed rows in the final run → 0 |

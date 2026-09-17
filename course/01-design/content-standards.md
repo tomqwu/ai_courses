@@ -58,7 +58,11 @@ Each `03-content/mNN-slug/` folder contains, in addition to the existing `lesson
 > unchanged, and the maxima are **ceilings, not targets**: an artifact that needs 1,600 words is fine,
 > an artifact that rambles to 1,600 words is not.
 
-`m06-expertise-product/` additionally keeps `evidence-dataset.md` (already written).
+`m06-expertise-product/` additionally keeps `evidence-dataset.md` (already written), plus the
+self-paced pass-gate tooling: `selfcheck.py` and its `selfcheck-examples/good.md` and
+`selfcheck-examples/bad.md` fixtures. `m04-spec-driven-saas/` additionally keeps
+`stranger-prompt.md`. Files beyond the eight in the table carry **no word band** — `verify.py`
+bands only the named artifacts — but every repo pointer in them is checked like any other.
 
 ## 2. Artifact specifications
 

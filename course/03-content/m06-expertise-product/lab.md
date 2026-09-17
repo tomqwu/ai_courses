@@ -1,5 +1,5 @@
 # Lab M6 — Build a Mini-Briefing
-> Part of AI Product Studio (APS-3) · Pass/fail checkpoint for Module 6 · Companion lesson: `lesson.md` · Starter data: `evidence-dataset.md`
+> Part of AI Product Studio (APS-3) · Pass/fail checkpoint for Module 6 · Companion lesson: `lesson.md` · Starter data: `evidence-dataset.md` · Self-check: `selfcheck.py`
 
 ## Goal
 
@@ -21,6 +21,7 @@ Turn research into a **trustworthy, sellable artifact**: a 12-slide mini-briefin
 3. **Outline 12 slides.** Every **quantitative** slide cites ≥1 provenance row (by row number) and carries its epistemic label *on the slide*. Borrow the wording rules from `ai_qe/docs/economics/slide-language.md`: a self-reported number is never presented as measured; an illustrative scenario is labeled illustrative on the slide itself.
 4. **Declare two routes over the SAME 12 slides** (stable slide IDs, modeled on `ai_qe/_data/briefing_routes.json`): an **executive route of 6 slides ending in a specific decision ask** ("fund Phases 0 and 1", not "transform QA" — `ai_qe/docs/economics/slide-language.md`), and a **technical route of 10 slides that retains the supporting evidence** the executive route skips.
 5. **Write an edition decision record** for a hypothetical v2 in which one slide gains a new number: what changes, what is **deliberately retained**, and which editions bump (site vs content) — modeled on the `ai_qe/releases.md` entries ("Audio, subtitle timing, and the v1.24.0 PDF editions remain unchanged") and the separation in `ai_qe/_data/release.yml` (`version` vs `slide_edition`).
+6. **Run the reconciliation gate on your own file.** Save the briefing — provenance table, slide outline and prose — as one Markdown file and run `python3 selfcheck.py your-briefing.md` from this folder (stdlib only, Python 3.11). It reads every sentence, table row and list item, and exits **1** listing each one that states a number with no citation *in the same unit*. Exactly three forms count as a citation: a backticked repo pointer with a line anchor (`ai_qe/docs/evidence/benchmarks.md:31`), a URL, or a `[source: …]` tag. Structural numbers ("slide 3", "row 12", "Phase 0", "edition 4") are not claims and are not flagged. **Pass = exit 0.** Run `python3 selfcheck.py --selftest` first: it checks itself against a passing and a failing excerpt (`selfcheck-examples/good.md` and `selfcheck-examples/bad.md`) so you can see what each verdict looks like before you run it on your own work. The script proves only that no number is an orphan. It cannot tell you a cited number is *right* — which is why `ai_qe/CONTRIBUTING.md:139-141` refuses to treat a resolving link as evidence — and it does not follow a `[source: row N]` tag to check that row N is itself sourced. Exit 0 is the floor, not the grade; rows 1–5 of the rubric are still yours to meet.
 
 ## Templates
 
@@ -51,11 +52,11 @@ technical:
 - [ ] The technical route retains ≥3 evidence slides the executive route skips (list the slide IDs).
 - [ ] Every quantitative slide carries an epistemic label on the slide itself (self-reported / measured / vendor-affiliated / illustrative).
 - [ ] The edition record distinguishes site vs content edition and states what v2 deliberately retains.
-- [ ] One peer review confirms no uncited quantitative claim (reviewer named, in writing).
+- [ ] **No uncited quantitative claim.** Self-paced: `python3 selfcheck.py your-briefing.md` exits 0 — paste the command and its last line. Cohort: one named peer reviewer confirms the same in writing. Either way, **name the path you used**; cohorts run the script too, because it catches what a reader skims past.
 
 ## Evidence to record
 
-Commands or actions, outcomes, date, environment, limitations (the course format). Include: the full research log, the provenance table, the 12-slide outline with citations, both route declarations with the decision ask quoted, the edition decision record, and the peer-review confirmation. If a source failed to fetch, record it in the manifest style of `ai_qe/research/document-manifest.json` (status: unavailable + reason) — an honest failure counts as evidence.
+Commands or actions, outcomes, date, environment, limitations (the course format). Include: the full research log, the provenance table, the 12-slide outline with citations, both route declarations with the decision ask quoted, the edition decision record, and the reconciliation evidence: the verbatim `selfcheck.py` output with its exit status and the path you used (self-check or named peer review), plus the peer's written confirmation if you took the cohort path. If a source failed to fetch, record it in the manifest style of `ai_qe/research/document-manifest.json` (status: unavailable + reason) — an honest failure counts as evidence.
 
 ## Stretch goals
 
