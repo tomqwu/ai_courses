@@ -45,11 +45,23 @@ title: M6 — The Expertise Product: Evidence, Routing, Editions
 
 ## The citation is the evidence
 
-- Benchmark record: date, sample, method, unit
-- Plus: self-reported vs measured, sponsor, supported claim
-- "The citation is the evidence; no vendor is endorsed"
-- Anything unverifiable is listed as unverifiable
-- No client or partner names — "the bank", "the sponsor"
+- `ai_qe/CONTRIBUTING.md:88-95` — "Research conventions"
+- A number without a stated limit is an advertisement
+- The supported-claim field is the one people skip
+
+```markdown
+## Research conventions
+
+- No client, partner or engagement names. Use "the bank", "the
+  sponsor", "the advisory team".
+- Research sources … are cited by name because the citation is the
+  evidence; no vendor is endorsed.
+- Every benchmark record includes date, sample, method, unit,
+  self-reported vs measured, sponsor, and what claim it can support.
+  Anything unverifiable is listed as such.
+- New research goes in `docs/research-log.md` first (dated entry),
+  then into the topic page.
+```
 
 <!-- NOTES: Open `ai_qe/CONTRIBUTING.md` at the section titled Research conventions and read the rule aloud. It says research sources are cited by name because the citation is the evidence, and that no vendor is endorsed. Then it lists the required fields: date, sample, method, unit, self-reported versus measured, sponsor, and what claim the record can support. That last field is the one people skip. A number without a stated limit is not evidence; it is an advertisement. Timing: 5 minutes. Transition: look at two real records that make the difference visible. -->
 
@@ -86,11 +98,21 @@ GitHub Copilot", 13 Feb 2023
 
 ## Log before you publish
 
+- `ai_qe/docs/research-log.md:11,114-122`
 - Newest first: Question / Checked / Outcome / Changed
 - Add an entry before editing a topic page
-- Publish a "Not verified" list, openly
-- The only independent RCT is negative — say so
 - Research you cannot verify goes on the list
+
+```markdown
+## 2026-09-04: Initial evidence base
+
+**Outcome.** Task-level gains exist in vendor and lab studies; the only
+independent RCT is negative; … consultancies report 10-15% and say it
+is rarely monetized.
+
+**Not verified.** World Quality Report cost-of-quality share; any
+Gartner AI-testing productivity figure; …
+```
 
 <!-- NOTES: `ai_qe/docs/research-log.md` is the intake queue. Its own instruction is that new research goes in first as a dated entry, then into the topic page. Entries are structured Question, Checked, Outcome, Changed. In the initial evidence base entry, the outcome states that the only independent randomized controlled trial is negative — and the part most sites would delete, an explicit Not verified list: World Quality Report cost-of-quality share, any Gartner AI-testing productivity figure, Snyk accuracy claims. That list is what makes the other four entries believable. Timing: 5 minutes. Transition: three files exist only to record where content came from. -->
 
@@ -135,11 +157,15 @@ GitHub Copilot", 13 Feb 2023
 
 ## The mixing error
 
+| Step | Figure | Who measured it |
+|---|---|---|
+| Measured task gain | 55.8% faster, one synthetic task | Peng et al. |
+| Coding's share of developer time | ≈ 16% | Atlassian survey |
+| Code generation, idea-to-launch | 25–35% | Bain |
+| What survives the dilution | single digits of total engineering time | — |
+
 - 55.8% task-level speedup is not 55.8% capacity
-- Coding ≈ 16% of developer time
-- Code generation ≈ 25–35% of idea-to-launch
-- A 50% task gain dilutes to single digits
-- Pointer: `ai_qe/docs/evidence/reading-the-evidence.md`
+- Pointer: `ai_qe/docs/evidence/reading-the-evidence.md:34`
 
 <!-- NOTES: Take Peng's measured fifty-five point eight percent and try to sell it as a budget number. Coding is roughly sixteen percent of developer time, and code generation is twenty-five to thirty-five percent of idea-to-launch, according to the survey sources recorded in the reading-the-evidence page. So a fifty percent task gain dilutes to single digits of total engineering time before any redeployment or headcount decision. The file states that dilution. The same paragraph notes that the nineteen percent, the ten to fifteen percent and the roughly two-times figures are perception or per-task numbers. Timing: 4 minutes. Transition: publish your own audit. -->
 
@@ -216,11 +242,13 @@ evp:
 
 ## Script the meeting, not the deck
 
-- 01 / Align · 5 min — where work repeats
-- 02 / Explore · 15 min — follow one workflow
-- 03 / Agree · 10 min — process, owner, evidence
-- `ai_qe/briefings/index.md`
-- The deck is not the product
+| Segment | Minutes | What it asks |
+|---|---|---|
+| 01 / Align | 5 | Which part of QA creates the most delay or repeated work? |
+| 02 / Explore | 15 | Follow one workflow and show the platform services behind it |
+| 03 / Agree | 10 | Choose the process, owner and evidence needed for a first pilot |
+
+**The deck is not the product.** Pointer: `ai_qe/briefings/index.md:23`
 
 <!-- NOTES: `ai_qe/briefings/index.md` embeds a suggested thirty-minute conversation. Align for five minutes: which part of QA creates the most delay or repeated work? Explore for fifteen: follow one workflow and show the platform services behind it. Agree for ten: choose the process, the owner and the evidence needed for a first pilot, landing on the discovery guide. Notice what that structure does. It spends half the meeting on the buyer's problem and closes on a decision, not on a feature list. Timing: 4 minutes. Transition: make the ask decidable. -->
 
@@ -228,12 +256,13 @@ evp:
 
 ## Sell the decision, not the transformation
 
-- Use: "working hypothesis, tested on the bank's data"
-- Use: "capacity is not a saving until Finance confirms"
-- Avoid: "industry benchmarks show 30-50% gains"
-- Avoid: "ROI of X%" before a pilot measures
-- Decision: fund Phases 0 and 1, not transform
-- Pointer: `ai_qe/docs/economics/slide-language.md`
+| Use | Avoid |
+|---|---|
+| "Working hypothesis, to be tested on the bank's own data" | "Industry benchmarks show 30-50% productivity gains" |
+| "Capacity released is not a saving until Finance confirms how it is captured" | "ROI of X%" before a pilot has measured anything |
+| "Every phase has a cost ceiling and a stop rule" | Any squad-level headcount arithmetic |
+
+**Decision: fund Phases 0 and 1, not transform QA.** `ai_qe/docs/economics/slide-language.md:13-31`
 
 <!-- NOTES: `ai_qe/docs/economics/slide-language.md` gives exact wording rules. Its Use list includes "working hypothesis, to be tested on the bank's own data" and "capacity released is not a saving until Finance confirms how it is captured." Its Avoid list includes "industry benchmarks show 30 to 50 percent productivity gains," "ROI of X percent before a pilot has measured anything," and any squad-level headcount arithmetic. The executive message ends with the line to remember: the decision today is whether to fund the first two phases, not whether to transform QA. A bounded ask is decidable. Timing: 4 minutes. Transition: the funnel starts with one form. -->
 
@@ -241,12 +270,16 @@ evp:
 
 ## The questionnaire is lead qualification
 
+| Who answers | Sections | Route time |
+|---|---|---|
+| Executive sponsor, Finance, procurement | 1, 5B, 6 | ~11–13 min |
+| Engineering, delivery, QE, platform | 2, 3, 4, 5A, 6 | ~15–25 min |
+
 - One form, role-routed at the first question
-- Executive sponsor, Finance, procurement: Sections 1, 5B, 6
-- Engineering, delivery, QE, platform: 2, 3, 4, 5A, 6
 - Single-select on the questions that define success
 - Ranges mutually exclusive and gap-free
 - An "unknown" option so a guess is not data
+- Pointer: `ai_qe/docs/method/discovery-questionnaire.md:22,32,109`
 
 <!-- NOTES: `ai_qe/docs/method/discovery-questionnaire.md` is not a survey; it is the funnel's filter. The design rules are explicit: one form, role-routed at the first question; respondents complete the sections they own and leave unknowns blank. The executive sponsor, Finance and procurement answer Sections 1, 5B and 6. Engineering, delivery, QE and platform leaders answer Sections 2, 3, 4, 5A and 6. Priority questions — what success means, the autonomy ceiling, the go/no-go threshold — are single-select, because a nuanced multi-select produced no signal. Timing: 5 minutes. Transition: read the post-mortem. -->
 
@@ -356,12 +389,19 @@ models:
 
 ## The pilot is the product
 
-- Five phases (0–4), each with a cost ceiling
+<!-- _diagram: flow -->
+
+- 0 · Sponsor alignment and guardrails
+- 1 · Current-state baseline
+- 2 · Capped low-risk pilot
+- 3 · Limited production validation
+- 4 · Incremental scale
+
+- Each phase carries its own cost guardrail
 - Effort in person-day ranges, never dollars
 - Each phase ends in a sponsor-signed go/no-go memo
 - Freeze the outcome before observing results
-- A CI crossing 10% or 15% is insufficient evidence
-- ≥30 comparable tasks per arm
+- Pointer: `ai_qe/docs/method/phased-pilot.md:22-28`
 
 <!-- NOTES: `ai_qe/docs/method/phased-pilot.md` is the engagement the whole funnel points at: five phases, each with an objective, a duration, deliverables and a cost guardrail. Effort is stated in person-day ranges, deliberately not converted to dollars, and every phase ends with a written go/no-go memo signed by the sponsor. Measurement freezes the goal before any result exists: record the primary outcome and acceptance criteria before observing pilot results, and do not choose a different success metric after seeing a favourable one. Timing: 5 minutes. Transition: the boundaries are data. -->
 
@@ -380,9 +420,10 @@ models:
 ```
 
 - Boundaries are data, not prose
+- A CI crossing 10% or 15% is insufficient evidence
 - Benefits register: one row per capture mechanism
 - No capture row means productivity, not cash
-- Pointer: `ai_qe/docs/method/phased-pilot.md`
+- Pointer: `ai_qe/docs/method/phased-pilot.md:62,87,93`
 
 <!-- NOTES: The exact boundaries live in `_data/pilot_gates.json`, not in a paragraph someone can soften later: a fifteen percent net-effort go threshold, a ten percent review band, a three-week baseline, an eight-week pilot, two observed releases, at least thirty comparable tasks per arm, and one extension of at most four weeks. The rule that separates this from every pilot you have suffered: a confidence interval crossing ten or fifteen percent is insufficient evidence for that boundary, even if its point estimate looks favourable. A noisy result is no result. Timing: 5 minutes. Transition: the lab. -->
 
