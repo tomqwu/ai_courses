@@ -453,6 +453,18 @@ def slide_rail(deck: dict, slide: dict, site_base: str) -> str:
             f'</div></div>')
 
 
+def slide_cta(deck: dict, slide: dict, site_base: str) -> str:
+    """The unit's next step, on the slide that opens it: the lab checklist or the knowledge check."""
+    title = slide.get("full_title", slide["title"])
+    if re.match(r"^Lab\s+M\d+", title) or re.match(r"^Lab\s+M\d+", slide["kicker"]):
+        return (f'<p class="slide-cta"><a href="{site_base}/lab-{deck["id"]}.html">'
+                f'Open the lab checklist →</a></p>')
+    if re.match(r"^Quiz\s+M\d+", title):
+        return (f'<p class="slide-cta"><a href="{site_base}/quiz-{deck["id"]}.html">'
+                f'Take the knowledge check →</a></p>')
+    return ""
+
+
 def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
                 site_base: str, cover_note: str = "") -> str:
     classes = ["slide"]
@@ -478,6 +490,7 @@ def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
             f'<div class="slide-body">'
             f'<h2 id="{slide["id"]}-title">{inline(slide["title"])}</h2>'
             f'<div class="slide-content">{slide["html"]}</div>'
+            f'{slide_cta(deck, slide, site_base)}'
             f'{cover_meta}'
             f'</div>'
             f'<div class="slide-notes-source" hidden>{notes}</div>'
@@ -485,7 +498,7 @@ def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
 
 
 def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
-         text_only: bool = False) -> str:
+         text_only: bool = False, units: list[dict] | None = None) -> str:
     deck_manifest = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     preview_count = sum(1 for e in deck_manifest.values()
@@ -558,7 +571,9 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
 </head>
 <body class="deck-page" data-narration-manifest="{site_base}/narration.json"
       data-narration-deck="{deck['id']}" data-site-base="{site_base}"
-      data-voice="{'preview' if is_preview else 'release'}">
+      data-voice="{'preview' if is_preview else 'release'}"
+      data-units="{html.escape(json.dumps([{'id': u['id'], 'first': u['first'], 'last': u['last'], 'label': u['title'] if u['kind'] == 'segment' else u['label']} for u in (units or [])]), quote=True)}"
+      data-deck-label="{html.escape(deck['label'], quote=True)}">
 <a class="skip-link" href="#slides">Skip to slides</a>
 <header class="deck-header">
   <a class="deck-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">{html.escape(deck['module_tag'])}</span></a>
@@ -568,7 +583,11 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
     <button type="button" data-present aria-pressed="false" title="Full screen presentation">Present ↗</button>
     <button type="button" data-reading aria-pressed="false" title="Show every slide as a document">Read all</button>
     <button type="button" data-notes title="Presenter notes for this slide">Sources &amp; notes</button>
+    <a class="tool-link" href="{site_base}/lesson-{deck['id']}.html">Lesson</a>
+    <a class="tool-link" href="{site_base}/lab-{deck['id']}.html">Lab</a>
+    <a class="tool-link" href="{site_base}/quiz-{deck['id']}.html">Knowledge check</a>
     <a class="tool-link" href="{site_base}/transcript-{deck['id']}.html">Transcript</a>
+    <button type="button" class="search-button" data-search-open title="Search the course (press /)">Search <kbd>/</kbd></button>
     {voice_chip}
   </div>
 </header>
@@ -598,8 +617,10 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
 <noscript><style>.slide[hidden]{{display:block}}</style>
 <p class="no-script">JavaScript is off, so narration and slide navigation are disabled. Every slide is
 shown below in order and remains readable.</p></noscript>
+<script src="{site_base}/assets/progress.js" defer></script>
 <script src="{site_base}/assets/narration-media.js" defer></script>
 <script src="{site_base}/assets/player.js" defer></script>
+<script src="{site_base}/assets/search.js" defer></script>
 </body>
 </html>
 """
@@ -607,7 +628,8 @@ shown below in order and remains readable.</p></noscript>
 
 def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: str,
                text_only: bool = False, path_cards: str = "",
-               module_paths: dict[str, int] | None = None) -> str:
+               module_paths: dict[str, int] | None = None,
+               units_by_deck: dict[str, list[dict]] | None = None) -> str:
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     cards = []
     grand_total = 0.0
@@ -637,15 +659,20 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
         shared_chip = (f'<span class="voice-chip is-shared">shared · {shared_n} paths</span>'
                        if shared_n > 1 else "")
         module_href = f"{site_base}/module-{deck['id']}.html"
+        unit_ids = ",".join(f"{deck['id']}:{u['id']}" for u in (units_by_deck or {}).get(deck["id"], []))
+        ring = (f'<span class="ring" data-ring-units="{unit_ids}" role="img" aria-label="progress">'
+                f'<span class="ring-core" data-ring-label>0%</span></span>')
         cards.append(f"""<article class="room-card">
   <a class="room-cover" href="{module_href}">
+    {ring}
     <span class="room-audience">Module {int(deck['id'][1:])} · {len(deck['slides'])} slides</span>
     <h3>{html.escape(short)}</h3>
     <span class="room-number">{f"{len(deck['slides'])} slides" if text_only else f"{int(total // 60)}m {int(total % 60)}s of narration"}</span>
     <span class="room-waves" aria-hidden="true">{waves}</span>
   </a>
   <div class="room-body">
-    <p class="room-meta">{"slides · transcript · print-ready" if text_only else f"{len(entries)} narrated · captions · transcript"} {chip} {shared_chip}</p>
+    <p class="room-meta">{"slides · transcript · print-ready" if text_only else f"{len(entries)} narrated · captions · transcript"} {chip} {shared_chip} <span class="voice-chip is-release" data-quiz-badge="{deck['id']}" hidden></span></p>
+    <p class="room-links"><a href="{site_base}/lesson-{deck['id']}.html">Lesson</a> · <a href="{site_base}/lab-{deck['id']}.html">Lab</a> · <a href="{site_base}/quiz-{deck['id']}.html">Knowledge check</a> · <a href="{site_base}/handout-{deck['id']}.html">Handout</a></p>
     <details><summary>See the slides</summary><ul>{outline}</ul></details>
     <div class="room-actions">
       <a class="btn-primary" href="{site_base}/{deck['id']}.html">Present this deck →</a>
@@ -707,7 +734,10 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
 <body class="index">
 <header class="site-header">
   <div class="wrap">
-    <a class="site-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">Course</span></a>
+    <div class="site-brand-row">
+      <a class="site-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">Course</span></a>
+      <button type="button" class="search-button" data-search-open title="Search the course (press /)">Search <kbd>/</kbd></button>
+    </div>
     <p class="eyebrow">Nine modules · 233 slides</p>
     <h1>Build, ship and sell three kinds of AI product.</h1>
     <p class="site-lede">{lede}</p>
@@ -717,6 +747,15 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
   </div>
 </header>
 <main class="site-main">
+  <div class="continue-strip" data-continue hidden>
+    <p><strong>Continue where you left off:</strong> <span data-continue-label></span></p>
+    <a class="btn-primary" href="{site_base}/index.html">Continue →</a>
+    <div class="progress-tools">
+      <button type="button" data-progress-export title="Download your progress as JSON">Export progress</button>
+      <button type="button" data-progress-import title="Load a progress file">Import</button>
+      <button type="button" data-progress-reset>Reset</button>
+    </div>
+  </div>
   <div class="section-heading">
     <h2>Start with what you want to build</h2>
     <span class="section-note">Each path teaches one product type end to end. Not sure what a
@@ -743,8 +782,10 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       <li>Printing a deck prints one 16:9 slide per page.</li>
     </ul>
   </section>
-  <p class="index-footnote">{footnote}</p>
+  <p class="index-footnote">{footnote} Progress, quiz scores and lab checklists are stored in this browser only — export them from the strip above to move machines.</p>
 </main>
+<script src="{site_base}/assets/progress.js" defer></script>
+<script src="{site_base}/assets/search.js" defer></script>
 </body>
 </html>
 """
@@ -783,9 +824,14 @@ def main(argv=None) -> int:
     player_manifest = {"decks": {}} if args.no_narration else manifest
     write_json(target / "narration.json", player_manifest)
 
+    import site_paths as SP                                                       # noqa: PLC0415
+    import site_content as SC                                                     # noqa: PLC0415
+    import site_pages as SPG                                                      # noqa: PLC0415
+    units_by_deck = {deck["id"]: SP.module_units(deck) for deck in decks}
     for deck in decks:
         (target / f"{deck['id']}.html").write_text(
-            page(deck, manifest, provenance, args.site_base, text_only=args.no_narration),
+            page(deck, manifest, provenance, args.site_base, text_only=args.no_narration,
+                 units=units_by_deck[deck["id"]]),
             encoding="utf-8")
         (target / f"transcript-{deck['id']}.html").write_text(
             transcript_page(deck, manifest, provenance, args.site_base, text_only=args.no_narration),
@@ -794,9 +840,42 @@ def main(argv=None) -> int:
     # The Microsoft Learn hierarchy (path -> module -> unit) built on the content that already
     # exists. Paths are built one at a time; `status` on each track decides what gets a real page,
     # so a path that has not been built cannot link to a page that does not exist.
-    import site_paths as SP                                                       # noqa: PLC0415
-    units_by_deck = {deck["id"]: SP.module_units(deck) for deck in decks}
     seconds = SP.unit_seconds(units_by_deck, manifest)
+
+    # ── the course text: lesson, handout, glossary, lab, knowledge check ──────────────────────────
+    # Parsed from the module Markdown; the quiz parser refuses a malformed item, so a question with
+    # zero or two keyed answers fails the build here rather than shipping.
+    records: list[dict] = []
+    terms_by_deck: dict[str, list[dict]] = {}
+    for deck in decks:
+        folder = COURSE_DIR / deck["source"].rsplit("/", 1)[0]
+        for kind in ("lesson", "handout", "glossary"):
+            html_out, record = SPG.document_page(deck, kind, SC.read(folder / f"{kind}.md"),
+                                                 args.site_base, BRAND_MARK)
+            (target / f"{kind}-{deck['id']}.html").write_text(html_out, encoding="utf-8")
+            record["module"] = SPG.short_label(deck)
+            if kind == "glossary":
+                record["terms"] = SC.parse_glossary(SC.read(folder / "glossary.md"))
+                terms_by_deck[deck["id"]] = record["terms"]
+            records.append(record)
+        lab = SC.parse_lab(SC.read(folder / "lab.md"), deck["id"])
+        html_out, record = SPG.lab_page(deck, lab, args.site_base, BRAND_MARK)
+        (target / f"lab-{deck['id']}.html").write_text(html_out, encoding="utf-8")
+        record["module"] = SPG.short_label(deck)
+        records.append(record)
+        try:
+            quiz = SC.parse_quiz(SC.read(folder / "quiz.md"), deck["id"])
+        except SC.QuizError as error:
+            raise SystemExit(f"knowledge check: {error}")
+        html_out, record = SPG.quiz_page(deck, quiz, args.site_base, BRAND_MARK)
+        (target / f"quiz-{deck['id']}.html").write_text(html_out, encoding="utf-8")
+        record["module"] = SPG.short_label(deck)
+        records.append(record)
+    decks_by_id_for_glossary = {deck["id"]: deck for deck in decks}
+    (target / "glossary.html").write_text(
+        SPG.master_glossary_page(terms_by_deck, decks_by_id_for_glossary, args.site_base, BRAND_MARK),
+        encoding="utf-8")
+    (target / "search.json").write_text(SPG.search_index(records, decks, units_by_deck), encoding="utf-8")
     decks_by_id = {deck["id"]: deck for deck in decks}
     built_tracks = [t for t in SP.TRACKS if t["status"] == "built"]
     built_modules = {d for t in built_tracks for d in list(t["core"]) + list(t.get("slice") or {})}
@@ -822,7 +901,7 @@ def main(argv=None) -> int:
                     for deck_id in DECK_IDS}
     (target / "index.html").write_text(
         index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration,
-                   path_cards=path_cards, module_paths=module_paths),
+                   path_cards=path_cards, module_paths=module_paths, units_by_deck=units_by_deck),
         encoding="utf-8")
 
     # The transcripts are committed as Markdown, so a check must prove the committed copies still
@@ -898,6 +977,8 @@ def main(argv=None) -> int:
     print(f"  decks: {len(decks)} · slides: {total_slides} · scripted: {scripted} · recorded: {recorded}")
     print(f"  transcripts: {len(decks)} decks · {transcript_words:,} words"
           f"{' (verified against the approved scripts)' if args.check else ''}")
+    print(f"  course text: {len(decks)} lessons · labs · knowledge checks ({sum(1 for r in records if r['kind'] == 'quiz') * 8} questions) "
+          f"· handouts · glossaries ({sum(len(t) for t in terms_by_deck.values())} terms) · search index {len(json.loads((target / 'search.json').read_text(encoding='utf-8')))} entries")
     if recorded < scripted:
         print(f"  note: {scripted - recorded} slides have no recording yet — "
               f"run `python3 ../06-production/narration/generate_narration.py generate --provider say`")

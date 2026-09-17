@@ -431,8 +431,12 @@ def path_cards_html(tracks: list[dict], units_by_deck: dict[str, list[dict]],
             status = '<span class="voice-chip is-text">page not built yet</span>'
             href, target = f"{site_base}/index.html", "Browse the modules"
         modules = len(track["core"]) + len(track.get("slice") or {})
+        unit_ids = ",".join(f"{u['deck']}:{u['id']}" for u in units)
+        ring = (f'<span class="ring" data-ring-units="{unit_ids}" role="img" aria-label="progress">'
+                f'<span class="ring-core" data-ring-label>0%</span></span>')
         cards.append(f"""<article class="path-card">
   <a class="path-cover" href="{href}">
+    {ring}
     <span class="path-kicker">{html.escape(track['kicker'])}</span>
     <h3>{html.escape(track['title'])}</h3>
     <span class="path-medium">{html.escape(track['medium'])}</span>
@@ -711,6 +715,13 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
             time_text = f'{fmt_minutes(seconds_value)} slide · {lab_time(deck["id"])} hands-on'
         else:
             time_text = fmt_minutes(seconds_value)
+        extra = ""
+        if unit["kind"] == "lab":
+            extra = f'<a class="unit-open" href="{site_base}/lab-{deck["id"]}.html">Checklist →</a>'
+        elif unit["kind"] == "quiz":
+            extra = f'<a class="unit-open" href="{site_base}/quiz-{deck["id"]}.html">Take it →</a>'
+        elif unit["kind"] == "segment":
+            extra = f'<a class="unit-open" href="{site_base}/lesson-{deck["id"]}.html">Read →</a>'
         rows.append(f"""<li class="unit" data-unit="{deck['id']}:{html.escape(unit['id'])}">
   <label class="unit-check">
     <input type="checkbox" data-progress="{deck['id']}:{html.escape(unit['id'])}">
@@ -719,7 +730,8 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     <span class="unit-title">{html.escape(unit['title'])}</span>
     <span class="unit-time">{html.escape(time_text)}</span>
   </label>
-  <a class="unit-open" href="{site_base}/{unit['href']}">Open →</a>
+  {extra}
+  <a class="unit-open" href="{site_base}/{unit['href']}">Slides →</a>
 </li>""")
 
     if len(tracks_for) == 1 and tracks_for[0]["track"].get("page"):
@@ -742,6 +754,16 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
                     else "Beginner to intermediate"),
                    ("Lesson", facts["lesson_length"]),
                    ("Lab", lab_time(deck["id"]))])}
+    <nav class="module-tabs" aria-label="This module"><ul>
+      <li><a href="{site_base}/module-{deck['id']}.html" aria-current="page">Overview</a></li>
+      <li><a href="{site_base}/{deck['id']}.html">Slides</a></li>
+      <li><a href="{site_base}/lesson-{deck['id']}.html">Lesson</a></li>
+      <li><a href="{site_base}/lab-{deck['id']}.html">Lab</a></li>
+      <li><a href="{site_base}/quiz-{deck['id']}.html">Knowledge check</a></li>
+      <li><a href="{site_base}/handout-{deck['id']}.html">Handout</a></li>
+      <li><a href="{site_base}/glossary-{deck['id']}.html">Glossary</a></li>
+      <li><a href="{site_base}/transcript-{deck['id']}.html">Transcript</a></li>
+    </ul></nav>
   </div>
 </header>
 <main class="site-main">
@@ -763,7 +785,9 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
       <span class="progress-bar" role="progressbar" aria-labelledby="progress-count"
             aria-valuemin="0" aria-valuemax="{len(units)}" aria-valuenow="0"><span id="progress-fill"></span></span></p>
     <p class="progress-note">Progress is stored in this browser only — there are no accounts on this
-      site, so nothing is uploaded and nothing follows you to another device.</p>
+      site, so nothing is uploaded and nothing follows you to another device. Slides mark a unit done
+      when you reach its last slide; a lab when every checklist item is ticked; the knowledge check at
+      75%. <a href="{site_base}/index.html">Export or import</a> your progress from the course home.</p>
   </div>
   <ol class="unit-list">
 {chr(10).join(rows)}
@@ -774,8 +798,11 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     <p class="index-footnote">Part of {path_link}. {'This is the text-first copy: narration and captions are not published here, so units are read and presented rather than played.' if text_only else 'Units carry narration, captions and a transcript.'}</p>
   </section>
 </main>
+<script src="{site_base}/assets/progress.js" defer></script>
+<script src="{site_base}/assets/search.js" defer></script>
 <script>
 (function () {{
+  return; /* progress is handled by progress.js (aps.progress.v2, which migrates the v1 store) */
   var KEY = 'aps.progress.v1';
   var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-progress]'));
   var done = {{}};

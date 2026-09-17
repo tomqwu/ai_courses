@@ -452,7 +452,8 @@ def check_pages(browser: str, port: int) -> list[str]:
     title rendered at 1.00:1. The deck probe could never have caught it.
     """
     pages = ["index.html", "paths.html"]
-    for pattern in ("path-*.html", "module-*.html", "transcript-*.html"):
+    for pattern in ("path-*.html", "module-*.html", "transcript-*.html",
+                    "lesson-*.html", "lab-*.html", "quiz-*.html", "handout-*.html", "glossary*.html"):
         pages += sorted(p.name for p in SITE_ROOT.glob(pattern))
     pages = [p for p in pages if (SITE_ROOT / p).exists()]
     if not pages:
