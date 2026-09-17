@@ -21,8 +21,10 @@ FIXTURE_PATH = PLAYBOOK_DIR / "examples" / "food-bank.json"
 FIXTURE_REQUIRED_KEYS = frozenset(
     {"id", "version", "workflow", "name", "event", "secondary_event", "critical_role", "roles", "drills"}
 )
-# The scenarios every mini-flow manifest must carry: three shared journeys plus the fixture's drill.
-REQUIRED_SCENARIOS = frozenset({"MF-01", "MF-02", "MF-03", "PF-04"})
+# The scenarios every mini-flow manifest must carry: three shared journeys, the fixture's drill, and
+# the behavioural-eval row. MF-05 is `blocked` on purpose: the honest statuses exist so a scenario
+# nothing tests yet can be admitted rather than dropped, and dropping it fails collection.
+REQUIRED_SCENARIOS = frozenset({"MF-01", "MF-02", "MF-03", "PF-04", "MF-05"})
 EXECUTABLE_TIERS = frozenset({"unit", "api", "integration", "e2e"})
 
 ScenarioId = Annotated[str, Field(pattern=r"^[A-Z]{2}-[0-9]{2}$")]

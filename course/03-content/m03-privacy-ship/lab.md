@@ -53,6 +53,32 @@ Reference: ListenToMe's `make e2e` (auto-selects an installed chat model, `LTM_E
 
 Reference: ListenToMe's 95% floor (`ListenToMe/scripts/check-coverage.sh`, run in the `core` CI job — `ListenToMe/.github/workflows/ci.yml:36-42`) and the Module 1 evidence rule: include the failures in your record, not just the green run.
 
+## Step 3b — Behavioural evals, the tier above the floor (~20 min)
+
+A coverage floor proves your code ran. It cannot tell you whether the Listener invented an owner,
+which is the failure a note-taker ships with. The starter carries an eval suite for exactly that
+(`course/03-content/m02-ondevice-app/tinycopilot/evals/`): five transcripts where the right answer
+is known, run through the real prompt layer, with the Listener contract as the assertions.
+
+1. Run it offline: `make evals`. It answers from the reference stub in `evals/provider.py`, so the
+   suite is testable with no daemon and no network. Record the pass rate.
+2. **Prove the assertions bite.** Edit one stub reply in `evals/provider.py` so the Listener invents
+   an owner and a deadline — change the `unstated-owner` reply's Actions line to name someone and a
+   day — and run `make evals` again. Record which scenario fails and which assertion caught it, then
+   restore the reply.
+3. If you have a daemon with a local model, run `make evals-live` and record that pass rate too,
+   **with the model name beside it**. The two numbers are not comparable and neither is a grade:
+   each says what happened on these five transcripts, with that model, on that date.
+4. Add one scenario of your own: a transcript with a tempting wrong answer from your own domain, its
+   assertion, and why the right answer is the one you wrote. Put it in `evals/scenarios.json` and run
+   the suite again.
+
+Record all of it in the evidence log as a measurement with a denominator — "five of five on the
+shipped set plus one of mine, stub provider, 2026-xx-xx" — not as "the Listener is accurate".
+
+Reference: the tier assignment rule in Segment M3.2, and the eval table there on what an eval proves
+and what it does not.
+
 ## Step 4 — Comparison table (~60 min)
 
 Produce `docs/competition.md` for **your** product idea:
@@ -101,7 +127,7 @@ Segment M3.3's Definition of Done ends one rung past green tests: a tag at the e
 
 ## Evidence to record
 
-Use the Module 1 format (commands, counts, date, environment, limitations, head SHA) plus: the Step 0 red run, which daemon case you hit in Step 1 (local model or only-cloud aliases), the red-team test output, the injection test's pass and its failure with the fence removed, both coverage runs (failure and success), the `LAB_E2E` run *and* its skip message, and the Step 5 tag + checksum block (tag, commit SHA, digest line, `OK`, `FAILED`, rung).
+Use the Module 1 format (commands, counts, date, environment, limitations, head SHA) plus: the Step 0 red run, which daemon case you hit in Step 1 (local model or only-cloud aliases), the red-team test output, the injection test's pass and its failure with the fence removed, both coverage runs, both eval runs with the model named (failure and success), the `LAB_E2E` run *and* its skip message, and the Step 5 tag + checksum block (tag, commit SHA, digest line, `OK`, `FAILED`, rung).
 
 ## Stretch goals
 

@@ -55,6 +55,11 @@ make m3-restore  # bring the reference Lab M3 solution back; COV_FLOOR -> 90
 - `make demo` → produces labeled LISTENER / QUICK / DEEP outputs; picks models via `model_router.role_defaults`
 - `python3 -m pytest tests/test_injection.py -q` → **10 passed**: the prompt-injection red team. Remove
   the fence in `prompts.py` and 4 of the 10 fail, which is what makes it a defense rather than a habit.
+- `make evals` → **5 passed (100%)**: the Listener's behavioural evals, offline against the reference
+  stub in `evals/provider.py`. Make one stub reply invent an owner and a deadline and the
+  `unstated-owner` scenario fails, so the assertions bite. `make evals-live` runs the same assertions
+  against a real daemon; record the model name beside that rate, because the number means nothing
+  without it. Both need `npx` (the suite is a promptfoo config); everything else here is Python.
 
 ## The privacy lab, in one paragraph
 
