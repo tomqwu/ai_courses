@@ -12,7 +12,7 @@
 
 ## [Hero]
 
-# Ship three real AI products. Learn from code that actually shipped.
+# Ship AI products a skeptical engineer can audit.
 
 **AI Product Studio** is a project-based course built on three production open-source apps by one engineer — a private on-device meeting copilot, a multi-tenant SaaS with a 7-tier test suite, and an evidence-cited briefing site with a consulting funnel.
 
@@ -20,11 +20,11 @@ You'll study how each one was actually built — the specs, the agent instructio
 
 **You leave with:** three portfolio-grade builds, public repos with recorded validation evidence, a pricing and positioning package for your product, and a repeatable operating system for shipping the next one.
 
-**Level up how you build with AI — by studying products that prove it works.**
+**Every claim on this page carries a file you can open — and the course checks its own claims every time it is built.**
 
 [**Enroll in the next cohort →**] · [**Get self-paced access →**]
 
-*8 weeks · 9 modules · 27 lessons · 8 hands-on labs · capstone demo day · lifetime access to materials*
+*8 weeks · 9 modules · 27 lessons · 8 hands-on labs · capstone demo day · edition v2026.09, updates through September 2027 ([changelog](https://github.com/tomqwu/ai_courses/blob/main/CHANGELOG.md))*
 
 ---
 
@@ -93,7 +93,15 @@ This course covers all three — on three product types that cover the whole spa
 
 ## [Proof — why you can trust this course]
 
-The three case studies are public, and everything this course claims about them is checkable:
+The three case studies are public, and everything this course claims about them is checkable — and the course checks itself. Every build of the learner site runs the same gate and prints what it found:
+
+| The check | What the last build measured (2026-09-17) |
+|---|---|
+| Every repo claim carries a file pointer | 1,085 pointers into the three repositories resolve; 239 line ranges lie inside the file they name |
+| The numbers are re-derived, not remembered | 17 pinned facts, all re-derived from the repositories at their 2026-09-16 heads; five had drifted within a week of the first pin and were corrected, on the record |
+| The labs are run, not described | TinyCopilot: `make lab-m2` → 191 passed, 100% coverage; `make lab-m3` → 49 passed |
+| What is spoken is what is written | 233 slides, 22,122 words of narration; captions, transcript and script checked word for word |
+
 
 - **ListenToMe** — MIT-licensed, notarized releases on GitHub, 96% core coverage badge, and the full design specs, implementation plans, and gap reviews in-repo for you to read.
 - **SignUpFlow** — dated validation evidence (`1,464 passed / 21 skipped, 2026-09-12`), 17 spec folders, executable authorization matrix, playbook coverage manifest. Nothing is claimed that isn't recorded.
@@ -141,7 +149,10 @@ Materials are lifetime; each workshop is recorded; you can re-join a later cohor
 Three working builds (TinyCopilot with privacy hardening + tests; your spec-kit + tenant-hardened SaaS feature; your mini-briefing), plus a pricing/positioning package, sales page draft, launch email arc, and a recorded capstone demo.
 
 **Refunds?**
-Full refund within 14 days or before Module 3 (cohort), whichever is later — keep the materials. We'd rather lose a sale than host a regretful student.
+Full refund within 14 days or before Module 3 (cohort), whichever is later — keep the materials. We'd rather lose a sale than host a regretful student. EU buyers: the 14-day withdrawal right applies; consenting to immediate access at checkout is what starts the clock, and the withdrawal button on the account page works throughout.
+
+**How current is it?**
+The course is versioned as dated editions. This is v2026.09, verified against the three repositories at their 2026-09-16 heads; the [changelog](https://github.com/tomqwu/ai_courses/blob/main/CHANGELOG.md) lists what changed and when, and your purchase includes every edition through September 2027. A course about building with tools that change monthly has to say when it was last checked — so it does, on every build.
 
 **Is this another "vibe coding" course?**
 It's the opposite. You'll use agents aggressively — under constitutions, verifiable rules, tests, and evidence recording. That's the whole point: agents raise the stakes for discipline.
@@ -156,8 +167,22 @@ Yes. There are three single-track bundles at **$199** each — On-Device AI Apps
 
 ## [Pricing]
 
+### What's included, by tier
+
+| | Studio · self-paced | Studio Live · cohort | One track |
+|---|---|---|---|
+| Nine modules: 27 narrated lesson segments, captions, transcripts, searchable lesson text | ✓ | ✓ | four modules + the launch slice |
+| Eight labs with objective acceptance checklists, evidence-entry export, and the capstone | ✓ | ✓ | the track's labs |
+| Nine interactive knowledge checks (72 questions) with rationale and objective references | ✓ | ✓ | the track's checks |
+| TinyCopilot and mini-flow lab starters with their verified test runs | ✓ | ✓ | the track's starter |
+| Handouts, glossaries, the capstone rubric, the evidence-record template | ✓ | ✓ | ✓ |
+| Community access | ✓ | cohort channel | ✓ |
+| Eight 90-minute workshops, instructor code review on three labs, capstone review, demo day | — | ✓ | — |
+| Updates through September 2027 (edition v2026.09; every edition is cut behind a green gate) | ✓ | ✓ | ✓ |
+| Refund: 14 days, or before Module 3 in a cohort — keep the materials | ✓ | ✓ | ✓ |
+
 ### Studio (self-paced) — **$399**
-All 9 modules · 8 labs with acceptance checklists · 72 quiz questions with keys · community access · capstone rubric · lifetime updates.
+All 9 modules · 8 labs with acceptance checklists · 72 quiz questions with keys · community access · capstone rubric · updates through September 2027.
 
 ### Studio Live (8-week cohort) — **$1,490**
 Everything in Studio · weekly 90-minute workshops (I do / We do / You do) · instructor code review on 3 labs · capstone review + demo day · cohort channel. *Founding cohort: $990 in exchange for a testimonial and feedback.*
@@ -188,5 +213,5 @@ You'll do the same thing, at lab scale, in eight weeks — and leave with the op
 
 - Keep every number on this page synchronized with `course/00-research/*.md` (source: the repos). If a repo updates its evidence line, update the page — the course's credibility standard applies to its own marketing.
 - The "before/after/result" testimonial format and the objection-teardown FAQ entries (falling behind, refunds, "other courses failed me") come from the launch research in `04-sales/launch-plan.md`.
-- **Length check (measured, not estimated):** 2,251 words total, of which ~1,900 is publishable page copy; the remainder is authoring notes and reserved placeholders. **This number is checked automatically** — `06-production/verify.py` fails the package if this line drifts more than 10% from the measured file, because a count you don't re-measure after editing is the exact drift M4 warns about. For a $399–$1,490 cold-traffic offer the research band is 2,000–3,000 words of copy; this page sits at the lower end deliberately, because the free lead product (`lead-product-teardown.md`) carries the top-of-funnel education and this page only has to close. If conversion testing shows hesitation at checkout, extend §4 (curriculum-as-outcomes) and §7 (FAQ) first — those are the two sections that answer price objections.
+- **Length check (measured, not estimated):** 2,729 words total, of which ~2,329 is publishable page copy; the remainder is authoring notes and reserved placeholders. **This number is checked automatically** — `06-production/verify.py` fails the package if this line drifts more than 10% from the measured file, because a count you don't re-measure after editing is the exact drift M4 warns about. For a $399–$1,490 cold-traffic offer the research band is 2,000–3,000 words of copy; this page sits at the lower end deliberately, because the free lead product (`lead-product-teardown.md`) carries the top-of-funnel education and this page only has to close. If conversion testing shows hesitation at checkout, extend §4 (curriculum-as-outcomes) and §7 (FAQ) first — those are the two sections that answer price objections.
 - A/B test candidates: headline variant "Stop studying AI. Start shipping it." vs. current; proof-first layout (badges above hero) for cold technical traffic.
