@@ -52,7 +52,7 @@ Everything above is enumerated module by module — including what is deliberate
 
 | Week | Focus | Lab | You finish the week with |
 |---|---|---|---|
-| 1 | Orient and get running (M0) | Lab M0 | Three repos cloned, Ollama running, SignUpFlow solver output captured, TinyCopilot suite green |
+| 1 | Orient and get running (M0) | Lab M0 | Three repos cloned, Ollama running, SignUpFlow solver output captured (TinyCopilot suite as stretch) |
 | 2 | Your AI product operating system (M1) | Lab M1 | `constitution.md`, `AGENTS.md`, `specs/001-todo-command/`, one red→green TDD loop, a dated evidence entry |
 | 3 | The on-device architecture (M2.1–M2.3) | Lab M2, modules 1–3 | `conversation_store`, `question_detector`, `prompts` re-implemented test-first |
 | 4 | Routing, streaming, orchestration (M2) | Lab M2, modules 4–6 | `make lab-m2` green: 191 passed, 100% coverage, floor 90 (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) |

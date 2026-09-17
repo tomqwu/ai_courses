@@ -117,6 +117,49 @@ def _json_slide_counts(path: str) -> str | None:
     return f"{sum(counts)} = {'+'.join(map(str, counts))}" if counts else None
 
 
+def _count_files(path: str, glob: str) -> int | None:
+    p = ROOT / path
+    return sum(1 for _ in p.rglob(glob)) if p.is_dir() else None
+
+
+def _lines_glob(path: str, glob: str) -> int | None:
+    p = ROOT / path
+    if not p.is_dir():
+        return None
+    return sum(sum(1 for _ in f.open(encoding="utf-8", errors="ignore")) for f in p.rglob(glob))
+
+
+def _line_of(path: str, pattern: str) -> int | None:
+    """1-based line number of the first line matching `pattern`."""
+    p = ROOT / path
+    if not p.exists():
+        return None
+    for i, line in enumerate(p.read_text(encoding="utf-8").splitlines(), 1):
+        if re.search(pattern, line):
+            return i
+    return None
+
+
+def _current_pdf_editions() -> int | None:
+    """PDFs in ai_qe/assets/pdf at the editions release.yml names: full + guided decks at
+    slide_edition / fintech_edition, the questionnaire and the research companion at theirs."""
+    rel = ROOT / "ai_qe/_data/release.yml"
+    pdf = ROOT / "ai_qe/assets/pdf"
+    if not rel.exists() or not pdf.is_dir():
+        return None
+    ed = dict(re.findall(r'^(\w+):\s*"([^"]+)"', rel.read_text(encoding="utf-8"), re.M))
+    try:
+        patterns = [
+            rf"^ai-qe-(evp|technical)(-guided)?-v{re.escape(ed['slide_edition'])}\.pdf$",
+            rf"^ai-qe-fintech-(evp|technical)(-guided)?-v{re.escape(ed['fintech_edition'])}\.pdf$",
+            rf"^ai-qe-discovery-questionnaire-v{re.escape(ed['questionnaire_edition'])}\.pdf$",
+            rf"^ai-qe-industry-research-v{re.escape(ed['research_edition'])}\.pdf$",
+        ]
+    except KeyError:
+        return None
+    return sum(1 for f in pdf.iterdir() if any(re.match(pat, f.name) for pat in patterns))
+
+
 DERIVATIONS = {
     "listentome.coverage_badge": lambda: _grep_first("ListenToMe/README.md", r"Core_coverage-(\d+)%25"),
     "listentome.coverage_floor": lambda: _grep_first("ListenToMe/scripts/check-coverage.sh", r'THRESHOLD="\$\{1:-(\d+)\}"'),
@@ -137,6 +180,10 @@ DERIVATIONS = {
     "ai_qe.site_version": lambda: _grep_first("ai_qe/_data/release.yml", r'^version:\s*"([^"]+)"'),
     "ai_qe.self_audit_findings": lambda: _grep_first(
         "ai_qe/research/reviews/site-audit-2026-09-06.md", r"identifies \*\*(\d+) findings"),
+    "listentome.core_swift_files": lambda: _count_files("ListenToMe/Sources/ListenToMeCore", "*.swift"),
+    "listentome.core_swift_lines": lambda: _lines_glob("ListenToMe/Sources/ListenToMeCore", "*.swift"),
+    "ai_qe.current_pdf_editions": _current_pdf_editions,
+    "signupflow.health_score_line": lambda: _line_of("SignUpFlow/api/cli/main.py", r'click\.echo\(f"Health score: '),
 }
 
 

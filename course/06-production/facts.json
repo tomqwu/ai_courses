@@ -150,5 +150,40 @@
       "dated September 2026"
     ],
     "note": "the competition-analysis.md header's 'Last updated' month, quoted in M0, M3 and M7"
+  },
+  "listentome.core_swift_files": {
+    "pinned": 45,
+    "pinned_date": "2026-09-16",
+    "literals": [
+      "45 Swift source files",
+      "45 core Swift source files"
+    ],
+    "note": "M2.1 / curriculum M2.1 / deep-read: Sources/ListenToMeCore has 45 .swift files (the pre-2026-09-16 text said '33 modules')"
+  },
+  "listentome.core_swift_lines": {
+    "pinned": 5194,
+    "pinned_date": "2026-09-16",
+    "literals": [
+      "5,194 lines"
+    ],
+    "note": "M2.1 / deep-read: total lines across the 45 .swift files in Sources/ListenToMeCore (the pre-2026-09-16 text said '~3,400 lines')"
+  },
+  "ai_qe.current_pdf_editions": {
+    "pinned": 10,
+    "pinned_date": "2026-09-10",
+    "literals": [
+      "10 current PDF",
+      "10 current PDFs",
+      "ten current PDF"
+    ],
+    "note": "M0.1: PDFs in assets/pdf/ at the editions _data/release.yml names — 4 full decks + 4 guided routes at slide_edition/fintech_edition, the questionnaire at questionnaire_edition, the research companion at research_edition"
+  },
+  "signupflow.health_score_line": {
+    "pinned": 193,
+    "pinned_date": "2026-09-16",
+    "literals": [
+      "main.py:193"
+    ],
+    "note": "M0.3: the line of api/cli/main.py that prints `Health score: …/100` (the course cites it as the source of the first-win artifact; the README has no such block). The VALUE the sample workspace prints is revision-dependent and only derivable by running init+solve — 0.0/100 with 2 hard violations at the 2026-09-16 head, 100.0/100 in an older sample"
   }
 }

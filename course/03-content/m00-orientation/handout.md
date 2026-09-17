@@ -32,15 +32,16 @@ ollama pull qwen3:0.6b && ollama list                # :cloud suffix = not local
 ollama run qwen3:0.6b "Reply with exactly: PONG"
 cd SignUpFlow && make setup                          # Poetry env + migrations + seed
 poetry run python -m api.cli.main init my-church
-poetry run python -m api.cli.main solve my-church     # capture "Health score:"
-cd ../course/03-content/m02-ondevice-app/tinycopilot && make lab-m2
+poetry run python -m api.cli.main solve my-church     # capture the whole block
+cd ../course/03-content/m02-ondevice-app/tinycopilot && make lab-m2   # before Module 1
 ```
 
-Sample solver output (stable parts): `People: 5`, `Events: 2`, `Health score: 100.0/100`,
-`Violations: 0 hard, 0 soft`, `Fairness: stdev=0.43`, `Solution saved to my-church/output/solution.json`.
-`Solved in 0ms` varies by machine.
+Solver output at the 2026-09-16 head: `People: 5`, `Events: 2`, `Health score: 0.0/100`,
+`Violations: 2 hard, 0 soft`, `Fairness: stdev=0.50`, `Solution saved to my-church/output/solution.json`
+(`SignUpFlow/api/cli/main.py:193` prints the score line; the value moves with the revision — record
+what your run printed). `Solved in …ms` and `Range:` vary by machine and day.
 
-`make lab-m2` → **191 passed**, coverage **100%** (90% floor). `make lab-m3` → **49 passed**.
+Before Module 1: `make lab-m2` → **191 passed**, coverage **100%** (90% floor). `make lab-m3` → **49 passed**.
 `make e2e` → **2 passed** with a live daemon; 2 contract tests skip without `LAB_E2E=1`.
 
 ## Files to open
@@ -49,7 +50,7 @@ Sample solver output (stable parts): `People: 5`, `Events: 2`, `Health score: 10
 - `course/03-content/m00-orientation/lab.md` — steps and acceptance checklist
 - `course/03-content/m00-orientation/quiz.md` — 8 questions
 - `course/03-content/m02-ondevice-app/tinycopilot/README.md` — the M2 lab reference
-- `SignUpFlow/README.md` — solver "CLI Example"
+- `SignUpFlow/README.md` — solver "CLI Examples"; `SignUpFlow/api/cli/main.py` prints the summary block
 - `ai_qe/README.md` — publication records
 
 ## Three gotchas
@@ -67,7 +68,7 @@ Sample solver output (stable parts): `People: 5`, `Events: 2`, `Health score: 10
 - [ ] `ls -d ListenToMe SignUpFlow ai_qe` prints all three
 - [ ] `python3 --version` shows 3.11–3.13
 - [ ] `ollama list` shows ≥1 model, and you can label it local or `:cloud`
-- [ ] Solver ran; the `Health score:` line and the `Solution saved to …` line are pasted
-- [ ] `make lab-m2` shows `191 passed` (or the exact missing dependency is named)
+- [ ] Solver ran; the full block with the `Health score:` and `Solution saved to …` lines is pasted
 - [ ] Evidence-log entry written with the date
 - [ ] First-win post up: solver output + `ollama list` + your archetype sentence
+- [ ] Before Module 1: `make lab-m2` shows `191 passed` (or the exact missing dependency is named)

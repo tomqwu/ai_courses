@@ -1,6 +1,6 @@
 # Deep-Read Report: SignUpFlow (The Spec-Driven AI SaaS)
 
-> Source: subagent deep-read of /Users/tomwu/ai_courses/SignUpFlow (all claims grounded in files read directly from the repo).
+> Source: subagent deep-read of the `SignUpFlow/` clone, a sibling of `course/` in the workspace root (all claims grounded in files read directly from the repo).
 
 ## 1. The Product and the Archetype Lesson
 

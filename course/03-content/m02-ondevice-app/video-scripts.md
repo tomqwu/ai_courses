@@ -16,7 +16,7 @@ of its decisions were put somewhere a test can reach.
 |---|---|---|
 | 0:00 | `ListenToMe/README.md` | This is ListenToMe, a free on-device meeting copilot for macOS. Two audio channels, live transcription, three AI panes. |
 | 0:15 | Architecture diagram from the design spec | The shipped design is one process: audio and speech run off the main actor, and the UI only observes published state. |
-| 0:35 | `ListenToMe/Sources/ListenToMeCore/` file list | Here is the split. `Sources/ListenToMeCore` is a pure SwiftPM package, 33 modules, no microphone and no network. `App/` is platform glue. |
+| 0:35 | `ListenToMe/Sources/ListenToMeCore/` file list | Here is the split. `Sources/ListenToMeCore` is a pure SwiftPM package, 45 Swift source files, no microphone and no network. `App/` is platform glue. |
 | 1:00 | `App/DualChannelCapture.swift` line 8 | Capture taps the mic and creates a ScreenCaptureKit stream, converting both to mono Float PCM and emitting audio chunks. |
 | 1:25 | Lines 102 and 212 | The mic tap tags buffers `.you`; the ScreenCaptureKit callback tags `.others`. One tag gives speaker attribution with no diarization model. |
 | 1:45 | `Sources/ListenToMeCore/Transcriber.swift` | The `Transcribing` protocol declares `prepare`, `feed`, and `finish`. `prepare` warms the pipeline before audio arrives, so the first seconds of a meeting are not dropped. |

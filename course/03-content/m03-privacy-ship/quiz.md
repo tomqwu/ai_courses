@@ -46,7 +46,7 @@
 - c) CI can't reach an Ollama daemon or audio hardware — the test needs a real model on a real machine, so it gates off (skips with a stated reason) in normal runs
 - d) CI runs it against a built-in mock daemon instead
 
-**Q7 (Short answer).** The September 2026 gap review recommended **not** promoting ListenToMe 1.3.0 despite 215 passing tests and 97.24% coverage. In 2–3 sentences, what does that teach about the difference between testing and shipping?
+**Q7 (Short answer).** Your TinyCopilot is at 191 passed, 100% coverage, and a teammate says "tag v1.0 and ship." Before tagging, write the three-line self-review entry the September 2026 gap review models (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`): one finding of the kind tests cannot surface (name a concrete one for your copilot), the release claim you refuse to make until it is closed, and what "closed" looks like.
 
 **Q8 (Short answer).** Given a comparison table with columns *platform, on-device?, privacy, model choice, price, focus*, write a positioning one-liner for a hypothetical product and annotate each clause with the column that proves it.
 
@@ -58,12 +58,12 @@
 
 **A3: c.** The check proves what the daemon's self-description says, nothing more — the README states the trust boundary ("trusts the installed local Ollama service and its metadata"). (b) overclaims: marketing copy is not the privacy policy. *Ref: M3.1 — `README.md` "Privacy."*
 
-**A4: b.** Redirect following is silent by default; the delegate answers `nil` so meeting text can never be silently forwarded. *Ref: M3.1 — `OllamaProvider.swift:99-103, 151-157`.*
+**A4: b.** Redirect following is silent by default; the delegate answers `nil` so meeting text can never be silently forwarded. *Ref: M3.1 — `OllamaProvider.swift:138-142, 208-214`.*
 
 **A5: a.** Untested core code drags the percentage below the floor. (b) and (d) were real gap-review findings (G01, G02) that coexisted with 97% coverage — "97% coverage means ship it" and "one more test would have caught it" are the misconceptions. *Ref: M3.2 — `design-and-gap-review.md`.*
 
 **A6: c.** Tier assignment: CI covers headless logic; `make e2e` covers the real-model contract on your machine; the manual tier covers audio. Gating keeps the test in the default suite — skipped with a reason, not deleted. *Ref: M3.2 — `Makefile:39-53`.*
 
-**A7.** Key points: metrics validate what you *built* — the tests passed because they tested the shipped design; the review validated what users *needed* (honest routing, durable saving, real error handling), which no coverage number establishes. "Tests validate what you built; honest review validates what you shipped" — and it only counts because the P0s were tracked to closure. *Ref: M3.2.*
+**A7.** A strong entry names a design or user-facing gap, not a test count — e.g. the privacy label keys off whether an API key is set rather than where the request goes (G01), or nothing checkpoints the transcript so a crash loses the meeting (G02) — refuses the matching claim ("local-only", "production-ready") until it is closed, and defines closure as a P0 filed, the enforcing code plus a test, and a re-review. Reject entries whose "finding" is a coverage or count target. The lesson: metrics validate what you *built*; the review validates what users *need*, which no coverage number establishes — "do not promote" coexisted with 215 passing tests and 97.24% coverage (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md:5`). *Ref: M3.2.*
 
 **A8.** Grading: every clause falsifiable against a specific column ("free" ← price; "on-device" ← the on-device? column; "for macOS" ← platform). Reject vague adjectives ("powerful," "modern") with no column behind them, and unsourced claims. *Ref: M3.3 — `competition-analysis.md:70-80`.*

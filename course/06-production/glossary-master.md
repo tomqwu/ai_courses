@@ -123,7 +123,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Guided route** *(M6)* — A curated sequence over stable slide IDs, with a declared `closing` slide, that reorders and omits but never rewrites. Lives in `ai_qe/_data/briefing_routes.json`.
 ### H
 
-- **Health score** *(M0)* — The solver's 0–100 quality metric for a generated roster, printed by `api.cli.main solve`. On the sample workspace it is `100.0/100`. — `SignUpFlow/README.md`
+- **Health score** *(M0)* — The solver's 0–100 quality metric for a generated roster, printed by `api.cli.main solve` (`SignUpFlow/api/cli/main.py:193`). Its value depends on the revision: at the 2026-09-16 head the sample workspace prints `0.0/100` with two hard violations. — `SignUpFlow/README.md`
 - **Honest-marketing checklist** *(M7)* — Five rules every sales asset must pass: sourced numbers, qualified claims, no invented testimonials, plain refund/deadline policies, price the transformation. Lives in `course/04-sales/pricing-and-platforms.md`.
 ### I
 

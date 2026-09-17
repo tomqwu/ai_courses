@@ -4,7 +4,7 @@
 > correct answer. The exemplar feature is **availability windows** (volunteer time-off) for a
 > SignUpFlow-style app, built in the student's *own* project. Exemplar paths (`app/…`, `specs/001-…`)
 > belong to that exemplar project, not to SignUpFlow. Pointers marked **[SIG]** resolve in
-> `/Users/tomwu/ai_courses/SignUpFlow`.
+> the `SignUpFlow/` clone (a sibling of `course/` in the workspace root).
 > Models to imitate: **[SIG]** `specs/014-security-hardening/spec.md`, `specs/000-user-onboarding/tasks.md`,
 > `.specify/templates/{spec,plan,tasks}-template.md`, `specs/014-security-hardening/checklists/requirements.md`.
 

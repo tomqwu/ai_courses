@@ -20,8 +20,8 @@ ls -d ListenToMe SignUpFlow ai_qe   # all three print
 **Common wrong answers.**
 - *Cloned one repo and read the other two on GitHub.* Fails: the lab's later steps and every module
   pointer assume local files. Signals the student is treating pointers as decoration.
-- *Cloned into nested folders and lost track of paths.* Fails later; `cd ../course/...` in step 5
-  breaks.
+- *Cloned into nested folders and lost track of paths.* Fails later; `cd ../course/...` in the
+  "Before Module 1" block breaks.
 - *Downloaded ZIPs.* `make setup` and `pytest` still work, but `git log` evidence and tagged releases
   do not. Signals a shortcut that will cost time in M1.
 
@@ -85,7 +85,7 @@ valid").
 ## Step 4 — Run the SignUpFlow solver
 
 **Reference answer.** `make setup` completes, then `init` creates the workspace and `solve` prints the
-summary. The captured line is the health score.
+summary. The captured artifact is the whole block around the health-score line.
 
 ```bash
 cd SignUpFlow && make setup
@@ -93,27 +93,36 @@ poetry run python -m api.cli.main init my-church
 poetry run python -m api.cli.main solve my-church
 ```
 
-Expected output, verbatim from `SignUpFlow/README.md` ("CLI Example"):
+Expected output at the 2026-09-16 SignUpFlow head (the `Health score:` line is printed by
+`SignUpFlow/api/cli/main.py:193`; the README's "CLI Examples" show the commands, not this block):
 
 ```
 Created workspace at my-church/
-  org.yaml
-  people.yaml
-  events.yaml
+  org.yaml      — organization config
+  people.yaml   — volunteers and their roles
+  events.yaml   — events to schedule
 
 Workspace: my-church
 People:    5
 Events:    2
+Range:     <today+7> → <today+14>
 Mode:      relaxed
-Health score: 100.0/100
+
+Solved in 0ms
+Health score: 0.0/100
 Assignments:  2
-Violations:   0 hard, 0 soft
-Fairness:     stdev=0.43
+Violations:   2 hard, 0 soft
+Fairness:     stdev=0.50
+
+Hard violations:
+  - Role sound_tech needs 1, got 0
+  - Role sound_tech needs 1, got 0
 Solution saved to my-church/output/solution.json
 ```
 
-`Solved in 0ms` and `solve_ms` (0.12 in the README's JSON example) vary by machine; the health score,
-counts, and fairness stdev come from the sample data and are stable.
+`Solved in …ms` and the `Range:` dates vary by machine and day. The score, counts, and stdev are
+whatever the sample workspace produces at the revision cloned — an older sample printed `100.0/100`
+with `0 hard, 0 soft`; the current one does not, and a student who pastes `100.0/100` today did not run it.
 
 **Common failures and fixes.**
 
@@ -125,19 +134,35 @@ counts, and fairness stdev come from the sample data and are stable.
 | `No such file or directory: my-church` | `init` skipped | Run `init my-church` before `solve` |
 
 **Common wrong answers.**
-- *Pastes only "Health score: 100.0/100".* Incomplete — the summary block is the evidence.
-- *Hand-edits the number.* The README publishes the same value, so an invented score is both
-  detectable and unnecessary. Fabrication is the one automatic fail
-  (`course/01-design/assessment-and-rubrics.md`).
+- *Pastes only the `Health score:` line.* Incomplete — the summary block is the evidence.
+- *Hand-edits the number, or "corrects" `0.0` to `100.0`.* The value is not graded, the run record
+  is; an edited score is detectable (the violations and stdev lines will not match) and it is
+  fabrication, the one automatic fail (`course/01-design/assessment-and-rubrics.md`).
 - *Runs `solve` on the wrong workspace.* Output names the workspace; check it.
 
 **Grading note.** Real pass: the full block, including the `Solution saved to …` line proving the run
 wrote a file. Fake: a lone health-score line with no workspace summary.
 
-## Step 5 — Run the TinyCopilot tests
+## Step 5 — Post the first win
+
+**Reference answer.** One community post containing (a) the solver summary block with its health-score
+line, (b) `ollama list` with each entry labeled local or `:cloud`, (c) one sentence naming archetype 1,
+2, or 3 for the student's week-8 goal.
+
+**Common wrong answers.**
+- *"Done!"* with no output attached.
+- *Picks all three archetypes.* The post asks for one; the capstone also requires one.
+- *Pastes a screenshot the text evidence should carry.* Acceptable, but the log still needs the text.
+
+**Grading note.** The post is the completion lever (`course/02-instructor/instructor-guide.md` §1) and a
+checklist item; a missing post is *Developing*, chased by the instructor — not an auto-fail. The pass
+gate is the solver block plus a non-empty `ollama list`.
+
+## Before Module 1 (stretch) — Run the TinyCopilot tests
 
 **Reference answer.** From `course/03-content/m02-ondevice-app/tinycopilot`, install the three test
-dependencies, then run the suite. The Module 2 pass gate is `make lab-m2`.
+dependencies, then run the suite. This is Module 2's pass gate (`make lab-m2`), recorded now, graded
+in Lab M2.
 
 ```bash
 cd ../course/03-content/m02-ondevice-app/tinycopilot
@@ -167,20 +192,7 @@ These match content-standards §0.2.
   must name the package.
 
 **Grading note.** Accept a green suite or a named, exact missing dependency. Reject a claim of green
-with no pytest summary.
-
-## Step 6 — Post the first win
-
-**Reference answer.** One community post containing (a) the solver summary with health score,
-(b) `ollama list`, (c) one sentence naming archetype 1, 2, or 3 for the student's week-8 goal.
-
-**Common wrong answers.**
-- *"Done!"* with no output attached.
-- *Picks all three archetypes.* The post asks for one; the capstone also requires one.
-- *Pastes a screenshot the text evidence should carry.* Acceptable, but the log still needs the text.
-
-**Grading note.** The post is the completion lever (`course/02-instructor/instructor-guide.md` §1); a missing
-post fails Lab M0.
+with no pytest summary — that is the one automatic fail, even on a stretch item.
 
 ## Stretch goals
 
@@ -196,7 +208,7 @@ post fails Lab M0.
 | Python in band | `python3 --version` prints 3.11–3.13 |
 | Model present | `ollama list` shows ≥1 entry; suffix noted |
 | Completion returned | `ollama run qwen3:0.6b "Reply with exactly: PONG"` |
-| Solver ran | `Health score:` line + `Solution saved to …` pasted |
-| TinyCopilot green | `make lab-m2` → `191 passed`, coverage `100%` |
+| Solver ran | Full block: `Health score:` line + `Solution saved to …` pasted |
 | Environment recorded | Evidence-log entry dated, outputs pasted verbatim |
 | First win posted | Community post has all three parts |
+| Before Module 1: TinyCopilot | `make lab-m2` → `191 passed`, coverage `100%` (or the exact missing package) |

@@ -1,10 +1,10 @@
 # Deep-Read Report: ListenToMe (The Native On-Device AI App)
 
-> Source: subagent deep-read of /Users/tomwu/ai_courses/ListenToMe (all claims grounded in files read directly from the repo).
+> Source: subagent deep-read of the `ListenToMe/` clone, a sibling of `course/` in the workspace root (all claims grounded in files read directly from the repo).
 
 ## 1. What the product is, its differentiators, and the "3 types" lesson
 
-**ListenToMe** (README.md) is a free, open-source (MIT), fully on-device meeting copilot for macOS 26+ with a companion standalone iOS 26 app. It captures two audio channels — your microphone (labeled **You**) and other participants' system audio via ScreenCaptureKit (labeled **Others**) — transcribes live on-device, and streams real-time AI help through **Ollama** (local models by default; Ollama Cloud optionally, with your own key). Stack: Swift 6 / SwiftUI / `@Observable` / Swift Concurrency; all testable logic lives in a pure SwiftPM package `ListenToMeCore` (33 modules, ~3,400 lines) with **96% test coverage** (95% CI floor).
+**ListenToMe** (README.md) is a free, open-source (MIT), fully on-device meeting copilot for macOS 26+ with a companion standalone iOS 26 app. It captures two audio channels — your microphone (labeled **You**) and other participants' system audio via ScreenCaptureKit (labeled **Others**) — transcribes live on-device, and streams real-time AI help through **Ollama** (local models by default; Ollama Cloud optionally, with your own key). Stack: Swift 6 / SwiftUI / `@Observable` / Swift Concurrency; all testable logic lives in a pure SwiftPM package `ListenToMeCore` (45 Swift source files, 5,194 lines as of 2026-09-16) with **96% test coverage** (95% CI floor).
 
 **Differentiators** (README "Why ListenToMe" + `docs/competition-analysis.md`):
 - **On-device & private** — transcription runs locally (Apple SpeechAnalyzer); with a local Ollama model, audio and transcript never leave the Mac.
@@ -82,7 +82,7 @@ Layered design: **pure core behind protocols + thin platform glue**. `Sources/Li
 
 ## 6. Numbers & facts worth citing in marketing
 
-- **96% core test coverage** (README badge); **95% coverage floor enforced in CI**; 97.24% coverage / 215 tests cited at the 1.3.0 review point; today 33 core modules (~3,400 lines) and 36 test files (~290 test functions).
+- **96% core test coverage** (README badge); **95% coverage floor enforced in CI**; 97.24% coverage / 215 tests cited at the 1.3.0 review point; today 45 core Swift source files (5,194 lines, counted 2026-09-16) and 36 test files (~290 test functions).
 - **3 transcription engines** (Apple SpeechAnalyzer default, legacy SpeechRecognizer, opt-in WhisperKit); **4 panes**; **3 independent AI roles** with per-pane model dropdowns; **18 use-case presets** (+None); **9 response actions**; **13 competitors analyzed** in `docs/competition-analysis.md`.
 - **Pricing contrast:** Granola ~$14–35/user/mo, Otter ~$8–30, Fireflies ~$10–39/seat, Cluely $19.99–149.99/mo, Superpowered $25–50/mo, MacWhisper ~$69 one-time — vs ListenToMe free & open-source (MIT).
 - **Model families referenced in-app:** deepseek-v4-pro / deepseek-v4-flash (`:cloud`), GLM, Kimi, Qwen3-coder, MiniMax, Gemini, gpt-oss, Devstral, Nemotron, Mistral, Llama, Gemma, Phi.

@@ -1,7 +1,7 @@
 # M4 Glossary — Spec-Driven SaaS
 
-> Every "where it lives" pointer resolves in `/Users/tomwu/ai_courses/`. SignUpFlow paths are relative to
-> `/Users/tomwu/ai_courses/SignUpFlow`.
+> Every "where it lives" pointer resolves in the workspace root, where `course/`, `SignUpFlow/`,
+> `ListenToMe/` and `ai_qe/` are siblings. SignUpFlow paths are relative to `SignUpFlow/`.
 
 - **Acceptance scenario** — A Given/When/Then statement inside a user story whose Then-clause is an
   observable, numeric outcome. — `SignUpFlow/specs/014-security-hardening/spec.md` (US1).

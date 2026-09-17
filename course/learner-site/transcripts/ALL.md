@@ -95,13 +95,13 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *33.2s · sentence-measured*
 
-> Everything in this segment is a command you type, not a concept you remember. Clone the three case studies, verify you have Python 3.11 or newer, install Ollama and pull a small local model, run SignUpFlow's solver on the sample data, run TinyCopilot's test suite, and post your first win. The whole sequence takes under fifteen minutes, and most of that is download time. Do it in order, and do not skip the test suite. It is the exact acceptance gate you will re-implement in Module 2, and seeing it green now tells you your environment is real.
+> Everything in this segment is a command you type, not a concept you remember. Clone the three case studies, verify you have Python 3.11 or newer, install Ollama and pull a small local model, run SignUpFlow's solver on the sample data, and post your first win. The whole sequence takes about thirty minutes, and most of that is download time. Do it in order, and before Module 1 do not skip the TinyCopilot test suite. It is the exact acceptance gate you will re-implement in Module 2, and seeing it green now tells you your environment is real.
 
 ### Slide 13 — First ship-win — clone and run the solver
 
 *36.7s · sentence-measured*
 
-> Clone the three repositories first, then, inside SignUpFlow, run make setup. That installs the Poetry environment, runs migrations, and seeds data. The init command writes three YAML files: organization, people, and events. The solve command runs the real greedy scheduler. On the sample workspace it prints a health score of 100.0 out of 100, with zero hard and zero soft violations and a fairness standard deviation of 0.43. Capture that health-score line and keep the raw terminal output, because it is your first artifact. Do not retype it from memory.
+> Clone the three repositories first, then, inside SignUpFlow, run make setup. That installs the Poetry environment, runs migrations, and seeds data. The init command writes three YAML files: organization, people, and events. The solve command runs the real greedy scheduler. On the sample workspace it prints a health-score line, the violation counts, and a fairness standard deviation. The numbers are whatever the revision you cloned produces; at the current head the sample scores zero out of one hundred with two hard violations, and that is fine. Capture the whole block around the health-score line and keep the raw terminal output, because the run record is your first artifact, not the number. Do not retype it from memory.
 
 ### Slide 14 — Local LLM in three commands
 
@@ -119,7 +119,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *35.0s · sentence-measured*
 
-> The lab has six steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, run the TinyCopilot tests, and post to the community. The goal is every tool installed and proven with real output, and the three pass gates are solver output with a health score, an ollama list showing at least one model, and a TinyCopilot suite that is green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is the only automatic fail.
+> The lab has five steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, start your evidence log, and post to the community. The goal is every tool installed and proven with real output, and the pass gate is two things: the solver block with its health-score line, and an ollama list showing at least one model. Before Module 1, run the TinyCopilot suite; it is the Module 2 gate, green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is the only automatic fail.
 
 ### Slide 17 — Quiz M0
 

@@ -78,7 +78,7 @@ Course-level count mismatch: `D/assessment-and-rubrics.md:10` says "64 total" qu
 | M7 | Web access; the course's own honest-marketing checklist | No |
 | M8 | Public GitHub, a static host or deploy target, screen recording, a community pair | No |
 
-Four M4 artifacts hardcode the author's machine path (`/Users/tomwu/…`): `C/m04-spec-driven-saas/solutions.md:7`, `facilitation.md:5`, `video-scripts.md:5`, `glossary.md:3-4`. The three deep-reads in `00-research/` do too.
+Four M4 artifacts hardcode the author's machine path (an absolute home-directory prefix): `C/m04-spec-driven-saas/solutions.md:7`, `facilitation.md:5`, `video-scripts.md:5`, `glossary.md:3-4`. The three deep-reads in `00-research/` do too.
 
 ## 4. Quiz quality
 

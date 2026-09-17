@@ -1,4 +1,4 @@
-# Quiz 1 — The AI Product Operating System
+# Quiz M1 — The AI Product Operating System
 
 > 8 questions · 6 multiple choice + 2 short answer · Answer key at the end with objective refs.
 
@@ -54,7 +54,7 @@ Which task line follows the repo's tasks.md format?
 Which line belongs in an honest validation record, and why?
 
 - a) "All green — ship it."
-- b) "Tests passed (trust me)."
+- b) "`make test-all` green; the 21 skipped tests were left out of the record to keep it clean."
 - c) "Full API mypy: 835 errors in 40 files; not a pass." — because records include known debt and failures
 - d) "No local record needed — adding more CI is always better."
 
@@ -78,7 +78,7 @@ Your test run: 12 passed, then 1 failed on a timing flake; after a fix, 13 passe
 
 ### Q5 — c — The format is `[ID] [P?] [Story]` with exact file paths and tests first; option c is a real line (`SignUpFlow/specs/019-sms-notifications/tasks.md`). (objective: M1.2 — write executable task lines)
 
-### Q6 — c — Records include known debt and failures, and never fabricate; "more CI is always better" is the misconception the no-CI policy argues against — hosted checks don't record what you validated (`SignUpFlow/docs/playbooks/validation.md`). (objective: M1.3 — record honest evidence)
+### Q6 — c — Records include known debt and failures, and never fabricate; (b) hides the skips the real record counts ("1,464 passed, 21 skipped"); "more CI is always better" is the misconception the no-CI policy argues against — hosted checks don't record what you validated (`SignUpFlow/docs/playbooks/validation.md`). (objective: M1.3 — record honest evidence)
 
 ### Q7 — Model answer — Scenario: "Given Sarah has a blocked-date period covering 2026-04-23, When an admin runs the solver for that week, Then Sarah gets no assignment and the solution reports zero hard violations." Task: "- [ ] T031 [P] [US1] Implement POST /api/v1/availability/time-off in api/routers/availability.py: write the failing test in tests/api/test_availability.py first." (objective: M1.2 — turn a story into a checkable scenario and an executable task)
 

@@ -15,10 +15,10 @@ B. All decision logic lives in a pure SwiftPM package behind `AudioCapturing`/`T
 C. Coverage is measured only on `App/` glue, which is small.
 D. The 95% floor script excludes any module that lacks tests.
 
-**Q3.** A local Ollama server has three models: `qwen3:0.6b`, `deepseek-v4-pro`, `gemini-2.5-flash`. What does `ModelRanking.roleDefaults` assign?
+**Q3.** In ListenToMe's Swift core, a local Ollama server has three models: `qwen3:0.6b`, `deepseek-v4-pro`, `gemini-2.5-flash`. What does `ModelRanking.roleDefaults` assign? (Answer for the Swift implementation. TinyCopilot's Python `role_defaults` deliberately simplifies this and gives Listener and Quick the same fastest model — for the lab, its tests are authoritative.)
 
 A. All three roles get `deepseek-v4-pro` — the strongest model is best everywhere.
-B. Quick = `gemini-2.5-flash` (fast marker), Deep = `deepseek-v4-pro` (strong marker), Listener = `qwen3:0.6b` (a distinct fast/light pick).
+B. Quick = `gemini-2.5-flash` (fast marker), Deep = `deepseek-v4-pro` (strong marker), Listener = `qwen3:0.6b` (the lightest model left once Quick and Deep are taken).
 C. Listener = `deepseek-v4-pro` because it writes the longest output.
 D. No defaults exist; the user must pick all three panes manually.
 
@@ -31,7 +31,7 @@ D. Queuing the old stream's tokens until the new model finishes, then merging th
 
 **Q5.** `PromptBuilder` is a pure enum of static functions with no I/O. Why is that the right shape?
 
-A. Swift enums compile faster than classes.
+A. A caseless enum can't be instantiated, so the built prompt strings are cached once and reused for every request.
 B. Prompts become exactly assertable unit-test output — `PromptBuilderTests` checks built strings with no LLM, network, or model.
 C. It lets each provider rewrite the base system prompts at request time.
 D. Purity is required by the Swift 6 compiler.
@@ -43,9 +43,9 @@ B. Local Ollama models cannot copy names out of transcripts reliably, so naming 
 C. The Listener summary is injected into Quick/Deep prompts, so an invented commitment would propagate into every downstream answer; the paired rule is that only *completed* summaries are injected.
 D. Meeting-transcription law requires marking unstated details.
 
-**Q7.** Name `OllamaStreamError`'s three cases and the condition that triggers each. Then explain in one sentence why "catch stream errors silently to avoid UI flicker" is rejected by this design.
+**Q7.** A tester reports: "The Quick pane showed a 40-token answer as finished, but the model had stopped mid-sentence — the NDJSON stream ended with no `done: true` line." Using the typed-error design in `OllamaProvider.streamEvents`, name the `OllamaStreamError` case this is, state what the provider must do instead of returning the partial text as a completed answer, and write the one unit test (TinyCopilot or Swift) that would have caught it.
 
-**Q8.** `QuestionDetector` alone would flag every question-like utterance. What does the 8-second debounce in `ContextEngine.shouldFireProactive` prevent, and what two other conditions must hold before a proactive response fires?
+**Q8.** Two bug reports on your proactive Quick trigger: (1) during a rapid-fire Q&A it fired three times in ten seconds; (2) it once answered a question *you* asked, not a participant. Using the guard in `ContextEngine.shouldFireProactive`, name the condition each report violates, name the one condition neither report mentions, and write the two unit-test cases that pin the fix.
 
 ---
 
@@ -55,14 +55,14 @@ D. Meeting-transcription law requires marking unstated details.
 
 **Q2 — B.** Every decision lives in the pure core behind the three protocol seams, so the suite runs against mocks — no hardware, no network. *(Objective: M2.1 protocol seams — `Sources/ListenToMeCore/Transcriber.swift`, `README.md` badge.)*
 
-**Q3 — B.** Defaults match capability markers per role — fast→Quick, strong→Deep (excluding Quick's pick), a distinct fast model→Listener. *(Objective: M2.2 role routing — `Sources/ListenToMeCore/ModelRanking.swift` lines 49–94.)*
+**Q3 — B.** Swift picks per role from the ranked pool: the first fast-marker match → Quick, the strongest strong-marker match excluding Quick's pick → Deep, then Listener = a second fast pick or, failing that, the lightest model remaining — here `qwen3:0.6b`. TinyCopilot's `role_defaults` maps `listener` and `quick` to the same fastest model on purpose (`tinycopilot/src/tinycopilot/model_router.py:176`), so do not carry this answer into the lab. *(Objective: M2.2 role routing — `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:49-53` for the markers, `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:91-111` for the picks.)*
 
 **Q4 — B.** `setModel` bumps the generation; the stream loop guards every write with it, so stale tokens can't land after a switch. *(Objective: M2.2 stale-stream cancellation — `Sources/ListenToMeCore/MeetingSession.swift` lines 119–132, 513–578.)*
 
-**Q5 — B.** Purity makes the built prompt a deterministic function of context — assertable string-for-string with no model. *(Objective: M2.2 pure prompt builders — `Sources/ListenToMeCore/Prompt.swift`, `Tests/ListenToMeCoreTests/PromptBuilderTests.swift`.)*
+**Q5 — B.** Purity makes the built prompt a deterministic function of context — assertable string-for-string with no model; (A) mistakes a testability decision for a caching trick — nothing is cached, every call rebuilds from the context it is given. *(Objective: M2.2 pure prompt builders — `Sources/ListenToMeCore/Prompt.swift`, `Tests/ListenToMeCoreTests/PromptBuilderTests.swift`.)*
 
 **Q6 — C.** The Listener summary grounds every downstream pane, so an invented commitment would propagate; only `lastCompletedListenerSummary` is injected. *(Objective: M2.2 never-invent contract — `Prompt.swift` lines 73–81.)*
 
-**Q7 — Acceptable answer:** `.server` — an in-stream `{"error": ...}` event; `.incomplete` — the lines ended without `done: true`; `.empty` — completed with no non-whitespace content. Swallowing errors is rejected because it turns truncation into apparent success — gap G06's exact finding. *(Objective: M2.3 typed streaming errors — `Sources/ListenToMeCore/OllamaProvider.swift` lines 67–83, 159–170.)*
+**Q7 — Acceptable answer:** `.incomplete` — the line source ended without a `done: true` event (thrown at `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:101`; the enum is at `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:216-224`). The provider must *throw* it, so the stream finishes with an error the pane shows ("The response ended before completion. Partial text is kept; retry the request.") and never as success — swallowing it turns truncation into apparent completion, gap G06's exact finding. Test: a fake transport yields content lines and then closes without `done: true`; assert the provider raises `IncompleteStreamError` (`tinycopilot/src/tinycopilot/ollama_provider.py:31`) or `OllamaStreamError.incomplete`, rather than returning the partial string. *(Objective: M2.3 typed streaming errors.)*
 
-**Q8 — Acceptable answer:** Flooding — several questions in quick succession fire at most one proactive response per 8-second window; the segment must also be finalized and from `.others` (and pass detection). *(Objective: M2.3 bounded proactive triggers — `Sources/ListenToMeCore/ContextEngine.swift` lines 31–40.)*
+**Q8 — Acceptable answer:** (1) violates the 8-second debounce — at most one fire per window (`now - lastFire >= debounce`); (2) violates `segment.source == .others` — your own questions never fire. The condition neither report mentions is `segment.isFinal` (the detector must also classify the text as a question). Tests: two final `.others` questions 3 s apart → the second call returns `false`; a final question from `.you` → `false`. *(Objective: M2.3 bounded proactive triggers — `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:41-50`; TinyCopilot's `QuestionDetector.should_fire` in `tinycopilot/src/tinycopilot/question_detector.py` applies the same four checks.)*

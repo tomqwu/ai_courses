@@ -46,15 +46,16 @@
 - **Command lines:** caption the command exactly as typed, flags included. Do not auto-correct
   `poetry run python -m api.cli.main solve my-church` — the module is teaching that string.
 - **File paths:** spell them out in captions rather than "this file", matching the spoken form above.
-- **Numbers:** caption what is spoken and what is printed. The health score is spoken "one hundred
-  point zero out of one hundred" and captioned `Health score: 100.0/100`. Same for `191 passed` and
-  coverage `100%`.
+- **Numbers:** caption what is spoken and what is printed. The health score is spoken "zero out of
+  one hundred with two hard violations" and captioned `Health score: 0.0/100` — the value the pinned
+  SignUpFlow head prints for the sample workspace; if the recording shows a different revision, caption
+  what that run printed. Same for `191 passed` and coverage `100%` in the stretch block.
 - **Non-English terms:** this module has none in speech. For a future term, caption the original, add
   a parenthetical translation, and pronounce both.
 
 ## Accommodations
 
-- **Extended time.** Lab M0 is 20–40 minutes, mostly downloads. Give extended time again, and let
+- **Extended time.** Lab M0 is about 30 minutes including downloads. Give extended time again, and let
   downloads start before the session — nothing depends on cloning live.
 - **No-audio path.** `course/03-content/m00-orientation/handout.md` must suffice alone: mental model, pointer list, commands, stable
   output values, gotchas. A student who never plays the audio can finish Lab M0 from it plus

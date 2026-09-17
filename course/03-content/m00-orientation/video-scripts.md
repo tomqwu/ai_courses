@@ -80,7 +80,7 @@ by running the solver, Prove by posting the output."
 fills download waits).
 
 **Cold open (0:00–0:15).** "By the end of this segment you will have run a production scheduler and a
-local language model. No API key. No credit card. Under fifteen minutes, mostly downloads."
+local language model. No API key. No credit card. About thirty minutes, mostly downloads."
 
 **Beats.**
 
@@ -89,16 +89,16 @@ local language model. No API key. No credit card. Under fifteen minutes, mostly 
 | 0:15 | Terminal: `python3 --version` | Two requirements, both free. Git, and Python 3.11 or newer. SignUpFlow's build gate accepts 3.11 through 3.13 — check yours before anything else, because a wrong interpreter burns ten minutes at the worst moment. |
 | 1:00 | Terminal: three `git clone` lines | Clone all three case studies into one parent folder. Keep them siblings; every pointer in this course is written relative to that root. |
 | 2:00 | Terminal: `cd SignUpFlow && make setup` | `make setup` installs the Poetry environment, runs database migrations, and seeds sample data. It may take a few minutes. Watch the output — if Poetry is missing it stops and tells you. Fix: `make install-poetry`, add `$HOME/.local/bin` to your PATH, reopen the shell. |
-| 4:00 | Terminal: `init` and `solve` | Two commands. `init my-church` writes three YAML files: organization, people, events. `solve my-church` runs the real greedy scheduler. Here is the output: five people, two events, mode relaxed, health score one hundred out of one hundred, zero hard violations, zero soft, fairness standard deviation zero point four three. And the solution is written to `my-church/output/solution.json`. |
-| 6:00 | Terminal: highlight health score | Capture that health-score line. It is your first artifact in this course, and it is not a toy — this is the same solver whose evolution you will trace from specification to code comment to test oracle in Module 5. |
+| 4:00 | Terminal: `init` and `solve` | Two commands. `init my-church` writes three YAML files: organization, people, events. `solve my-church` runs the real greedy scheduler. Here is the output: five people, two events, mode relaxed, then the health-score line, the violation counts, and a fairness standard deviation. The numbers are whatever the revision you cloned produces — at the current head the sample scores zero out of one hundred with two hard violations, and that is fine. The solution is written to `my-church/output/solution.json`. |
+| 6:00 | Terminal: highlight health score | Capture the whole block around that health-score line — the run record is the artifact, not the number. It is your first artifact in this course, and it is not a toy — this is the same solver whose evolution you will trace from specification to code comment to test oracle in Module 5. |
 | 6:45 | Terminal: `ollama pull qwen3:0.6b` | Now the local model. Install Ollama, then pull a small model. While it downloads, look at the daemon you have. Run `ollama list`. |
 | 8:00 | Terminal: `ollama list` | Read the names carefully. Any name ending in colon-cloud is a cloud-backed alias, not weights on your disk. A localhost URL proves nothing about where your text is processed — that distinction becomes the Module 3 privacy lab. |
 | 9:00 | Terminal: `ollama run … PONG` | One prompt: reply with exactly PONG. That answer was generated on your machine. No key, no bill, no transcript leaving the laptop. Module 2 builds a three-role copilot on exactly this foundation. |
-| 10:00 | Terminal: `make lab-m2` in tinycopilot | Last step. Move to the course folder and run the TinyCopilot test suite, or `make lab-m2`. Expected: one hundred ninety-one passed, one hundred percent coverage, with a ninety percent floor enforced. If pytest is missing, install it in a virtual environment — a system Python with PEP 668 protections will refuse a global install, and the error names that clearly. |
+| 10:00 | Terminal: `make lab-m2` in tinycopilot | Before Module 1, not tonight's pass gate: move to the course folder and run the TinyCopilot test suite, or `make lab-m2`. Expected: one hundred ninety-one passed, one hundred percent coverage, with a ninety percent floor enforced. If pytest is missing, install it in a virtual environment — a system Python with PEP 668 protections will refuse a global install, and the error names that clearly. |
 | 11:15 | Slide: acceptance checklist | Now post your first win: the solver output including the health score, your `ollama list`, and one sentence naming the archetype you want to build by week eight. Complete Lab M0 for the full checklist. |
 
 **Demo cue.** One terminal, one window, large font. The viewer should notice two things: the solver
-summary block is machine output with stable numbers, and the local model answers without any network
+summary block is machine output you record as printed, and the local model answers without any network
 configuration. Keep the health-score line on screen while you talk about the module map.
 
 **Action-step close.** "Post the three-part first win in the community, then complete Lab M0. That
@@ -108,7 +108,7 @@ checklist is your first pass-or-fail checkpoint in this course."
 - Blur nothing, but use a sample workspace only — never a real organization's data.
 - If over time, cut the `make setup` walkthrough to its last two lines; keep the solver output and
   the `:cloud` explanation, which carry the teaching.
-- Do not promise identical timings; `Solved in 0ms` and `solve_ms` vary by machine. Say the score,
-  counts, and fairness stdev are the stable parts.
-- Do not read a health score you have not seen on screen; the sample value is 100.0/100.
+- Do not promise identical numbers; `Solved in …ms` and the `Range:` dates vary by machine and day,
+  and the score moves with the SignUpFlow revision (`0.0/100`, 2 hard violations at the 2026-09-16 head).
+- Do not read a health score you have not seen on screen; say what your run printed.
 - Show the PEP 668 error text on screen rather than paraphrasing it.

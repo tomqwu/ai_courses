@@ -2,7 +2,7 @@
 
 > Three segments, each **5 minutes** at ~130 words/min (≈650 words). Total file ≈ 15 min.
 > Narration is written to be read aloud. Every file pointer shown on screen is also announced verbally.
-> Pointers marked **[SIG]** resolve in `/Users/tomwu/ai_courses/SignUpFlow`.
+> Pointers marked **[SIG]** resolve in the `SignUpFlow/` clone (a sibling of `course/` in the workspace root).
 
 ## M4.1 — The artifact pipeline in full
 

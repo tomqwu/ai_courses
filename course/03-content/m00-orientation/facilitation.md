@@ -11,7 +11,7 @@
 | 0–2 | Opening hook | I do | This one-pager on screen |
 | 2–12 | Archetype tour: open one proof file per repo | I do | `ListenToMe/README.md`, `SignUpFlow/docs/playbooks/validation.md`, `ai_qe/research/reviews/site-audit-2026-09-06.md` |
 | 12–22 | The Spec-to-Ship Loop, one artifact per stage | I do | ASCII loop diagram + `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md` |
-| 22–30 | Live solver run; health-score line on screen | I do | `Health score: 100.0/100` |
+| 22–30 | Live solver run; health-score line on screen | I do | The `Health score:` line as the run prints it (`0.0/100` at the 2026-09-16 head) |
 | 30–50 | Breakout: clone + solve + post the summary | We do | Pasted solver block in the thread |
 | 50–62 | Debrief: read three posts aloud; diagnose `:cloud` | We do | `ollama list` outputs |
 | 62–80 | Archetype triage on real product ideas | You do | One-line archetype + repo-to-study per idea |
@@ -83,13 +83,15 @@ quietly."
 | `ollama list` shows only `:cloud` aliases | "You are not blocked. Label them and move on; for M2 either pull `qwen3:0.6b` or run roles in cloud mode." |
 | `python3 --version` shows 3.10 or 3.14 | "SignUpFlow's gate is 3.11 through 3.13. Install that band, then re-run `make setup`." |
 | Student pastes a health score with no summary block | "Paste the whole block; the `Solution saved to …` line proves the run wrote a file." |
+| "My score is 0.0, did I break it?" | "No — that is what the sample scores at the current head. Record it as printed; the run record is the artifact." |
 | "This is just setup, when do we build?" | "You already ran a production scheduler. That is the win; Module 1 turns it into your own repo." |
 
 ## Close (5 min) — script
 
 "Three things before you go. One: paste tonight's outputs into your evidence log with today's date —
 that log becomes your capstone's evidence record. Two: finish Lab M0, all six checklist items; the
-community post is one of them, and the pass gate is the solver output plus a non-empty `ollama list`.
+community post is one of them (chased, not an auto-fail), and the pass gate is the solver output plus a
+non-empty `ollama list`. Before Module 1, run the TinyCopilot suite — Lab M2's gate, not tonight's.
 Three: state your archetype, one of the three, because Module 1 starts building your own operating
 system and the capstone contract is one archetype, one shippable scope, the loop complete."
 
