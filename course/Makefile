@@ -29,9 +29,10 @@ narration-plan:
 narration:
 	$(PYTHON) $(NARRATION)/generate_narration.py generate --provider elevenlabs
 
-# Free, offline, sentence-accurate preview. Clearly labelled as a preview in provenance and in the UI.
+# Free, offline, sentence-accurate preview: macOS `say` or Linux `espeak-ng`, whichever this machine
+# has. Clearly labelled as a preview in provenance and in the UI.
 narration-preview:
-	$(PYTHON) $(NARRATION)/generate_narration.py generate --provider say
+	$(PYTHON) $(NARRATION)/generate_narration.py generate --provider preview
 
 transcripts:
 	$(PYTHON) learner-site/build_site.py

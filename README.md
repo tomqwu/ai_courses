@@ -73,6 +73,7 @@ work without them.
 
 ## Quick start
 
+[![gate](https://github.com/tomqwu/ai_courses/actions/workflows/gate.yml/badge.svg)](https://github.com/tomqwu/ai_courses/actions/workflows/gate.yml)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/tomqwu/ai_courses?quickstart=1)
 
 The devcontainer installs Python 3.11 with pytest, Poetry, Ollama with the lab model, clones the
@@ -166,6 +167,12 @@ verify.py                          artifacts · rubrics · bundles · decks · s
 check_facts.py --strict            every pinned number re-derived from the clones; skipped
                                    with a note when the clones are absent
 ```
+
+The same gate runs on every push and pull request as a GitHub Actions workflow
+([`.github/workflows/gate.yml`](.github/workflows/gate.yml)): an Ubuntu runner installs ffmpeg,
+espeak-ng and Chromium, clones the three case-study repositories at their pinned commits, records the
+free preview voice so the narration step has audio to measure, and runs `check.sh`, then the two lab
+suites. Nothing the runner generates is committed; the manifest in the repository stays the owner's.
 
 `verify.py` is the same evidence discipline the course teaches, applied to the course: every claim
 carries a pointer to a file, and every pointer is resolved. Run it on its own with

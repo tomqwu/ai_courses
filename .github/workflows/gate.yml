@@ -1,0 +1,89 @@
+# The verification gate, on a Linux runner.
+#
+# The same steps a contributor runs with `make -C course check`, plus the two lab suites. The
+# narration media step needs audio on disk, and audio is generated rather than committed, so the
+# runner first records the free preview voice (espeak-ng) — the manifest it rewrites lives only in
+# the runner. The pointer and facts checks need the three case-study repositories beside course/,
+# cloned at the commits the course pins.
+name: gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: package gate (check.sh)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: System packages — ffmpeg measures audio, espeak-ng is the preview voice
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q --no-install-recommends ffmpeg espeak-ng
+
+      - name: Chromium for the browser check (check_player.py finds it under ~/.cache/ms-playwright)
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Case-study repositories at their pinned commits
+        run: |
+          set -e
+          clone() { git clone --quiet "https://github.com/tomqwu/$1.git" && git -C "$1" checkout --quiet "$2"; }
+          clone ListenToMe a9bde8e
+          clone SignUpFlow c550d46
+          clone ai_qe 6388f0a
+
+      # Order matters. The committed transcripts are checked against the committed scripts and
+      # manifest FIRST, while the checkout is untouched — that is the check a contributor can fail by
+      # editing a script and forgetting to regenerate. Only then is audio recorded, which rewrites the
+      # manifest with this runner's voice, and the transcripts are rebuilt to match it.
+      - name: Committed transcripts match the approved scripts
+        run: python3 course/learner-site/build_site.py --check
+
+      - name: Preview narration (free voice; nothing the runner writes is committed)
+        run: python3 course/06-production/narration/generate_narration.py generate --provider espeak
+
+      - name: Transcripts against the runner's own manifest
+        run: make -C course transcripts
+
+      - name: Gate
+        run: bash course/check.sh
+
+      - name: Manifest the runner produced (for the record, never committed)
+        if: always()
+        run: git -C course status --short 06-production/narration || true
+
+  labs:
+    name: lab suites (TinyCopilot, mini-flow)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: TinyCopilot — Lab M2 suite with the coverage floor
+        run: |
+          python -m pip install --quiet pytest pytest-cov httpx
+          make -C course/03-content/m02-ondevice-app/tinycopilot lab-m2
+
+      - name: mini-flow — Lab M5 baseline suite with the coverage floor
+        run: |
+          make -C course/03-content/m05-security-tests/mini-flow setup
+          make -C course/03-content/m05-security-tests/mini-flow lab-m5

@@ -70,7 +70,7 @@ course/
         ├── DESIGN.md              ← what this borrows from ai_qe, and what it deliberately changes
         ├── README.md              ← operator's guide: generate, validate, swap the voice
         ├── scripts/mNN.json       ← the approved narration words for each deck
-        ├── voices: elevenlabs (release) · say (free preview) · pronunciations.json
+        ├── voices: elevenlabs (release) · say / espeak-ng (free preview) · pronunciations.json
         ├── generate_narration.py · validate_narration.py · import_narration.py
         ├── captions.py · providers.py · narration_data.py
         └── test_captions.py (32) · test_providers.py (13)

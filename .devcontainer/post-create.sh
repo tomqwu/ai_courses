@@ -4,6 +4,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# The gate's preview voice and audio measurement (the narration step of `make -C course check`).
+sudo apt-get update -q >/dev/null && sudo apt-get install -y -q --no-install-recommends ffmpeg espeak-ng >/dev/null
+
 python -m pip install --upgrade pip >/dev/null
 python -m pip install pytest pytest-cov httpx playwright >/dev/null
 pipx install poetry >/dev/null 2>&1 || python -m pip install poetry >/dev/null
