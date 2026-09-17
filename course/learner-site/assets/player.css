@@ -1330,3 +1330,36 @@ body.transcript main { padding-bottom: 80px; }
   .search-snippet { grid-column: 1; }
   .q-objective { margin-left: 0; }
 }
+
+/* ───────────────────────────────────────────────── landing: hero actions, proof, what's included ── */
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin: 26px 0 0; }
+.btn-hero { display: inline-block; padding: 12px 20px; border-radius: 6px; background: var(--mint); color: var(--navy); font-weight: 700; font-size: var(--d-4); text-decoration: none; }
+.btn-hero:hover { background: var(--white); }
+.btn-hero-quiet { color: var(--navy-ink); font-size: var(--d-3); text-decoration: none; border-bottom: 1px solid var(--navy-line); }
+.btn-hero-quiet:hover { border-bottom-color: var(--mint); }
+.proof { margin: 0 0 34px; }
+.proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.proof-card { padding: 18px 20px; background: var(--paper); border: 1px solid var(--line); border-top: 3px solid var(--teal); border-radius: 6px; }
+.proof-card h3 { margin: 0 0 8px; font-size: var(--d-5); line-height: 1.25; }
+.proof-card p { margin: 0 0 8px; font-size: var(--d-3); line-height: 1.5; color: var(--ink); }
+.proof-card .proof-foot { margin: 8px 0 0; color: var(--ink-soft); font-size: var(--d-2); }
+.proof-card details { font-size: var(--d-2); }
+.proof-card summary { cursor: pointer; color: var(--teal); }
+.proof-list { margin: 0; padding-left: 1.2em; font-size: var(--d-3); line-height: 1.5; }
+.proof-list li { margin-bottom: 6px; }
+.proof-table { width: 100%; border-collapse: collapse; font-size: var(--d-2); margin-top: 8px; }
+.proof-table th, .proof-table td { text-align: left; padding: 5px 8px 5px 0; border-top: 1px solid var(--line-soft); vertical-align: top; }
+.proof-table thead th { border-top: 0; color: var(--teal); text-transform: uppercase; letter-spacing: .06em; font-size: var(--d-1); }
+.proof-status { white-space: nowrap; font-weight: 650; }
+.proof-status.is-ok { color: var(--teal); }
+.proof-status.is-drift { color: var(--proof-ink); }
+.proof-status.is-pinned { color: var(--ink-soft); }
+.included { margin-top: 40px; }
+.included-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.included-card { padding: 18px 20px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; }
+.included-card.is-featured { border-color: var(--teal); box-shadow: 0 0 0 2px var(--mint); }
+.included-card h3 { margin: 0 0 4px; font-size: var(--d-5); }
+.included-price { margin: 0 0 10px; font-size: var(--d-7); font-weight: 700; color: var(--navy); letter-spacing: -.02em; }
+.included-price small { font-size: var(--d-2); font-weight: 600; color: var(--ink-soft); margin-left: 6px; }
+.included-card ul { margin: 0; padding-left: 1.2em; font-size: var(--d-3); line-height: 1.5; }
+.included-card li { margin-bottom: 5px; }

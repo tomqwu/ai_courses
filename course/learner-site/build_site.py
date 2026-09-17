@@ -629,7 +629,8 @@ shown below in order and remains readable.</p></noscript>
 def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: str,
                text_only: bool = False, path_cards: str = "",
                module_paths: dict[str, int] | None = None,
-               units_by_deck: dict[str, list[dict]] | None = None) -> str:
+               units_by_deck: dict[str, list[dict]] | None = None,
+               proof_html: str = "") -> str:
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     cards = []
     grand_total = 0.0
@@ -738,12 +739,19 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       <a class="site-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">Course</span></a>
       <button type="button" class="search-button" data-search-open title="Search the course (press /)">Search <kbd>/</kbd></button>
     </div>
-    <p class="eyebrow">Nine modules · 233 slides</p>
-    <h1>Build, ship and sell three kinds of AI product.</h1>
-    <p class="site-lede">{lede}</p>
+    <p class="eyebrow">AI Product Studio · edition 2026.09 · nine modules</p>
+    <h1>Ship AI products a skeptical engineer can audit.</h1>
+    <p class="site-lede">Three production repositories — an on-device meeting copilot, a multi-tenant SaaS
+      built with AI agents under written rules, and an evidence-cited briefing site — taught as one method:
+      spec it, build it, validate it, prove it. Nine narrated modules, labs whose pass criteria are objective,
+      and a course that checks its own claims every time it is built.</p>
     <ul class="site-facts">
 {facts}
     </ul>
+    <div class="hero-actions">
+      <a class="btn-hero" href="{site_base}/lab-m00.html">Start here: your first win in about 30 minutes →</a>
+      <a class="btn-hero-quiet" href="#proof">See what this site proves about itself</a>
+    </div>
   </div>
 </header>
 <main class="site-main">
@@ -756,6 +764,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       <button type="button" data-progress-reset>Reset</button>
     </div>
   </div>
+{proof_html}
   <div class="section-heading">
     <h2>Start with what you want to build</h2>
     <span class="section-note">Each path teaches one product type end to end. Not sure what a
@@ -771,6 +780,48 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
   <div class="room-grid">
 {chr(10).join(cards)}
   </div>
+  <section class="included" id="included">
+    <div class="section-heading">
+      <h2>What is included</h2>
+      <span class="section-note">Stated the way the sales page states it — and the sales page is in the repository, so the two cannot drift.</span>
+    </div>
+    <div class="included-grid">
+      <article class="included-card">
+        <h3>Studio · self-paced</h3>
+        <p class="included-price">$399</p>
+        <ul>
+          <li>All 9 modules: 27 narrated lesson segments with captions and transcripts</li>
+          <li>8 labs with objective acceptance checklists, plus the capstone</li>
+          <li>9 knowledge checks (72 questions) with rationale and objective references</li>
+          <li>The TinyCopilot and mini-flow lab starters with their verified test runs</li>
+          <li>Lessons, handouts and glossaries as searchable text</li>
+          <li>The capstone rubric and the evidence-record template</li>
+        </ul>
+      </article>
+      <article class="included-card is-featured">
+        <h3>Studio Live · 8-week cohort</h3>
+        <p class="included-price">$1,490 <small>founding cohort $990</small></p>
+        <ul>
+          <li>Everything in Studio</li>
+          <li>Eight 90-minute workshops (I do / we do / you do)</li>
+          <li>Instructor code review on three labs</li>
+          <li>Capstone review and demo day</li>
+          <li>The cohort channel and the founding-cohort testimonial trade</li>
+        </ul>
+      </article>
+      <article class="included-card">
+        <h3>One track · self-paced</h3>
+        <p class="included-price">$199</p>
+        <ul>
+          <li>One archetype: on-device app, spec-driven SaaS, or expertise product</li>
+          <li>Four modules in full plus the monetise-and-launch slice</li>
+          <li>The same labs, decks, checks and artifacts for those modules</li>
+          <li>Each path page states what it leaves out, before checkout</li>
+        </ul>
+      </article>
+    </div>
+    <p class="index-footnote">Prices are the decision record in <a href="https://github.com/tomqwu/ai_courses/blob/main/course/04-sales/pricing-and-platforms.md">pricing-and-platforms.md</a>, with the reasoning in both directions. Testimonials are not shown because none exist yet; the three repositories are the proof until the founding cohort finishes.</p>
+  </section>
   <section class="how-to">
     <h2>How to use this site</h2>
     <ul>
@@ -899,9 +950,13 @@ def main(argv=None) -> int:
     path_cards = SP.path_cards_html(SP.TRACKS, units_by_deck, seconds, args.site_base)
     module_paths = {deck_id: len(SP.paths_for_module(deck_id, built_tracks))
                     for deck_id in DECK_IDS}
+    import site_proof as SPR                                                      # noqa: PLC0415
+    proof = SPR.gather(decks, manifest)
+    (target / "proof.json").write_text(json.dumps(proof, indent=1, default=str), encoding="utf-8")
     (target / "index.html").write_text(
         index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration,
-                   path_cards=path_cards, module_paths=module_paths, units_by_deck=units_by_deck),
+                   path_cards=path_cards, module_paths=module_paths, units_by_deck=units_by_deck,
+                   proof_html=SPR.proof_section(proof, args.site_base)),
         encoding="utf-8")
 
     # The transcripts are committed as Markdown, so a check must prove the committed copies still

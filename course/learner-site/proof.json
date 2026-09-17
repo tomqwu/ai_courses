@@ -1,0 +1,169 @@
+{
+ "built": "2026-09-17",
+ "pointers": {
+  "checked": 1082,
+  "ranges": 234,
+  "problems": 0,
+  "live": true
+ },
+ "facts": {
+  "rows": [
+   {
+    "key": "listentome.coverage_badge",
+    "pinned": "96",
+    "pinned_date": "2026-09-12",
+    "derived": "96",
+    "status": "ok",
+    "note": "content-standards \u00a70.2: 96% core coverage (README badge)"
+   },
+   {
+    "key": "listentome.coverage_floor",
+    "pinned": "95",
+    "pinned_date": "2026-09-12",
+    "derived": "95",
+    "status": "ok",
+    "note": "content-standards \u00a70.2: 95% floor via scripts/check-coverage.sh"
+   },
+   {
+    "key": "listentome.competitor_rows",
+    "pinned": 14,
+    "pinned_date": "2026-09-17",
+    "derived": 14,
+    "status": "ok",
+    "note": "content-standards \u00a70.2: 14-row competitor table (13 rivals + ListenToMe) in docs/competition-analysis.md, header dated 2026-09"
+   },
+   {
+    "key": "listentome.latest_macos_tag",
+    "pinned": "v1.4.4",
+    "pinned_date": "2026-09-17",
+    "derived": "v1.4.4",
+    "status": "ok",
+    "note": "informational: the course tells the 1.3.0 gap review as a dated record (2026-09-10) and notes that 1.4.0\u20131.4.4 shipped 13\u201314 Sept; a newer tag is not drift, but re-read the README's 'Verified proof' column when it moves"
+   },
+   {
+    "key": "listentome.gap_review_verdict",
+    "pinned": "do not promote the existing 1.3.0 DMG as a broadly validated production release",
+    "pinned_date": "2026-09-12",
+    "derived": "do not promote the existing 1.3.0 DMG as a broadly validated production release",
+    "status": "ok",
+    "note": "content-standards \u00a70.2: the 2026-09-10 gap review's recommendation (historical \u2014 stays true as a dated record)"
+   },
+   {
+    "key": "signupflow.agents_md_lines",
+    "pinned": 188,
+    "pinned_date": "2026-09-17",
+    "derived": 188,
+    "status": "ok",
+    "note": "curriculum M1.1: AGENTS.md (188 lines, universal baseline)"
+   },
+   {
+    "key": "signupflow.constitution_lines",
+    "pinned": 85,
+    "pinned_date": "2026-09-17",
+    "derived": 85,
+    "status": "ok",
+    "note": "curriculum M1.1 / lead-product email 2: an 85-line constitution"
+   },
+   {
+    "key": "signupflow.spec_folders",
+    "pinned": 17,
+    "pinned_date": "2026-09-12",
+    "derived": 17,
+    "status": "ok",
+    "note": "content-standards \u00a70.2: 17 spec folders (every entry under specs/, including COMPLETED-000-safety-verification)"
+   },
+   {
+    "key": "signupflow.spec_014_has_tasks",
+    "pinned": false,
+    "pinned_date": "2026-09-12",
+    "derived": false,
+    "status": "ok",
+    "note": "content-standards \u00a70.2: spec 014 has no tasks.md \u2014 the honest-gap teaching point in M4.1"
+   },
+   {
+    "key": "signupflow.validation_status",
+    "pinned": "Historical reference",
+    "pinned_date": "2026-09-13",
+    "derived": "Historical reference",
+    "status": "ok",
+    "note": "validation.md was reclassified 2026-09-13; the course already states this"
+   },
+   {
+    "key": "signupflow.test_functions",
+    "pinned": 1766,
+    "pinned_date": "2026-09-17",
+    "derived": 1766,
+    "status": "ok",
+    "note": "test functions on disk (def test_) \u2014 a different measure from the recorded run the course quotes ('1,464 passed, 21 skipped', dated 2026-09-12, which the course already says never to quote as today's status); growth here is information, not an edit"
+   },
+   {
+    "key": "ai_qe.slide_counts",
+    "pinned": "116 = 21+33+26+36",
+    "pinned_date": "2026-09-12",
+    "derived": "116 = 21+33+26+36",
+    "status": "ok",
+    "note": "content-standards \u00a70.2: 116 narrated slides = 21+33+26+36 (_data/briefing_room.json)"
+   },
+   {
+    "key": "ai_qe.site_version",
+    "pinned": "1.24.1",
+    "pinned_date": "2026-09-17",
+    "derived": "1.24.1",
+    "status": "ok",
+    "note": "informational \u2014 the site version moves with every publish; nothing in the course pins it"
+   },
+   {
+    "key": "ai_qe.self_audit_findings",
+    "pinned": "14",
+    "pinned_date": "2026-09-12",
+    "derived": "14",
+    "status": "ok",
+    "note": "content-standards \u00a70.2: 14-finding self-audit (research/reviews/site-audit-2026-09-06.md)"
+   },
+   {
+    "key": "signupflow.claude_md_lines",
+    "pinned": 154,
+    "pinned_date": "2026-09-17",
+    "derived": 154,
+    "status": "ok",
+    "note": "M1.1 proof slide: CLAUDE.md line count"
+   },
+   {
+    "key": "signupflow.copilot_lines",
+    "pinned": 127,
+    "pinned_date": "2026-09-17",
+    "derived": 127,
+    "status": "ok",
+    "note": "M1.1 proof slide: .github/copilot-instructions.md line count"
+   },
+   {
+    "key": "listentome.competition_updated",
+    "pinned": "2026-09",
+    "pinned_date": "2026-09-17",
+    "derived": "2026-09",
+    "status": "ok",
+    "note": "the competition-analysis.md header's 'Last updated' month, quoted in M0, M3 and M7"
+   }
+  ],
+  "live": true,
+  "drifted": 0,
+  "total": 17
+ },
+ "labs": [
+  {
+   "name": "TinyCopilot (Labs M2\u2013M3)",
+   "lines": [
+    "191 passed, coverage 100% (floor: 90% enforced via `--cov-fail-under`)",
+    "49 passed",
+    "2 passed against a live Ollama daemon (cloud aliases and local models both work \u2014 the contract test is about the provider, not privacy)"
+   ],
+   "href": "https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m02-ondevice-app/tinycopilot/README.md"
+  }
+ ],
+ "narration": {
+  "slides": 233,
+  "scripted": 233,
+  "words": 22122,
+  "recorded": 233
+ }
+}
