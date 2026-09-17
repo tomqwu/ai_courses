@@ -332,11 +332,13 @@ def transcript_markdown(deck: dict, manifest: dict, provenance: dict) -> str:
     out.append("")
     if preview and preview == len(entries):
         out.append("**Voice:** preview narration — a free local voice, not the finished release "
-                   "recording. The words below are the approved narration and do not change when the "
+                   "recording. The audio is spoken by a synthesized voice, not a human recording. "
+                   "The words below are the approved narration and do not change when the "
                    "release voice is recorded.")
     elif preview:
-        out.append(f"**Voice:** mixed — {preview} of {len(entries)} recordings are preview audio; "
-                   f"the rest were recorded separately. The words below are the approved narration.")
+        out.append(f"**Voice:** mixed — {preview} of {len(entries)} recordings are preview audio "
+                   f"spoken by a synthesized voice; the rest were recorded separately. The words "
+                   f"below are the approved narration.")
     elif voice:
         out.append(f"**Voice:** {voice}")
     out.append("")
@@ -526,9 +528,15 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
                       f'<small>Narration is not published with this copy; every slide carries a '
                       f'complete transcript.</small>')
     else:
+        # The synthetic-voice disclosure is a compliance item under EU AI Act Article 50 and, more
+        # to the point, the same honesty the course teaches: say how a thing was produced, where a
+        # listener meets it. It rides the cover note rather than a footer nobody reads.
+        synthetic = (" The narration is spoken by a synthesized voice, not a human recording."
+                     if is_preview else "")
         cover_note = (f'<strong>{len(deck["slides"])} slides · {recorded} narrated</strong>'
                       f'<small>{int(total // 60)}m {int(total % 60)}s of narration with captions and transcript.'
                       f'{" Free preview voice — the release recording is pending." if is_preview else ""}'
+                      f'{synthetic}'
                       f'</small>')
     sections = "\n".join(
         slide_shell(deck, slide, deck_manifest.get(slide["id"]), site_base, cover_note)

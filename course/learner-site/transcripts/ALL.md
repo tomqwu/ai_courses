@@ -19,7 +19,7 @@ Every word spoken in the course, in order. The words are the approved narration 
 
 **19 slides · 19 narrated · 10m 2s of audio**
 
-**Voice:** mixed — 18 of 19 recordings are preview audio; the rest were recorded separately. The words below are the approved narration.
+**Voice:** mixed — 18 of 19 recordings are preview audio spoken by a synthesized voice; the rest were recorded separately. The words below are the approved narration.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -146,7 +146,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **25 slides · 25 narrated · 14m 23s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -309,7 +309,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **26 slides · 26 narrated · 15m 4s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -478,7 +478,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **27 slides · 27 narrated · 14m 58s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -653,7 +653,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 18m 16s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -834,7 +834,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **25 slides · 25 narrated · 16m 32s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -997,7 +997,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 16m 14s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -1178,7 +1178,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 15m 47s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -1359,7 +1359,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **27 slides · 27 narrated · 14m 21s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 

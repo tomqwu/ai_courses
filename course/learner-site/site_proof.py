@@ -167,7 +167,8 @@ def proof_section(proof: dict, site_base: str) -> str:
     <article class="proof-card">
       <h3>What is spoken is what is written</h3>
       <p><strong>{n['slides']} slides</strong>, {n['scripted']} scripted, <strong>{n['words']:,} words</strong> of approved narration. Captions, transcript and script are checked word for word; a mismatch fails the build.</p>
-      <p class="proof-foot"><a href="{site_base}/transcripts/ALL.md">The complete transcript</a> is the same words.</p>
+      <p class="proof-foot"><a href="{site_base}/transcripts/ALL.md">The complete transcript</a> is the same words.
+        Where a deck says preview voice, its audio is spoken by a synthesized voice rather than a human recording.</p>
     </article>
   </div>
 </section>"""
