@@ -99,6 +99,7 @@ course/
 **To sell it:** `04-sales/` is publish-ready: landing-page copy, pricing rationale grounded in 2025–26 platform benchmarks, and a full launch plan with the 7-email arc.
 
 **To run the labs yourself:** the Module 2/3 labs use `03-content/m02-ondevice-app/tinycopilot/` — a complete, tested Python reference implementation that mirrors ListenToMe's architecture (see its README). **Verified status as shipped:** `make lab-m2` → 191 passed, 100% coverage (floor 90 enforced); `make lab-m3` → 49 passed; `make e2e` → 2 passed against a live Ollama daemon; `make demo` → three role outputs. Requirements: Python 3.11+ (TinyCopilot itself also runs on 3.10), pytest, httpx, and Ollama (`ollama pull qwen3:0.6b` for a local model).
+The Module 5 lab uses `03-content/m05-security-tests/mini-flow/` — a deliberately incomplete FastAPI + SQLAlchemy + JWT multi-tenant starter mirroring SignUpFlow's auth shape (see its README for the intentional gaps). **Verified status as shipped:** `make lab-m5` → 51 passed, 23 skipped, 100% coverage (floor 90 enforced); `make pass-gate` → 11 failed, 63 passed on the starter by design, 74 passed once the four lab fixes are in; `make demo` → two `LEAK` lines. Requirements: Python 3.11+, `make setup` (no compiled dependencies, no database server).
 
 
 ## Course at a glance

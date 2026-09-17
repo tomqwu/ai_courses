@@ -1,9 +1,10 @@
 # Facilitation M5 — Multi-Tenant Security & the Acceptance Gate
 
 > One 90-minute cohort session for Module 5. Students arrive with Lab M4 done (a spec folder that
-> passed the requirements checklist) and leave with the four Lab M5 steps started and one induced
-> failure recorded. Mode labels: **I do** (instructor demonstrates), **We do** (whole room), **You
-> do** (breakout).
+> passed the requirements checklist) and the `mini-flow/` starter installed (`make setup`, then
+> `make lab-m5` green), and leave with the four Lab M5 steps started and one induced failure
+> recorded. Mode labels: **I do** (instructor demonstrates), **We do** (whole room), **You do**
+> (breakout).
 
 ## Timing table (sums to 90)
 
@@ -14,7 +15,7 @@
 | 12 | Breakout 1: hunt the unfiltered query | We do | Each group posts the leaky line + org |
 | 8 | Debrief 1: which failure class is it? | We do | Whiteboard of the seven negative cases |
 | 12 | Live miswire: drift test red → green | I do | `tests/unit/test_api_route_auth_policy.py` |
-| 14 | Breakout 2: write your route policy + drift test | You do | `route_policy.py` + failing test output |
+| 14 | Breakout 2: complete the route policy, then break it | You do | `route_auth_policy.py` diff + failing test output |
 | 6 | Debrief 2: what the red run proved | We do | Two groups paste their red output |
 | 10 | Manifest demo: delete a scenario, watch collection die | I do | `docs/playbooks/coverage.json`, `plugin.py:37-45` |
 | 8 | Breakout 3: honesty audit of your own manifest | You do | One row with status ≠ `automated` |
@@ -48,17 +49,17 @@ Groups of **3–4**. Rotate three roles: **driver** (shares screen, types), **sk
 attacker: "can I enumerate ids? can I write?"), **recorder** (owns the posted deliverable). Timeboxed;
 the driver must be a different person in each breakout.
 
-**Breakout 1 — hunt the unfiltered query (12 min).** Exact prompt: *"Run
-`grep -rn "db.query(" app/ | grep -v org_id`. For each hit, paste the line, name the route that
-reaches it, and write the status code a foreign id would return after the fix. If you have no hits,
-invent one: write a plausible query that omits `org_id` and say which of the seven negative cases
+**Breakout 1 — hunt the unfiltered query (12 min).** Exact prompt: *"Run `make demo` in
+`mini-flow/`, then `grep -n "db.query(Event)" src/miniflow/routers/events.py`. For each hit without
+`org_id`, paste the line, name the route that reaches it, and write the status code a foreign id
+returns now and must return after the fix. Then say which test in `tests/test_lab1_isolation.py`
 catches it."* **Deliverable to post:** the leaky line plus its route and intended status code.
 
-**Breakout 2 — write your route policy + drift test (14 min).** Exact prompt: *"List every mounted
-route, assign each to `public` / `member` / `admin`, and write the set-equality assertion against
-`app.routes` plus the dependency-tree check. Then deliberately miswire one `admin` route to
-`get_current_user`, run it, and paste the red output."* **Deliverable to post:** the policy dict and
-the raw red run.
+**Breakout 2 — complete the route policy, then break it (14 min).** Exact prompt: *"Run
+`make step3`. Classify the unclassified route in `src/miniflow/route_auth_policy.py` and get to
+green. Then deliberately miswire `create_event` in `routers/events.py` to `get_current_user`, run
+`make step3` again, and paste the red output — it must name the route and the missing dependency."*
+**Deliverable to post:** the policy diff and the raw red run.
 
 **Breakout 3 — honesty audit (8 min).** Exact prompt: *"Pick one scenario you cannot currently
 prove. Give it a status from `automated`/`partial`/`manual`/`blocked` and the tiers that justify it —

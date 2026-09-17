@@ -24,6 +24,7 @@
    - TinyCopilot (the lab): `make lab-m2` → **191 passed, 100% coverage** (floor 90 enforced);
      `make lab-m3` → **49 passed**; `make e2e` → **2 passed** against a live Ollama daemon;
      2 contract tests skip without `LAB_E2E=1`.
+   - mini-flow (the Lab M5 starter, `03-content/m05-security-tests/mini-flow/`): `make lab-m5` → **51 passed, 23 skipped, 100% coverage** (floor 90 enforced); `make pass-gate` → **11 failed, 63 passed** on the shipped starter by design and **74 passed** with the four reference fixes applied (re-run 2026-09-17).
 3. **Numbering.** Modules `M0`–`M8`; segments `M#.#`; labs `Lab M#`; quizzes `Quiz M#`.
    Do not renumber or invent segments — use the segment titles already in each `lesson.md`.
 4. **Voice.** Imperative, specific, no hype, no "in this section we will". Second person. Short
