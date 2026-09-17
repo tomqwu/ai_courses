@@ -28,7 +28,7 @@ Explain SignUpFlow's layered instruction stack, write rules in its house style, 
 
 - `.specify/memory/constitution.md` — **85 lines**. Project principles, "single source of truth above all agent files" (`SignUpFlow/AGENTS.md`, "File-by-file scope notes"). It defines two operating contexts (a Ralph implementation loop vs. interactive chat), four principles, an autonomy configuration, and the current validation policy.
 - `AGENTS.md` — **188 lines**. The universal baseline "consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, Factory" (`SignUpFlow/AGENTS.md`).
-- `CLAUDE.md` — **143 lines**. Claude Code doesn't read `AGENTS.md` natively, so `CLAUDE.md` cross-references it via a link at the top and adds Claude-specific addenda (`SignUpFlow/AGENTS.md`).
+- `CLAUDE.md` — **154 lines** (as of 2026-09-16). Claude Code doesn't read `AGENTS.md` natively, so `CLAUDE.md` cross-references it via a link at the top and adds Claude-specific addenda (`SignUpFlow/AGENTS.md`).
 - `.github/copilot-instructions.md` — a restatement for Copilot, which needs its own file.
 
 Three properties make this stack work. **One canonical source, many delivery files** — the baseline lives in `AGENTS.md` and the other files reference or restate it rather than duplicating prose (`SignUpFlow/docs/ai-agent-coding-strategy.md`, "Single source, multi-host"). **Short files** — house style: "Keep each instruction file under ~200 lines. Split by topic rather than nest" (`SignUpFlow/AGENTS.md`). **Imperative, verifiable rules** — the heart of the house style, stated as a contrast:
