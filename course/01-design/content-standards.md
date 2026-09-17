@@ -10,9 +10,11 @@
    clone — e.g. `` `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:15-24` ``,
    `` `SignUpFlow/docs/playbooks/validation.md` ``, `` `ai_qe/_data/pilot_gates.json` ``.
    All 234 existing pointers were verified to resolve. Never invent a path, count, quote, or number.
-2. **Verified numbers only.** These are the numbers you may state as fact without re-deriving them:
+2. **Verified numbers only.** These are the numbers you may state as fact without re-deriving them
+   (re-derived 2026-09-17 against the upstream heads of 2026-09-16 by `06-production/check_facts.py`,
+   which is also where each one is pinned — run `make facts` before quoting any of them in new text):
    - ListenToMe: 96% core coverage; 95% CI coverage floor via `scripts/check-coverage.sh`;
-     12-row competitor table in `docs/competition-analysis.md`; 1.3.0 held back ("do not promote")
+     14-row competitor table in `docs/competition-analysis.md`; 1.3.0 held back on 2026-09-10 ("do not promote"; macOS 1.4.0–1.4.4 then shipped 13–14 Sept)
      at 97.24% coverage per `docs/reviews/2026-09-10/design-and-gap-review.md`.
    - SignUpFlow: "1,464 passed, 21 skipped" in `docs/playbooks/validation.md` (dated 2026-09-12,
      demoted to historical reference 2026-09-13); 7 test tiers (`docs/TESTING.md`); 17 spec folders;

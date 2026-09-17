@@ -51,9 +51,9 @@ title: M0 — Orientation: Three Products, One Method
 - Model choice: local Ollama or cloud with your key
 - Proof: 96% core-coverage badge — `ListenToMe/README.md`
 - Proof: notarized release DMGs on GitHub Releases
-- Proof: 12-row competitor table — `ListenToMe/docs/competition-analysis.md`
+- Proof: 14-row competitor table — `ListenToMe/docs/competition-analysis.md`
 
-<!-- NOTES: ListenToMe is a real macOS app you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick. Open the README and scroll to the coverage badge — that is a number produced by a test run, not a marketing line. Then open the competition analysis: twelve rows, each claim sourced and dated. That file is positioning work done as research, and it is the reason the product has a defensible one-liner. Timing: 4 minutes. Transition: Type 2 is server-side, and its proof asset looks completely different. -->
+<!-- NOTES: ListenToMe is a real macOS app you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick. Open the README and scroll to the coverage badge — that is a number produced by a test run, not a marketing line. Then open the competition analysis: fourteen rows, each claim sourced and dated. That file is positioning work done as research, and it is the reason the product has a defensible one-liner. Timing: 4 minutes. Transition: Type 2 is server-side, and its proof asset looks completely different. -->
 
 ---
 
@@ -129,7 +129,7 @@ Reviewed edition: **1.2.1**, commit `fd1133…`
 
 | Stage | Artifact | Pointer |
 |---|---|---|
-| Study | 12-row competitor table | `ListenToMe/docs/competition-analysis.md` |
+| Study | 14-row competitor table | `ListenToMe/docs/competition-analysis.md` |
 | Study | "Baseline before solutioning." | `ai_qe/docs/principles.md` |
 | Spec | Given/When/Then stories | `SignUpFlow/specs/014-security-hardening/spec.md` |
 | Build | Checkbox tasks with file paths | `SignUpFlow/specs/019-sms-notifications/tasks.md` |

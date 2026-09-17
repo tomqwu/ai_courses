@@ -26,8 +26,8 @@ Explain SignUpFlow's layered instruction stack, write rules in its house style, 
 
 **The stack.** Open these four files from your SignUpFlow clone and note their lengths:
 
-- `.specify/memory/constitution.md` — **79 lines**. Project principles, "single source of truth above all agent files" (`SignUpFlow/AGENTS.md`, "File-by-file scope notes"). It defines two operating contexts (a Ralph implementation loop vs. interactive chat), four principles, an autonomy configuration, and the current validation policy.
-- `AGENTS.md` — **177 lines**. The universal baseline "consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, Factory" (`SignUpFlow/AGENTS.md`).
+- `.specify/memory/constitution.md` — **85 lines**. Project principles, "single source of truth above all agent files" (`SignUpFlow/AGENTS.md`, "File-by-file scope notes"). It defines two operating contexts (a Ralph implementation loop vs. interactive chat), four principles, an autonomy configuration, and the current validation policy.
+- `AGENTS.md` — **188 lines**. The universal baseline "consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, Factory" (`SignUpFlow/AGENTS.md`).
 - `CLAUDE.md` — **143 lines**. Claude Code doesn't read `AGENTS.md` natively, so `CLAUDE.md` cross-references it via a link at the top and adds Claude-specific addenda (`SignUpFlow/AGENTS.md`).
 - `.github/copilot-instructions.md` — a restatement for Copilot, which needs its own file.
 
@@ -44,7 +44,7 @@ A rule an agent can't check is a vibe, not a rule. Use this contrast table when 
 | "Value test coverage" | "Write tests first (TDD): write the failing test, implement to make it pass, run `make test-unit`" (`SignUpFlow/AGENTS.md`) | Names the action and the check command |
 | "Handle secrets safely" | "Never commit secrets, API keys, JWT signing keys... Read them from environment variables" (`SignUpFlow/AGENTS.md`, "Safety") | "Never commit X" is greppable; "safely" isn't |
 
-**What a constitution holds.** SignUpFlow's 79-line constitution keeps only what must never drift: four principles — *Native First* (prefer plain Poetry + SQLite over Docker for local dev), *Test-Driven Implementation*, *Simplicity & YAGNI* ("Build exactly what's needed, nothing more."), and *Safety & Reliability*: email and SMS "MUST be disabled by default (`EMAIL_ENABLED=false`, `SMS_ENABLED=false`...)" and payments "MUST be mocked or disabled" (`SignUpFlow/.specify/memory/constitution.md`). It also fixes **autonomy**: "YOLO Mode: DISABLED / Git Autonomy: ENABLED (Commit changes when done)" — agents may commit finished work but never run unchecked destructive commands; `AGENTS.md` adds "When unsure whether an action is reversible, stop and ask" (`SignUpFlow/AGENTS.md`, "Safety").
+**What a constitution holds.** SignUpFlow's 85-line constitution keeps only what must never drift: four principles — *Native First* (prefer plain Poetry + SQLite over Docker for local dev), *Test-Driven Implementation*, *Simplicity & YAGNI* ("Build exactly what's needed, nothing more."), and *Safety & Reliability*: email and SMS "MUST be disabled by default (`EMAIL_ENABLED=false`, `SMS_ENABLED=false`...)" and payments "MUST be mocked or disabled" (`SignUpFlow/.specify/memory/constitution.md`). It also fixes **autonomy**: "YOLO Mode: DISABLED / Git Autonomy: ENABLED (Commit changes when done)" — agents may commit finished work but never run unchecked destructive commands; `AGENTS.md` adds "When unsure whether an action is reversible, stop and ask" (`SignUpFlow/AGENTS.md`, "Safety").
 
 **Precedence.** When rules overlap, `AGENTS.md` gives a 5-level hierarchy and one tie-breaker: "follow the more specific and safer one."
 
@@ -158,7 +158,7 @@ Open your loop journal and write one evidence entry now, for the SignUpFlow solv
 
 ## Recap
 
-- **Governance:** a 79-line constitution above a 177-line `AGENTS.md` baseline, with `CLAUDE.md` (143) and Copilot restatements — every file imperative, verifiable, under ~200 lines (`SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md`).
+- **Governance:** an 85-line constitution above a 188-line `AGENTS.md` baseline, with `CLAUDE.md` (154) and Copilot restatements — every file imperative, verifiable, under ~200 lines (`SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md`).
 - **Precedence:** five levels, and when they conflict, "follow the more specific and safer one" (`SignUpFlow/AGENTS.md`).
 - **Anti-hallucination:** grep before referencing; read facts from the canonical source; present 2-3 differentiated options when ambiguous (`SignUpFlow/AGENTS.md`).
 - **Rules graduate:** research-log observation → tested on a real change → promoted → upstreamed (`SignUpFlow/docs/ai-agent-coding-strategy.md`).

@@ -48,7 +48,7 @@ Price it, package it, position it — from evidence.
 ## The competitor table is your raw material
 
 - `ListenToMe/docs/competition-analysis.md`
-- 12 competitor rows, dated 2026-08
+- 13 competitor rows + ListenToMe, dated 2026-09
 - Unconfirmed details marked "approximately" or "reportedly"
 - Price column carries model, price, and channel
 - Commercial tiers run about $8–149/mo
@@ -62,7 +62,7 @@ where a detail could not be confirmed from a primary source, it is qualified
 with "approximately" or "reportedly."_
 ```
 
-<!-- NOTES: Put the file on screen. Note the header convention: every price fact is stated as of 2026, and where a detail could not be confirmed from a primary source it is qualified "approximately" or "reportedly." That convention is the honesty mechanism you copy in Lab M7 Step 1 — every price cell gets a source URL and a retrieval date, and unconfirmed cells get the qualifier. Point at the twelve rows; this is not a summary, it is evidence you can audit. Timing: 3 minutes. Transition: now read the Price column against each row's cost structure. -->
+<!-- NOTES: Put the file on screen. Note the header convention: every price fact is stated as of 2026, and where a detail could not be confirmed from a primary source it is qualified "approximately" or "reportedly." That convention is the honesty mechanism you copy in Lab M7 Step 1 — every price cell gets a source URL and a retrieval date, and unconfirmed cells get the qualifier. Point at the thirteen competitor rows; this is not a summary, it is evidence you can audit. Timing: 3 minutes. Transition: now read the Price column against each row's cost structure. -->
 
 ---
 

@@ -36,7 +36,7 @@ once, aloud: "Which of these could a marketing team have written by hand?" None 
 
 ## Loop walkthrough (10 min)
 
-Draw the six stages live. For each, open one file and stop at the number: the 12-row competitor table
+Draw the six stages live. For each, open one file and stop at the number: the 14-row competitor table
 (Study), the Given/When/Then spec (Spec), the checkbox tasks with file paths (Build), the seven test
 tiers (Validate), the signed DMGs (Release), and the review that says do not promote the 1.3.0 build
 despite 97.24% coverage (Prove). Say plainly: Prove is the stage most portfolios are missing, and the

@@ -13,7 +13,7 @@
    mkdir -p specs/001-todo-command docs tests
    touch docs/research-log.md docs/evidence-log.md
    ```
-2. **Write `constitution.md` (≤80 lines).** Copy, then personalize the three bracketed parts:
+2. **Write `constitution.md` (≤80 lines).** SignUpFlow's own has grown to 85 lines since this lab was written (`SignUpFlow/.specify/memory/constitution.md`); the cap is for *your first one* — brevity is the skill. Copy, then personalize the three bracketed parts:
    ```markdown
    # <Project> Constitution
    ## Principles
@@ -27,7 +27,7 @@
    - Git Autonomy: ENABLED (commit when a task completes and tests pass)
    - When unsure whether an action is reversible, stop and ask.
    ```
-   (Model: `SignUpFlow/.specify/memory/constitution.md` — 79 lines.)
+   (Model: `SignUpFlow/.specify/memory/constitution.md` — 85 lines.)
 3. **Write `AGENTS.md` (≤200 lines).** Every rule imperative and verifiable; include a validation checklist:
    ```markdown
    # AGENTS.md

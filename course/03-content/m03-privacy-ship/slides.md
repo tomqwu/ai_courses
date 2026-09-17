@@ -328,12 +328,12 @@ final class OllamaContractE2ETests: XCTestCase {
 ## Competition analysis as an engineering artifact
 
 - Dated header, uncertainty labeled in-band
-- 12-row by 9-column table, per-cell sources
+- 14-row by 9-column table, per-cell sources
 - "approximately", "reportedly" where unconfirmed
 - Taxonomy: bot-joiners, cloud capturers, on-device
 - Pointer: `ListenToMe/docs/competition-analysis.md:1-68`
 
-<!-- NOTES: The other half of shipping is knowing and proving what your product is against what exists. Open competition-analysis.md. It is built like a test suite: a dated header stating that unconfirmed details are qualified with approximately or reportedly, a twelve-row by nine-column table, and a per-competitor section ending every entry with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud even when marketed as local-first. Timing: three minutes. Transition: the one-liner. -->
+<!-- NOTES: The other half of shipping is knowing and proving what your product is against what exists. Open competition-analysis.md. It is built like a test suite: a dated header stating that unconfirmed details are qualified with approximately or reportedly, a fourteen-row by nine-column table, and a per-competitor section ending every entry with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud even when marketed as local-first. Timing: three minutes. Transition: the one-liner. -->
 
 ---
 

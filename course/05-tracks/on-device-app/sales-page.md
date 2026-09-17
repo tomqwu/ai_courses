@@ -16,7 +16,7 @@ Most AI app courses end where the hard part starts: a notebook that calls an API
 
 Then you write the test that proves it. Your red-team case is the hole that breaks naive privacy checkers — a `localhost` daemon quietly serving a cloud-backed model alias. Your code rejects it; your test says so. That is the promise: **privacy claims enforced in code, proven by tests.**
 
-You study this in shipped code. **ListenToMe** is a free, open-source, on-device meeting copilot for macOS/iOS with a 96% core-coverage badge (`ListenToMe/README.md`) and a 95% coverage floor enforced by script (`ListenToMe/scripts/check-coverage.sh`). Its market was mapped in a 12-row, per-cell-sourced competitor table (`ListenToMe/docs/competition-analysis.md`) — and its engineers once held a release back at 97.24% coverage with the words "do not promote" (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`). You read that review in class.
+You study this in shipped code. **ListenToMe** is a free, open-source, on-device meeting copilot for macOS/iOS with a 96% core-coverage badge (`ListenToMe/README.md`) and a 95% coverage floor enforced by script (`ListenToMe/scripts/check-coverage.sh`). Its market was mapped in a 14-row, per-cell-sourced competitor table (`ListenToMe/docs/competition-analysis.md`) — and its engineers once held a release back at 97.24% coverage with the words "do not promote" (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`). You read that review in class.
 
 **No Mac required.** The graded labs are Python + Ollama on macOS, Linux, or Windows; the Swift case study is mapped onto your Python modules.
 
@@ -63,7 +63,7 @@ Skip all three and you get an abandoned repo with a good README.
 
 ## Your instructor
 
-**Tom Wu** is a software engineer who builds in public. With AI agents under the discipline this track teaches, he shipped ListenToMe — an on-device meeting copilot with 96% core coverage, notarized releases, and a 12-row competitor analysis in the repo (`ListenToMe/README.md`; `ListenToMe/docs/competition-analysis.md`) — plus SignUpFlow, whose validation record reads "1,464 passed, 21 skipped" with a date (`SignUpFlow/docs/playbooks/validation.md`), and AI × QE, an evidence-cited briefing platform with 116 narrated slides (`ai_qe/_data/briefing_room.json`).
+**Tom Wu** is a software engineer who builds in public. With AI agents under the discipline this track teaches, he shipped ListenToMe — an on-device meeting copilot with 96% core coverage, notarized releases, and a 14-row competitor analysis in the repo (`ListenToMe/README.md`; `ListenToMe/docs/competition-analysis.md`) — plus SignUpFlow, whose validation record reads "1,464 passed, 21 skipped" with a date (`SignUpFlow/docs/playbooks/validation.md`), and AI × QE, an evidence-cited briefing platform with 116 narrated slides (`ai_qe/_data/briefing_room.json`).
 
 ---
 

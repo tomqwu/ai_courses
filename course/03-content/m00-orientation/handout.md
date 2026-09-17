@@ -15,7 +15,7 @@ product — are all built with one loop, **Study → Spec → Build → Validate
 ## The loop, with one real artifact per stage
 
 ```
-STUDY    12-row competitor table     ListenToMe/docs/competition-analysis.md
+STUDY    14-row competitor table     ListenToMe/docs/competition-analysis.md
 SPEC     Given/When/Then stories     SignUpFlow/specs/014-security-hardening/spec.md
 BUILD    checkbox tasks, tests first SignUpFlow/specs/019-sms-notifications/tasks.md
 VALIDATE 7 test tiers, dated counts  SignUpFlow/docs/TESTING.md

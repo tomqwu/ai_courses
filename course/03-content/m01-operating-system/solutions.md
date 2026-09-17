@@ -57,7 +57,7 @@ Summary / Changed files / Validation / Follow-ups.
 
 **Why these pass.** Every line is an action or prohibition a stranger can check; both are under the
 cap; neither copies SignUpFlow's content, only its structure
-(`SignUpFlow/.specify/memory/constitution.md` is 79 lines; `SignUpFlow/AGENTS.md` is 177).
+(`SignUpFlow/.specify/memory/constitution.md` is 85 lines; `SignUpFlow/AGENTS.md` is 177).
 
 ## Step solutions
 

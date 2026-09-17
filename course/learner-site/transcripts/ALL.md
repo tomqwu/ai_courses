@@ -47,7 +47,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *31.2s · sentence-measured*
 
-> ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is twelve rows, each claim sourced and dated, which is positioning work done as research.
+> ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is fourteen rows, each claim sourced and dated, which is positioning work done as research.
 
 ### Slide 5 — Type 2 — SignUpFlow (spec-driven SaaS)
 
@@ -77,7 +77,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *32.7s · sentence-measured*
 
-> Open each of these files as you go. The twelve-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first.
+> Open each of these files as you go. The fourteen-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first.
 
 ### Slide 10 — Stages 4–6 — real artifacts
 
@@ -180,7 +180,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *37.3s · sentence-measured*
 
-> These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is seventy-nine lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.
+> These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is eighty-five lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred eighty-eight. CLAUDE.md is one hundred fifty-four, and the Copilot instructions file is one hundred twenty-seven. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.
 
 ### Slide 6 — House style: a rule must be verifiable
 
@@ -198,7 +198,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *34.2s · sentence-measured*
 
-> A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is seventy-nine lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands.
+> A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is eighty-five lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands.
 
 ### Slide 9 — Precedence: five levels, one tie-breaker
 
@@ -294,7 +294,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *45.8s · sentence-measured*
 
-> Six lines, one idea each. Governance: a seventy-nine-line constitution above a one-hundred-seventy-seven-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.
+> Six lines, one idea each. Governance: a eighty-five-line constitution above a one-hundred-eighty-eight-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.
 
 ### Slide 25 — Discussion prompt
 
@@ -614,7 +614,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *31.2s · sentence-measured*
 
-> The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is twelve rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first.
+> The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is fourteen rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first.
 
 ### Slide 23 — The one-liner and its columns
 
@@ -1206,7 +1206,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *36.1s · sentence-measured*
 
-> This is the file where the pattern is recorded: the competition analysis document, holding twelve competitor rows dated August 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.
+> This is the file where the pattern is recorded: the competition analysis document, holding thirteen competitor rows plus ListenToMe, dated September 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.
 
 ### Slide 5 — Recurring compute sets the model
 

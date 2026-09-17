@@ -57,9 +57,9 @@ title: M1 — The AI Product Operating System
 | File | Lines | Role |
 |---|---|---|
 | `.specify/memory/constitution.md` | 79 | Principles, single source of truth |
-| `AGENTS.md` | 177 | Universal baseline |
-| `CLAUDE.md` | 143 | Cross-reference plus addenda |
-| `.github/copilot-instructions.md` | 119 | Copilot restatement |
+| `AGENTS.md` | 188 | Universal baseline |
+| `CLAUDE.md` | 154 | Cross-reference plus addenda |
+| `.github/copilot-instructions.md` | 127 | Copilot restatement |
 
 Pointers: `SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md`,
 ```markdown
@@ -73,7 +73,7 @@ Pointers: `SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md`,
 
 `SignUpFlow/CLAUDE.md`, `SignUpFlow/.github/copilot-instructions.md`
 
-<!-- NOTES: Open these four files in your own clone and count. The constitution is 79 lines, AGENTS.md is 177, CLAUDE.md is 143, and the Copilot file is 119 — all under the ~200-line cap the house style sets. The lesson gives this as a table you can verify with wc -l. Why it matters: a rule file an agent cannot hold in context is a rule file it will not follow. Transition: short is necessary, not sufficient — the rules must also be checkable. Timing: 3 minutes. -->
+<!-- NOTES: Open these four files in your own clone and count. The constitution is 85 lines, AGENTS.md is 188, CLAUDE.md is 154, and the Copilot file is 127 — all under the ~200-line cap the house style sets. The lesson gives this as a table you can verify with wc -l. Why it matters: a rule file an agent cannot hold in context is a rule file it will not follow. Transition: short is necessary, not sufficient — the rules must also be checkable. Timing: 3 minutes. -->
 
 ---
 
@@ -106,7 +106,7 @@ Pointer: `SignUpFlow/AGENTS.md`, "House style" and "Safety"
 
 ## What a constitution holds
 
-- Four principles in 79 lines: Native First, TDD, YAGNI, Safety.
+- Four principles in 85 lines: Native First, TDD, YAGNI, Safety.
 - Safety is default-off: `EMAIL_ENABLED=false`, `SMS_ENABLED=false`.
 - Payments MUST be mocked or disabled locally.
 - Autonomy is fixed: YOLO DISABLED, Git autonomy ENABLED.
@@ -335,7 +335,7 @@ Limitations / not verified:
 
 ## Recap
 
-- Governance: 79-line constitution, 177-line baseline, every rule verifiable.
+- Governance: 85-line constitution, 188-line baseline, every rule verifiable.
 - Precedence: five levels; the more specific and safer rule wins.
 - Anti-hallucination: grep first; read canonical sources; offer options.
 - Spec pipeline: WHAT → decisions → HOW → tasks.

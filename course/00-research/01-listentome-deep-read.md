@@ -83,7 +83,7 @@ Layered design: **pure core behind protocols + thin platform glue**. `Sources/Li
 ## 6. Numbers & facts worth citing in marketing
 
 - **96% core test coverage** (README badge); **95% coverage floor enforced in CI**; 97.24% coverage / 215 tests cited at the 1.3.0 review point; today 33 core modules (~3,400 lines) and 36 test files (~290 test functions).
-- **3 transcription engines** (Apple SpeechAnalyzer default, legacy SpeechRecognizer, opt-in WhisperKit); **4 panes**; **3 independent AI roles** with per-pane model dropdowns; **18 use-case presets** (+None); **9 response actions**; **12 competitors analyzed** in `docs/competition-analysis.md`.
+- **3 transcription engines** (Apple SpeechAnalyzer default, legacy SpeechRecognizer, opt-in WhisperKit); **4 panes**; **3 independent AI roles** with per-pane model dropdowns; **18 use-case presets** (+None); **9 response actions**; **13 competitors analyzed** in `docs/competition-analysis.md`.
 - **Pricing contrast:** Granola ~$14–35/user/mo, Otter ~$8–30, Fireflies ~$10–39/seat, Cluely $19.99–149.99/mo, Superpowered $25–50/mo, MacWhisper ~$69 one-time — vs ListenToMe free & open-source (MIT).
 - **Model families referenced in-app:** deepseek-v4-pro / deepseek-v4-flash (`:cloud`), GLM, Kimi, Qwen3-coder, MiniMax, Gemini, gpt-oss, Devstral, Nemotron, Mistral, Llama, Gemma, Phi.
 - **Live-summary engineering numbers:** 5-second batching, 24-char eligibility, 30 s / 16 KiB response caps, 3,072-token quick budget, 600-char attributed chunks, 3-bullet/480-char recaps, 30 s/60 s review spacing.

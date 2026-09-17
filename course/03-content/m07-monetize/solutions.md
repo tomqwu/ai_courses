@@ -9,15 +9,15 @@
 
 **Reference answer.** ≥5 rows the student actually visited; columns **Tool | Pricing model | Price |
 What the price buys | Source URL | Retrieved**. The exemplar is the shape to imitate — model, price,
-and channel in one cell, per `ListenToMe/docs/competition-analysis.md` header (dated 2026-08):
+and channel in one cell, per `ListenToMe/docs/competition-analysis.md` header (dated 2026-09):
 
 | Tool | Model | Price | What it buys | Source | Retrieved |
 |---|---|---|---|---|---|
-| Granola | per-user/mo | Free; Business ~$14/user/mo; Enterprise ~$35/user/mo | cloud ASR + cloud LLM, templates | `competition-analysis.md` row | 2026-08 |
-| Otter.ai | per-user/mo | Free (300 min/mo); Pro ~$8.33–16.99; Business ~$20–30 | proprietary ASR, Claude insights | same | 2026-08 |
-| MacWhisper | one-time + store | Pro ~€59 (~$69) one-time; App Store $6.99/mo–$99.99 lifetime | on-device Whisper, BYO keys | same | 2026-08 |
-| Natively | free + Pro | Free personal; Pro via lifetime/yearly | on-device STT, local RAG | same | 2026-08 |
-| ListenToMe | free & open-source | $0, MIT | full on-device copilot, BYO model | same | 2026-08 |
+| Granola | per-user/mo | Free; Business ~$14/user/mo; Enterprise ~$35/user/mo | cloud ASR + cloud LLM, templates | `competition-analysis.md` row | 2026-09 |
+| Otter.ai | per-user/mo | Free (300 min/mo); Pro ~$8.33–16.99; Business ~$20–30 | proprietary ASR, Claude insights | same | 2026-09 |
+| MacWhisper | one-time + store | Pro ~€59 (~$69) one-time; App Store $6.99/mo–$99.99 lifetime | on-device Whisper, BYO keys | same | 2026-09 |
+| Natively | free + Pro | Free personal; Pro via lifetime/yearly | on-device STT, local RAG | same | 2026-09 |
+| ListenToMe | free & open-source | $0, MIT | full on-device copilot, BYO model | same | 2026-09 |
 
 **Verify.** `grep -c '^| ' docs/pricing.md` → expect ≥7 (header + separator + ≥5 rows);
 `grep -c 'http' docs/pricing.md` → at least one URL per price cell; `grep -c 'reportedly\|approximately' docs/pricing.md` → ≥1 if any cell is unconfirmed.

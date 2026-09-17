@@ -6,7 +6,7 @@ This repository is the product. The three repositories the course is built from 
 
 | Archetype | Case study | Verified proof |
 |---|---|---|
-| Native on-device AI app | [ListenToMe](https://github.com/tomqwu/ListenToMe) — macOS/iOS meeting copilot | 96% core coverage · 95% CI coverage floor · 12-row competitor table · 1.3.0 held back at 97.24% |
+| Native on-device AI app | [ListenToMe](https://github.com/tomqwu/ListenToMe) — macOS/iOS meeting copilot | 96% core coverage · 95% CI coverage floor · 14-row competitor table · 1.3.0 held back on 2026-09-10 at 97.24% (1.4.4 shipped since) |
 | Spec-driven AI SaaS | [SignUpFlow](https://github.com/tomqwu/SignUpFlow) — volunteer scheduling | 1,464 passing tests · 7 test tiers · 17 spec folders |
 | Expertise content product | [ai_qe](https://github.com/tomqwu/ai_qe) — "AI × QE" briefing site | 116 narrated slides (21+33+26+36) · four claim levels · 14-finding self-audit |
 

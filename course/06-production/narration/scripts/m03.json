@@ -87,7 +87,7 @@
     },
     "slide-22": {
       "title": "Competition analysis as an engineering artifact",
-      "text": "The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is twelve rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first."
+      "text": "The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is fourteen rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first."
     },
     "slide-23": {
       "title": "The one-liner and its columns",

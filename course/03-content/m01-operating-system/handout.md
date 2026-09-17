@@ -46,8 +46,8 @@ check whether a rule was followed, rewrite it.
 
 ## Pointers to open
 
-- `SignUpFlow/.specify/memory/constitution.md` — 79 lines, the single source of truth.
-- `SignUpFlow/AGENTS.md` — 177 lines; house style, hierarchy, anti-hallucination, PR rules.
+- `SignUpFlow/.specify/memory/constitution.md` — 85 lines, the single source of truth.
+- `SignUpFlow/AGENTS.md` — 188 lines; house style, hierarchy, anti-hallucination, PR rules.
 - `SignUpFlow/CLAUDE.md` — 143 lines; cross-reference plus Claude addenda.
 - `SignUpFlow/docs/SPEC_KIT_SETUP.md` — the slash-command pipeline.
 - `SignUpFlow/specs/019-sms-notifications/tasks.md` — a real, executable task line.

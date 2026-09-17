@@ -6,7 +6,7 @@ Built from a deep study of three production open-source repositories by the same
 
 | Archetype | Case-study repo (cloned here) | Proof assets |
 |---|---|---|
-| 1. Native on-device AI app | `../ListenToMe/` — macOS/iOS meeting copilot | 96% core coverage · notarized releases · 12-competitor analysis |
+| 1. Native on-device AI app | `../ListenToMe/` — macOS/iOS meeting copilot | 96% core coverage · notarized releases · 13-competitor analysis |
 | 2. Spec-driven AI SaaS | `../SignUpFlow/` — volunteer-scheduling platform | 1,464 dated tests · 7 tiers · 17 spec folders |
 | 3. Expertise content product | `../ai_qe/` — "AI × QE" briefing site | 116 cited slides · provenance · published self-audit |
 

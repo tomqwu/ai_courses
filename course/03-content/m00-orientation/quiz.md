@@ -33,7 +33,7 @@ In this course, calling a case study "production-grade" means most nearly:
 
 ### Q4 (M0.2)
 
-ListenToMe's 12-row competitor comparison table is an artifact of which Spec-to-Ship Loop stage?
+ListenToMe's 14-row competitor comparison table is an artifact of which Spec-to-Ship Loop stage?
 
 - a) Spec
 - b) Build

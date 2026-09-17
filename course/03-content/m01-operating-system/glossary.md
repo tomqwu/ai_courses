@@ -2,10 +2,10 @@
 
 Alphabetical. Each term: definition, then where it lives.
 
-- **AGENTS.md** — The cross-agent baseline rules file that tools such as Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory read natively. In SignUpFlow it is 177 lines and is restated or cross-referenced by the host-specific files. (`SignUpFlow/AGENTS.md`)
+- **AGENTS.md** — The cross-agent baseline rules file that tools such as Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory read natively. In SignUpFlow it is 188 lines and is restated or cross-referenced by the host-specific files. (`SignUpFlow/AGENTS.md`)
 - **Anti-hallucination rules** — Prohibitions that make fabricated facts checkable: do not invent paths, names, commands, or identifiers; grep before referencing; read facts from the canonical source; offer 2–3 options when a request is ambiguous. (`SignUpFlow/AGENTS.md`, "Anti-hallucination")
 - **Autonomy configuration** — The section of a constitution that fixes what an agent may do alone. SignUpFlow's: `YOLO Mode: DISABLED`, `Git Autonomy: ENABLED (Commit changes when done)`. (`SignUpFlow/.specify/memory/constitution.md`, "Autonomy Configuration")
-- **Constitution** — The shortest and most authoritative governance file: the few principles that must never drift, plus the current validation policy. SignUpFlow's is 79 lines and sits above all agent instruction files. (`SignUpFlow/.specify/memory/constitution.md`)
+- **Constitution** — The shortest and most authoritative governance file: the few principles that must never drift, plus the current validation policy. SignUpFlow's is 85 lines and sits above all agent instruction files. (`SignUpFlow/.specify/memory/constitution.md`)
 - **Constitution Check gate** — The explicit pass/fail checkpoint in `plan.md` that must pass before Phase 0 research and be re-checked after Phase 1 design. (`SignUpFlow/specs/014-security-hardening/plan.md`)
 - **Definition of Done (DoD)** — The standard for "shipped," not "built": verify the affected behavior in the installed production app, and treat stale docs as a failure rather than a follow-up. (`ListenToMe/AGENTS.md`, `ListenToMe/CLAUDE.md`)
 - **Evidence record** — A dated, revision-pinned account of validation: commands with results, environment, head SHA, and an explicit list of what was not verified. (`SignUpFlow/docs/playbooks/validation.md`; template in `03-content/m01-operating-system/lesson.md`, §M1.3)
@@ -29,7 +29,7 @@ Alphabetical. Each term: definition, then where it lives.
 ## Curated resources
 
 1. `SignUpFlow/AGENTS.md` — the house style, the five-level hierarchy, and the anti-hallucination rules; read it as a model for your own baseline.
-2. `SignUpFlow/.specify/memory/constitution.md` — 79 lines showing how little a constitution needs to hold to be authoritative.
+2. `SignUpFlow/.specify/memory/constitution.md` — 85 lines showing how little a constitution needs to hold to be authoritative.
 3. `SignUpFlow/docs/ai-agent-coding-strategy.md` — the rule-graduation pipeline, with the reasoning behind one canonical source.
 4. `SignUpFlow/docs/SPEC_KIT_SETUP.md` — the exact slash-command order and what each artifact is for.
 5. `SignUpFlow/specs/019-sms-notifications/tasks.md` — read one real task line and copy its shape of path + contract + order.

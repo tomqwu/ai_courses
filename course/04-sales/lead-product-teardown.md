@@ -32,7 +32,7 @@ Subject: `Why one SaaS team turned CI off on purpose (30-min teardown, part 2)`
 
 SignUpFlow is a volunteer-scheduling SaaS — FastAPI, multi-tenant, 24 routers. What's interesting isn't the CRUD; it's the governance that let AI agents write most of it without the project dissolving:
 
-- **A 79-line constitution** sits above every agent instruction file. It states the principles (test-driven, YAGNI, dangerous features disabled by default) and even defines the two modes an agent can be in (autonomous implementation loop vs. interactive chat). (`.specify/memory/constitution.md`)
+- **A 85-line constitution** sits above every agent instruction file. It states the principles (test-driven, YAGNI, dangerous features disabled by default) and even defines the two modes an agent can be in (autonomous implementation loop vs. interactive chat). (`.specify/memory/constitution.md`)
 
 - **Agent rules that are actually checkable.** Not "be careful with multi-tenancy" but "Every database query MUST filter by org_id. A missing org_id filter is a cross-tenant data leak. Treat it as a P0 bug." Verifiable rules, imperative voice, files under 200 lines. (`SignUpFlow/AGENTS.md`)
 

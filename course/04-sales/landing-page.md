@@ -57,7 +57,7 @@ This course covers all three — on three product types that cover the whole spa
 ## [The three products you'll study — and build]
 
 ### 1. The native on-device AI app
-**Case study: ListenToMe** — a free, open-source, fully on-device meeting copilot for macOS/iOS. Live dual-channel capture, on-device transcription (3 swappable engines), real-time AI through Ollama with per-pane model selection, and a local-only mode engineered to fail closed against cloud model aliases. **96% core test coverage.** Signed, notarized public releases. A 12-competitor analysis in the repo that derived its positioning from a real market gap.
+**Case study: ListenToMe** — a free, open-source, fully on-device meeting copilot for macOS/iOS. Live dual-channel capture, on-device transcription (3 swappable engines), real-time AI through Ollama with per-pane model selection, and a local-only mode engineered to fail closed against cloud model aliases. **96% core test coverage.** Signed, notarized public releases. A 13-competitor analysis in the repo that derived its positioning from a real market gap.
 
 **You build:** TinyCopilot — a working multi-role copilot core (Python + Ollama; runs on macOS/Linux/Windows) with model routing, prompt builders, proactive triggers, unit tests, and a hardened local-only mode — with a Swift track mapped onto the real repo for Mac developers.
 
