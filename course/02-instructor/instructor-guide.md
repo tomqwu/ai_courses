@@ -74,7 +74,7 @@ Students may use AI agents for everything — the course teaches that — but th
 ## 8. Course upkeep (Definition of Done for instructors)
 
 - Keep repo file pointers exact: before each cohort, re-clone the three case-study repos and spot-check every pointer in the lessons (the repos' own rule: search for stale commands, counts, and check names).
-- Update evidence numbers (coverage badge, test counts, editions) if the repos changed.
+- Update evidence numbers (coverage badge, test counts, editions) if the repos changed. `python3 06-production/check_facts.py --strict` re-derives every pinned number from the clones and names the course files that still state a stale value — run it first, then edit only what it lists.
 - Log each cohort: NPS, completion %, stuck points, revenue vs. model — an evidence record for the course itself.
 
 ## 9. One-page cheat sheet (print for the first workshop)

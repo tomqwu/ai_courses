@@ -6,6 +6,7 @@
 #   make site               build the learner site from the decks + recordings
 #   make serve              build, then serve on http://localhost:8043
 #   make check              run check.sh: tests, scripts, media, site build, browser, verify
+#   make facts              re-derive the pinned case-study numbers from the clones and report drift
 #   make test               caption-engine and TTS-provider unit tests
 #   make publish            publish the built site to the gh-pages branch (text-first)
 #   make publish-audio      publish it with the recordings, so narration plays live
@@ -19,7 +20,7 @@ NARRATION := 06-production/narration
 SITE := learner-site
 PORT ?= 8043
 
-.PHONY: narration narration-preview narration-plan site serve check test browser-check publish
+.PHONY: narration narration-preview narration-plan site serve check test browser-check publish facts
 
 narration-plan:
 	$(PYTHON) $(NARRATION)/generate_narration.py plan
@@ -59,6 +60,11 @@ publish-audio:
 # /usr/bin/make refuses to run until the Xcode licence is accepted).
 check:
 	bash check.sh
+
+# Advisory: which of the numbers the course states as fact have drifted upstream, and where they are
+# still stated. Needs the three case-study repos cloned beside course/. `--strict` for the pre-cohort gate.
+facts:
+	$(PYTHON) 06-production/check_facts.py
 
 # The browser check needs a built site; it skips with a note if no browser is installed.
 browser-check: site

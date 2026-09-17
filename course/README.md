@@ -24,7 +24,13 @@ course/
 │   ├── 01-listentome-deep-read.md ← architecture, privacy engineering, release discipline (with file pointers)
 │   ├── 02-signupflow-deep-read.md ← spec-kit methodology, 7-tier testing, multi-tenant security
 │   ├── 02-course-market-research.md ← how to create/sell courses: frameworks, completion stats, pricing, platforms (all cited)
-│   └── 03-ai-qe-deep-read.md      ← evidence discipline, audience routing, editions, consulting funnel
+│   ├── 03-ai-qe-deep-read.md      ← evidence discipline, audience routing, editions, consulting funnel
+│   ├── 04-platform-review-2026.md ← the September 2026 review: verdict, findings, positioning, platform plan, roadmap
+│   ├── 05-platform-build-options-2026.md ← build vs buy: LMSes, merchants of record, reference architectures, labs, video
+│   ├── 06-competitive-landscape-2026.md  ← 28 competitors, price bands, gaps, demand signals, threats
+│   ├── 07-course-design-practice-2026.md ← what changed in learning science and cohort economics since 02-
+│   ├── 08-domain-currency-2026.md ← is each archetype's curriculum current (Apple FM, spec-kit 1.0, AI search)
+│   └── 09-content-audit-2026.md   ← module-by-module audit with pointers and the top-15 fixes
 ├── 01-design/                      ← course design (read first)
 │   ├── positioning.md             ← concept, audience, promise, differentiation, pricing ladder, voice standards
 │   ├── curriculum.md              ← master syllabus: 9 modules, objectives, labs, quizzes (the authoring brief)
@@ -55,6 +61,7 @@ course/
     ├── slides/build.sh · Makefile ← render/validate every deck (HTML/PDF)
     ├── slides/deck_lint.py        ← enforces bullets, per-slide notes, proof slide
     ├── verify.py                  ← artifacts, bands, rubrics, bundles, 900+ pointers
+    ├── check_facts.py · facts.json ← re-derives the pinned case-study numbers from the clones; reports drift
     ├── build-glossary.py          ← merges the nine module glossaries
     ├── glossary-master.md         ← 137 merged terms (13 shared across modules)
     ├── certificate.md             ← completion certificate + issuance rules (SHA-bounded)

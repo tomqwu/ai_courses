@@ -1,0 +1,129 @@
+{
+  "listentome.coverage_badge": {
+    "pinned": "96",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "96% core coverage",
+      "96% core test coverage",
+      "Core_coverage-96"
+    ],
+    "note": "content-standards §0.2: 96% core coverage (README badge)"
+  },
+  "listentome.coverage_floor": {
+    "pinned": "95",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "95% CI coverage floor",
+      "95% coverage floor",
+      "floor of 95%"
+    ],
+    "note": "content-standards §0.2: 95% floor via scripts/check-coverage.sh"
+  },
+  "listentome.competitor_rows": {
+    "pinned": 12,
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "12-row competitor table",
+      "12-competitor",
+      "12 competitors",
+      "12-row"
+    ],
+    "note": "content-standards §0.2: 12-row competitor table in docs/competition-analysis.md (data rows incl. ListenToMe itself)"
+  },
+  "listentome.latest_macos_tag": {
+    "pinned": "v1.3.0",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "1.3.0 held back",
+      "1.3.0 was held",
+      "don't ship 1.3.0",
+      "do not promote 1.3.0"
+    ],
+    "note": "the course tells the '1.3.0 held back at 97.24%' story as the latest release state"
+  },
+  "listentome.gap_review_verdict": {
+    "pinned": "do not promote the existing 1.3.0 DMG as a broadly validated production release",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "do not promote"
+    ],
+    "note": "content-standards §0.2: the 2026-09-10 gap review's recommendation (historical — stays true as a dated record)"
+  },
+  "signupflow.agents_md_lines": {
+    "pinned": 177,
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "177 lines",
+      "177-line"
+    ],
+    "note": "curriculum M1.1: AGENTS.md (177 lines, universal baseline)"
+  },
+  "signupflow.constitution_lines": {
+    "pinned": 79,
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "79 lines",
+      "79-line"
+    ],
+    "note": "curriculum M1.1 / lead-product email 2: a 79-line constitution"
+  },
+  "signupflow.spec_folders": {
+    "pinned": 17,
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "17 spec folders",
+      "17 spec-kit"
+    ],
+    "note": "content-standards §0.2: 17 spec folders (every entry under specs/, including COMPLETED-000-safety-verification)"
+  },
+  "signupflow.spec_014_has_tasks": {
+    "pinned": false,
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "no tasks.md",
+      "no `tasks.md`"
+    ],
+    "note": "content-standards §0.2: spec 014 has no tasks.md — the honest-gap teaching point in M4.1"
+  },
+  "signupflow.validation_status": {
+    "pinned": "Historical reference",
+    "pinned_date": "2026-09-13",
+    "literals": [
+      "demoted to historical reference"
+    ],
+    "note": "validation.md was reclassified 2026-09-13; the course already states this"
+  },
+  "signupflow.test_functions": {
+    "pinned": 1464,
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "1,464"
+    ],
+    "note": "content-standards §0.2 pins the *recorded run* (1,464 passed, 2026-09-12); this derivation counts test functions on disk today — a different measure, so a gap here means the suite has grown past the recorded evidence, not that the record is wrong"
+  },
+  "ai_qe.slide_counts": {
+    "pinned": "116 = 21+33+26+36",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "116 narrated slides",
+      "116 slides",
+      "21+33+26+36"
+    ],
+    "note": "content-standards §0.2: 116 narrated slides = 21+33+26+36 (_data/briefing_room.json)"
+  },
+  "ai_qe.site_version": {
+    "pinned": "1.24.1",
+    "pinned_date": "2026-09-17",
+    "literals": [],
+    "note": "informational — the site version moves with every publish; nothing in the course pins it"
+  },
+  "ai_qe.self_audit_findings": {
+    "pinned": "14",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "14-finding",
+      "14 findings"
+    ],
+    "note": "content-standards §0.2: 14-finding self-audit (research/reviews/site-audit-2026-09-06.md)"
+  }
+}

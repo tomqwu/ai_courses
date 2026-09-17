@@ -20,7 +20,8 @@ This repository is the product. The three repositories the course is built from 
 | **Understand the design** | [`course/01-design/positioning.md`](course/01-design/positioning.md) → [`curriculum.md`](course/01-design/curriculum.md) |
 | **Sell it** | [`course/04-sales/`](course/04-sales/) — publish-ready landing page, pricing, launch plan |
 | **Sell one archetype** | [`course/05-tracks/`](course/05-tracks/) — three standalone $199 bundles |
-| **Verify it** | `make -C course check` (or `bash course/check.sh`) |
+| **Verify it** | `make -C course check` (or `bash course/check.sh`) · `make -C course facts` for upstream number drift |
+| **Review it** | [`course/00-research/04-platform-review-2026.md`](course/00-research/04-platform-review-2026.md) — the September 2026 review against industry practice, with the platform plan and roadmap |
 | **See the whole map** | [`course/README.md`](course/README.md) — the detailed package map |
 
 ## Repository layout
@@ -182,6 +183,14 @@ What is **not**:
   inventing them. Run a founding cohort first.
 - **No `LICENSE` file.** Decide the terms before publishing or selling; the repository currently
   carries none.
+- **The pinned numbers drift.** The case-study repos ship daily; five of the fourteen facts the
+  content standard whitelists were already stale within five days of being pinned (ListenToMe is at
+  v1.4.4, not a held-back 1.3.0; its competitor table has 14 rows, not 12; SignUpFlow's `AGENTS.md`
+  and constitution have grown). `make -C course facts` measures this and names the files to edit;
+  the edits themselves are Milestone 5 in
+  [`course/06-production/MILESTONES.md`](course/06-production/MILESTONES.md).
+- **Three labs cannot be passed as written** (M3 ships pre-solved, M5 has no starter, M1/M2 template
+  a red run the tooling does not produce) — found by the September 2026 review and tracked there.
 - All facts about the three case-study repos were read from the clones in this workspace and carry file
   pointers — re-verify before publishing, because upstream repos evolve.
 
