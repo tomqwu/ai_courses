@@ -41,11 +41,14 @@ title: M1 — The AI Product Operating System
 
 ## Segment M1.1 — The four-file instruction stack
 
-- One canonical source, many delivery files.
-- `AGENTS.md` is the universal baseline agents read.
-- `CLAUDE.md` cross-references it, then adds Claude addenda.
-- `.github/copilot-instructions.md` restates rules for Copilot.
-- The constitution sits above all agent files.
+One canonical source, many delivery files.
+
+<!-- _diagram: stack -->
+
+- `.specify/memory/constitution.md` — above all agent files
+- `AGENTS.md` — the universal baseline agents read
+- `CLAUDE.md` — cross-references it, then adds Claude addenda
+- `.github/copilot-instructions.md` — restates rules for Copilot
 
 <!-- NOTES: Four files, one canonical source. The baseline lives in AGENTS.md and is consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory. Claude Code does not read AGENTS.md natively, so CLAUDE.md links to it at the top and adds Claude-specific addenda. Copilot needs its own restatement file. The constitution is the single source of truth above all of them. Transition: the next slide proves the lengths are real. Timing: 3 minutes. -->
 
@@ -56,10 +59,10 @@ title: M1 — The AI Product Operating System
 
 | File | Lines | Role |
 |---|---|---|
-| `.specify/memory/constitution.md` | 79 | Principles, single source of truth |
-| `AGENTS.md` | 177 | Universal baseline |
-| `CLAUDE.md` | 143 | Cross-reference plus addenda |
-| `.github/copilot-instructions.md` | 119 | Copilot restatement |
+| `.specify/memory/constitution.md` | 85 | Principles, single source of truth |
+| `AGENTS.md` | 188 | Universal baseline |
+| `CLAUDE.md` | 154 | Cross-reference plus addenda |
+| `.github/copilot-instructions.md` | 127 | Copilot restatement |
 
 Pointers: `SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md`,
 ```markdown
@@ -73,7 +76,7 @@ Pointers: `SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md`,
 
 `SignUpFlow/CLAUDE.md`, `SignUpFlow/.github/copilot-instructions.md`
 
-<!-- NOTES: Open these four files in your own clone and count. The constitution is 79 lines, AGENTS.md is 177, CLAUDE.md is 143, and the Copilot file is 119 — all under the ~200-line cap the house style sets. The lesson gives this as a table you can verify with wc -l. Why it matters: a rule file an agent cannot hold in context is a rule file it will not follow. Transition: short is necessary, not sufficient — the rules must also be checkable. Timing: 3 minutes. -->
+<!-- NOTES: Open these four files in your own clone and count. The constitution is 85 lines, AGENTS.md is 188, CLAUDE.md is 154, and the Copilot file is 127 — all under the ~200-line cap the house style sets. The lesson gives this as a table you can verify with wc -l. Why it matters: a rule file an agent cannot hold in context is a rule file it will not follow. Transition: short is necessary, not sufficient — the rules must also be checkable. Timing: 3 minutes. -->
 
 ---
 
@@ -106,11 +109,19 @@ Pointer: `SignUpFlow/AGENTS.md`, "House style" and "Safety"
 
 ## What a constitution holds
 
-- Four principles in 79 lines: Native First, TDD, YAGNI, Safety.
-- Safety is default-off: `EMAIL_ENABLED=false`, `SMS_ENABLED=false`.
+Four principles in 85 lines — keep only what must never drift.
+
+| Principle | What it fixes |
+|---|---|
+| Native First | Poetry + SQLite locally, not Docker |
+| Test-Driven Implementation | the smallest failing test first |
+| Simplicity & YAGNI | build exactly what's needed, nothing more |
+| Safety & Reliability | `EMAIL_ENABLED=false`, `SMS_ENABLED=false` |
+
 - Payments MUST be mocked or disabled locally.
 - Autonomy is fixed: YOLO DISABLED, Git autonomy ENABLED.
-- Keep only what must never drift.
+
+Pointer: `SignUpFlow/.specify/memory/constitution.md:41-53`
 
 <!-- NOTES: The constitution is not a longer AGENTS.md. It holds the few things that must never drift. SignUpFlow's four principles are Native First — prefer plain Poetry and SQLite over Docker locally — Test-Driven Implementation, Simplicity and YAGNI, and Safety and Reliability. Safety is concrete: email and SMS disabled by default, payments mocked or disabled. Autonomy is also fixed: agents may commit finished work, never run unchecked destructive commands. Transition: when two rules conflict, which wins? Timing: 3 minutes. -->
 
@@ -118,12 +129,17 @@ Pointer: `SignUpFlow/AGENTS.md`, "House style" and "Safety"
 
 ## Precedence: five levels, one tie-breaker
 
-- 1. The user's request in the current task.
-- 2. Repository rules: `CLAUDE.md` and `AGENTS.md`.
-- 3. Path-scoped rules under `.github/instructions/`.
-- 4. `docs/ai-agent-coding-strategy.md` guidance.
-- 5. Inferred best practice.
-- Tie-breaker: **follow the more specific and safer one.**
+| # | Rule source |
+|---|---|
+| 1 | The user's request in the current task |
+| 2 | Repository rules: `CLAUDE.md` and `AGENTS.md` |
+| 3 | Path-scoped rules under `.github/instructions/` |
+| 4 | `docs/ai-agent-coding-strategy.md` guidance |
+| 5 | Inferred best practice |
+
+Tie-breaker: **follow the more specific and safer one.**
+
+Pointer: `SignUpFlow/AGENTS.md:153-161`
 
 <!-- NOTES: Five levels from AGENTS.md. The user's request wins at the top. Repository rules come next. Path-scoped rules for Copilot come third. General strategy guidance is fourth, and inferred best practice is last. The single tie-breaker when rules overlap is the sentence to memorize: follow the more specific and safer one. That is how a specific path rule can beat a general baseline without anyone maintaining a precedence matrix. Transition: the rules that keep agents honest about facts. Timing: 3 minutes. -->
 
@@ -222,8 +238,17 @@ Pointer: `SignUpFlow/AGENTS.md`, "House style" and "Safety"
 - Story: "As a volunteer, I can block dates."
 - Scenario: given a blocked period, then zero hard violations.
 - Task line: `[ID] [P?] [Story]` plus exact file paths.
-- Name the file, the contract, the test file, the order.
+
+```text
+- [ ] T031 [P] [US1] Implement POST /api/v1/availability/time-off in
+      api/routers/availability.py per contracts/availability-api.md:
+      volunteer submits blocked dates; write the failing test in
+      tests/api/test_availability.py first
+```
+
 - Test first: the failing test is the task's first deliverable.
+
+Pointer: `SignUpFlow/api/routers/availability.py`
 
 <!-- NOTES: Watch the abstraction drop. A sentence of intent becomes a checkable scenario with dates, a measurable outcome, and a named artifact. Then it becomes a task that names the file to touch, the contract to follow, the test file to write first, and the order of work. A fresh agent session — or a teammate — could execute that with no further conversation. That is the entire point of the pipeline: the spec is the interface between human intent and agent execution. Transition: ListenToMe runs the same discipline in Swift. Timing: 4 minutes. -->
 
@@ -247,7 +272,14 @@ Pointer: `SignUpFlow/AGENTS.md`, "House style" and "Safety"
 - "Never recreate hosted checks or require CI statuses."
 - A policy-regression test guards the rule.
 - Evidence travels with the revision instead.
-- A hosted check is a snapshot; evidence is a record.
+
+| A hosted check | An evidence record |
+|---|---|
+| A pass/fail snapshot | Commands, counts, date |
+| Silent about the environment | Names the environment |
+| Silent about the limits | Lists what was not verified |
+
+Pointer: `SignUpFlow/.specify/memory/constitution.md:34-39`
 
 <!-- NOTES: SignUpFlow runs no CI checks. That is a deliberate, tested policy stated in its constitution's Current Validation Policy, and there is a policy-regression test in tests/unit/test_local_validation_policy.py guarding it. The argument: a hosted check tells you pass or fail and nothing about commands, environment, or limits. Replace it with something stronger — the evidence travels with the revision. Every PR records commands, outcomes, limitations, and the pushed head SHA. Transition: here is that record, verbatim. Timing: 3 minutes. -->
 
@@ -274,9 +306,16 @@ Across backend, web, contract and browser suites: 1,464 passed, 21 skipped.
 
 - A browser click race is recorded, not hidden.
 - "This initial failure is not omitted from the evidence."
-- mypy: `835 errors in 40 files; not a pass`
-- The record closes with what was not verified.
 - An evidence record that cannot say "not verified" is marketing.
+
+```text
+| Full API mypy | Existing debt: 835 errors in 40 files; not a pass |
+
+Do not count manual operational drills, external delivery, PostgreSQL, DST,
+venue scheduling or full tenant isolation as verified by these runs.
+```
+
+Pointer: `SignUpFlow/docs/playbooks/validation.md:45, 69-70`
 
 <!-- NOTES: Three moves. First, a real failure is named: an older recurring-event browser test exposed a click race; the fix is recorded, and the initial failure stays in the document. Second, known debt is named as debt: full API mypy has 835 errors in 40 files, and the record says "not a pass" instead of rounding it away. Third, the record ends with limits: do not count manual drills, external delivery, PostgreSQL, DST, venue scheduling, or full tenant isolation as verified. Transition: what "done" means once tests are green. Timing: 3 minutes. -->
 
@@ -286,9 +325,13 @@ Across backend, web, contract and browser suites: 1,464 passed, 21 skipped.
 
 - Tests validate what you built; DoD validates what you shipped.
 - Verify in the installed production app.
-- For audio changes: "a permission toggle is not proof."
 - Stale docs are a Definition-of-Done failure.
 - ListenToMe's own review says: do not promote 1.3.0.
+
+> For audio changes, verify actual system-audio transcription labeled OTHERS;
+> a permission toggle or microphone pickup is not proof.
+
+Pointer: `ListenToMe/AGENTS.md:21-23`
 
 <!-- NOTES: ListenToMe's Definition of Done requires the maintainer to verify affected behavior in the installed production app. For audio changes, verify actual system-audio transcription labeled OTHERS — a permission toggle or microphone pickup is not proof. Its checklist also states that stale docs are a Definition-of-Done failure, not a follow-up. And the strongest artifact in all three repos is the gap review recommending against promoting 1.3.0 despite 215 passing Core tests and 97.24% coverage, because those numbers do not establish capture reliability. Transition: copy the template now. Timing: 3 minutes. -->
 
@@ -312,11 +355,14 @@ Limitations / not verified:
 
 ## Lab M1 — build your operating system
 
+<!-- _diagram: steps -->
+
 - Write `constitution.md` (≤80 lines) and `AGENTS.md` (≤200 lines).
 - Write `specs/001-todo-command/`: spec, plan with gate, tasks.
 - Run TDD: failing test first, then implement, `pytest -q` green.
 - Record red run, green run, environment, head SHA, limitations.
-- Pass gate: artifacts exist; `pytest tests/ -q` exits 0.
+
+Pass gate: artifacts exist; `pytest tests/ -q` exits 0.
 
 <!-- NOTES: Two hours. You create a starter repo, write a constitution of at most eighty lines and an AGENTS.md of at most two hundred, then a spec folder for a small todo CLI feature. Then you run the loop for real: write the failing tests, watch them fail, implement, watch them pass, commit. The pass gate is objective: the artifacts exist and pytest exits zero. The evidence entry is not optional — it is the point of the lab. Transition: check your understanding with the quiz. Timing: 3 minutes. -->
 
@@ -335,7 +381,7 @@ Limitations / not verified:
 
 ## Recap
 
-- Governance: 79-line constitution, 177-line baseline, every rule verifiable.
+- Governance: 85-line constitution, 188-line baseline, every rule verifiable.
 - Precedence: five levels; the more specific and safer rule wins.
 - Anti-hallucination: grep first; read canonical sources; offer options.
 - Spec pipeline: WHAT → decisions → HOW → tasks.

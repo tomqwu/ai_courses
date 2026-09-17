@@ -13,7 +13,7 @@ Take the comparison table you built in Lab M3 (or build it now if your product c
 - **≥5 competitor rows** — competitors you actually visited, not ones you remember.
 - Columns must include: **Price**, **Pricing model** (one-time / per-seat subscription / free + Pro / usage-based), and **What the price buys** (limits, seats, privacy boundaries, support).
 - Every price cell carries a **source URL and a retrieval date**. No memory-only pricing.
-- Cells you could not confirm from a primary source are qualified "reportedly" or "approximately" — ListenToMe's convention: "where a detail could not be confirmed from a primary source, it is qualified with 'approximately' or 'reportedly'" (`ListenToMe/docs/competition-analysis.md`, header, dated 2026-08). Copy MacWhisper's row style: "Pro ~€59 (~$69) one-time; App Store $6.99/mo–$99.99 lifetime" — model, price, and channel in one cell.
+- Cells you could not confirm from a primary source are qualified "reportedly" or "approximately" — ListenToMe's convention: "where a detail could not be confirmed from a primary source, it is qualified with 'approximately' or 'reportedly'" (`ListenToMe/docs/competition-analysis.md`, header, dated 2026-09). Copy MacWhisper's row style: "Pro ~€59 (~$69) one-time; App Store $6.99/mo–$99.99 lifetime" — model, price, and channel in one cell.
 
 ## Step 2 — The pricing decision worksheet
 

@@ -9,7 +9,7 @@
 
 | Criterion | Exemplary | Proficient | Developing | Missing | Weight | Evidence required |
 |---|---|---|---|---|---|---|
-| Baseline green observed | Captures counts *and* coverage table before deleting | Captures `191 passed`, 100% | Runs it, no capture | No baseline run | 5 | Terminal capture of `make lab-m2` before edits |
+| Baseline green observed | Captures counts *and* coverage table before deleting | Captures `201 passed`, 100% | Runs it, no capture | No baseline run | 5 | Terminal capture of `make lab-m2` before edits |
 | Red run per module | Six captures, each labelled with module, command, exit code | Six captures, exit code implied | Fewer than six, or unlabelled | No red run, or red run after the fix | 10 | Six ImportError captures in the evidence log |
 
 ## B. Module implementations (Steps 3–8)
@@ -28,7 +28,7 @@
 | Criterion | Exemplary | Proficient | Developing | Missing | Weight | Evidence required |
 |---|---|---|---|---|---|---|
 | Coverage floor 90 | Green run shows `Required test coverage of 90% reached` | Floor passes | Floor reached by weakening tests | Floor fails or disabled | 5 | `make lab-m2` full output with coverage table |
-| M3 behavior preserved | `make lab-m3` 49 passed, unmodified tests | 49 passed | Passes after editing M3 tests | Fails or tests deleted | 5 | `make lab-m3` output; `git diff` on `tests/test_privacy.py` |
+| Privacy tests preserved | `test_privacy.py`'s 31 tests green inside `make lab-m2`, file unmodified, and the log notes they are Lab M3's parked-later reference | 31 green, file unmodified | Passes after editing `test_privacy.py` | Fails or tests deleted | 5 | `make lab-m2` output; `git diff` on `tests/test_privacy.py` |
 | Demo run | Three labeled role blocks, model names visible, no failure line | Three role blocks with models | Fewer roles, or model name hidden | No demo run | 5 | `make demo` transcript pasted |
 
 ## D. Evidence and community (Step 2 onward)
@@ -42,7 +42,7 @@
 
 The lab fails regardless of score if any of these is true:
 
-1. **Fabricated evidence** — output that does not match a real run (e.g. "191 failed" as the red run,
+1. **Fabricated evidence** — output that does not match a real run (e.g. "201 failed" as the red run,
    or counts that contradict the recorded environment).
 2. **No red run** — any of the six modules goes from the answer key to green with no deletion capture,
    or the red capture is dated after its green run.
@@ -55,7 +55,7 @@ The lab fails regardless of score if any of these is true:
 
 ## Grading notes
 
-- Distinguish a real pass from a plausible fake by re-running `make lab-m2` and `make lab-m3` yourself
+- Distinguish a real pass from a plausible fake by re-running `make lab-m2` yourself
   on the submitted tree; a copied implementation still passes, so the evidence log is what separates
   the two.
 - The six module rows are deliberately near-equal: this lab grades the *loop*, not one clever module.

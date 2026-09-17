@@ -1,0 +1,16 @@
+{
+  "_comment": "One award, recomputed from the artifacts per certificate.md's issuance procedure — never from the student's summary of them. Copy, fill, then: python3 issue_certificate.py issue --record award.json",
+  "student_name": "Ada Example",
+  "student_id": "urn:uuid:replace-with-a-stable-id-or-delete-this-line",
+  "track": "cohort",
+  "cohort_name": "founding",
+  "labs_passed": 8,
+  "quiz_average": 88,
+  "capstone_score": 91,
+  "capstone_product_name": "MeetingLedger",
+  "capstone_url": "https://github.com/example/meetingledger",
+  "archetype": "on-device AI app",
+  "evidence_log_ref": "docs/evidence/2026-09-17.md",
+  "head_sha": "abc1234def5678",
+  "award_date": "2026-09-17"
+}

@@ -62,7 +62,7 @@
         "slide-4": {
           "audio": "/assets/audio/aps-1.0.0/m00/slide-4.mp3",
           "captions": "/assets/audio/aps-1.0.0/m00/slide-4.vtt",
-          "transcript": "ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is twelve rows, each claim sourced and dated, which is positioning work done as research.",
+          "transcript": "ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is fourteen rows, each claim sourced and dated, which is positioning work done as research.",
           "title": "Type 1 — ListenToMe (on-device app)",
           "duration": 31.154,
           "sha256": "f8efe542d06b0fc46453077739ce79c8dcf39433014006153df7f14547a1e908",
@@ -127,7 +127,7 @@
         "slide-9": {
           "audio": "/assets/audio/aps-1.0.0/m00/slide-9.mp3",
           "captions": "/assets/audio/aps-1.0.0/m00/slide-9.vtt",
-          "transcript": "Open each of these files as you go. The twelve-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first.",
+          "transcript": "Open each of these files as you go. The fourteen-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first.",
           "title": "Stages 1–3 — real artifacts",
           "duration": 32.694,
           "sha256": "3784ac9f6acb7a8e979e3560075d392e9323816e4447f7e5af31ca87b00d2512",
@@ -289,7 +289,7 @@
         "slide-5": {
           "audio": "/assets/audio/aps-1.0.0/m01/slide-5.mp3",
           "captions": "/assets/audio/aps-1.0.0/m01/slide-5.vtt",
-          "transcript": "These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is seventy-nine lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.",
+          "transcript": "These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is eighty-five lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred eighty-eight. CLAUDE.md is one hundred fifty-four, and the Copilot instructions file is one hundred twenty-seven. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.",
           "title": "Proof: the stack, with real line counts",
           "duration": 37.337,
           "sha256": "14978efca3bb441e204096ff6f30eb8edf9e858fef056233437f8e969c688fd3",
@@ -341,7 +341,7 @@
         "slide-8": {
           "audio": "/assets/audio/aps-1.0.0/m01/slide-8.mp3",
           "captions": "/assets/audio/aps-1.0.0/m01/slide-8.vtt",
-          "transcript": "A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is seventy-nine lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands.",
+          "transcript": "A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is eighty-five lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands.",
           "title": "What a constitution holds",
           "duration": 34.174,
           "sha256": "a30cda281a50afd25cfe9a03147f47d2332229bcaeaa08b5f09ce8ec21678618",
@@ -562,7 +562,7 @@
         "slide-24": {
           "audio": "/assets/audio/aps-1.0.0/m01/slide-24.mp3",
           "captions": "/assets/audio/aps-1.0.0/m01/slide-24.vtt",
-          "transcript": "Six lines, one idea each. Governance: a seventy-nine-line constitution above a one-hundred-seventy-seven-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.",
+          "transcript": "Six lines, one idea each. Governance: a eighty-five-line constitution above a one-hundred-eighty-eight-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.",
           "title": "Recap",
           "duration": 45.833,
           "sha256": "67cca9736bc9b54d26d1981af1fc150f17c02c56e4de524d070df2cc661c3640",
@@ -1198,7 +1198,7 @@
         "slide-22": {
           "audio": "/assets/audio/aps-1.0.0/m03/slide-22.mp3",
           "captions": "/assets/audio/aps-1.0.0/m03/slide-22.vtt",
-          "transcript": "The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is twelve rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first.",
+          "transcript": "The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is fourteen rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first.",
           "title": "Competition analysis as an engineering artifact",
           "duration": 31.247,
           "sha256": "6e65b5c05e4c64eb04f65599afe772b92a13acf61d9be608e15ccc6cc34ba173",
@@ -2405,7 +2405,7 @@
         "slide-4": {
           "audio": "/assets/audio/aps-1.0.0/m07/slide-4.mp3",
           "captions": "/assets/audio/aps-1.0.0/m07/slide-4.vtt",
-          "transcript": "This is the file where the pattern is recorded: the competition analysis document, holding twelve competitor rows dated August 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.",
+          "transcript": "This is the file where the pattern is recorded: the competition analysis document, holding thirteen competitor rows plus ListenToMe, dated September 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.",
           "title": "The competitor table is your raw material",
           "duration": 36.094,
           "sha256": "460d579e4b1047b97f99c3358515c4712f4711d06915e1e60a0fdb3716aaf52e",

@@ -16,7 +16,7 @@ Most AI app courses end where the hard part starts: a notebook that calls an API
 
 Then you write the test that proves it. Your red-team case is the hole that breaks naive privacy checkers — a `localhost` daemon quietly serving a cloud-backed model alias. Your code rejects it; your test says so. That is the promise: **privacy claims enforced in code, proven by tests.**
 
-You study this in shipped code. **ListenToMe** is a free, open-source, on-device meeting copilot for macOS/iOS with a 96% core-coverage badge (`ListenToMe/README.md`) and a 95% coverage floor enforced by script (`ListenToMe/scripts/check-coverage.sh`). Its market was mapped in a 12-row, per-cell-sourced competitor table (`ListenToMe/docs/competition-analysis.md`) — and its engineers once held a release back at 97.24% coverage with the words "do not promote" (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`). You read that review in class.
+You study this in shipped code. **ListenToMe** is a free, open-source, on-device meeting copilot for macOS/iOS with a 96% core-coverage badge (`ListenToMe/README.md`) and a 95% coverage floor enforced by script (`ListenToMe/scripts/check-coverage.sh`). Its market was mapped in a 14-row, per-cell-sourced competitor table (`ListenToMe/docs/competition-analysis.md`) — and its engineers once held a release back at 97.24% coverage with the words "do not promote" (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`). You read that review in class.
 
 **No Mac required.** The graded labs are Python + Ollama on macOS, Linux, or Windows; the Swift case study is mapped onto your Python modules.
 
@@ -55,7 +55,7 @@ Skip all three and you get an abandoned repo with a good README.
 | 1 | Run the case studies locally, get Ollama answering, and run the lab gate yourself |
 | 2 | Write a constitution and `AGENTS.md` whose rules a stranger could check; run a spec → plan → TDD loop with a recorded red→green history |
 | 3 | Re-implement the copilot's pure core test-first: context budgeting, debounced question detection, three role prompts as pure functions |
-| 4 | Route three roles to three models with local-first defaults, stream typed-error-checked responses, and cancel stale streams on a model switch — `make lab-m2` green at **191 passed, 100% coverage** (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) |
+| 4 | Route three roles to three models with local-first defaults, stream typed-error-checked responses, and cancel stale streams on a model switch — `make lab-m2` green at **201 passed, 100% coverage** (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) |
 | 5 | Engineer a fail-closed local-only mode, reject a cloud alias in a red-team test, run a real-LLM contract test outside CI, enforce a coverage floor, and derive positioning from a sourced competitor table |
 | 6 | Price it, package it with explicit "not included" lines, write an 8-section sales page and a 5-email launch arc, tag the public repo, record a 5-minute demo |
 
@@ -63,13 +63,13 @@ Skip all three and you get an abandoned repo with a good README.
 
 ## Your instructor
 
-**Tom Wu** is a software engineer who builds in public. With AI agents under the discipline this track teaches, he shipped ListenToMe — an on-device meeting copilot with 96% core coverage, notarized releases, and a 12-row competitor analysis in the repo (`ListenToMe/README.md`; `ListenToMe/docs/competition-analysis.md`) — plus SignUpFlow, whose validation record reads "1,464 passed, 21 skipped" with a date (`SignUpFlow/docs/playbooks/validation.md`), and AI × QE, an evidence-cited briefing platform with 116 narrated slides (`ai_qe/_data/briefing_room.json`).
+**Tom Wu** is a software engineer who builds in public. With AI agents under the discipline this track teaches, he shipped ListenToMe — an on-device meeting copilot with 96% core coverage, notarized releases, and a 14-row competitor analysis in the repo (`ListenToMe/README.md`; `ListenToMe/docs/competition-analysis.md`) — plus SignUpFlow, whose validation record reads "1,464 passed, 21 skipped" with a date (`SignUpFlow/docs/playbooks/validation.md`), and AI × QE, an evidence-cited briefing platform with 116 narrated slides (`ai_qe/_data/briefing_room.json`).
 
 ---
 
 ## Testimonials
 
-> **Empty on purpose.** No student testimonials exist yet — the founding cohort hasn't finished, and we don't invent social proof (`course/04-sales/landing-page.md`). Verify us instead: run the lab's own gate — `make lab-m2` → 191 passed, 100% coverage (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) — and read the gap review that said "do not promote" at 97.24% coverage (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`).
+> **Empty on purpose.** No student testimonials exist yet — the founding cohort hasn't finished, and we don't invent social proof (`course/04-sales/landing-page.md`). Verify us instead: run the lab's own gate — `make lab-m2` → 201 passed, 100% coverage (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) — and read the gap review that said "do not promote" at 97.24% coverage (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`).
 
 ---
 

@@ -32,11 +32,12 @@ EVIDENCE    command + counts + date + head SHA + limitations
 ## Keep these commands and templates
 
 ```bash
-grep -rn "db.query(" app/ | grep -v org_id     # any hit is a P0 candidate
-pytest tests/test_isolation.py -q              # red first, then green
-pytest tests/test_route_policy.py -q           # miswire → red; restore → green
-pytest tests/test_manifest.py -q               # remove an id → red; restore → green
-git rev-parse HEAD                             # the revision your evidence pins
+make lab-m5      # baseline: 51 passed, 23 skipped — record first
+make demo        # two LEAK lines before step 1; zero after
+make step1 … step4        # red on the starter, then green
+make step3       # miswire create_event → red; restore → green
+make lab-m5      # delete MF-03 → Error 4; restore → green
+make pass-gate   # 74 passed
 ```
 
 ```markdown
@@ -72,7 +73,7 @@ Limitations / not verified:
 
 ## You're done when…
 
-- [ ] Every query carries the tenant predicate; the grep for unfiltered queries is empty.
+- [ ] Every event query carries the tenant predicate; `make demo` shows zero leaks.
 - [ ] Seven negative-path cases pass: 200 own rows, 403 foreign org, 404 guessed id, 404 PATCH,
       401 invalid token, 403 missing token, 401 mismatched tenant claim.
 - [ ] The forbidden write is denied **and** the row is byte-identical after the attempt.

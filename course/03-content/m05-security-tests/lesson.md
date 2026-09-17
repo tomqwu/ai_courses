@@ -126,6 +126,25 @@ Design acceptance as a tier pyramid that proves different properties per tier, p
 6. **Contract** (`tests/contract/`) — OpenAPI snapshot compatibility; proves clients don't break.
 7. **Browser** (`tests/e2e/`) — Playwright against a disposable live app; proves a human-shaped journey.
 
+**The eighth tier, and why it is not in that list.** Seven tiers cover code whose output is
+deterministic: the same request gives the same response, so a test can assert on it. The moment a
+product puts a model in the path — a drafted notice, a summarised roster, an assistant that explains
+a scheduling conflict — none of the seven can observe the failure that matters, because the output
+is different every run and still has to be *right*. That is the tier a **behavioural eval** covers:
+a fixed input set where the correct behaviour is known, run through the real prompt path, with
+assertions over what comes back. Module 3 builds one and Lab M3 runs it; here the point is where it
+sits. It is the eighth tier, not a replacement for any of the seven, and it is the only one whose
+result needs a denominator and a date attached before it means anything.
+
+The manifest is where that honesty gets enforced. `mini-flow`'s own coverage manifest carries
+scenario **MF-05** — an assistant's drafted notice checked against the roster it describes — with
+status `blocked` and a `manual` tier, because no eval suite ships for it yet
+(`course/03-content/m05-security-tests/mini-flow/tests/playbooks/coverage.json`). That is the
+statuses doing their job: a scenario nothing tests yet is admitted and named rather than dropped,
+and because MF-05 is in the required set, dropping it fails the run
+(`course/03-content/m05-security-tests/mini-flow/tests/playbooks/coverage.py`). A manifest that only
+lists what you already automated is a marketing document.
+
 The full-suite evidence is recorded, dated, and bounded: "1,464 passed, 21 skipped" across backend, web, contract, and browser suites in `docs/playbooks/validation.md` ("Acceptance evidence - 2026-09-12"). That file also carries its own demotion banner — reclassified 2026-09-13 as historical reference, "not current policy or live test status" — while `docs/TESTING.md` remains current. Evidence with a date is evidence; evidence with a date *and a retirement plan* is discipline.
 
 **Playbook acceptance.** Test tiers prove the machinery works; playbooks prove the product can be *operated*. `docs/playbooks/` ships two six-week operational scenarios — church and basketball — plus shared journeys. `church.md` is genuinely operational, in three ways:

@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "id": "MF-01",
+      "actor": "administrator",
+      "precondition": "No organization exists for this email",
+      "operation": "Sign up: create the organization and its first admin in one request",
+      "expected": "The token carries sub + org_id; a second signup with the same email is rejected; there is no public join",
+      "tiers": [
+        "api"
+      ],
+      "status": "automated",
+      "evidence": [
+        "tests/test_auth.py::test_signup_creates_org_and_first_admin",
+        "tests/test_auth.py::test_signup_rejects_existing_email"
+      ]
+    },
+    {
+      "id": "MF-02",
+      "actor": "administrator",
+      "precondition": "Administrator is authenticated in an owned organization",
+      "operation": "Invite a member with the usher qualification and let them try to invite someone",
+      "expected": "Invitations are single-use and a qualification does not grant administrator access",
+      "tiers": [
+        "api",
+        "manual"
+      ],
+      "status": "blocked",
+      "evidence": [
+        "tests/test_lab2_qualifications.py is skipped until Lab M5 step 2 un-skips and fixes it; until then an usher is checked by hand"
+      ]
+    },
+    {
+      "id": "MF-03",
+      "actor": [
+        "administrator",
+        "member"
+      ],
+      "precondition": "Two organizations exist in one database, each with an event",
+      "operation": "A member of one organization reads and patches the other organization's event",
+      "expected": "Read and write are denied with 404 and the row is unchanged",
+      "tiers": [
+        "api",
+        "manual"
+      ],
+      "status": "blocked",
+      "evidence": [
+        "tests/test_lab1_isolation.py is skipped until Lab M5 step 1 un-skips and fixes it; `make demo` shows the leak"
+      ]
+    },
+    {
+      "id": "PF-04",
+      "actor": "coordinator",
+      "precondition": "A published six-week roster exists for the food bank fixture",
+      "operation": "Block both coordinators for week 4 and attempt publication",
+      "expected": "Regeneration must not publish an incomplete roster; the prior roster stays live",
+      "tiers": [
+        "manual"
+      ],
+      "status": "manual",
+      "evidence": [
+        "mini-flow has no solver or publication endpoint; the coordinator confirms the prior roster by hand"
+      ]
+    },
+    {
+      "id": "MF-05",
+      "actor": "administrator",
+      "precondition": "A roster has been generated and an assistant drafts the notice sent to volunteers",
+      "operation": "Check the drafted notice against the roster it describes: names, roles, dates and counts",
+      "expected": "Every name, role and date in the notice appears in the roster; nothing is invented, and an unstaffed slot is named as unstaffed",
+      "tiers": [
+        "manual"
+      ],
+      "status": "blocked",
+      "evidence": [
+        "No eval suite ships for mini-flow yet; the tier that could observe this is behavioural evals, not a unit test.",
+        "Checked by hand against the roster until one exists - see Lab M3 step 3b for the shape."
+      ]
+    }
+  ]
+}

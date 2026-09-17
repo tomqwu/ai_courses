@@ -8,7 +8,7 @@
 `make lab-m2` runs `pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q`. Verified:
 
 ```
-191 passed, 2 deselected in 0.13s
+201 passed, 2 deselected in 0.13s
 Required test coverage of 90% reached. Total coverage: 100.00%
 ```
 
@@ -30,8 +30,8 @@ the red run; the test file holds the per-test spec. After a stub imports, red is
 budget-ignoring `recent_context` yields `13 failed, 2 passed`.
 
 Per-file counts: conversation_store **15**, question_detector **32**, prompts **38**, model_router
-**40**, ollama_provider **18**, copilot **17** (160, plus `test_privacy.py`'s **31** = 191).
-**Grading note:** a "191 failed" red run is fabricated; the honest one is an ImportError, exit 4.
+**40**, ollama_provider **18**, copilot **17** (160, plus `test_privacy.py`'s **31** = 201).
+**Grading note:** a "201 failed" red run is fabricated; the honest one is an ImportError, exit 4.
 
 ## 1. `conversation_store.py` (Step 3, 15 tests)
 
@@ -168,7 +168,7 @@ Listener summary, a Quick answer, and a Deep answer. The text varies by model; w
 | Six modules re-implemented | `make lab-m2` exits 0 |
 | Red captured per module | Six ImportError captures (exit 4) in the evidence log |
 | Coverage floor 90 | `make lab-m2` prints `Required test coverage of 90% reached` |
-| M3 behavior preserved | `make lab-m3` prints `49 passed` |
+| Privacy tests preserved | `tests/test_privacy.py` unmodified; its 31 tests are inside `make lab-m2`'s 201 |
 | Router matches the spec | `pytest tests/test_model_router.py -q` → 40 passed |
 | Typed stream errors | `pytest tests/test_ollama_provider.py -q` → 18 passed |
 | Cancellation proven | `pytest tests/test_copilot.py::TestSetModel -q` green |

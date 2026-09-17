@@ -19,7 +19,7 @@ Every word spoken in the course, in order. The words are the approved narration 
 
 **19 slides · 19 narrated · 10m 2s of audio**
 
-**Voice:** mixed — 18 of 19 recordings are preview audio; the rest were recorded separately. The words below are the approved narration.
+**Voice:** mixed — 18 of 19 recordings are preview audio spoken by a synthesized voice; the rest were recorded separately. The words below are the approved narration.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -47,7 +47,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *31.2s · sentence-measured*
 
-> ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is twelve rows, each claim sourced and dated, which is positioning work done as research.
+> ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is fourteen rows, each claim sourced and dated, which is positioning work done as research.
 
 ### Slide 5 — Type 2 — SignUpFlow (spec-driven SaaS)
 
@@ -77,7 +77,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *32.7s · sentence-measured*
 
-> Open each of these files as you go. The twelve-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first.
+> Open each of these files as you go. The fourteen-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first.
 
 ### Slide 10 — Stages 4–6 — real artifacts
 
@@ -95,13 +95,13 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *33.2s · sentence-measured*
 
-> Everything in this segment is a command you type, not a concept you remember. Clone the three case studies, verify you have Python 3.11 or newer, install Ollama and pull a small local model, run SignUpFlow's solver on the sample data, run TinyCopilot's test suite, and post your first win. The whole sequence takes under fifteen minutes, and most of that is download time. Do it in order, and do not skip the test suite. It is the exact acceptance gate you will re-implement in Module 2, and seeing it green now tells you your environment is real.
+> Everything in this segment is a command you type, not a concept you remember. Clone the three case studies, verify you have Python 3.11 or newer, install Ollama and pull a small local model, run SignUpFlow's solver on the sample data, and post your first win. The whole sequence takes about thirty minutes, and most of that is download time. Do it in order, and before Module 1 do not skip the TinyCopilot test suite. It is the exact acceptance gate you will re-implement in Module 2, and seeing it green now tells you your environment is real.
 
 ### Slide 13 — First ship-win — clone and run the solver
 
 *36.7s · sentence-measured*
 
-> Clone the three repositories first, then, inside SignUpFlow, run make setup. That installs the Poetry environment, runs migrations, and seeds data. The init command writes three YAML files: organization, people, and events. The solve command runs the real greedy scheduler. On the sample workspace it prints a health score of 100.0 out of 100, with zero hard and zero soft violations and a fairness standard deviation of 0.43. Capture that health-score line and keep the raw terminal output, because it is your first artifact. Do not retype it from memory.
+> Clone the three repositories first, then, inside SignUpFlow, run make setup. That installs the Poetry environment, runs migrations, and seeds data. The init command writes three YAML files: organization, people, and events. The solve command runs the real greedy scheduler. On the sample workspace it prints a health-score line, the violation counts, and a fairness standard deviation. The numbers are whatever the revision you cloned produces; at the current head the sample scores zero out of one hundred with two hard violations, and that is fine. Capture the whole block around the health-score line and keep the raw terminal output, because the run record is your first artifact, not the number. Do not retype it from memory.
 
 ### Slide 14 — Local LLM in three commands
 
@@ -119,7 +119,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *35.0s · sentence-measured*
 
-> The lab has six steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, run the TinyCopilot tests, and post to the community. The goal is every tool installed and proven with real output, and the three pass gates are solver output with a health score, an ollama list showing at least one model, and a TinyCopilot suite that is green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is the only automatic fail.
+> The lab has five steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, start your evidence log, and post to the community. The goal is every tool installed and proven with real output, and the pass gate is two things: the solver block with its health-score line, and an ollama list showing at least one model. Before Module 1, run the TinyCopilot suite; it is the Module 2 gate, green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is the only automatic fail.
 
 ### Slide 17 — Quiz M0
 
@@ -146,7 +146,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **25 slides · 25 narrated · 14m 23s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -180,7 +180,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *37.3s · sentence-measured*
 
-> These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is seventy-nine lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.
+> These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is eighty-five lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred eighty-eight. CLAUDE.md is one hundred fifty-four, and the Copilot instructions file is one hundred twenty-seven. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.
 
 ### Slide 6 — House style: a rule must be verifiable
 
@@ -198,7 +198,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *34.2s · sentence-measured*
 
-> A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is seventy-nine lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands.
+> A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is eighty-five lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands.
 
 ### Slide 9 — Precedence: five levels, one tie-breaker
 
@@ -294,7 +294,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *45.8s · sentence-measured*
 
-> Six lines, one idea each. Governance: a seventy-nine-line constitution above a one-hundred-seventy-seven-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.
+> Six lines, one idea each. Governance: a eighty-five-line constitution above a one-hundred-eighty-eight-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.
 
 ### Slide 25 — Discussion prompt
 
@@ -309,7 +309,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **26 slides · 26 narrated · 15m 4s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -319,7 +319,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *29.6s · sentence-measured*
 
-> Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until one hundred ninety-one tests pass. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision.
+> Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until two hundred one tests pass. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision.
 
 ### Slide 2 — By the end you can…
 
@@ -451,7 +451,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *35.3s · sentence-measured*
 
-> Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports one hundred ninety-one tests passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model.
+> Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports two hundred one tests passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model.
 
 ### Slide 24 — Quiz M2 — eight questions
 
@@ -478,7 +478,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **27 slides · 27 narrated · 14m 58s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -530,7 +530,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *37.7s · sentence-measured*
 
-> In local-only mode, three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or the IPv6 loopback address. Anything else throws before a single byte of your prompt is written. Second, the provider posts to the show endpoint and requires an HTTP two hundred response plus a verified-local metadata result, and this is re-verified on every request, so switching models mid-session cannot skip the check. Third, redirects. You can read all three defenses in OllamaProvider.swift, lines ninety-nine to one hundred nineteen.
+> In local-only mode, three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or the IPv6 loopback address. Anything else throws before a single byte of your prompt is written. Second, the provider posts to the show endpoint and requires an HTTP two hundred response plus a verified-local metadata result, and this is re-verified on every request, so switching models mid-session cannot skip the check. Third, redirects. You can read all three defenses in OllamaProvider.swift, lines one hundred thirty-eight to one hundred fifty-seven.
 
 ### Slide 9 — Redirects refused
 
@@ -614,7 +614,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *31.2s · sentence-measured*
 
-> The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is twelve rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first.
+> The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is fourteen rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first.
 
 ### Slide 23 — The one-liner and its columns
 
@@ -653,7 +653,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 18m 16s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -834,7 +834,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **25 slides · 25 narrated · 16m 32s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -997,7 +997,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 16m 14s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -1178,7 +1178,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 15m 47s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -1206,7 +1206,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *36.1s · sentence-measured*
 
-> This is the file where the pattern is recorded: the competition analysis document, holding twelve competitor rows dated August 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.
+> This is the file where the pattern is recorded: the competition analysis document, holding thirteen competitor rows plus ListenToMe, dated September 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.
 
 ### Slide 5 — Recurring compute sets the model
 
@@ -1359,7 +1359,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **27 slides · 27 narrated · 14m 21s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The audio is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 

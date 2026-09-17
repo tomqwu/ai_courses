@@ -22,12 +22,12 @@ The `tinycopilot/` folder is a *reference implementation plus a full test suite*
 
 - `make lab-m2` — runs this module's test suite and enforces the coverage floor (90).
 - `make demo` — feeds a small canned transcript through all three roles with your real Ollama model.
-- `make lab-m3` — the privacy tests Module 3 will build on. They must keep passing: your re-implementation must not change behavior the M3 tests pin down.
+- `make lab-m3` — Lab M3's privacy suite. Its files (`src/tinycopilot/privacy.py`, `tests/test_privacy.py`, `tests/test_contract_real_llm.py`) ship here as the reference solution; Lab M3's `make m3-start` parks them before that lab begins. In this lab leave them alone — `test_privacy.py`'s 31 tests already run inside `make lab-m2`.
 
 ## Steps
 
 1. Run `make lab-m2` before touching anything. Confirm the suite is green and the coverage floor passes. You are looking at the finished answer key — take ten minutes to read `src/tinycopilot/copilot.py` and see how the pieces connect before you delete them.
-2. Delete the first module's implementation: `git rm src/tinycopilot/conversation_store.py` (all modules live under `src/tinycopilot/`; their tests are `tests/test_<module>.py`). Run `make lab-m2` and **capture the red output** in your evidence log — those failures are your spec.
+2. Delete the first module's implementation: `git rm src/tinycopilot/conversation_store.py` (all modules live under `src/tinycopilot/`; their tests are `tests/test_<module>.py`). Run `make lab-m2` and **capture the red output** in your evidence log. It is not a list of failing tests: `src/tinycopilot/__init__.py:8-34` re-exports every module and `tests/conftest.py:13` imports the package, so pytest stops at collection with `ModuleNotFoundError: No module named 'tinycopilot.conversation_store'` and exit code 4, zero tests run. Record that verbatim as the red; the test file, not the error, is your spec, and once a stub imports, the red becomes assertion-level failures.
 3. Re-implement `conversation_store.py` from its test file (`test_conversation_store.py`): apply finalized vs partial segments, and `recent_context(max_chars)` keeping the newest segments that fit a character budget — always at least the newest one. Run `make lab-m2` until green.
 4. Delete and re-implement `question_detector.py` from `test_question_detector.py`: trailing "?", leading interrogatives, word-boundary phrase cues. Include the debounce test — a burst of questions triggers at most once per window.
 5. Delete and re-implement `prompts.py` from `test_prompts.py`: three base role prompts (anti-preamble Quick, never-invent Listener, depth-over-brevity Deep), the persona directive appended to every role, and the per-role user-message builder. These must be pure functions — no I/O.
@@ -40,7 +40,7 @@ The `tinycopilot/` folder is a *reference implementation plus a full test suite*
 
 - [ ] `make lab-m2` exits 0 after all six modules are re-implemented.
 - [ ] Your evidence log shows a red run *before* each green run, for all six modules.
-- [ ] `make lab-m3` (the pre-provided Module 3 privacy tests) still exits 0.
+- [ ] `make lab-m2` is green with `tests/test_privacy.py` unmodified — its 31 tests are inside the 201. Lab M3's `privacy.py` and tests ship here as the reference and are parked by Lab M3's `make m3-start`; do not build on them yet.
 - [ ] The coverage floor passes at 90 (part of `make lab-m2`).
 - [ ] `make demo` prints three distinct role outputs (Listener, Quick, Deep) from at least one real model.
 - [ ] Your evidence log explains each module's test-first cycle in one or two sentences per module.
@@ -49,7 +49,7 @@ The `tinycopilot/` folder is a *reference implementation plus a full test suite*
 
 ## Evidence to record
 
-For each module: the failing `make lab-m2` output after deletion, the passing output after re-implementation, and one sentence on what the tests specified that the prompt didn't. Then record the final full `make lab-m2` run (with coverage line), the `make lab-m3` run, and the complete `make demo` transcript with the model name visible. Use the course evidence format: commands, outcomes, date, environment, limitations.
+For each module: the failing `make lab-m2` output after deletion, the passing output after re-implementation, and one sentence on what the tests specified that the prompt didn't. Then record the final full `make lab-m2` run (with coverage line) and the complete `make demo` transcript with the model name visible. Use the course evidence format: commands, outcomes, date, environment, limitations.
 
 ## Stretch goals
 

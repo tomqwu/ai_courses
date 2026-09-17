@@ -1,4 +1,4 @@
-# Quiz 0 — Orientation
+# Quiz M0 — Orientation
 
 > 8 questions · 6 multiple choice + 2 short answer · Answer key at the end with objective refs.
 
@@ -33,7 +33,7 @@ In this course, calling a case study "production-grade" means most nearly:
 
 ### Q4 (M0.2)
 
-ListenToMe's 12-row competitor comparison table is an artifact of which Spec-to-Ship Loop stage?
+ListenToMe's 14-row competitor comparison table is an artifact of which Spec-to-Ship Loop stage?
 
 - a) Spec
 - b) Build
@@ -60,7 +60,7 @@ Which statement about the course environment is true?
 
 ### Q7 (M0.3 — short answer)
 
-Write the exact two commands (after `make setup`) that make SignUpFlow print a health score, and name the output line you should capture.
+A classmate's first-win post reads, in full: "`make setup` worked. `Health score: 100.0/100`." Write the reply you would post: the two commands (after `make setup`) their evidence has to show they ran, the lines of solver output they must paste around the score for it to count as a run record, and whether the post passes Lab M0 as it stands.
 
 ### Q8 (M0.1 — short answer)
 
@@ -80,6 +80,6 @@ A friend wants to build: a paid web app that drafts LinkedIn posts from a founde
 
 ### Q6 — b — Core labs are Python 3.11+ with free local Ollama models on all major OSes; only the Swift stretch track needs a Mac (`ListenToMe/README.md`). (objective: M0.3 — know your environment)
 
-### Q7 — Model answer — `poetry run python -m api.cli.main init my-church` then `poetry run python -m api.cli.main solve my-church`; capture the `Health score:` line (`SignUpFlow/README.md`). (objective: M0.3 — run the solver)
+### Q7 — Model answer — The two commands are `poetry run python -m api.cli.main init my-church` and `poetry run python -m api.cli.main solve my-church`. The score has to sit inside the block `solve` prints: the workspace header (`Workspace:`, `People: 5`, `Events: 2`, `Mode:`) above it and `Solution saved to my-church/output/solution.json` below it — the score line itself is emitted by `SignUpFlow/api/cli/main.py:193`, and its value depends on the SignUpFlow revision (at the 2026-09-16 head the sample workspace prints `0.0/100` with two hard violations), so a lone `100.0/100` is a warning sign, not proof. As posted it does not pass: a score with no run record is Lab M0 auto-fail 3, and the other half of the pass gate — a non-empty `ollama list` — is missing. (objective: M0.3 — run the solver and capture its health score)
 
 ### Q8 — Model answer — Archetype 2 (spec-driven AI SaaS): a multi-user web product whose features are specified for agent implementation — study SignUpFlow, which shows the same spec-kit → tasks → tested-feature method with 17 spec folders and 7 test tiers. (objective: M0.1 — classify products into archetypes)

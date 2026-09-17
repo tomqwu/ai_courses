@@ -3,7 +3,7 @@
 > **Goal:** produce a complete spec-kit folder for one real feature of *your* product, pass it through the same gate SignUpFlow runs, and prove a stranger could implement story 1 from `tasks.md` alone.
 > **Prerequisites:** Lesson M4; a feature idea for your SaaS (suggested for a SignUpFlow-style app: **volunteer time-off / availability windows** or **invitation links**; building something else — spec your own feature). **Time:** 90–120 minutes.
 
-You will work in a new folder `specs/001-your-feature/` inside **your own project** (or a scratch repo if you don't have one yet). SignUpFlow's real folders are your templates — open them as you go, don't copy blindly.
+You will work in a new folder `specs/001-your-feature/` inside **your own project** (or a scratch repo if you don't have one yet). SignUpFlow's real folders are your templates — open them as you go, don't copy blindly. The stranger you run in step 7 is scripted: the prompt, the report format and the pass rule live in `stranger-prompt.md` beside this file — read it before step 1, because knowing what the stranger will be asked is what makes step 1 sharp.
 
 ## Steps
 
@@ -13,7 +13,7 @@ You will work in a new folder `specs/001-your-feature/` inside **your own projec
 4. **Write `data-model.md`, `plan.md`, and one `contracts/<seam>.md`.** `plan.md` owns HOW (stack, versions, storage, performance targets) and must contain an explicit **Constitution Check**: one verdict line per principle of your project's constitution (SignUpFlow's is `.specify/memory/constitution.md`; use your Lab M1 constitution for your own repo). Any violation goes in a Complexity Tracking table with an argument — "Fill ONLY if Constitution Check has violations that must be justified" (`.specify/templates/plan-template.md`). The contract pins one real seam: request/response shapes, error keys, and a test sketch (model: `specs/014-security-hardening/contracts/rate-limiting.md`).
 5. **Write `tasks.md` (Phase 2).** Checkbox tasks in the template format — `[ID] [P?] [US#] description` — organized Setup → Foundational → one phase per story (tests written first, failing) → Polish, with a checkpoint after each story. **Every task names an exact file path** that exists in your repo ("Include exact file paths in descriptions", `.specify/templates/tasks-template.md`; "T017 [P] [US1] Implement create_wizard_state method in api/services/onboarding_service.py", `specs/000-user-onboarding/tasks.md`, is the model).
 6. **Write `checklists/requirements.md` and grade yourself honestly.** Three groups, all pass/fail: Content Quality, Requirement Completeness, Feature Readiness (same structure as 014's). Then run the **drift checks** from M4.3 against your own generated file: grep every path it cites and confirm the file exists; recount every count (stories, FRs, priorities) against `spec.md`; confirm no `[NEEDS CLARIFICATION]` remains. 014's self-graded "Quality Score: 100%" printed "5xP1" next to six P1 features — self-reported scores don't catch drift; your greps do.
-7. **The stranger test (the pass gate).** Hand `tasks.md` + the folder to a peer (cohort) or to a fresh agent session with no context beyond the folder, and ask for story 1 only. If they must ask you anything the folder doesn't answer, the spec has a hole: sharpen the artifact that starved them and re-run. Record what they asked.
+7. **The stranger test (the pass gate).** Commit the folder, then run the **scripted stranger** in `stranger-prompt.md`: paste its prompt into a fresh session of any coding agent on a clean clone, with no context beyond the repo, and let it implement story 1 without asking you anything. It returns a fixed report — what it built, which acceptance scenarios it could check, and every question (Q) and assumption (A) it logged. Label each Q/A row **spec-owed** or **environment-owed** using the table in `stranger-prompt.md`. **Pass = zero spec-owed rows.** One spec-owed row means the spec has a hole: sharpen the artifact that starved it and re-run in a new fresh session. **Cohort option:** hand the folder to a peer under the same rules and the same report format.
 
 ## Acceptance checklist
 
@@ -24,11 +24,11 @@ You will work in a new folder `specs/001-your-feature/` inside **your own projec
 - [ ] ≥1 contract with shapes, error keys, and a test sketch
 - [ ] `tasks.md`: checkbox format with `[US#]` links, tests-first phases, checkpoint per story, exact file paths in every task
 - [ ] `checklists/requirements.md`: all three groups pass; drift checks run (paths grepped, counts recounted)
-- [ ] Stranger test: story 1 implemented (or attempted) with zero questions the folder should have answered; residual questions recorded and artifacts sharpened
+- [ ] Stranger test: a `=== STRANGER REPORT ===` (scripted agent session, or a peer using the same format) for story 1 with **zero spec-owed Q/A rows**; every earlier run's rows labelled and the sharpened artifact shown before/after
 
 ## Evidence to record
 
-In your evidence log: the checklist's three pass lines with today's date; the drift-check commands you ran and their output; and the stranger-test transcript (or the questions the stranger asked). Format follows the course evidence-log template from Lab M1.
+In your evidence log: the checklist's three pass lines with today's date; the drift-check commands you ran and their output; and every stranger report verbatim with its run date, each Q/A row's label, and the artifact sharpened between runs. Format follows the course evidence-log template from Lab M1.
 
 ## Stretch
 
@@ -37,4 +37,4 @@ In your evidence log: the checklist's three pass lines with today's date; the dr
 
 ## Discussion prompt
 
-Post the stranger-test result: what did your stranger ask that your folder should have answered? Name the artifact that starved them and show the sharpened line before/after.
+Post your stranger report's `Counts` block and one spec-owed row from a run that did not pass: name the artifact that starved the stranger and show the sharpened line before/after. If your first run passed, post the environment-owed rows and say why each is not the spec's job.

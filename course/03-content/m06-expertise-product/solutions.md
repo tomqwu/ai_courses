@@ -83,8 +83,8 @@ explicitly illustrative one.
 carries its epistemic label in the slide text — for example "Peng et al.: 55.8% faster (95
 freelancers; one synthetic task; vendor-affiliated)."
 
-**Common wrong answers.** (a) A number on slide 5 with no row — an orphan number, automatic
-reconciliation failure. (b) "Measured" applied to the Bain figure — the headline failure below.
+**Common wrong answers.** (a) A number on slide 5 with no row — an orphan number that
+`selfcheck.py` catches in step 6. (b) "Measured" applied to the Bain figure — the headline failure below.
 
 ## Step 4 — two routes over the same 12 slides
 
@@ -117,6 +117,39 @@ never overwritten (`ai_qe/CONTRIBUTING.md`).
 **Common wrong answers.** (a) Bumping every edition together — signals version theatre.
 (b) Republishing over the old release — editions are immutable.
 
+## Step 6 — the reconciliation gate
+
+**Reference answer.** The briefing as one Markdown file, `selfcheck.py` run against it, exit
+status 0, and the command, its last line and the path used recorded.
+
+**Commands and exact output.** The script checks itself first — verbatim:
+
+```text
+$ python3 selfcheck.py --selftest
+[PASS] good.md: 0 uncited claim(s), expected 0
+[PASS] bad.md: flagged lines [13, 14, 22, 27, 30, 32], expected [13, 14, 22, 27, 30, 32]
+    line 13: 55.8%, 71.2, 160.9 minutes, 2026-09-04
+    line 14: 47.6%, 2026-09-04
+    line 22: 55.8%
+    line 27: 10, 15%
+    line 30: $450k
+    line 32: 3.3x
+Full report: selfcheck.py selfcheck-examples/bad.md
+
+SELFTEST: PASS
+```
+
+On the briefing itself a clean file prints `PASS: 0 uncited quantitative claims in 1 file(s)`;
+anything else exits 1 and names the unit, not just the number.
+
+**Common wrong answers.** (a) A source cell holding `ai_qe/docs/evidence/benchmarks.md` with no
+line anchor: that names a file, not a record, and the script flags it — `bad.md` line 13. (b)
+Deleting the number instead of citing it: green gate, lost claim.
+(c) Rewording until the pattern stops matching; the check over-flags on purpose.
+
+**Grading note.** A real pass pastes the command, the file name and the exit status; a fake pastes
+a bare `PASS`, or output naming another file.
+
 ## The mixed-level claim, and the honest replacement
 
 Raw: "AI cuts testing time 55.8%, so we can take $450k out of the QA budget."
@@ -126,18 +159,16 @@ single synthetic task; our own pilot will measure net QA effort on our data, and
 releases becomes a saving only when Finance names the budget line it is captured against."
 
 The raw claim commits three errors: a task-level number sold as capacity, capacity sold as cash, and a
-fictitious dollar figure. The replacement keeps the strongest number and drops the two claims nobody
-earned.
+fictitious dollar figure. The replacement keeps the strongest number and drops the rest.
 
 ## Common student failures
 
 1. **A vendor self-reported figure headlined as measured.** "Organizations achieve 10–15% gains"
-   printed with the label *measured*. Bain is a self-reported consultancy estimate; the fix is the
-   verb — "organizations *report*" — plus the label *self-reported*.
-2. **A task-level number sold as a budget saving.** 55.8% presented as a Finance outcome. It fails
-   the level-3 requirement of a named budget line confirmed by Finance.
+   labelled *measured*; the fix is the verb, "organizations *report*".
+2. **A task-level number sold as a budget saving.** 55.8% presented as a Finance outcome with no
+   named budget line.
 3. **A citation with a link but no date, sample, method or unit.** A bare URL is not a benchmark
-   record (`ai_qe/CONTRIBUTING.md`). The fix is the full record, or a not-verified entry.
+   record (`ai_qe/CONTRIBUTING.md:93-94`). The fix is the full record, or a not-verified entry.
 4. **Routes that rewrite rather than reorder.** A reworded "executive route" breaks the stable-ID
    invariant and every shared link with it.
 
@@ -150,4 +181,4 @@ earned.
 | Every row has URL + date + level | Read the table's last three columns top to bottom |
 | Executive route is exactly 6, decision ask quoted | Count the YAML list; paste the ask |
 | Technical route keeps ≥3 skipped evidence slides | Diff the two `slides:` lists |
-| Peer review in writing, reviewer named | Paste the reviewer's message in the evidence record |
+| No uncited quantitative claim | `python3 selfcheck.py briefing.md` → exit 0; cohort path adds the named reviewer's written confirmation |

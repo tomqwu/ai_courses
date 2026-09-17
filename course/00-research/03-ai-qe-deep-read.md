@@ -1,6 +1,6 @@
 # Deep-Read Report: ai_qe (The Expertise-Content Product)
 
-> Source: subagent deep-read of /Users/tomwu/ai_courses/ai_qe (all claims grounded in files read directly from the repo).
+> Source: subagent deep-read of the `ai_qe/` clone, a sibling of `course/` in the workspace root (all claims grounded in files read directly from the repo).
 > Archetype framing ("3rd type of app") is the course's framing, not the repo's — but the repo is a near-perfect specimen of that archetype.
 
 ## 1. What this product is, and the archetype lesson

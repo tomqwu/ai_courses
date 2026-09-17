@@ -18,11 +18,26 @@ recordings is still fully readable, and the player says so instead of failing.
 | Path | Source | Committed? |
 |---|---|---|
 | `mNN.html`, `index.html` | `03-content/mNN-*/slides.md` + `06-production/narration/manifest.json` | No — generated |
+| `lesson-mNN.html`, `handout-mNN.html`, `glossary-mNN.html`, `glossary.html` | the module Markdown, rendered by `site_content.py` with every repo pointer linked at the pinned commit | No — generated |
+| `lab-mNN.html` | `lab.md` — the acceptance checklist as persisted checkboxes, commands with copy buttons, an evidence-entry form | No — generated |
+| `quiz-mNN.html` | `quiz.md` — the knowledge check, playable; the parser fails the build on a question with zero or two keyed answers | No — generated |
+| `search.json` | every unit, slide (with its narration), lesson and lab heading, question and glossary term | No — generated |
+| `proof.json` | what the build measured about itself: pointers resolved, facts re-derived, lab runs, narration contract | No — generated |
+| `assets/progress.js`, `quiz.js`, `lab.js`, `search.js` | hand-written | **Yes** |
 | `narration.json` | `06-production/narration/manifest.json` | No — copied at build time |
 | `assets/audio/…` | `generate_narration.py` | No — generated (see the narration README) |
 | `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
 | `assets/fonts/source-sans-3.woff2` | Source Sans 3, SIL OFL 1.1 (licence travels with it) | **Yes** |
 | `build_site.py`, `check_player.py` | hand-written | **Yes** |
+
+## The learner's record
+
+Progress lives in the browser behind one small interface (`assets/progress.js`, key `aps.progress.v2`),
+so a server-backed store can replace it later without touching the pages that read it. Reaching a
+unit's last slide marks it done; a lab completes when every checklist item is ticked; a knowledge
+check at 75%, the certificate threshold. Rings on the module and path cards, a "continue where you
+left off" strip on the course home, and export / import / reset as plain JSON — the learner owns it,
+nothing is uploaded. Press `/` anywhere to search.
 
 ## Design system
 

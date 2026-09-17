@@ -47,7 +47,7 @@
   exact wording.
 - Non-English terms and product names: caption the spelling once, in the form used on screen, and use the
   same spelling in the transcript and glossary.
-- Numbers read aloud get digits in the caption: "191 passed", "42 to 55 percent", "$8,767" — viewers
+- Numbers read aloud get digits in the caption: "201 passed", "42 to 55 percent", "$8,767" — viewers
   compare these against their own runs.
 
 ## Accommodations

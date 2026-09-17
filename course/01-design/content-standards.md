@@ -10,18 +10,21 @@
    clone — e.g. `` `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:15-24` ``,
    `` `SignUpFlow/docs/playbooks/validation.md` ``, `` `ai_qe/_data/pilot_gates.json` ``.
    All 234 existing pointers were verified to resolve. Never invent a path, count, quote, or number.
-2. **Verified numbers only.** These are the numbers you may state as fact without re-deriving them:
+2. **Verified numbers only.** These are the numbers you may state as fact without re-deriving them
+   (re-derived 2026-09-17 against the upstream heads of 2026-09-16 by `06-production/check_facts.py`,
+   which is also where each one is pinned — run `make facts` before quoting any of them in new text):
    - ListenToMe: 96% core coverage; 95% CI coverage floor via `scripts/check-coverage.sh`;
-     12-row competitor table in `docs/competition-analysis.md`; 1.3.0 held back ("do not promote")
+     14-row competitor table in `docs/competition-analysis.md`; 1.3.0 held back on 2026-09-10 ("do not promote"; macOS 1.4.0–1.4.4 then shipped 13–14 Sept)
      at 97.24% coverage per `docs/reviews/2026-09-10/design-and-gap-review.md`.
    - SignUpFlow: "1,464 passed, 21 skipped" in `docs/playbooks/validation.md` (dated 2026-09-12,
      demoted to historical reference 2026-09-13); 7 test tiers (`docs/TESTING.md`); 17 spec folders;
      spec 014 has **no** `tasks.md`.
    - ai_qe: 116 narrated slides = 21+33+26+36 (`_data/briefing_room.json`); four claim levels
      (`docs/principles.md`); 14-finding self-audit (`research/reviews/`).
-   - TinyCopilot (the lab): `make lab-m2` → **191 passed, 100% coverage** (floor 90 enforced);
+   - TinyCopilot (the lab): `make lab-m2` → **201 passed, 100% coverage** (floor 90 enforced);
      `make lab-m3` → **49 passed**; `make e2e` → **2 passed** against a live Ollama daemon;
      2 contract tests skip without `LAB_E2E=1`.
+   - mini-flow (the Lab M5 starter, `03-content/m05-security-tests/mini-flow/`): `make lab-m5` → **51 passed, 23 skipped, 100% coverage** (floor 90 enforced); `make pass-gate` → **11 failed, 63 passed** on the shipped starter by design and **74 passed** with the four reference fixes applied (re-run 2026-09-17).
 3. **Numbering.** Modules `M0`–`M8`; segments `M#.#`; labs `Lab M#`; quizzes `Quiz M#`.
    Do not renumber or invent segments — use the segment titles already in each `lesson.md`.
 4. **Voice.** Imperative, specific, no hype, no "in this section we will". Second person. Short
@@ -55,7 +58,11 @@ Each `03-content/mNN-slug/` folder contains, in addition to the existing `lesson
 > unchanged, and the maxima are **ceilings, not targets**: an artifact that needs 1,600 words is fine,
 > an artifact that rambles to 1,600 words is not.
 
-`m06-expertise-product/` additionally keeps `evidence-dataset.md` (already written).
+`m06-expertise-product/` additionally keeps `evidence-dataset.md` (already written), plus the
+self-paced pass-gate tooling: `selfcheck.py` and its `selfcheck-examples/good.md` and
+`selfcheck-examples/bad.md` fixtures. `m04-spec-driven-saas/` additionally keeps
+`stranger-prompt.md`. Files beyond the eight in the table carry **no word band** — `verify.py`
+bands only the named artifacts — but every repo pointer in them is checked like any other.
 
 ## 2. Artifact specifications
 

@@ -13,7 +13,7 @@
    mkdir -p specs/001-todo-command docs tests
    touch docs/research-log.md docs/evidence-log.md
    ```
-2. **Write `constitution.md` (≤80 lines).** Copy, then personalize the three bracketed parts:
+2. **Write `constitution.md` (≤80 lines).** SignUpFlow's own has grown to 85 lines since this lab was written (`SignUpFlow/.specify/memory/constitution.md`); the cap is for *your first one* — brevity is the skill. Copy, then personalize the three bracketed parts:
    ```markdown
    # <Project> Constitution
    ## Principles
@@ -27,7 +27,7 @@
    - Git Autonomy: ENABLED (commit when a task completes and tests pass)
    - When unsure whether an action is reversible, stop and ask.
    ```
-   (Model: `SignUpFlow/.specify/memory/constitution.md` — 79 lines.)
+   (Model: `SignUpFlow/.specify/memory/constitution.md` — 85 lines.)
 3. **Write `AGENTS.md` (≤200 lines).** Every rule imperative and verifiable; include a validation checklist:
    ```markdown
    # AGENTS.md
@@ -88,12 +88,12 @@
        s.done(i)
        assert s.list()[0]["done"] is True
    ```
-   Run `python3 -m pytest tests/ -q` — record the failure (red). Then execute T002/T004: implement `todo.py` (a list of dicts; `add` appends and returns the id; `done` sets the flag). Run pytest again — record the pass (green). Finish T005, then run your full validation checklist.
+   Run `python3 -m pytest tests/ -q` — with no `todo.py` yet, pytest stops at collection: `ERROR tests/test_todo.py`, `ModuleNotFoundError: No module named 'todo'`, `1 error`, exit code 2. That collection error *is* the red — record it verbatim (it is not "2 failed"; the two tests never ran). Then execute T002/T004: implement `todo.py` (a list of dicts; `add` appends and returns the id; `done` sets the flag). Run pytest again — record the pass (green). Finish T005, then run your full validation checklist.
 8. **Record evidence** in `docs/evidence-log.md`, in the prescribed format:
    ```markdown
    ## Evidence — my-studio — todo command — <YYYY-MM-DD>
    Commands (with results):
-   - python3 -m pytest tests/ -q (before implementation) → 2 failed
+   - python3 -m pytest tests/ -q (before implementation) → 1 error: ModuleNotFoundError: No module named 'todo' (exit 2)
    - python3 -m pytest tests/ -q (after implementation) → <N> passed
    Environment: <OS, Python version>
    Revision: <output of `git rev-parse HEAD`>
@@ -109,7 +109,7 @@
 - [ ] `specs/001-todo-command/spec.md` has 2 stories, each with ≥1 Given/When/Then
 - [ ] `plan.md` contains a Constitution Check gate, explicitly passed
 - [ ] `tasks.md` has ≥5 `[ID] [Story]` tasks, each citing an exact file path, tests first
-- [ ] Red run recorded: pytest failed before implementation, output saved
+- [ ] Red run recorded: the collection error before implementation, output saved
 - [ ] Green run: `python3 -m pytest tests/ -q` exits 0
 - [ ] Evidence entry has commands, counts, date, environment, limitations, head SHA
 - [ ] `docs/research-log.md` has ≥1 dated observation

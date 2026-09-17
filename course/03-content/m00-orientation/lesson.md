@@ -1,5 +1,5 @@
 # Module 0 — Orientation: Three Products, One Method
-> Part of AI Product Studio (APS-3) · ~30 minutes · No prerequisites
+> Part of AI Product Studio (APS-3) · ~30 minutes of lesson, plus ~30 minutes for the first win (mostly downloads) · No prerequisites
 
 ## Overview
 
@@ -35,11 +35,11 @@ Describe the three AI product archetypes, name each case-study repo, and state w
 
 The three archetypes cover essentially everything a solo technical builder can ship, and each case study comes with **proof assets** — verifiable evidence in the repo itself, not marketing claims.
 
-**Type 1: The native on-device AI app — ListenToMe.** A real-time macOS app that captures your mic and the meeting's system audio, transcribes on-device, and streams AI responses through a model you pick — Ollama locally, or a cloud provider with your own key (`ListenToMe/README.md`). Proof assets: a **96% core-coverage badge** rendered on the README (`ListenToMe/README.md`); **notarized release DMGs** published on GitHub Releases ("Grab the notarized `.dmg` from Releases" — `ListenToMe/README.md`); and a **12-row competitor comparison table** with sourced, dated claims (`ListenToMe/docs/competition-analysis.md`). That table is also how the product was positioned: "the free, open-source, fully on-device meeting copilot" — a corner of the market the table shows no commercial rival fills (`ListenToMe/docs/competition-analysis.md`).
+**Type 1: The native on-device AI app — ListenToMe.** A real-time macOS app that captures your mic and the meeting's system audio, transcribes on-device, and streams AI responses through a model you pick — Ollama locally, or a cloud provider with your own key (`ListenToMe/README.md`). Proof assets: a **96% core-coverage badge** rendered on the README (`ListenToMe/README.md`); **notarized release DMGs** published on GitHub Releases ("Grab the notarized `.dmg` from Releases" — `ListenToMe/README.md`); and a **14-row competitor comparison table** with sourced, dated claims (`ListenToMe/docs/competition-analysis.md`). That table is also how the product was positioned: "the free, open-source, fully on-device meeting copilot" — a corner of the market the table shows no commercial rival fills (`ListenToMe/docs/competition-analysis.md`).
 
 **Type 2: The spec-driven AI SaaS — SignUpFlow.** A multi-tenant volunteer-scheduling platform for churches and leagues: FastAPI + SQLAlchemy, JWT auth, a greedy heuristic solver, and a YAML-in/JSON-out CLI (`SignUpFlow/AGENTS.md`, "Repository purpose"; the HTMX web app it also ships is described at `SignUpFlow/README.md:288`). Proof assets: **dated test evidence** — "1,464 passed, 21 skipped" across the full local suite (`SignUpFlow/docs/playbooks/validation.md`); **17 spec-kit folders** under `SignUpFlow/specs/`, each a complete specification→plan→tasks package; and a **seven-tier test pyramid** run in separate processes by `make test-all` (`SignUpFlow/docs/TESTING.md`).
 
-**Type 3: The expertise content product — AI × QE.** A research-backed briefing site about modernizing quality engineering with AI. Proof assets: **116 slides across 4 decks** — 21 + 33 + 26 + 36, defined in `ai_qe/_data/briefing_room.json` — with **10 current PDF editions** and per-claim provenance (`00-research/03-ai-qe-deep-read.md`; see also `ai_qe/README.md`, "Publication records"); and a **published self-audit**: a 14-finding review of its own site, with per-finding evidence and acceptance criteria (`ai_qe/research/reviews/site-audit-2026-09-06.md`).
+**Type 3: The expertise content product — AI × QE.** A research-backed briefing site about modernizing quality engineering with AI. Proof assets: **116 slides across 4 decks** — 21 + 33 + 26 + 36, defined in `ai_qe/_data/briefing_room.json` — with **10 current PDF editions** — the 4 full decks, 4 guided routes, the research companion and the questionnaire at the editions `ai_qe/_data/release.yml` names, counted in `ai_qe/assets/pdf/` as of 2026-09-10 (`00-research/03-ai-qe-deep-read.md`; see also `ai_qe/README.md`, "Publication records"); and a **published self-audit**: a 14-finding review of its own site, with per-finding evidence and acceptance criteria (`ai_qe/research/reviews/site-audit-2026-09-06.md`).
 
 Notice what all nine proof assets have in common: **each is a file you can open, dated or machine-checkable, not a testimonial.** That is the standard this course holds your work to as well — every lab ends in an artifact, and every artifact ends in evidence.
 
@@ -69,7 +69,7 @@ Here is the loop you will run in every module of this course:
 
 Each stage has a real artifact behind it. Open these as you read:
 
-1. **Study.** ListenToMe's 12-row competitor table with per-claim sources (`ListenToMe/docs/competition-analysis.md`); AI × QE's first principle: "**Baseline before solutioning.**" (`ai_qe/docs/principles.md`). Positioning is a research artifact, not a slogan.
+1. **Study.** ListenToMe's 14-row competitor table with per-claim sources (`ListenToMe/docs/competition-analysis.md`); AI × QE's first principle: "**Baseline before solutioning.**" (`ai_qe/docs/principles.md`). Positioning is a research artifact, not a slogan.
 2. **Spec.** SignUpFlow's spec.md files carry prioritized user stories (P1/P2/P3) with **Given/When/Then** acceptance scenarios (`SignUpFlow/specs/014-security-hardening/spec.md`); ListenToMe's design spec defines protocol-level interfaces *and* a YAGNI non-goals list — "No cloud backend, accounts, billing, or multi-user" (`ListenToMe/docs/superpowers/specs/2026-06-18-listentome-design.md`).
 3. **Build.** SignUpFlow's tasks.md turns each spec into checkbox tasks with exact file paths, tests written first (`SignUpFlow/specs/019-sms-notifications/tasks.md`); ListenToMe's implementation plan is a 2,410-line TDD task list ending in a self-review that maps every spec bullet to a task (`ListenToMe/docs/superpowers/plans/2026-06-18-listentome-mvp.md`).
 4. **Validate.** SignUpFlow's seven test tiers and dated counts (`SignUpFlow/docs/playbooks/validation.md`); ListenToMe's **95% coverage floor** enforced by script (`ListenToMe/README.md`).
@@ -82,7 +82,7 @@ Stage 6 is the rarest and it is the spine of this course: the honest record of w
 
 Copy the loop diagram above into your notes, then start your **loop journal** — a single file you'll keep all course. For every future action step, record one line per stage you touched. First entry: for M0.3 below, you'll be doing a miniature STUDY (read the README), BUILD (run the solver), and PROVE (post output).
 
-## Segment M0.3 — Set up and get your first win (~12 min)
+## Segment M0.3 — Set up and get your first win (~12 min of lesson; ~30 min at the keyboard)
 
 ### Objective
 
@@ -90,7 +90,7 @@ Clone all three repos, run the SignUpFlow solver locally and capture its health 
 
 ### Lesson
 
-Do this now — the whole sequence is under 15 minutes, most of it downloads. You need git and Python 3.11+ (SignUpFlow's own floor — `SignUpFlow/AGENTS.md`, "Code style").
+Do this now — the whole sequence is about 30 minutes, most of it downloads (`make setup`, the Ollama installer and the model pull). You need git and Python 3.11+ (SignUpFlow's own floor — `SignUpFlow/AGENTS.md`, "Code style").
 
 **1. Clone the three case studies:**
 
@@ -108,7 +108,7 @@ poetry run python -m api.cli.main init my-church
 poetry run python -m api.cli.main solve my-church
 ```
 
-`solve` prints the workspace summary and the solver's result — people, events, a **health score** (`Health score: 100.0/100` on the sample data), hard/soft violations, and a fairness stdev — and saves the solution to `my-church/output/solution.json` (`SignUpFlow/README.md`). **Capture that health score line**; it is your first artifact.
+`solve` prints the workspace summary and the solver's result — people, events, a **health score** line, hard/soft violations, and a fairness stdev — and saves the solution to `my-church/output/solution.json`. The line is emitted by `SignUpFlow/api/cli/main.py:193` (`Health score: {health_score:.1f}/100`); its *value* is whatever the sample workspace produces at the SignUpFlow revision you cloned, not a number the README promises — at the 2026-09-16 head, `init my-church` + `solve my-church` prints `Health score: 0.0/100` with `Violations: 2 hard, 0 soft` (both `sound_tech` slots unfilled), and an older sample printed `100.0/100`. **Capture that health score line with the lines around it**; it is your first artifact, and the number is not the point — the run record is.
 
 **3. Install Ollama and pull a genuinely local model** (from <https://ollama.com/download>):
 
@@ -122,19 +122,19 @@ That last command is your first local LLM completion: no API key, no cloud bill,
 
 > **Windows note.** Ollama runs on Windows, macOS, and Linux, and every core lab in this course is Python + Ollama — so Windows and Linux users are fully equipped for the main track. The **Swift stretch track** (Modules 2–3, "same lab in Swift" appendices) requires a Mac with Xcode, since ListenToMe targets macOS (`ListenToMe/README.md`). SignUpFlow's `make` targets work anywhere with Python 3.11+ and Poetry.
 
-Why the rush to a working solver in Module 0? Because the hardest part of any builder course is the gap between watching and running. In the next twenty minutes you will have executed real production software and a real local model — that is the two-minute first win that beats the "Module 2 chasm" where most courses lose people.
+Why the rush to a working solver in Module 0? Because the hardest part of any builder course is the gap between watching and running. Within about thirty minutes — most of it download time — you will have executed real production software and a real local model. That is the first win, and it is what beats the "Module 2 chasm" where most courses lose people.
 
 ### Action step
 
-Post your first win to the community: (1) your solver output including the health score line, (2) your `ollama list` output, and (3) your two-sentence "which archetype is mine" note from M0.1. Then complete **Lab M0** (`m00-orientation/lab.md`) — its checklist turns this segment into your first pass/fail checkpoint.
+Post your first win to the community: (1) your solver output including the health score line, (2) your `ollama list` output, and (3) your two-sentence "which archetype is mine" note from M0.1. Then complete **Lab M0** (`m00-orientation/lab.md`) — its checklist turns this segment into your first pass/fail checkpoint; the pass gate is the solver block plus a non-empty `ollama list`. Its "Before Module 1" block (run the TinyCopilot suite, start your evidence log) is where Module 2 begins.
 
 ## Recap
 
-- Three archetypes, three real repos: **ListenToMe** (on-device AI app; 96% core-coverage badge, notarized DMGs, 12-row competitor table), **SignUpFlow** (spec-driven SaaS; 1,464 passed / 21 skipped dated evidence, 17 spec folders, 7 test tiers), **AI × QE** (expertise product; 116 slides / 4 decks / 10 PDFs, provenance files, a published 14-finding self-audit).
+- Three archetypes, three real repos: **ListenToMe** (on-device AI app; 96% core-coverage badge, notarized DMGs, 14-row competitor table), **SignUpFlow** (spec-driven SaaS; 1,464 passed / 21 skipped dated evidence, 17 spec folders, 7 test tiers), **AI × QE** (expertise product; 116 slides / 4 decks / 10 current PDF editions as of 2026-09-10, provenance files, a published 14-finding self-audit).
 - One method behind all three: the **Spec-to-Ship Loop** — Study, Spec, Build, Validate, Release, Prove — with a real, openable artifact at every stage.
 - Production-grade means proof you can open: a badge, a dated evidence line, a provenance file — not a testimonial.
 - Your environment: Python 3.11+ and Ollama everywhere; a Mac only for the Swift stretch track.
-- You have already run one case study end to end and one local LLM — keep both outputs in your evidence log.
+- You have already run one case study end to end and one local LLM — keep both outputs in your evidence log, and run the TinyCopilot suite before Module 1.
 
 ## Discussion prompt
 

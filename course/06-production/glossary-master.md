@@ -58,7 +58,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Acceptance gate** *(M5)* — The point where the product must be proven operable, not merely functional: playbook scenarios, disruption drills, and a manifest that admits unproven rows. (`SignUpFlow/docs/playbooks/coverage.json`; `docs/playbooks/church.md`)
 - **Acceptance scenario** *(M4)* — A Given/When/Then statement inside a user story whose Then-clause is an observable, numeric outcome. — `SignUpFlow/specs/014-security-hardening/spec.md` (US1).
 - **Adjective-wedge** *(M7)* — The leading adjectives of a positioning one-liner that carry the differentiator — the part a competitor would have to rebuild to match. Lives in the derived one-liner at `ListenToMe/docs/competition-analysis.md:80`.
-- **AGENTS.md** *(M1)* — The cross-agent baseline rules file that tools such as Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory read natively. In SignUpFlow it is 177 lines and is restated or cross-referenced by the host-specific files. (`SignUpFlow/AGENTS.md`)
+- **AGENTS.md** *(M1)* — The cross-agent baseline rules file that tools such as Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory read natively. In SignUpFlow it is 188 lines and is restated or cross-referenced by the host-specific files. (`SignUpFlow/AGENTS.md`)
 - **Anti-hallucination rules** *(M1)* — Prohibitions that make fabricated facts checkable: do not invent paths, names, commands, or identifiers; grep before referencing; read facts from the canonical source; offer 2–3 options when a request is ambiguous. (`SignUpFlow/AGENTS.md`, "Anti-hallucination")
 - **Archetype** *(M0)* — One of the three product shapes this course builds: on-device app, spec-driven SaaS, expertise product. They differ in technical center of gravity, not in method. — `course/03-content/m00-orientation/lesson.md`
 - **Authorization matrix (executable)** *(M5)* — A dict classifying every mounted route as public/ member/ admin, paired with a test that compares the dict to the live route table and to each route's dependency tree. (`SignUpFlow/api/route_auth_policy.py:8-171`; test in `tests/unit/test_api_route_auth_policy.py`)
@@ -77,7 +77,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Claim level** *(M6)* — One of four labels that every number must carry: task-level efficiency, QA capacity released, hard-dollar saving, total software-spend impact. Lives in `ai_qe/docs/principles.md`; reproduced in `evidence-dataset.md`.
 - **Comparator band** *(M7)* — The min–max price range of the rows in your own table that are genuinely comparable to your product. Lives in `lab.md` Step 2 (the worksheet template).
 - **Complexity Tracking** *(M4)* — The plan table that must be filled *only* when the Constitution Check records a violation that needs arguing. — `SignUpFlow/.specify/templates/plan-template.md`.
-- **Constitution** *(M1)* — The shortest and most authoritative governance file: the few principles that must never drift, plus the current validation policy. SignUpFlow's is 79 lines and sits above all agent instruction files. (`SignUpFlow/.specify/memory/constitution.md`)
+- **Constitution** *(M1)* — The shortest and most authoritative governance file: the few principles that must never drift, plus the current validation policy. SignUpFlow's is 85 lines and sits above all agent instruction files. (`SignUpFlow/.specify/memory/constitution.md`)
 - **Constitution Check** *(M4)* — The plan's per-principle compliance pass; the gate must pass before Phase 0 research and be re-checked after Phase 1 design. — `SignUpFlow/.specify/templates/plan-template.md`.
 - **Constitution Check gate** *(M1)* — The explicit pass/fail checkpoint in `plan.md` that must pass before Phase 0 research and be re-checked after Phase 1 design. (`SignUpFlow/specs/014-security-hardening/plan.md`)
 - **Content as code** *(M6)* — Running published content under the same discipline as software: tests, review gates, hashed media, editions and immutable releases. Lives in `ai_qe/Makefile` and `ai_qe/CONTRIBUTING.md`, "Release validation".
@@ -123,7 +123,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Guided route** *(M6)* — A curated sequence over stable slide IDs, with a declared `closing` slide, that reorders and omits but never rewrites. Lives in `ai_qe/_data/briefing_routes.json`.
 ### H
 
-- **Health score** *(M0)* — The solver's 0–100 quality metric for a generated roster, printed by `api.cli.main solve`. On the sample workspace it is `100.0/100`. — `SignUpFlow/README.md`
+- **Health score** *(M0)* — The solver's 0–100 quality metric for a generated roster, printed by `api.cli.main solve` (`SignUpFlow/api/cli/main.py:193`). Its value depends on the revision: at the 2026-09-16 head the sample workspace prints `0.0/100` with two hard violations. — `SignUpFlow/README.md`
 - **Honest-marketing checklist** *(M7)* — Five rules every sales asset must pass: sourced numbers, qualified claims, no invented testimonials, plain refund/deadline policies, price the transformation. Lives in `course/04-sales/pricing-and-platforms.md`.
 ### I
 
@@ -138,7 +138,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Lead product** *(M8)* — The free asset that builds the list before the arc runs; the course uses a 30-minute AI product teardown. *Where:* `04-sales/launch-plan.md` (the free lead product).
 - **Local model** *(M0)* — A model whose weights run on your machine. In M0 the example is `qwen3:0.6b`; the point of pulling one is that no API key and no cloud bill are involved. — `course/03-content/m00-orientation/lesson.md`
 - **Local-first defaults — auto-selection that filters cloud aliases out first** *(M2)* — Cloud is chosen only when no local model exists. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:76-94`.
-- **LOCAL_HOSTS / loopback allowlist** *(M3)* — The only hosts local-only mode trusts: `localhost`, `127.0.0.1`, `::1`. Anything else throws before a prompt is written — `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:106-108`.
+- **LOCAL_HOSTS / loopback allowlist** *(M3)* — The only hosts local-only mode trusts: `localhost`, `127.0.0.1`, `::1`. Anything else throws before a prompt is written — `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:145-147`.
 - **Loop journal** *(M0)* — The single file, started in M0.2, where a student records one line per loop stage touched by each action step. — `course/03-content/m00-orientation/lesson.md`
 ### M
 
@@ -174,7 +174,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 ### R
 
 - **Ralph loop** *(M4)* — The constitution's Context A: an agent picks the highest-priority incomplete spec, completes *all* acceptance criteria, and reports `<promise>DONE</promise>`. — `SignUpFlow/.specify/memory/constitution.md`.
-- **Redirect refusal (`RejectRedirects`)** *(M3)* — A transport that refuses every 3xx instead of following it, so meeting text can never be silently forwarded — the Swift URLSession delegate is `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:151-157`; the Python twin builds httpx with `follow_redirects=False` and raises on 3xx in `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
+- **Redirect refusal (`RejectRedirects`)** *(M3)* — A transport that refuses every 3xx instead of following it, so meeting text can never be silently forwarded — the Swift URLSession delegate is `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`; the Python twin builds httpx with `follow_redirects=False` and raises on 3xx in `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
 - **Reputation funnel** *(M7)* — The marketing surface a free or open-source product runs on: code, README, coverage badge, published competitor analysis, support, and a Pro tier. Lives in `course/01-design/curriculum.md`, M7.1.
 - **Research log** *(M6)* — The dated intake queue where a claim enters before it can reach a page: Question / Checked / Outcome / Changed. Lives in `ai_qe/docs/research-log.md`.
 - **Reserved testimonial slot** *(M8)* — A labeled, empty testimonial placeholder with an honesty note, used instead of inventing social proof. The course's page reserves three in before/after/result format. *Where:* `04-sales/landing-page.md` (testimonials).

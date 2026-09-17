@@ -6,7 +6,7 @@ This repository is the product. The three repositories the course is built from 
 
 | Archetype | Case study | Verified proof |
 |---|---|---|
-| Native on-device AI app | [ListenToMe](https://github.com/tomqwu/ListenToMe) — macOS/iOS meeting copilot | 96% core coverage · 95% CI coverage floor · 12-row competitor table · 1.3.0 held back at 97.24% |
+| Native on-device AI app | [ListenToMe](https://github.com/tomqwu/ListenToMe) — macOS/iOS meeting copilot | 96% core coverage · 95% CI coverage floor · 14-row competitor table · 1.3.0 held back on 2026-09-10 at 97.24% (1.4.4 shipped since) |
 | Spec-driven AI SaaS | [SignUpFlow](https://github.com/tomqwu/SignUpFlow) — volunteer scheduling | 1,464 passing tests · 7 test tiers · 17 spec folders |
 | Expertise content product | [ai_qe](https://github.com/tomqwu/ai_qe) — "AI × QE" briefing site | 116 narrated slides (21+33+26+36) · four claim levels · 14-finding self-audit |
 
@@ -20,7 +20,9 @@ This repository is the product. The three repositories the course is built from 
 | **Understand the design** | [`course/01-design/positioning.md`](course/01-design/positioning.md) → [`curriculum.md`](course/01-design/curriculum.md) |
 | **Sell it** | [`course/04-sales/`](course/04-sales/) — publish-ready landing page, pricing, launch plan |
 | **Sell one archetype** | [`course/05-tracks/`](course/05-tracks/) — three standalone $199 bundles |
-| **Verify it** | `make -C course check` (or `bash course/check.sh`) |
+| **Verify it** | `make -C course check` (or `bash course/check.sh`) · `make -C course facts` for upstream number drift |
+| **Take the tools** | [`aps-tools/`](aps-tools/) — pointer lint, facts-drift check and agent-rule audit, free and standard-library only, runnable on any repository |
+| **Review it** | [`course/00-research/04-platform-review-2026.md`](course/00-research/04-platform-review-2026.md) — the September 2026 review against industry practice, with the platform plan and roadmap |
 | **See the whole map** | [`course/README.md`](course/README.md) — the detailed package map |
 
 ## Repository layout
@@ -71,6 +73,14 @@ work without them.
   them onto the real ListenToMe code
 
 ## Quick start
+
+[![gate](https://github.com/tomqwu/ai_courses/actions/workflows/gate.yml/badge.svg)](https://github.com/tomqwu/ai_courses/actions/workflows/gate.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/tomqwu/ai_courses?quickstart=1)
+
+The devcontainer installs Python 3.11 with pytest, Poetry, Ollama with the lab model, clones the
+three case-study repos beside `course/`, and runs `make lab-m2` so the first thing you see is the
+gate going green. Every GitHub account has free Codespaces hours that cover the nine modules.
+
 
 ```bash
 make -C course narration-preview   # record the free local preview voice (~8 min, no API key)
@@ -153,8 +163,17 @@ check_player --all                 headless browser: the 16:9 frame is measured 
                                    overflow, font loaded), panel visible, captions
                                    parsed, deep links, Present/Read all/notes all work
 verify.py                          artifacts · rubrics · bundles · decks · sales claims ·
-                                   narration contract · learner site · 1,048 file pointers
+                                   narration contract · learner site · every file pointer,
+                                   with :N-M line ranges checked against the file
+check_facts.py --strict            every pinned number re-derived from the clones; skipped
+                                   with a note when the clones are absent
 ```
+
+The same gate runs on every push and pull request as a GitHub Actions workflow
+([`.github/workflows/gate.yml`](.github/workflows/gate.yml)): an Ubuntu runner installs ffmpeg,
+espeak-ng and Chromium, clones the three case-study repositories at their pinned commits, records the
+free preview voice so the narration step has audio to measure, and runs `check.sh`, then the two lab
+suites. Nothing the runner generates is committed; the manifest in the repository stays the owner's.
 
 `verify.py` is the same evidence discipline the course teaches, applied to the course: every claim
 carries a pointer to a file, and every pointer is resolved. Run it on its own with
@@ -182,6 +201,14 @@ What is **not**:
   inventing them. Run a founding cohort first.
 - **No `LICENSE` file.** Decide the terms before publishing or selling; the repository currently
   carries none.
+- **The pinned numbers drift.** The case-study repos ship daily; five of the fourteen facts the
+  content standard whitelists were already stale within five days of being pinned (ListenToMe is at
+  v1.4.4, not a held-back 1.3.0; its competitor table has 14 rows, not 12; SignUpFlow's `AGENTS.md`
+  and constitution have grown). `make -C course facts` measures this and names the files to edit;
+  the edits themselves are Milestone 5 in
+  [`course/06-production/MILESTONES.md`](course/06-production/MILESTONES.md).
+- **Three labs cannot be passed as written** (M3 ships pre-solved, M5 has no starter, M1/M2 template
+  a red run the tooling does not produce) — found by the September 2026 review and tracked there.
 - All facts about the three case-study repos were read from the clones in this workspace and carry file
   pointers — re-verify before publishing, because upstream repos evolve.
 

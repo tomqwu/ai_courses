@@ -48,7 +48,7 @@ Price it, package it, position it — from evidence.
 ## The competitor table is your raw material
 
 - `ListenToMe/docs/competition-analysis.md`
-- 12 competitor rows, dated 2026-08
+- 13 competitor rows + ListenToMe, dated 2026-09
 - Unconfirmed details marked "approximately" or "reportedly"
 - Price column carries model, price, and channel
 - Commercial tiers run about $8–149/mo
@@ -62,7 +62,7 @@ where a detail could not be confirmed from a primary source, it is qualified
 with "approximately" or "reportedly."_
 ```
 
-<!-- NOTES: Put the file on screen. Note the header convention: every price fact is stated as of 2026, and where a detail could not be confirmed from a primary source it is qualified "approximately" or "reportedly." That convention is the honesty mechanism you copy in Lab M7 Step 1 — every price cell gets a source URL and a retrieval date, and unconfirmed cells get the qualifier. Point at the twelve rows; this is not a summary, it is evidence you can audit. Timing: 3 minutes. Transition: now read the Price column against each row's cost structure. -->
+<!-- NOTES: Put the file on screen. Note the header convention: every price fact is stated as of 2026, and where a detail could not be confirmed from a primary source it is qualified "approximately" or "reportedly." That convention is the honesty mechanism you copy in Lab M7 Step 1 — every price cell gets a source URL and a retrieval date, and unconfirmed cells get the qualifier. Point at the thirteen competitor rows; this is not a summary, it is evidence you can audit. Timing: 3 minutes. Transition: now read the Price column against each row's cost structure. -->
 
 ---
 
@@ -81,12 +81,15 @@ with "approximately" or "reportedly."_
 
 ## Free and open-source is a price
 
-- ListenToMe prices at $0, MIT-licensed
-- "Code open for inspection" against $8–149/mo rivals
+| Open tool | Price column, 2026 | What pays for it |
+|---|---|---|
+| ListenToMe | Free & open-source — $0, MIT | Reputation funnel: repo, README, badge, competitor analysis |
+| Natively | Free personal; Pro via lifetime/yearly | A Pro tier above a complete free core |
+
 - Free still has a business model attached
-- Paying surfaces: reputation funnel, support, Pro tier
-- Peer evidence: Natively "Free personal; Pro via lifetime/yearly"
-- Paid tier sits above a complete free core
+- "Code open for inspection" against $8–149/mo rivals
+- Paid tier never repairs a deliberately crippled core
+- Pointer: `ListenToMe/docs/competition-analysis.md:30,35`
 
 <!-- NOTES: A $0 price is a decision, not an absence of one. The course syllabus names the paying surfaces for an open-source product: the reputation funnel, support, and a Pro tier — see `course/01-design/curriculum.md`, M7.1. The open-source peer Natively is the existence proof: its row in `ListenToMe/docs/competition-analysis.md` reads "Free personal; Pro via lifetime/yearly." State the rule: the paid tier sits above a complete free core, never as a repair of a deliberately crippled one. Timing: 3 minutes. Transition: why this position is defensible. -->
 
@@ -94,12 +97,13 @@ with "approximately" or "reportedly."_
 
 ## The wedge rivals cannot copy cheaply
 
-- Category tension one: privacy versus convenience
-- "Local-first" usually means local capture only
-- Category tension two: opinionated versus open
-- Rivals lock one engine, one undisclosed LLM
-- Copying privacy + BYO destroys their cost base
+| Category tension | What rivals ship | Why copying is expensive |
+|---|---|---|
+| Privacy vs convenience | Cloud ASR and cloud AI; "local-first" is local capture only | On-device removes the cost base their subscription prices |
+| Opinionated vs open | One undisclosed engine, one summarization model, no picker | BYO means rebuilding the pipeline and the revenue line at once |
+
 - Durable wedges are expensive in business-model terms
+- Pointer: `ListenToMe/docs/competition-analysis.md:14`
 
 <!-- NOTES: Read the tension paragraph near the top of `ListenToMe/docs/competition-analysis.md`: nearly every commercial product processes audio and runs its AI in the cloud, even when it markets itself as local-first; the local part is usually just audio capture. The second tension is opinionated versus open — most products lock you to one undisclosed transcription engine and one summarization LLM. Say why the wedge holds: their monthly price pays for the cloud compute that the wedge removes. Copying it means rebuilding the pipeline and the revenue line at once. Timing: 3 minutes. Transition: Type 2 prices differently. -->
 
@@ -122,12 +126,17 @@ with "approximately" or "reportedly."_
 
 ## Invitation growth produces the billing event
 
+<!-- _diagram: flow -->
+
+- `/auth/signup` — org plus first admin, atomically
+- Administrator invitation — the only later way in
+- Token onboarding — no email required
+- Per-seat pricing — it tracks real adoption
+
 - Public signup is rejected for existing orgs
-- New members join through administrator invitations
-- `/auth/signup` creates org plus first admin atomically
-- Token-based onboarding, no email required
 - The admin who invites is the buyer
 - Make the growth loop emit the billing event
+- Pointer: `SignUpFlow/README.md:85-86,199`
 
 <!-- NOTES: The README's onboarding section says existing organizations reject public signup and every later member is added through an administrator-created invitation; `/auth/signup` creates the org and its first admin atomically, and later members join by token. That makes growth and billing the same event: every new member is an invited org member, so per-seat pricing tracks real adoption, and the person who invites is the person who pays. Read the exact passages in `SignUpFlow/README.md`. Timing: 3 minutes. Transition: Type 3 sells measurement. -->
 
@@ -179,11 +188,15 @@ Pointer: `ai_qe/_data/engagement.json`; `ai_qe/index.md`; `ai_qe/discovery.md`
 
 ## M7.2 — Cohort and self-paced are different products
 
+| Maven band — live hours + artifacts | Cohort price |
+|---|---|
+| 6–8 live hours + 1+ project | $800–1,200 |
+| 8–12 hours + multiple projects/capstone | $1,200–1,800 |
+| 12–20 hours + multiple projects + capstone | $1,800–2,450 |
+
 - Same content, two value propositions
 - Rule of thumb: $97–297 self-paced
 - Live 4-week cohort: $500–2,000+
-- Maven: 8–12 live hours + projects → $1,200–1,800
-- Maven: 12–20 live hours + capstone → $1,800–2,450
 - The cohort buyer pays for live feedback and peers
 
 <!-- NOTES: Source is `course/00-research/02-course-market-research.md` §C, citing ShopSpace and Maven's published benchmarks. The point to make: these are not the same product at two prices; they are two value propositions. The cohort buyer pays for live instruction, peer interaction, and feedback — which is exactly what Maven's live-hour bands price. Say the bands slowly, because students will use them as a comparator in Lab M7. Timing: 3 minutes. Transition: the rule that connects the two prices. -->
@@ -214,12 +227,15 @@ Pointer: `ai_qe/_data/engagement.json`; `ai_qe/index.md`; `ai_qe/discovery.md`
 
 ## Marketplace vs own platform
 
-- Udemy: 37% marketplace payout
-- 32 cents per dollar marketplace-wide in 2025
-- Platform controls pricing, $9.99 flash sales
-- No student-email export — no customer relationship
-- Own-platform creators charge $50–200+
+| Dimension | Marketplace (Udemy) | Own platform |
+|---|---|---|
+| Payout | 37%; 32¢ per dollar marketplace-wide in 2025 | Flat fee — Thinkific from ~$54/mo |
+| Pricing control | Platform's; $9.99 flash sales | Yours |
+| Customer list | No student-email export | You keep the email address |
+| Price achieved | ~$10–15 effective | $50–200+ |
+
 - Marketplace is discovery and validation, never primary
+- Worked decision: `course/04-sales/pricing-and-platforms.md`
 
 <!-- NOTES: Source: `course/00-research/02-course-market-research.md` §D, with the own-platform figure in §C. The decision is not about reach alone; it is about margin and the customer list. At 37% payout with platform-controlled $9.99 pricing and no email export, the marketplace keeps the relationship as well as the money. Use it to validate demand and as optional discovery. The course's own platform table is the worked decision — see `course/04-sales/pricing-and-platforms.md`. Timing: 3 minutes. Transition: the same reach-versus-margin split appears for apps. -->
 
@@ -227,11 +243,13 @@ Pointer: `ai_qe/_data/engagement.json`; `ai_qe/index.md`; `ai_qe/discovery.md`
 
 ## Store vs direct is reach vs margin
 
-- MacWhisper sells on two channels at once
-- Gumroad: ~€59 (~$69) one-time
-- App Store: $6.99/mo to $99.99 lifetime
-- Store brings reach, takes a cut, owns the customer
-- Direct gives margin and the email address
+| MacWhisper channel | Price | What it costs you |
+|---|---|---|
+| Direct (Gumroad) | ~€59 (~$69) one-time | You run the release machinery yourself |
+| App Store | $6.99/mo to $99.99 lifetime | A cut, and the customer relationship |
+
+- One row, two channels: `ListenToMe/docs/competition-analysis.md:34`
+- Store brings reach and subscription expectations
 - Direct machinery: `ListenToMe/docs/RELEASING.md`
 
 <!-- NOTES: MacWhisper is the natural experiment: one row in `ListenToMe/docs/competition-analysis.md` carries both channels — "Pro ~€59 (~$69) one-time; App Store $6.99/mo–$99.99 lifetime." The store adds subscription expectations and subtracts margin and ownership; direct keeps both. Direct is not a compromise for a small team — the release machinery already exists: signed, notarized, stapled releases targeting an exact commit, documented in `ListenToMe/docs/RELEASING.md`. Choose per product: store for reach, direct for margin. Timing: 3 minutes. Transition: before any price, do the arithmetic. -->
@@ -264,9 +282,13 @@ fixed costs.
 
 ## The worked example is this course
 
-- $0 lead product → **$399** self-paced
-- **$1,490** cohort, founding **$990**
-- **$2,500–4,000** team tier, 3–5 seats
+| Tier | Price | What defends the rung |
+|---|---|---|
+| Lead product | **$0** | List-builder; one repo teardown |
+| Studio self-paced | **$399** | Completion is the product |
+| Studio Live cohort | **$1,490** (founding **$990**) | Maven's 12–20 live-hours band |
+| Team / Enterprise | **$2,500–4,000** | 3–5 seats, private code review |
+
 - Why not cheaper: ≥$950 courses earn 50–100% more
 - Why not more: no public testimonials yet
 - Founding discount trades for a testimonial and interview

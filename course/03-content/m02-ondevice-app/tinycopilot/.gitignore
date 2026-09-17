@@ -5,3 +5,8 @@ __pycache__/
 htmlcov/
 dist/
 *.egg-info/
+.m3-solution/
+
+# promptfoo's local eval cache and result store (evals/)
+.promptfoo/
+evals/.promptfoo/

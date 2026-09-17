@@ -31,7 +31,7 @@
     },
     "slide-8": {
       "title": "Three defenses around the check",
-      "text": "In local-only mode, three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or the IPv6 loopback address. Anything else throws before a single byte of your prompt is written. Second, the provider posts to the show endpoint and requires an HTTP two hundred response plus a verified-local metadata result, and this is re-verified on every request, so switching models mid-session cannot skip the check. Third, redirects. You can read all three defenses in OllamaProvider.swift, lines ninety-nine to one hundred nineteen."
+      "text": "In local-only mode, three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or the IPv6 loopback address. Anything else throws before a single byte of your prompt is written. Second, the provider posts to the show endpoint and requires an HTTP two hundred response plus a verified-local metadata result, and this is re-verified on every request, so switching models mid-session cannot skip the check. Third, redirects. You can read all three defenses in OllamaProvider.swift, lines one hundred thirty-eight to one hundred fifty-seven."
     },
     "slide-9": {
       "title": "Redirects refused",
@@ -87,7 +87,7 @@
     },
     "slide-22": {
       "title": "Competition analysis as an engineering artifact",
-      "text": "The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is twelve rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first."
+      "text": "The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is fourteen rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first."
     },
     "slide-23": {
       "title": "The one-liner and its columns",

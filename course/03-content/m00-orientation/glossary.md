@@ -27,7 +27,8 @@ it becomes the capstone's evidence record. — `course/03-content/m00-orientatio
 M3, a model without verified-local metadata is rejected rather than trusted. — `course/03-content/m03-privacy-ship/lesson.md`
 
 **Health score** — The solver's 0–100 quality metric for a generated roster, printed by
-`api.cli.main solve`. On the sample workspace it is `100.0/100`. — `SignUpFlow/README.md`
+`api.cli.main solve` (`SignUpFlow/api/cli/main.py:193`). Its value depends on the revision: at the
+2026-09-16 head the sample workspace prints `0.0/100` with two hard violations. — `SignUpFlow/README.md`
 
 **Local model** — A model whose weights run on your machine. In M0 the example is `qwen3:0.6b`; the
 point of pulling one is that no API key and no cloud bill are involved. — `course/03-content/m00-orientation/lesson.md`

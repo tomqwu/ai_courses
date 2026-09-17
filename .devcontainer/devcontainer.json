@@ -1,0 +1,23 @@
+{
+  "name": "AI Product Studio labs",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" }
+  },
+  "hostRequirements": { "cpus": 2, "memory": "8gb", "storage": "32gb" },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postStartCommand": "bash .devcontainer/post-start.sh",
+  "forwardPorts": [8043, 11434],
+  "portsAttributes": {
+    "8043": { "label": "learner site", "onAutoForward": "notify" },
+    "11434": { "label": "Ollama", "onAutoForward": "silent" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "marp-team.marp-vscode"],
+      "settings": { "python.defaultInterpreterPath": "/usr/local/bin/python" }
+    },
+    "codespaces": { "openFiles": ["course/03-content/m00-orientation/lab.md"] }
+  }
+}

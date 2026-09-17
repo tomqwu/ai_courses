@@ -7,7 +7,7 @@ so it survives being forwarded, and the help section says who answers what.
 
 ## Email 1 — Welcome (send on enrolment)
 
-> **Subject:** You're in — here's how to start (10 minutes)
+> **Subject:** You're in — here's how to start (about 30 minutes)
 >
 > Welcome to **AI Product Studio**.
 >
@@ -16,7 +16,7 @@ so it survives being forwarded, and the help section says who answers what.
 > can open and check.
 >
 > **Three things to do this week:**
-> 1. Run the **setup checklist** below (about 10 minutes, mostly downloads).
+> 1. Run the **setup checklist** below (about 30 minutes, mostly downloads — the Ollama installer, the model pull and `make setup`).
 > 2. Post your **first win** in the community — your environment output and one sentence on which
 >    archetype you want to build.
 > 3. Skim **Module 0** — it is short and it makes the rest of the course faster.
@@ -31,7 +31,7 @@ so it survives being forwarded, and the help section says who answers what.
 
 ## Email 2 — The setup checklist (send 24h later if setup is incomplete)
 
-> **Subject:** 10 minutes to be ready for Module 0
+> **Subject:** 30 minutes to be ready for Module 0
 >
 > Pasted below so you can forward it to yourself. If any step fails, reply with the exact error — do not
 > fight it alone.
@@ -51,7 +51,7 @@ so it survives being forwarded, and the help section says who answers what.
 - [ ] The three case-study repos cloned:
       `git clone https://github.com/tomqwu/ListenToMe.git`,
       `…/SignUpFlow.git`, `…/ai_qe.git`
-- [ ] The TinyCopilot lab suite runs green: `make lab-m2` → **191 passed, 100% coverage**
+- [ ] Before Module 1 (Lab M0 stretch): the TinyCopilot lab suite runs green: `make lab-m2` → **201 passed, 100% coverage**
 - [ ] An evidence log started (a plain Markdown file is fine — you will use it all course)
 
 ### Known setup snags (and the fix)

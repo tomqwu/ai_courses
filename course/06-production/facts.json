@@ -1,0 +1,191 @@
+{
+  "listentome.coverage_badge": {
+    "pinned": "96",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "96% core coverage",
+      "96% core test coverage",
+      "Core_coverage-96"
+    ],
+    "note": "content-standards §0.2: 96% core coverage (README badge)"
+  },
+  "listentome.coverage_floor": {
+    "pinned": "95",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "95% CI coverage floor",
+      "95% coverage floor",
+      "floor of 95%"
+    ],
+    "note": "content-standards §0.2: 95% floor via scripts/check-coverage.sh"
+  },
+  "listentome.competitor_rows": {
+    "pinned": 14,
+    "pinned_date": "2026-09-17",
+    "literals": [
+      "14-row competitor",
+      "13-competitor",
+      "13 competitors",
+      "fourteen rows"
+    ],
+    "note": "content-standards §0.2: 14-row competitor table (13 rivals + ListenToMe) in docs/competition-analysis.md, header dated 2026-09"
+  },
+  "listentome.latest_macos_tag": {
+    "pinned": "v1.4.4",
+    "pinned_date": "2026-09-17",
+    "literals": [],
+    "note": "informational: the course tells the 1.3.0 gap review as a dated record (2026-09-10) and notes that 1.4.0–1.4.4 shipped 13–14 Sept; a newer tag is not drift, but re-read the README's 'Verified proof' column when it moves"
+  },
+  "listentome.gap_review_verdict": {
+    "pinned": "do not promote the existing 1.3.0 DMG as a broadly validated production release",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "do not promote"
+    ],
+    "note": "content-standards §0.2: the 2026-09-10 gap review's recommendation (historical — stays true as a dated record)"
+  },
+  "signupflow.agents_md_lines": {
+    "pinned": 188,
+    "pinned_date": "2026-09-17",
+    "literals": [
+      "188 lines",
+      "188-line",
+      "one hundred eighty-eight"
+    ],
+    "note": "curriculum M1.1: AGENTS.md (188 lines, universal baseline)"
+  },
+  "signupflow.constitution_lines": {
+    "pinned": 85,
+    "pinned_date": "2026-09-17",
+    "literals": [
+      "85 lines",
+      "85-line",
+      "eighty-five lines",
+      "eighty-five-line"
+    ],
+    "note": "curriculum M1.1 / lead-product email 2: an 85-line constitution"
+  },
+  "signupflow.spec_folders": {
+    "pinned": 17,
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "17 spec folders",
+      "17 spec-kit"
+    ],
+    "note": "content-standards §0.2: 17 spec folders (every entry under specs/, including COMPLETED-000-safety-verification)"
+  },
+  "signupflow.spec_014_has_tasks": {
+    "pinned": false,
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "no tasks.md",
+      "no `tasks.md`"
+    ],
+    "note": "content-standards §0.2: spec 014 has no tasks.md — the honest-gap teaching point in M4.1"
+  },
+  "signupflow.validation_status": {
+    "pinned": "Historical reference",
+    "pinned_date": "2026-09-13",
+    "literals": [
+      "demoted to historical reference"
+    ],
+    "note": "validation.md was reclassified 2026-09-13; the course already states this"
+  },
+  "signupflow.test_functions": {
+    "pinned": 1766,
+    "pinned_date": "2026-09-17",
+    "literals": [],
+    "note": "test functions on disk (def test_) — a different measure from the recorded run the course quotes ('1,464 passed, 21 skipped', dated 2026-09-12, which the course already says never to quote as today's status); growth here is information, not an edit"
+  },
+  "ai_qe.slide_counts": {
+    "pinned": "116 = 21+33+26+36",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "116 narrated slides",
+      "116 slides",
+      "21+33+26+36"
+    ],
+    "note": "content-standards §0.2: 116 narrated slides = 21+33+26+36 (_data/briefing_room.json)"
+  },
+  "ai_qe.site_version": {
+    "pinned": "1.24.1",
+    "pinned_date": "2026-09-17",
+    "literals": [],
+    "note": "informational — the site version moves with every publish; nothing in the course pins it"
+  },
+  "ai_qe.self_audit_findings": {
+    "pinned": "14",
+    "pinned_date": "2026-09-12",
+    "literals": [
+      "14-finding",
+      "14 findings"
+    ],
+    "note": "content-standards §0.2: 14-finding self-audit (research/reviews/site-audit-2026-09-06.md)"
+  },
+  "signupflow.claude_md_lines": {
+    "pinned": 154,
+    "pinned_date": "2026-09-17",
+    "literals": [
+      "CLAUDE.md (154)",
+      "CLAUDE.md is 154",
+      "one hundred fifty-four",
+      "CLAUDE.md` — **154 lines**",
+      "CLAUDE.md` — 154 lines"
+    ],
+    "note": "M1.1 proof slide: CLAUDE.md line count"
+  },
+  "signupflow.copilot_lines": {
+    "pinned": 127,
+    "pinned_date": "2026-09-17",
+    "literals": [
+      "| 127 | Copilot",
+      "Copilot file is 127",
+      "one hundred twenty-seven"
+    ],
+    "note": "M1.1 proof slide: .github/copilot-instructions.md line count"
+  },
+  "listentome.competition_updated": {
+    "pinned": "2026-09",
+    "pinned_date": "2026-09-17",
+    "literals": [
+      "dated 2026-09",
+      "dated September 2026"
+    ],
+    "note": "the competition-analysis.md header's 'Last updated' month, quoted in M0, M3 and M7"
+  },
+  "listentome.core_swift_files": {
+    "pinned": 45,
+    "pinned_date": "2026-09-16",
+    "literals": [
+      "45 Swift source files",
+      "45 core Swift source files"
+    ],
+    "note": "M2.1 / curriculum M2.1 / deep-read: Sources/ListenToMeCore has 45 .swift files (the pre-2026-09-16 text said '33 modules')"
+  },
+  "listentome.core_swift_lines": {
+    "pinned": 5194,
+    "pinned_date": "2026-09-16",
+    "literals": [
+      "5,194 lines"
+    ],
+    "note": "M2.1 / deep-read: total lines across the 45 .swift files in Sources/ListenToMeCore (the pre-2026-09-16 text said '~3,400 lines')"
+  },
+  "ai_qe.current_pdf_editions": {
+    "pinned": 10,
+    "pinned_date": "2026-09-10",
+    "literals": [
+      "10 current PDF",
+      "10 current PDFs",
+      "ten current PDF"
+    ],
+    "note": "M0.1: PDFs in assets/pdf/ at the editions _data/release.yml names — 4 full decks + 4 guided routes at slide_edition/fintech_edition, the questionnaire at questionnaire_edition, the research companion at research_edition"
+  },
+  "signupflow.health_score_line": {
+    "pinned": 193,
+    "pinned_date": "2026-09-16",
+    "literals": [
+      "main.py:193"
+    ],
+    "note": "M0.3: the line of api/cli/main.py that prints `Health score: …/100` (the course cites it as the source of the first-win artifact; the README has no such block). The VALUE the sample workspace prints is revision-dependent and only derivable by running init+solve — 0.0/100 with 2 hard violations at the 2026-09-16 head, 100.0/100 in an older sample"
+  }
+}

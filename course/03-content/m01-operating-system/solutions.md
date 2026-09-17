@@ -57,7 +57,7 @@ Summary / Changed files / Validation / Follow-ups.
 
 **Why these pass.** Every line is an action or prohibition a stranger can check; both are under the
 cap; neither copies SignUpFlow's content, only its structure
-(`SignUpFlow/.specify/memory/constitution.md` is 79 lines; `SignUpFlow/AGENTS.md` is 177).
+(`SignUpFlow/.specify/memory/constitution.md` is 85 lines; `SignUpFlow/AGENTS.md` is 177).
 
 ## Step solutions
 
@@ -109,9 +109,11 @@ ERROR tests/test_todo.py
 ModuleNotFoundError: No module named 'todo'
 1 error in 0.03s
 ```
-Record that as what happened. For the literal "2 failed" line in the lab template, create an empty
-`todo.py` stub first so both tests collect and fail. Either passes; a fabricated "2 failed" over a
-`ModuleNotFoundError` does not.
+Exit code 2. That is the line the lab's template records. A student who wants assertion-level red
+must stub the *name* first — `class TodoStore: pass` in `todo.py` gives `2 failed` (AttributeError
+on `add`), exit 1; an empty `todo.py` still stops at collection (`ImportError: cannot import name
+'TodoStore'`). Either honest capture passes; a fabricated "2 failed" over a `ModuleNotFoundError`
+does not.
 **Green run.** After implementing `add`, `list`, and `done`:
 ```text
 $ python3 -m pytest tests/ -q
@@ -126,7 +128,7 @@ Reference: all six fields, with at least one limitation.
 ```markdown
 ## Evidence — my-studio — todo command — <YYYY-MM-DD>
 Commands (with results):
-- python3 -m pytest tests/ -q (before implementation) → 1 error: ModuleNotFoundError
+- python3 -m pytest tests/ -q (before implementation) → 1 error: ModuleNotFoundError: No module named 'todo' (exit 2)
 - python3 -m pytest tests/ -q (after implementation) → 2 passed
 Environment: macOS 15, Python 3.11.9
 Revision: <output of `git rev-parse HEAD`>

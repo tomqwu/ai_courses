@@ -16,7 +16,7 @@ of its decisions were put somewhere a test can reach.
 |---|---|---|
 | 0:00 | `ListenToMe/README.md` | This is ListenToMe, a free on-device meeting copilot for macOS. Two audio channels, live transcription, three AI panes. |
 | 0:15 | Architecture diagram from the design spec | The shipped design is one process: audio and speech run off the main actor, and the UI only observes published state. |
-| 0:35 | `ListenToMe/Sources/ListenToMeCore/` file list | Here is the split. `Sources/ListenToMeCore` is a pure SwiftPM package, 33 modules, no microphone and no network. `App/` is platform glue. |
+| 0:35 | `ListenToMe/Sources/ListenToMeCore/` file list | Here is the split. `Sources/ListenToMeCore` is a pure SwiftPM package, 45 Swift source files, no microphone and no network. `App/` is platform glue. |
 | 1:00 | `App/DualChannelCapture.swift` line 8 | Capture taps the mic and creates a ScreenCaptureKit stream, converting both to mono Float PCM and emitting audio chunks. |
 | 1:25 | Lines 102 and 212 | The mic tap tags buffers `.you`; the ScreenCaptureKit callback tags `.others`. One tag gives speaker attribution with no diarization model. |
 | 1:45 | `Sources/ListenToMeCore/Transcriber.swift` | The `Transcribing` protocol declares `prepare`, `feed`, and `finish`. `prepare` warms the pipeline before audio arrives, so the first seconds of a meeting are not dropped. |
@@ -27,7 +27,7 @@ of its decisions were put somewhere a test can reach.
 | 3:50 | `scripts/check-coverage.sh` | That layering is why 96% coverage is even meaningful, with a 95% floor enforced by this script. |
 | 4:15 | `tinycopilot/README.md` layout table | TinyCopilot copies the shape exactly: a transcription seam satisfied by a canned transcript, and everything else pure and tested. |
 
-**Demo cue.** Terminal: `cd tinycopilot && make lab-m2`. Show `191 passed, 2 deselected` and
+**Demo cue.** Terminal: `cd tinycopilot && make lab-m2`. Show `201 passed, 2 deselected` and
 `Total coverage: 100.00%`. Say that coverage floor is 90 here, not 95 — the lab is smaller.
 
 **Action-step close.** Pause the video and do the four action steps in `lesson.md` §M2.1: read

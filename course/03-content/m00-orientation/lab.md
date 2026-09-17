@@ -1,7 +1,8 @@
 # Lab M0 — Environment Setup & First Ship-Win
 
 > **Goal:** every tool the course needs is installed and proven with one real output — before Module 1, you have already run real software end to end.
-> **Prerequisites:** none. **Time:** 20–40 minutes (mostly downloads).
+> **Prerequisites:** none. **Time:** ~30 minutes including downloads (`make setup`, the Ollama installer, the model pull); the "Before Module 1" block below adds ~10 minutes.
+> **Pass gate:** the full solver summary block (with its `Health score:` line and the `Solution saved to …` line) plus a non-empty `ollama list`.
 
 ## Steps
 
@@ -24,27 +25,29 @@
    poetry run python -m api.cli.main init my-church
    poetry run python -m api.cli.main solve my-church
    ```
-   Capture the output: people, events, **health score**, fairness stdev, assignments.
-5. **Run the TinyCopilot lab tests** (the Module 2 lab's reference implementation):
-   ```bash
-   cd ../course/03-content/m02-ondevice-app/tinycopilot
-   python3 -m pytest tests -q    # or: make lab-m2
-   ```
-   All green? You've just run the exact acceptance gate you'll re-implement in Module 2.
-6. **Post your first win** in the community: your solver output + your `ollama list` + one sentence on which archetype (1: on-device app, 2: SaaS, 3: expertise product) you want to build by week 8.
+   Capture the whole block: people, events, the **health score** line, violations, fairness stdev, assignments, and the `Solution saved to …` line. The score is whatever the sample workspace produces at the revision you cloned (`SignUpFlow/api/cli/main.py:193`) — at the 2026-09-16 head it is `0.0/100` with two hard violations. Do not "fix" the number; record it.
+5. **Post your first win** in the community: your solver block + your `ollama list` (each entry labeled local or `:cloud`) + one sentence on which archetype (1: on-device app, 2: SaaS, 3: expertise product) you want to build by week 8.
 
 ## Acceptance checklist
 
 - [ ] All three repos cloned and present locally
 - [ ] `python3 --version` shows 3.11+
 - [ ] `ollama list` shows at least one model; you can tell which are local vs `:cloud` aliases
-- [ ] Solver ran; you captured a health score line
-- [ ] TinyCopilot's test suite passed (or, if a dependency is missing, you noted exactly which)
+- [ ] Solver ran; the full summary block, including the `Health score:` and `Solution saved to …` lines, is captured
+- [ ] Evidence log started (see below)
 - [ ] First-win post is up
 
-## Evidence to record
+The pass gate is the solver block plus a non-empty `ollama list`. The post is a checklist item and the completion lever (`course/02-instructor/instructor-guide.md` §1), not an auto-fail; the only auto-fail is fabricated output.
 
-Start your **course evidence log** (you'll keep it all course): paste the solver output, `ollama list`, and the pytest summary line, each with the date.
+## Before Module 1
+
+- **Start your course evidence log** (you'll keep it all course): paste the solver block and `ollama list`, each with the date and one line on what remains unverified.
+- **Stretch — run the TinyCopilot lab tests** (the Module 2 lab's reference implementation, and Module 2's own pass gate):
+  ```bash
+  cd ../course/03-content/m02-ondevice-app/tinycopilot
+  python3 -m pytest tests -q    # or: make lab-m2
+  ```
+  Expected: `201 passed`, coverage `100%`. If a dependency is missing, log the exact package and error line — an honest partial is fine here; Lab M2 is where this suite is graded. Add the pytest summary line to your evidence log when you have it.
 
 ## Stretch goals
 

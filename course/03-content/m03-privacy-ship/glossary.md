@@ -35,7 +35,7 @@ app degrades, it does not stop — `ListenToMe/README.md`, "AI processing mode".
 
 **LOCAL_HOSTS / loopback allowlist** — The only hosts local-only mode trusts:
 `localhost`, `127.0.0.1`, `::1`. Anything else throws before a prompt is written —
-`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:106-108`.
+`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:145-147`.
 
 **Manual smoke test** — The tier that covers mic capture, system audio, and live speech-to-text,
 all of which need a GUI session and manual permission grants — a numbered, repeatable script —
@@ -50,7 +50,7 @@ TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopi
 
 **Redirect refusal (`RejectRedirects`)** — A transport that refuses every 3xx instead of following
 it, so meeting text can never be silently forwarded — the Swift URLSession delegate is
-`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:151-157`; the Python twin builds httpx with
+`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`; the Python twin builds httpx with
 `follow_redirects=False` and raises on 3xx in
 `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
 

@@ -2,7 +2,7 @@
 
 > Week 4 workshop per `02-instructor/instructor-guide.md`: "spec one feature live from student
 > suggestions; run the checklist gate on it." Formula: **I do / We do / You do ≈ 25 / 35 / 30**.
-> Pointers marked **[SIG]** resolve in `/Users/tomwu/ai_courses/SignUpFlow`.
+> Pointers marked **[SIG]** resolve in the `SignUpFlow/` clone (a sibling of `course/` in the workspace root).
 
 ## Timing table
 

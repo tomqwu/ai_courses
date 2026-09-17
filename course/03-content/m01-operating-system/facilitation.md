@@ -10,7 +10,7 @@
 | Min | Activity | Mode | Artifacts |
 |---|---|---|---|
 | 0–2 | Opening hook: the unverifiable rule | I do | Slide 6 |
-| 2–10 | The four-file stack and the 79-line constitution | I do | `SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md` |
+| 2–10 | The four-file stack and the 85-line constitution | I do | `SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md` |
 | 10–20 | Walk a real spec folder: the gate and a task line | I do | `SignUpFlow/specs/014-security-hardening/plan.md`, `SignUpFlow/specs/019-sms-notifications/tasks.md` |
 | 20–32 | Rewrite one bad rule, live, and break it first | We do | Shared editor |
 | 32–42 | Precedence and anti-hallucination drill | We do | `SignUpFlow/AGENTS.md` |
@@ -69,7 +69,7 @@ careful engineer who ran it. Do not delete the failure. Name one thing the run d
 
 | Symptom | 30-second intervention |
 |---|---|
-| "My constitution feels fake" (empty brackets) | "Steal structure, not content. Open `SignUpFlow/.specify/memory/constitution.md` — 79 lines — and write YOUR three principles. Imperative, verifiable, under 80 lines." |
+| "My constitution feels fake" (empty brackets) | "Steal structure, not content. Open `SignUpFlow/.specify/memory/constitution.md` — 85 lines — and write YOUR three principles. Imperative, verifiable, under 80 lines." |
 | Rules come back as adjectives ("robust", "clean") | "Circle the adjective. What command would contradict it? That command is your rule." |
 | Spec leaks `sqlite3` or `argparse` | "Run the checklist gate out loud: no implementation details. Move the library choice to `plan.md`." |
 | Green run posted with no red run | "Show me the failing output first. A green-only record is an auto-fail — not because you cheated, because the evidence is incomplete." |

@@ -1,0 +1,36 @@
+# Behavioural evals for TinyCopilot's Listener — the fourth test tier.
+#
+# Unit tests prove the prompt is built correctly. Contract tests prove the provider speaks the
+# daemon's protocol. Neither can tell you whether the model invented an owner, and that is the
+# failure a meeting note-taker actually ships with. This suite asserts the Listener contract —
+# "Never invent an owner, deadline, agreement, or completion. Mark missing details as unstated."
+# (`src/tinycopilot/prompts.py`) — over a fixed transcript set where the right answer is known.
+#
+#   make evals        offline, against the reference stub in provider.py
+#   make evals-live   against a real Ollama daemon, same assertions
+#
+# The scenarios and their assertions live in scenarios.json, which provider.py's --selftest reads
+# too, so there is one transcript set rather than two that drift.
+#
+# An eval is a measurement, not a proof. It reports what happened on these transcripts with this
+# model, which is why the pass rate belongs in the evidence log with the model name beside it.
+description: TinyCopilot Listener — never invent an owner, deadline or agreement
+
+prompts:
+  - "{{transcript}}"
+
+providers:
+  - id: file://provider.py
+    label: tinycopilot-listener
+    config:
+      role: listener
+
+defaultTest:
+  assert:
+    # The four-section shape is part of the Listener's own contract, so every answer carries it.
+    - type: contains
+      value: "Summary"
+    - type: contains
+      value: "Actions"
+
+tests: file://scenarios.json

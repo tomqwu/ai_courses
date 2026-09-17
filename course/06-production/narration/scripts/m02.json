@@ -3,7 +3,7 @@
   "slides": {
     "slide-1": {
       "title": "M2 — The On-Device AI App: Architecture",
-      "text": "Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until one hundred ninety-one tests pass. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision."
+      "text": "Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until two hundred one tests pass. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision."
     },
     "slide-2": {
       "title": "By the end you can…",
@@ -91,7 +91,7 @@
     },
     "slide-23": {
       "title": "Lab M2 — Build TinyCopilot's core",
-      "text": "Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports one hundred ninety-one tests passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model."
+      "text": "Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports two hundred one tests passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model."
     },
     "slide-24": {
       "title": "Quiz M2 — eight questions",
