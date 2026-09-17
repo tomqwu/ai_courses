@@ -630,7 +630,31 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
                text_only: bool = False, path_cards: str = "",
                module_paths: dict[str, int] | None = None,
                units_by_deck: dict[str, list[dict]] | None = None,
-               proof_html: str = "") -> str:
+               proof_html: str = "", subscribe_action: str = "") -> str:
+    # The sign-up form posts to whatever mailing provider the operator configures at build time.
+    # With none configured the form is shown disabled and says so, rather than silently posting
+    # into the void and telling a visitor their address was taken.
+    configured = bool(subscribe_action)
+    capture_html = f"""  <section class="capture" id="stay">
+    <div class="capture-inner">
+      <h2>The 30-minute teardown, in three emails</h2>
+      <p>How three shipped products make their claims checkable: a privacy guarantee that fails
+         closed, a SaaS built by agents under written rules, and an expertise site that cites itself.
+         One email a day for three days, then the checklist. No other mail.</p>
+      <form class="capture-form" method="post" action="{html.escape(subscribe_action)}"{"" if configured else " data-unconfigured"}>
+        <label class="sr-only" for="aps-email">Your email address</label>
+        <input id="aps-email" type="email" name="email" required autocomplete="email"
+               placeholder="you@example.com" spellcheck="false"{"" if configured else " disabled"}>
+        <button class="btn-primary" type="submit"{"" if configured else " disabled"}>Send me the teardown</button>
+        <label class="capture-consent">
+          <input type="checkbox" name="consent" value="yes" required{"" if configured else " disabled"}>
+          <span>Yes, email me the three-part teardown and occasional notes about the course. I can
+                unsubscribe from any email, and my address is not shared or sold.</span>
+        </label>
+      </form>
+      {"" if configured else '<p class="capture-note">No mailing provider is configured for this build, so the form is disabled. Build the site with <code>--subscribe-action &lt;form url&gt;</code> to turn it on.</p>'}
+    </div>
+  </section>"""
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     cards = []
     grand_total = 0.0
@@ -833,6 +857,35 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       <li>Printing a deck prints one 16:9 slide per page.</li>
     </ul>
   </section>
+  <section class="tools" id="tools">
+    <div class="section-heading">
+      <h2>Take the method without buying the course</h2>
+      <span class="section-note">The three checkers this site runs on itself, free and self-contained.</span>
+    </div>
+    <div class="tools-grid">
+      <article class="tools-card">
+        <h3>Pointer lint</h3>
+        <p>Every claim in your documentation carries a path, and every path and line range still
+           resolves — or the run fails with the file and line to fix.</p>
+        <code>python3 pointer_lint.py docs/</code>
+      </article>
+      <article class="tools-card">
+        <h3>Facts drift</h3>
+        <p>Re-derives the numbers you state as fact from the source they came from, and names the
+           documents still printing the old value. The pinned file is data, never code.</p>
+        <code>python3 facts_drift.py --facts facts.json --strict</code>
+      </article>
+      <article class="tools-card">
+        <h3>Agent rule audit</h3>
+        <p>Reads an <code>AGENTS.md</code>, a <code>CLAUDE.md</code> or a constitution and sorts every
+           rule into checkable, vague, or imperative-but-unenforced.</p>
+        <code>python3 agents_audit.py AGENTS.md</code>
+      </article>
+    </div>
+    <p class="index-footnote">Standard library only, no install, nothing sent anywhere.
+      <a href="https://github.com/tomqwu/ai_courses/tree/main/aps-tools">Read them or copy the folder →</a></p>
+  </section>
+{capture_html}
   <p class="index-footnote">{footnote} Progress, quiz scores and lab checklists are stored in this browser only — export them from the strip above to move machines.</p>
 </main>
 <script src="{site_base}/assets/progress.js" defer></script>
@@ -846,6 +899,9 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--check", action="store_true", help="build into a temp dir and report only")
+    parser.add_argument("--subscribe-action", default="",
+                        help="form action URL of your mailing provider for the teardown sign-up; "
+                             "without it the form is shown disabled and says so")
     parser.add_argument("--site-base", default=".",
                         help="prefix for asset URLs; '.' works from file:// and any subpath")
     parser.add_argument("--out", metavar="DIR",
@@ -955,6 +1011,7 @@ def main(argv=None) -> int:
     (target / "proof.json").write_text(json.dumps(proof, indent=1, default=str), encoding="utf-8")
     (target / "index.html").write_text(
         index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration,
+                   subscribe_action=args.subscribe_action,
                    path_cards=path_cards, module_paths=module_paths, units_by_deck=units_by_deck,
                    proof_html=SPR.proof_section(proof, args.site_base)),
         encoding="utf-8")

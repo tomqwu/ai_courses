@@ -1363,3 +1363,45 @@ body.transcript main { padding-bottom: 80px; }
 .included-price small { font-size: var(--d-2); font-weight: 600; color: var(--ink-soft); margin-left: 6px; }
 .included-card ul { margin: 0; padding-left: 1.2em; font-size: var(--d-3); line-height: 1.5; }
 .included-card li { margin-bottom: 5px; }
+
+/* ── the free tools, and the teardown sign-up ──────────────────────────────────────────────────
+   Both sit below the module grid: what a visitor can take away without buying, and how to hear
+   from the course again. Tokens only — no literal colours, per the palette block above. */
+.tools { margin-top: 40px; }
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.tools-card {
+  padding: 18px 20px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
+}
+.tools-card h3 { margin: 0 0 6px; font-size: var(--d-5); }
+.tools-card p { margin: 0 0 10px; font-size: var(--d-3); line-height: 1.55; color: var(--ink); }
+.tools-card code {
+  display: block; padding: 7px 10px; font-size: var(--d-2); background: var(--wash);
+  border: 1px solid var(--line-soft); border-radius: 4px; overflow-x: auto; color: var(--ink);
+}
+.tools-card p code { display: inline; padding: 1px 4px; border: 0; background: var(--wash); }
+
+.capture { margin-top: 40px; }
+.capture-inner {
+  padding: 24px 24px 20px; background: var(--wash); border: 1px solid var(--line); border-radius: 6px;
+  max-width: 720px;
+}
+.capture-inner h2 { margin: 0 0 8px; font-size: var(--d-6); }
+.capture-inner > p { margin: 0 0 14px; font-size: var(--d-4); line-height: 1.55; color: var(--ink); }
+.capture-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.capture-form input[type="email"] {
+  flex: 1 1 260px; padding: .5rem .7rem; font: inherit; font-size: var(--d-4); color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 4px;
+}
+.capture-form input[type="email"]:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }
+.capture-form .btn-primary {
+  background: var(--teal-bright); border: 1px solid var(--teal-bright); color: var(--white);
+  padding: .5rem 1rem; border-radius: 4px; font-weight: 650; cursor: pointer; font-size: var(--d-4);
+}
+.capture-form .btn-primary:disabled { background: var(--ink-soft); border-color: var(--ink-soft); cursor: not-allowed; }
+.capture-consent {
+  flex: 1 1 100%; display: flex; gap: 8px; align-items: flex-start;
+  font-size: var(--d-2); line-height: 1.5; color: var(--ink);
+}
+.capture-consent input { margin-top: 3px; }
+.capture-note { margin: 12px 0 0; font-size: var(--d-2); color: var(--ink); }
+.capture-note code { padding: 1px 4px; background: var(--paper); border: 1px solid var(--line-soft); border-radius: 3px; }

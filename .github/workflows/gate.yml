@@ -63,6 +63,12 @@ jobs:
       - name: Gate
         run: bash course/check.sh
 
+      # The free tools, run on this repository the way a stranger would run them on theirs.
+      - name: aps-tools on this repository
+        run: |
+          python3 aps-tools/pointer_lint.py --base . --roots ListenToMe,SignUpFlow,ai_qe course
+          python3 aps-tools/facts_drift.py --facts aps-tools/facts.example.json --base . --strict
+
       - name: Manifest the runner produced (for the record, never committed)
         if: always()
         run: git -C course status --short 06-production/narration || true

@@ -31,6 +31,7 @@ step "narration media"            "$PYTHON" 06-production/narration/validate_nar
 step "learner site build"         "$PYTHON" learner-site/build_site.py --check
 step "browser check"              "$PYTHON" learner-site/check_player.py --all --print-skip
 step "package verification"       "$PYTHON" 06-production/verify.py
+step "aps-tools unit tests"       "$PYTHON" ../aps-tools/test_aps_tools.py
 
 # The pinned facts are re-derived from the case-study clones. Without the clones the step cannot
 # run, so it says how to get them and does not fail — the same posture as the pointer check.

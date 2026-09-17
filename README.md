@@ -21,6 +21,7 @@ This repository is the product. The three repositories the course is built from 
 | **Sell it** | [`course/04-sales/`](course/04-sales/) — publish-ready landing page, pricing, launch plan |
 | **Sell one archetype** | [`course/05-tracks/`](course/05-tracks/) — three standalone $199 bundles |
 | **Verify it** | `make -C course check` (or `bash course/check.sh`) · `make -C course facts` for upstream number drift |
+| **Take the tools** | [`aps-tools/`](aps-tools/) — pointer lint, facts-drift check and agent-rule audit, free and standard-library only, runnable on any repository |
 | **Review it** | [`course/00-research/04-platform-review-2026.md`](course/00-research/04-platform-review-2026.md) — the September 2026 review against industry practice, with the platform plan and roadmap |
 | **See the whole map** | [`course/README.md`](course/README.md) — the detailed package map |
 
