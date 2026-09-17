@@ -1,8 +1,8 @@
 {
  "built": "2026-09-17",
  "pointers": {
-  "checked": 1133,
-  "ranges": 279,
+  "checked": 1181,
+  "ranges": 339,
   "problems": 0,
   "live": true
  },
@@ -185,7 +185,7 @@
   {
    "name": "TinyCopilot (Labs M2\u2013M3)",
    "lines": [
-    "191 passed, coverage 100% (floor: 90% enforced via `--cov-fail-under`)",
+    "201 passed, coverage 100% (floor: 90% enforced via `--cov-fail-under`)",
     "49 passed",
     "2 passed against a live Ollama daemon (cloud aliases and local models both work \u2014 the contract test is about the provider, not privacy)"
    ],

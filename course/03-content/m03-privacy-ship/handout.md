@@ -28,7 +28,7 @@ checksum-verified artifact.
 
 ```bash
 make lab-m3                    # privacy + streaming hardening suite → 49 passed
-make lab-m2                    # unit suite + coverage floor ≥90 → 191 passed, 100%
+make lab-m2                    # unit suite + coverage floor ≥90 → 201 passed, 100%
 make e2e                       # real-LLM contract test (needs LAB_E2E=1, live daemon)
 pytest tests/test_contract_real_llm.py -q    # 2 skipped — with a stated reason
 LAB_E2E=1 pytest tests/test_contract_real_llm.py -q   # 2 passed

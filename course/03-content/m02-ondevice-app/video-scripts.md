@@ -27,7 +27,7 @@ of its decisions were put somewhere a test can reach.
 | 3:50 | `scripts/check-coverage.sh` | That layering is why 96% coverage is even meaningful, with a 95% floor enforced by this script. |
 | 4:15 | `tinycopilot/README.md` layout table | TinyCopilot copies the shape exactly: a transcription seam satisfied by a canned transcript, and everything else pure and tested. |
 
-**Demo cue.** Terminal: `cd tinycopilot && make lab-m2`. Show `191 passed, 2 deselected` and
+**Demo cue.** Terminal: `cd tinycopilot && make lab-m2`. Show `201 passed, 2 deselected` and
 `Total coverage: 100.00%`. Say that coverage floor is 90 here, not 95 — the lab is smaller.
 
 **Action-step close.** Pause the video and do the four action steps in `lesson.md` §M2.1: read

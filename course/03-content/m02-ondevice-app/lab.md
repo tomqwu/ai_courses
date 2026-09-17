@@ -40,7 +40,7 @@ The `tinycopilot/` folder is a *reference implementation plus a full test suite*
 
 - [ ] `make lab-m2` exits 0 after all six modules are re-implemented.
 - [ ] Your evidence log shows a red run *before* each green run, for all six modules.
-- [ ] `make lab-m2` is green with `tests/test_privacy.py` unmodified — its 31 tests are inside the 191. Lab M3's `privacy.py` and tests ship here as the reference and are parked by Lab M3's `make m3-start`; do not build on them yet.
+- [ ] `make lab-m2` is green with `tests/test_privacy.py` unmodified — its 31 tests are inside the 201. Lab M3's `privacy.py` and tests ship here as the reference and are parked by Lab M3's `make m3-start`; do not build on them yet.
 - [ ] The coverage floor passes at 90 (part of `make lab-m2`).
 - [ ] `make demo` prints three distinct role outputs (Listener, Quick, Deep) from at least one real model.
 - [ ] Your evidence log explains each module's test-first cycle in one or two sentences per module.

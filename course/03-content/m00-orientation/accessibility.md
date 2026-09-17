@@ -49,7 +49,7 @@
 - **Numbers:** caption what is spoken and what is printed. The health score is spoken "zero out of
   one hundred with two hard violations" and captioned `Health score: 0.0/100` — the value the pinned
   SignUpFlow head prints for the sample workspace; if the recording shows a different revision, caption
-  what that run printed. Same for `191 passed` and coverage `100%` in the stretch block.
+  what that run printed. Same for `201 passed` and coverage `100%` in the stretch block.
 - **Non-English terms:** this module has none in speech. For a future term, caption the original, add
   a parenthetical translation, and pronounce both.
 

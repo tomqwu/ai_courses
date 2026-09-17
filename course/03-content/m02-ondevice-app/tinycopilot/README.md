@@ -19,12 +19,12 @@ red-team it.
 |---|---|---|
 | `src/tinycopilot/conversation_store.py` | `ConversationStore.swift` | ordered finalized-utterance log + partial; `recent_context(max_chars)` char budget, always ≥1 segment |
 | `src/tinycopilot/question_detector.py` | `QuestionDetector.swift` | cheap heuristic ("?", interrogatives, phrase cues) + injectable-clock debounce |
-| `src/tinycopilot/prompts.py` | `Prompt.swift` | pure prompt builders; three role contracts (anti-preamble Quick; Listener's "Never invent an owner, deadline, agreement, or completion"; Deep = depth) |
+| `src/tinycopilot/prompts.py` | `Prompt.swift` | pure prompt builders; three role contracts (anti-preamble Quick; Listener's "Never invent an owner, deadline, agreement, or completion"; Deep = depth); the `<transcript>` data fence and its notice, so spoken text reads as data rather than instructions |
 | `src/tinycopilot/ollama_provider.py` | `OllamaProvider.swift` | NDJSON streaming over `/api/chat`; typed errors (`ServerError` / `IncompleteStreamError` / `EmptyResponseError`); in-stream error events; no redirect following |
 | `src/tinycopilot/model_router.py` | `ModelRanking.swift`, `ModelRouter.swift` | `/api/tags` discovery, local-first role defaults (Listener=fast, Quick=fastest, Deep=strongest), token-prefix capability hints |
 | `src/tinycopilot/privacy.py` | `ModelPrivacy.swift` | `PrivacyMode` (OFF/LOCAL/CLOUD); `verify_local_model()` **fail-closed** `/api/show` metadata check (remote_host/remote_model must be absent); localhost-only host rule |
 | `src/tinycopilot/copilot.py` | `MeetingSession.swift`, `CopilotRole.swift` | three roles → three models; per-role generation tokens cancel stale streams; only *completed* listener summaries ground Quick/Deep |
-| `tests/` | `Tests/ListenToMeCoreTests/` | the executable spec (191 tests; contract tests gated by `LAB_E2E=1`) |
+| `tests/` | `Tests/ListenToMeCoreTests/` | the executable spec (201 tests; contract tests gated by `LAB_E2E=1`) |
 | `demo.py` | — | feeds a scripted meeting through all three roles |
 
 ## Setup
@@ -49,10 +49,12 @@ make m3-restore  # bring the reference Lab M3 solution back; COV_FLOOR -> 90
 
 ## Verified status (as shipped)
 
-- `make lab-m2` → **191 passed**, coverage **100%** (floor: 90% enforced via `--cov-fail-under`)
+- `make lab-m2` → **201 passed**, coverage **100%** (floor: 90% enforced via `--cov-fail-under`)
 - `make lab-m3` → **49 passed**
 - `make e2e` → **2 passed** against a live Ollama daemon (cloud aliases and local models both work — the contract test is about the provider, not privacy)
 - `make demo` → produces labeled LISTENER / QUICK / DEEP outputs; picks models via `model_router.role_defaults`
+- `python3 -m pytest tests/test_injection.py -q` → **10 passed**: the prompt-injection red team. Remove
+  the fence in `prompts.py` and 4 of the 10 fail, which is what makes it a defense rather than a habit.
 
 ## The privacy lab, in one paragraph
 

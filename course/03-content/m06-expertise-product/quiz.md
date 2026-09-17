@@ -36,12 +36,12 @@ B. Extend until the interval excludes the boundary.
 C. Insufficient evidence for that boundary — a CI crossing 10% or 15% is insufficient "even if its point estimate appears favorable" — so take the one bounded extension or hold, per the frozen rules.
 D. Relabel the result as a quality win, since effort came in ambiguous.
 
-**Q6.** AI × QE publishes its own 14-finding site audit and remediation table on the live site. What is the commercial logic?
+**Q6.** You are packaging a paid pilot. Which design makes its go/no-go gates decidable rather than negotiable?
 
-A. Audits are only for big companies with compliance departments.
-B. Self-audits should stay internal; publishing findings gives buyers free ammunition.
-C. Publish only clean results — an audit that finds nothing proves credibility.
-D. Finding → response → verification tables make the site demonstrably harder on itself than any buyer would be, converting skepticism into trust: "why should I believe you?" becomes "when can we start?"
+A. Agree one headline target ("20% faster testing"), run the pilot, then report against whichever measure the results support best.
+B. Freeze the terms in Phase 0 — sponsor, funded cost ceiling, one primary outcome with its measure, acceptance criteria and stop rules, all recorded before execution — cap each phase, end each phase with a sponsor-signed go/no-go memo, and treat a control or authorization breach as a hold whatever the effort number says.
+C. Leave the thresholds open so the sponsor sets the bar once the first numbers arrive; fixing a bar before any data risks a false no-go.
+D. Apply one effort threshold to every phase and every route, so quality, reliability and reuse pilots are held to the same 15% bar and stay comparable.
 
 **Q7.** For each claim, give its level (task-level efficiency / released capacity / hard-dollar saving / total-spend impact — or illustrative) and the slide wording it permits:
 
@@ -65,8 +65,18 @@ D. Finding → response → verification tables make the site demonstrably harde
 
 **Q5 — C.** Criteria are frozen before results; a CI crossing a boundary is insufficient evidence; one extension of at most 4 weeks; relabeling an effort miss as a quality win after the fact is explicitly rejected. *(Objective: M6.3 pilot gates — `ai_qe/docs/method/phased-pilot.md`; `ai_qe/_data/pilot_gates.json`.)*
 
-**Q6 — D.** The published audit (14 findings: 4 high, 9 medium, 1 lower) with a finding → response → verification remediation table is credibility engineering: visible self-skepticism is the one thing a hype deck cannot counterfeit. *(Objective: M6.1 publish your own audit — `ai_qe/research/reviews/site-audit-2026-09-06.md`; `remediation-2026-09-06.md`.)*
+**Q6 — B.** Every phase is capped and "ends with a written go/no-go memo signed by the sponsor" (`ai_qe/docs/method/phased-pilot.md:20`), and the charter records "the sponsor, value rationale, funded cost ceiling, primary outcome and acceptance criteria before execution" (`ai_qe/docs/method/phased-pilot.md:70`). A is the metric-swap the method forbids outright — "Do not choose a different success metric after seeing a favorable result" (`ai_qe/docs/method/phased-pilot.md:54`); C is the same error moved earlier, leaving nothing frozen to decide against; D inherits the effort bands onto routes that never agreed them — "Quality, reliability, evidence and reuse routes use the criteria frozen in their charter; they do not inherit an effort-saving requirement", and "A control breach overrides every route" (`ai_qe/docs/method/phased-pilot.md:87`). *(Objective: M6.3 pilot design — `ai_qe/docs/method/phased-pilot.md:20, 54, 70, 87`; `ai_qe/_data/pilot_gates.json`.)*
 
 **Q7 — Acceptable answer:** (1) Task-level efficiency — measured but vendor-affiliated on one synthetic task; may appear only with sample and affiliation labels, never as a productivity rate or capacity claim. (2) Self-reported task-level perception — must read "organizations *report*" and "rarely monetized"; never presented as measured or as savings. (3) Illustrative model output, not observed client results — labeled illustrative on the slide with "planning inputs are not observed client results"; any hard-dollar line requires Finance-confirmed capture. *(Objective: M6.1 four claim levels and the mixing error — `ai_qe/docs/principles.md`; `ai_qe/docs/economics/slide-language.md`; `ai_qe/README.md`.)*
 
 **Q8 — Acceptable answer:** The ask is whether to fund Phases 0 and 1 (sponsor alignment plus a capped baseline), not whether to transform QA; every phase has a cost ceiling, frozen acceptance criteria, and a go/no-go memo signed by the sponsor. The benefits-realization register ties any claimed saving to a Finance-owned budget row (capture mechanism, budget-line owner, earliest date, accepted evidence), so "a capacity result with no capture row is reported as productivity, not cash saving." This closes because the buyer funds a bounded way to *produce* the number with stop rules — no promised outcome to disbelieve, and a negative or noisy result is survivable by design. *(Objective: M6.3 sell measurement, not outcomes — `ai_qe/docs/method/phased-pilot.md`; `ai_qe/docs/economics/slide-language.md`.)*
+## Objective → assessment map
+
+Every "By the end of this module you can" line in `course/03-content/m06-expertise-product/lesson.md`, and what checks it.
+
+| Objective (lesson.md) | Checked by |
+|---|---|
+| Label every quantitative claim with one of the four "saving" levels plus an epistemic status, and avoid the mixing error | Q1 (benchmark-record fields), Q7 (level + permitted wording for three claims); Lab M6 provenance table — every slide claim carries its level and status |
+| Keep a dated research log and provenance manifest a skeptic can audit, and re-cut one slide set into routes that end on decisions | Q1 (the "not verified" list), Q2 (routes end on a decision), Q3 (role-routed questionnaire); Lab M6 two audience routes + provenance manifest |
+| Run content under edition discipline — separate site vs content versions, immutable releases, review gates | Q4 (player-only patch: bump site version, retain slide/PDF editions, never overwrite) |
+| Design a pilot offer with go/no-go gates that sells measurement, not outcomes | Q6 (what must be frozen in Phase 0 for a gate to be decidable), Q5 (a CI crossing a boundary is insufficient evidence), Q8 (what the sponsor funds, and the benefits-realization register) |

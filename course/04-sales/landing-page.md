@@ -99,7 +99,7 @@ The three case studies are public, and everything this course claims about them 
 |---|---|
 | Every repo claim carries a file pointer | 1,085 pointers into the three repositories resolve; 239 line ranges lie inside the file they name |
 | The numbers are re-derived, not remembered | 17 pinned facts, all re-derived from the repositories at their 2026-09-16 heads; five had drifted within a week of the first pin and were corrected, on the record |
-| The labs are run, not described | TinyCopilot: `make lab-m2` → 191 passed, 100% coverage; `make lab-m3` → 49 passed |
+| The labs are run, not described | TinyCopilot: `make lab-m2` → 201 passed, 100% coverage; `make lab-m3` → 49 passed |
 | What is spoken is what is written | 233 slides, 22,122 words of narration; captions, transcript and script checked word for word |
 
 

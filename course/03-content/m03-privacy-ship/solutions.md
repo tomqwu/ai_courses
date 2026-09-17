@@ -2,7 +2,7 @@
 
 > Reference answers for Lab M3; the runnable reference is
 > `course/03-content/m02-ondevice-app/tinycopilot/`. Counts match Content Standards §0.2:
-> `make lab-m3` → **49 passed**; `make lab-m2` → **191 passed, 100% coverage**; `make e2e` →
+> `make lab-m3` → **49 passed**; `make lab-m2` → **201 passed, 100% coverage**; `make e2e` →
 > **2 passed** on a live daemon.
 
 ## Step 0 — Park the shipped solution
@@ -131,7 +131,7 @@ python -m pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q
 # ERROR: Coverage failure: total of 78.26 is less than fail-under=90   <- exit 1, value varies
 
 make lab-m2                                                            # after restoring
-# 191 passed, 2 deselected in 0.08s
+# 201 passed, 2 deselected in 0.08s
 # Required test coverage of 90% reached. Total coverage: 100.00%
 ```
 

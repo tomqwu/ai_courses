@@ -41,7 +41,7 @@ Solver output at the 2026-09-16 head: `People: 5`, `Events: 2`, `Health score: 0
 (`SignUpFlow/api/cli/main.py:193` prints the score line; the value moves with the revision — record
 what your run printed). `Solved in …ms` and `Range:` vary by machine and day.
 
-Before Module 1: `make lab-m2` → **191 passed**, coverage **100%** (90% floor). `make lab-m3` → **49 passed**.
+Before Module 1: `make lab-m2` → **201 passed**, coverage **100%** (90% floor). `make lab-m3` → **49 passed**.
 `make e2e` → **2 passed** with a live daemon; 2 contract tests skip without `LAB_E2E=1`.
 
 ## Files to open
@@ -71,4 +71,4 @@ Before Module 1: `make lab-m2` → **191 passed**, coverage **100%** (90% floor)
 - [ ] Solver ran; the full block with the `Health score:` and `Solution saved to …` lines is pasted
 - [ ] Evidence-log entry written with the date
 - [ ] First-win post up: solver output + `ollama list` + your archetype sentence
-- [ ] Before Module 1: `make lab-m2` shows `191 passed` (or the exact missing dependency is named)
+- [ ] Before Module 1: `make lab-m2` shows `201 passed` (or the exact missing dependency is named)

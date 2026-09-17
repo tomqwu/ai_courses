@@ -38,7 +38,7 @@ fabricated.
 
 | Criterion | Wt | Exemplary | Proficient | Developing | Missing | Evidence required |
 |---|---|---|---|---|---|---|
-| Suite run reported honestly | — | `191 passed`, coverage `100%`, and student notes the 90% floor is enforced by `--cov-fail-under` (`tinycopilot/Makefile`) | `191 passed` with coverage `100%`, or the exact missing package plus the exact error line | "All tests pass" with no summary, or a named-but-vague missing dependency | Claims green with no summary, or a summary not from a run | Pytest summary line, or the exact error text |
+| Suite run reported honestly | — | `201 passed`, coverage `100%`, and student notes the 90% floor is enforced by `--cov-fail-under` (`tinycopilot/Makefile`) | `201 passed` with coverage `100%`, or the exact missing package plus the exact error line | "All tests pass" with no summary, or a named-but-vague missing dependency | Claims green with no summary, or a summary not from a run | Pytest summary line, or the exact error text |
 
 Record the result in the evidence log; grade it in Lab M2, where `make lab-m2` is the gate.
 

@@ -41,7 +41,7 @@ capture ─▶ transcribe ─▶ store/context ─▶ prompt ─▶ route ─▶
 
 ```bash
 cd course/03-content/m02-ondevice-app/tinycopilot
-make lab-m2     # unit suite + coverage floor 90  → 191 passed, 100%
+make lab-m2     # unit suite + coverage floor 90  → 201 passed, 100%
 make lab-m3     # M3 privacy suite must stay green → 49 passed
 make e2e        # real-LLM contract test (needs LAB_E2E=1)
 make demo       # scripted meeting, three role outputs
@@ -71,7 +71,7 @@ pytest tests/ -m "not e2e" --collect-only -q | tail -1
 
 ## You're done when…
 
-- [ ] `make lab-m2` exits 0 with 191 passed and the 90 coverage floor reached.
+- [ ] `make lab-m2` exits 0 with 201 passed and the 90 coverage floor reached.
 - [ ] Six red runs (ImportError, exit 4) are in your evidence log, each before its green run.
 - [ ] `make lab-m3` still prints 49 passed.
 - [ ] `make demo` prints Listener, Quick, and Deep outputs with model names visible.

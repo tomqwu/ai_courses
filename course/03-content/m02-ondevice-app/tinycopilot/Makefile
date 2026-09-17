@@ -10,7 +10,7 @@ COV_FLOOR ?= 90
 M3_FILES = src/tinycopilot/privacy.py tests/test_privacy.py tests/test_contract_real_llm.py
 M3_PARK = .m3-solution
 
-.PHONY: help lab-m2 lab-m3 e2e demo test m3-start m3-restore
+.PHONY: help lab-m2 lab-m3 e2e demo test evals evals-live m3-start m3-restore
 
 help:
 	@echo "TinyCopilot lab targets:"
@@ -19,6 +19,8 @@ help:
 	@echo "  make e2e        - real-LLM contract test against the local Ollama daemon"
 	@echo "  make demo       - scripted meeting through all three roles"
 	@echo "  make test       - the full suite, e2e auto-skipped"
+	@echo "  make evals      - behavioural evals for the Listener contract, offline (needs npx)"
+	@echo "  make evals-live - the same evals against a real Ollama daemon"
 	@echo "  make m3-start   - Lab M3 step 0: park the shipped privacy module, its tests, the contract test; floor -> 0"
 	@echo "  make m3-restore - put the reference Lab M3 solution back; floor -> 90"
 
@@ -27,6 +29,16 @@ lab-m2:
 
 lab-m3:
 	$(PYTHON) -m pytest tests/test_privacy.py tests/test_ollama_provider.py -q
+
+# Tier 4: behavioural evals. Offline they run against the reference stub in evals/provider.py, so
+# the suite and its assertions are testable without a daemon or a network; `evals-live` runs the
+# same assertions against a real model, which is the number that belongs in an evidence log.
+evals:
+	$(PYTHON) evals/provider.py --selftest
+	cd evals && TINYCOPILOT_EVAL_MODE=stub npx --yes promptfoo@0.123.0 eval -c promptfooconfig.yaml --no-cache
+
+evals-live:
+	cd evals && TINYCOPILOT_EVAL_MODE=live npx --yes promptfoo@0.123.0 eval -c promptfooconfig.yaml --no-cache
 
 e2e:
 	LAB_E2E=1 $(PYTHON) -m pytest tests/test_contract_real_llm.py -q

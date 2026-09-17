@@ -14,7 +14,7 @@ $199 buys 4 of 9 modules plus a monetization-and-launch slice, 4 labs, 5 quizzes
 | M0, M1, M2, M3 in full; the M7.1–M7.3 and M8.1–M8.2 teaching segments | M4/M5 (spec-driven SaaS) and M6 (expertise product) — those are Tracks 2 and 3 |
 | Lab M0, Lab M1, Lab M2, Lab M3, and Lab M7 steps 1–5 scoped to your on-device app | The full Lab M7/Lab M8 course labs, the scored capstone, and demo day (`course/03-content/m08-launch-capstone/lab.md`) |
 | Quiz M0–M3 and Quiz M7 — 40 questions with answer keys | Quiz M8, which tests capstone material outside this track |
-| The `tinycopilot` reference implementation and its 191-test suite | Live workshops, instructor code review, cohort channel — those are cohort-tier ($1,490) |
+| The `tinycopilot` reference implementation and its 201-test suite | Live workshops, instructor code review, cohort channel — those are cohort-tier ($1,490) |
 
 ## Why $199
 

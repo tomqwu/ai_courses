@@ -9,7 +9,7 @@
 
 | Criterion | Exemplary | Proficient | Developing | Missing | Weight | Evidence required |
 |---|---|---|---|---|---|---|
-| Baseline green observed | Captures counts *and* coverage table before deleting | Captures `191 passed`, 100% | Runs it, no capture | No baseline run | 5 | Terminal capture of `make lab-m2` before edits |
+| Baseline green observed | Captures counts *and* coverage table before deleting | Captures `201 passed`, 100% | Runs it, no capture | No baseline run | 5 | Terminal capture of `make lab-m2` before edits |
 | Red run per module | Six captures, each labelled with module, command, exit code | Six captures, exit code implied | Fewer than six, or unlabelled | No red run, or red run after the fix | 10 | Six ImportError captures in the evidence log |
 
 ## B. Module implementations (Steps 3–8)
@@ -42,7 +42,7 @@
 
 The lab fails regardless of score if any of these is true:
 
-1. **Fabricated evidence** — output that does not match a real run (e.g. "191 failed" as the red run,
+1. **Fabricated evidence** — output that does not match a real run (e.g. "201 failed" as the red run,
    or counts that contradict the recorded environment).
 2. **No red run** — any of the six modules goes from the answer key to green with no deletion capture,
    or the red capture is dated after its green run.

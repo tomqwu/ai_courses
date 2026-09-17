@@ -18,7 +18,7 @@ number a student adds must carry its own observed run.
 | 0 | Plan post | Archetype, one-sentence scope, each stage mapped to a named file/tag/URL, first-pass self-score naming the weakest dimension | `03-content/m08-launch-capstone/lab.md` step 1 |
 | 1 | Spec | ≥2 independently testable stories, Given/When/Then criteria, explicit non-goals, checklist gate run | Spec 014 shows the shape: `SignUpFlow/specs/014-security-hardening/spec.md` |
 | 2 | TDD evidence | The failing-test-first commit visible as its own commit in `git log`, not squashed into the fix | `03-content/m08-launch-capstone/lab.md` step 3 |
-| 3 | Validation record | Commands, counts, date, environment, limitations; the red run kept beside the green | `make lab-m2` → *191 passed, 100% coverage (floor 90)*; `make lab-m3` → *49 passed* |
+| 3 | Validation record | Commands, counts, date, environment, limitations; the red run kept beside the green | `make lab-m2` → *201 passed, 100% coverage (floor 90)*; `make lab-m3` → *49 passed* |
 | 4 | Release | Pushed version tag or deployed URL, opened in a clean browser and confirmed identical to the tested artifact | `03-content/m08-launch-capstone/lab.md` step 5 |
 | 5 | Discipline artifact | Local-only mode fail-closed **plus** the cloud-alias red-team case as a test | `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift` |
 | 6 | Sales page | Eight sections in the M8.1 order, one CTA, word target set by the M7 price, every claim tagged | `04-sales/landing-page.md` (~1,900 words of copy, measured by `06-production/verify.py`) |
@@ -34,7 +34,7 @@ claim has a row (`ai_qe/docs/principles.md`).
 ```markdown
 ## Capstone evidence — TinyCopilot local-only v1 — 2026-xx-xx
 Commands run (with results):
-- make lab-m2 → 191 passed, coverage 100% (floor 90), 2026-xx-xx
+- make lab-m2 → 201 passed, coverage 100% (floor 90), 2026-xx-xx
 - make lab-m3 → 49 passed
 - make e2e → 2 passed (live Ollama daemon); 2 contract tests skipped
   without LAB_E2E=1
@@ -89,7 +89,7 @@ Fail regardless of the other rows:
 
 - **Spec:** a topic outline ("feature X") instead of testable stories; implementation detail leaking into the spec file (code belongs in plan/contracts). Signals the M4 checklist gate was skipped.
 - **Build:** one commit containing implementation and tests, described as TDD. Signals the student knows the vocabulary but not the sequence.
-- **Validation:** "191 passed" with no date, environment, or skipped count. Signals copy-paste from the lab rather than the student's own run — which is why the count alone is never accepted.
+- **Validation:** "201 passed" with no date, environment, or skipped count. Signals copy-paste from the lab rather than the student's own run — which is why the count alone is never accepted.
 - **Sales page:** a topic list for section 4; two different CTAs; a drafted testimonial. Signals the student read the anatomy but not the honesty rules.
 - **Arc:** all five emails sell. Signals the warmup/conversion split was not internalized.
 

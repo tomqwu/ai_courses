@@ -170,7 +170,7 @@ python3 -m pip install pytest pytest-cov httpx
 make lab-m2        # or: python3 -m pytest tests -q
 ```
 
-Expected: **191 passed**, coverage **100%**, with a **90%** floor enforced by
+Expected: **201 passed**, coverage **100%**, with a **90%** floor enforced by
 `--cov-fail-under` (`tinycopilot/Makefile`). Related gates: `make lab-m3` → **49 passed**;
 `make e2e` → **2 passed** against a live daemon; the 2 contract tests skip without `LAB_E2E=1`.
 These match content-standards §0.2.
@@ -211,4 +211,4 @@ with no pytest summary — that is the one automatic fail, even on a stretch ite
 | Solver ran | Full block: `Health score:` line + `Solution saved to …` pasted |
 | Environment recorded | Evidence-log entry dated, outputs pasted verbatim |
 | First win posted | Community post has all three parts |
-| Before Module 1: TinyCopilot | `make lab-m2` → `191 passed`, coverage `100%` (or the exact missing package) |
+| Before Module 1: TinyCopilot | `make lab-m2` → `201 passed`, coverage `100%` (or the exact missing package) |

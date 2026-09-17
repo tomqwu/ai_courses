@@ -55,7 +55,7 @@ Skip all three and you get an abandoned repo with a good README.
 | 1 | Run the case studies locally, get Ollama answering, and run the lab gate yourself |
 | 2 | Write a constitution and `AGENTS.md` whose rules a stranger could check; run a spec → plan → TDD loop with a recorded red→green history |
 | 3 | Re-implement the copilot's pure core test-first: context budgeting, debounced question detection, three role prompts as pure functions |
-| 4 | Route three roles to three models with local-first defaults, stream typed-error-checked responses, and cancel stale streams on a model switch — `make lab-m2` green at **191 passed, 100% coverage** (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) |
+| 4 | Route three roles to three models with local-first defaults, stream typed-error-checked responses, and cancel stale streams on a model switch — `make lab-m2` green at **201 passed, 100% coverage** (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) |
 | 5 | Engineer a fail-closed local-only mode, reject a cloud alias in a red-team test, run a real-LLM contract test outside CI, enforce a coverage floor, and derive positioning from a sourced competitor table |
 | 6 | Price it, package it with explicit "not included" lines, write an 8-section sales page and a 5-email launch arc, tag the public repo, record a 5-minute demo |
 
@@ -69,7 +69,7 @@ Skip all three and you get an abandoned repo with a good README.
 
 ## Testimonials
 
-> **Empty on purpose.** No student testimonials exist yet — the founding cohort hasn't finished, and we don't invent social proof (`course/04-sales/landing-page.md`). Verify us instead: run the lab's own gate — `make lab-m2` → 191 passed, 100% coverage (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) — and read the gap review that said "do not promote" at 97.24% coverage (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`).
+> **Empty on purpose.** No student testimonials exist yet — the founding cohort hasn't finished, and we don't invent social proof (`course/04-sales/landing-page.md`). Verify us instead: run the lab's own gate — `make lab-m2` → 201 passed, 100% coverage (`course/03-content/m02-ondevice-app/tinycopilot/README.md`) — and read the gap review that said "do not promote" at 97.24% coverage (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`).
 
 ---
 

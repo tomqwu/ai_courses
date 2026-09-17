@@ -47,7 +47,7 @@ The pass gate is the solver block plus a non-empty `ollama list`. The post is a 
   cd ../course/03-content/m02-ondevice-app/tinycopilot
   python3 -m pytest tests -q    # or: make lab-m2
   ```
-  Expected: `191 passed`, coverage `100%`. If a dependency is missing, log the exact package and error line — an honest partial is fine here; Lab M2 is where this suite is graded. Add the pytest summary line to your evidence log when you have it.
+  Expected: `201 passed`, coverage `100%`. If a dependency is missing, log the exact package and error line — an honest partial is fine here; Lab M2 is where this suite is graded. Add the pytest summary line to your evidence log when you have it.
 
 ## Stretch goals
 

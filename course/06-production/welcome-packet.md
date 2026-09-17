@@ -51,7 +51,7 @@ so it survives being forwarded, and the help section says who answers what.
 - [ ] The three case-study repos cloned:
       `git clone https://github.com/tomqwu/ListenToMe.git`,
       `…/SignUpFlow.git`, `…/ai_qe.git`
-- [ ] Before Module 1 (Lab M0 stretch): the TinyCopilot lab suite runs green: `make lab-m2` → **191 passed, 100% coverage**
+- [ ] Before Module 1 (Lab M0 stretch): the TinyCopilot lab suite runs green: `make lab-m2` → **201 passed, 100% coverage**
 - [ ] An evidence log started (a plain Markdown file is fine — you will use it all course)
 
 ### Known setup snags (and the fix)

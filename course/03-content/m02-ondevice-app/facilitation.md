@@ -100,9 +100,9 @@ copilot 17.
 
 ## Close (5 min) — script
 
-"Three numbers from today. One: 191 tests, 100% coverage, floor 90 — that is your M2 gate. Two: 49
+"Three numbers from today. One: 201 tests, 100% coverage, floor 90 — that is your M2 gate. Two: 49
 tests in `make lab-m3`; your re-implementation must not break them. Three: the red run is exit 4, an
-ImportError, and it is real evidence — not a fabricated '191 failed.'
+ImportError, and it is real evidence — not a fabricated '201 failed.'
 
 Before Thursday: finish all six modules, capture six red runs and six green runs, and run `make demo`
 once with the model name visible. Post your demo output in the lab thread with the template in
