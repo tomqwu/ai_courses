@@ -338,9 +338,9 @@
     loadClip();
   }
 
-  // Unit progress: reaching the last slide of a unit marks it complete in the shared store, and
-  // every slide records "where you left off" for the course home. Labs and knowledge checks are
-  // completed on their own pages, not by reading their slide.
+  // Every slide records "where you left off" for the course home. Reaching a slide completes
+  // nothing (#84): a unit is watched when the narration plays through its last slide (onEnded), or
+  // read to the end in Read. Labs and knowledge checks are completed on their own pages.
   function recordUnit() {
     const P = window.APSProgress;
     if (!P) return;
@@ -348,7 +348,6 @@
     const unit = unitAt(n);
     const where = `${deckId}.html#${slides[index].id}`;
     if (unit) {
-      if (n === unit.last && unit.id !== 'lab' && unit.id !== 'quiz') P.setUnit(`${deckId}:${unit.id}`, true);
       P.setLast(where, `${body.dataset.deckLabel || deckId} — ${unit.label} (slide ${n} of ${slides.length})`);
     } else {
       P.setLast(where, `${body.dataset.deckLabel || deckId} — slide ${n} of ${slides.length}`);
@@ -481,6 +480,10 @@
   const togglePlay = () => ((advanceTimer || (!audio.paused && !audio.ended)) ? pausePlayback() : play());
 
   function onEnded() {
+    // The narration played through: on a unit's last slide, that unit is watched.
+    const unit = unitAt(index + 1);
+    if (clip && unit && unit.last === index + 1 && unit.kind !== 'lab' && unit.kind !== 'quiz'
+        && window.APSProgress) window.APSProgress.record(`${deckId}:${unit.id}`, 'watched');
     const nextIndex = index + 1;
     if (nextIndex >= slides.length) {
       announce('End of the module. Up next is below.');

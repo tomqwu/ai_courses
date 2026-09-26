@@ -55,13 +55,26 @@ and the page's own title in the content column. There is no hero band.
 
 ## The learner's record
 
-Progress lives in the browser behind one small interface (`assets/progress.js`, key `aps.progress.v2`),
-so a server-backed store can replace it later without touching the pages that read it. Reaching a
-unit's last slide marks it done; a lab completes when every checklist item is ticked; a knowledge
-check at 75%, the certificate threshold. Rings on the module and path cards, a "continue where you
-left off" strip on the course home, and export / import / reset as plain JSON — the learner owns it,
-nothing is uploaded. The same store remembers the path the learner last opened, which the outline
-shows. Press `/` or ⌘K anywhere to search.
+Progress lives in the browser behind one small interface (`assets/progress.js`, key `aps.progress.v3`),
+so a server-backed store (#42) can replace it later without touching the pages that read it.
+
+**Progress is recorded from what the learner does, never ticked by hand (#84).** The history is a list
+of events (`{unit, kind, at}`), and a unit is done once it has one:
+
+| Event | When |
+|---|---|
+| `watched` | the narration plays through a lesson unit's last slide (paging past it records nothing) |
+| `read` | the learner reads the unit's section of the lesson to its end (Overview → introduction, "Segment M2.1" → M2.1, Recap → summary) |
+| `passed` | the knowledge check scores at least 75%, the certificate threshold |
+| `completed` | the lab's checklist is complete **and** its evidence entry is filled in (project, commands, environment, revision) and copied or downloaded |
+| `migrated` | carried over from the v1/v2 stores, where units were ticked |
+
+No page offers a checkbox that marks a unit. The module page lists its units as links with their
+recorded status and opens on **Start module** (or **Resume · slide N**), followed by the next unit;
+the home and path cards are plain light cards with the recorded progress and one action. A "continue
+where you left off" strip on the course home, and export / import / reset as plain JSON — the learner
+owns it, nothing is uploaded. The same store remembers the path the learner last opened, which the
+outline shows. Press `/` or ⌘K anywhere to search.
 
 `check_features.py` drives all of this in a real browser, from empty storage, the way a learner
 uses it. Ticks survive a reload and reach the rings and the "continue" strip. Every knowledge-check

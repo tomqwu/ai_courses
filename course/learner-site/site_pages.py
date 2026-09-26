@@ -49,6 +49,8 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) 
     number = int(deck["id"][1:])
     title, body = SC.split_title(text)
     rendered, headings, _ = SC.render_document(body)
+    if kind == "lesson":
+        rendered = reading_marks(rendered, deck["id"])
     toc = SC.toc_html(headings, 2, 3 if kind == "lesson" else 2)
     ledes = {
         "lesson": "The master text for the three segments — what the narration teaches, in full, with every repo pointer linked at the commit it was verified against.",
@@ -78,6 +80,36 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) 
                        crumbs=SH.module_crumbs(site_base, deck, KIND_TITLES[kind]),
                        deck_id=deck["id"], current={"glossary": "module-glossary"}.get(kind, kind),
                        mode="read"), record
+
+
+READ_UNIT = (
+    (re.compile(r"^Overview\b", re.I), "intro"),
+    (re.compile(r"^(?:Segment\s+)?(M\d+\.\d)\b"), None),
+    (re.compile(r"^Recap\b", re.I), "summary"),
+)
+
+
+def reading_marks(rendered: str, deck_id: str) -> str:
+    """Mark the end of each section that is a unit, so reading it to the end records the unit (#84).
+
+    The lesson's own headings name the units: Overview is the introduction, "Segment M2.1 — …" is
+    that segment, Recap is the summary. A marker sits where the section ends — before the next
+    heading at its level — and shell.js records the unit as read when the marker comes into view.
+    """
+    parts = re.split(r"(?=<h2[ >])", rendered)
+    out = []
+    for part in parts:
+        heading = re.match(r"<h2[^>]*>(.*?)</h2>", part, re.S)
+        text = html.unescape(re.sub(r"<[^>]+>", "", heading.group(1))).strip() if heading else ""
+        unit = None
+        for rx, fixed in READ_UNIT:
+            m = rx.match(text)
+            if m:
+                unit = fixed or m.group(1)
+                break
+        out.append(part + (f'<span class="read-end" data-read-unit="{deck_id}:{unit}" aria-hidden="true"></span>'
+                           if unit else ""))
+    return "".join(out)
 
 
 def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict, site_base: str,
@@ -155,7 +187,8 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
   <p class="check-progress"><strong data-check-count>0 of {lab['checklist_count']} checked</strong>
     <span class="progress-bar" aria-hidden="true"><span data-check-fill></span></span></p>
   {sec['html']}
-  <p class="lab-done" data-lab-done hidden><strong>Every item is checked.</strong> This lab now shows as complete on your module and path progress. Record the evidence entry below — the checklist is your claim; the entry is your proof.</p>
+  <p class="lab-done" data-lab-done hidden><strong>Every item is checked.</strong> Now fill in the evidence entry and copy or download it: the checklist is your claim; the exported entry is your proof, and it is what completes the lab.</p>
+  <p class="lab-done is-complete" data-lab-complete hidden><strong>Lab complete.</strong> The checklist is done and the evidence entry was exported; this lab now shows as complete on your module and path progress.</p>
 </section>""")
             if auto_fail and not any('id="auto-fail"' in x for x in sections):
                 sections.append(f"""<section class="lab-section lab-autofail" id="auto-fail" aria-labelledby="auto-fail-title">
@@ -182,6 +215,7 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
     <div class="evidence-actions">
       <button type="button" class="btn-primary" data-evidence-copy>Copy evidence entry</button>
       <button type="button" data-evidence-download>Download .md</button>
+      <span class="evidence-status" data-evidence-status role="status" aria-live="polite"></span>
     </div>
   </form>
 </section>""")
