@@ -27,6 +27,7 @@ from deck_lint import split_slides                      # noqa: E402
 from captions import words
 from narration_data import (COURSE_DIR, DECK_IDS, EDITION, MANIFEST_PATH, PROVENANCE_PATH,  # noqa: E402
                             SITE_ROOT, load_manifest, load_scripts, read_json, write_json)
+import site_shell as SH                                  # noqa: E402
 
 # Our decks already write `M0.1 — Real title` and `Type 1 — Real title`, which is exactly the
 # kicker/title split ai_qe uses (`02 / Strategic target state`). Only an em dash splits: an en dash
@@ -416,38 +417,17 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
         note = f'<p class="voice-badge" role="note">{disclosure} These are the approved words.</p>'
     else:
         note = ""
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(deck['label'])} — transcript</title>
-<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{site_base}/assets/player.css">
-</head>
-<body class="transcript">
-<header class="transcript-head">
-  <p class="kicker"><a href="{site_base}/index.html">AI Product Studio</a> · {html.escape(deck['module_tag'])}</p>
-  <h1>{html.escape(deck['label'])} — transcript</h1>
-  <p>{len(deck['slides'])} slides · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s
-     · <a href="{site_base}/{deck['id']}.html">open the narrated deck →</a></p>
-  {note}
-</header>
-<main>
-{chr(10).join(rows)}
-</main>
-</body>
-</html>
-"""
+    lede = (f'{len(deck["slides"])} slides · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s'
+            f' · <a href="{site_base}/{deck["id"]}.html">open the narrated deck →</a>')
+    content = (SH.page_head(deck["module_tag"], f'{html.escape(deck["label"])} — transcript', lede, note)
+               + "\n" + "\n".join(rows))
+    return SH.document(f"{deck['label']} — transcript", f"The narration of {deck['label']}, slide by slide.",
+                       content, site_base, "transcript",
+                       crumbs=SH.module_crumbs(site_base, deck, "Transcript"),
+                       deck_id=deck["id"], mode="read")
 
 
-BRAND_MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">'
-              '<rect width="32" height="32" rx="7" fill="#2446c8"/>'
-              '<path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" '
-              'stroke-linejoin="round" stroke-linecap="round"/>'
-              '<path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/>'
-              '</svg>')
+BRAND_MARK = SH.BRAND_MARK
 
 
 def slide_rail(deck: dict, slide: dict, site_base: str) -> str:
@@ -601,32 +581,29 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(deck['label'])} — AI Product Studio</title>
-<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{site_base}/assets/player.css">
+{SH.fonts(site_base)}
 </head>
-<body class="deck-page" data-narration-manifest="{site_base}/narration.json"
+<body class="deck-page app-page" data-narration-manifest="{site_base}/narration.json"
       data-narration-deck="{deck['id']}" data-site-base="{site_base}"
       data-voice="{'preview' if is_preview else 'release'}"
       data-units="{html.escape(json.dumps([{'id': u['id'], 'first': u['first'], 'last': u['last'], 'label': u['title'] if u['kind'] == 'segment' else u['label']} for u in (units or [])]), quote=True)}"
       data-deck-label="{html.escape(deck['label'], quote=True)}">
 <a class="skip-link" href="#slides">Skip to slides</a>
-<header class="deck-header">
-  <a class="deck-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">{html.escape(deck['module_tag'])}</span></a>
+<div class="app">
+{SH.sidebar(site_base, deck['id'])}
+<div class="app-main">
+{SH.topbar(site_base, SH.module_crumbs(site_base, deck, "Watch"), deck['id'], "watch")}
+<div class="deck-header" role="toolbar" aria-label="Deck tools">
   <span class="deck-audience">{len(deck['slides'])} slides{' · text-first copy' if text_only else f" · {recorded} narrated · {int(total // 60)}m {int(total % 60)}s"}</span>
   <div class="deck-tools">
     <button type="button" class="tool-primary" data-narration-start hidden aria-pressed="false">▶ Play narration</button>
     <button type="button" data-present aria-pressed="false" title="Full screen presentation">Present ↗</button>
     <button type="button" data-reading aria-pressed="false" title="Show every slide as a document">Read all</button>
     <button type="button" data-notes title="Presenter notes for this slide">Sources &amp; notes</button>
-    <a class="tool-link" href="{site_base}/lesson-{deck['id']}.html">Lesson</a>
-    <a class="tool-link" href="{site_base}/lab-{deck['id']}.html">Lab</a>
-    <a class="tool-link" href="{site_base}/quiz-{deck['id']}.html">Knowledge check</a>
     <a class="tool-link" href="{site_base}/transcript-{deck['id']}.html">Transcript</a>
-    <button type="button" class="search-button" data-search-open title="Search the course (press /)">Search <kbd>/</kbd></button>
     {voice_chip}
   </div>
-</header>
+</div>
 {badge}
 <main id="slides" class="slides" tabindex="-1" aria-label="{html.escape(deck['label'])}">
 <h1 class="sr-only">{html.escape(deck['label'])}</h1>
@@ -650,10 +627,14 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
   <p class="drawer-meta" data-drawer-meta></p>
   <div class="drawer-notes" data-drawer-notes></div>
 </dialog>
+</div>
+</div>
+<div class="outline-backdrop" data-outline-backdrop hidden></div>
 <noscript><style>.slide[hidden]{{display:block}}</style>
 <p class="no-script">JavaScript is off, so narration and slide navigation are disabled. Every slide is
 shown below in order and remains readable.</p></noscript>
 <script src="{site_base}/assets/progress.js" defer></script>
+<script src="{site_base}/assets/shell.js" defer></script>
 <script src="{site_base}/assets/narration-media.js" defer></script>
 <script src="{site_base}/assets/player.js" defer></script>
 <script src="{site_base}/assets/search.js" defer></script>
@@ -784,40 +765,21 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
         footnote = ("Speaker notes are the presenter's version; the narration is the learner's. "
                     "Recordings currently use a free preview voice and say so wherever they appear — the "
                     "released voice is recorded separately and the words do not change.")
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Product Studio — narrated course</title>
-<meta name="description" content="Build, ship and sell three kinds of AI product. Nine narrated modules with captions and transcripts.">
-<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{site_base}/assets/player.css">
-</head>
-<body class="index">
-<header class="site-header">
-  <div class="wrap">
-    <div class="site-brand-row">
-      <a class="site-brand" href="{site_base}/index.html">{BRAND_MARK}AI Product Studio<span class="brand-destination">Course</span></a>
-      <button type="button" class="search-button" data-search-open title="Search the course (press /)">Search <kbd>/</kbd></button>
-    </div>
-    <p class="eyebrow">AI Product Studio · edition 2026.09 · nine modules</p>
-    <h1>Ship AI products a skeptical engineer can audit.</h1>
-    <p class="site-lede">Three production repositories — an on-device meeting copilot, a multi-tenant SaaS
-      built with AI agents under written rules, and an evidence-cited briefing site — taught as one method:
-      spec it, build it, validate it, prove it. Nine narrated modules, labs whose pass criteria are objective,
-      and a course that checks its own claims every time it is built.</p>
-    <ul class="site-facts">
+    head = SH.page_head(
+        "AI Product Studio · edition 2026.09 · nine modules",
+        "Ship AI products a skeptical engineer can audit.",
+        "Three production repositories — an on-device meeting copilot, a multi-tenant SaaS built with "
+        "AI agents under written rules, and an evidence-cited briefing site — taught as one method: "
+        "spec it, build it, validate it, prove it. Nine narrated modules, labs whose pass criteria are "
+        "objective, and a course that checks its own claims every time it is built.",
+        f"""<ul class="site-facts">
 {facts}
     </ul>
     <div class="hero-actions">
       <a class="btn-hero" href="{site_base}/lab-m00.html">Start here: your first win in about 30 minutes →</a>
       <a class="btn-hero-quiet" href="#proof">See what this site proves about itself</a>
-    </div>
-  </div>
-</header>
-<main class="site-main">
+    </div>""")
+    content = f"""{head}
   <div class="continue-strip" data-continue hidden>
     <p><strong>Continue where you left off:</strong> <span data-continue-label></span></p>
     <a class="btn-primary" href="{site_base}/index.html">Continue →</a>
@@ -925,13 +887,11 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       <a href="https://github.com/tomqwu/ai_courses/tree/main/aps-tools">Read them or copy the folder →</a></p>
   </section>
 {capture_html}
-  <p class="index-footnote">{footnote} Progress, quiz scores and lab checklists are stored in this browser only — export them from the strip above to move machines.</p>
-</main>
-<script src="{site_base}/assets/progress.js" defer></script>
-<script src="{site_base}/assets/search.js" defer></script>
-</body>
-</html>
-"""
+  <p class="index-footnote">{footnote} Progress, quiz scores and lab checklists are stored in this browser only — export them from the strip above to move machines.</p>"""
+    return SH.document("AI Product Studio — narrated course",
+                       "Build, ship and sell three kinds of AI product. Nine narrated modules with "
+                       "captions and transcripts.", content, site_base, "index home-page",
+                       crumbs=[("Home", None)], current="home")
 
 
 def main(argv=None) -> int:
@@ -974,6 +934,9 @@ def main(argv=None) -> int:
     import site_content as SC                                                     # noqa: PLC0415
     import site_pages as SPG                                                      # noqa: PLC0415
     units_by_deck = {deck["id"]: SP.module_units(deck) for deck in decks}
+    # Every page carries the course outline (#73), so the shell learns the modules, their units and
+    # the paths once, before the first page is written.
+    SH.configure(decks, units_by_deck, SP.TRACKS)
     for deck in decks:
         (target / f"{deck['id']}.html").write_text(
             page(deck, manifest, provenance, args.site_base, text_only=args.no_narration,
@@ -993,6 +956,7 @@ def main(argv=None) -> int:
     # zero or two keyed answers fails the build here rather than shipping.
     records: list[dict] = []
     terms_by_deck: dict[str, list[dict]] = {}
+    labs_for_log: list[dict] = []
     for deck in decks:
         folder = COURSE_DIR / deck["source"].rsplit("/", 1)[0]
         for kind in ("lesson", "handout", "glossary"):
@@ -1009,6 +973,8 @@ def main(argv=None) -> int:
         auto_fail = SC.parse_auto_fail(SC.read(rubrics)) if rubrics.is_file() else None
         html_out, record = SPG.lab_page(deck, lab, args.site_base, BRAND_MARK, auto_fail)
         (target / f"lab-{deck['id']}.html").write_text(html_out, encoding="utf-8")
+        labs_for_log.append({"deck": deck["id"], "title": lab["title"],
+                             "checks": lab["checklist_count"]})
         record["module"] = SPG.short_label(deck)
         records.append(record)
         try:
@@ -1023,6 +989,8 @@ def main(argv=None) -> int:
     (target / "glossary.html").write_text(
         SPG.master_glossary_page(terms_by_deck, decks_by_id_for_glossary, args.site_base, BRAND_MARK),
         encoding="utf-8")
+    (target / "evidence.html").write_text(SPG.evidence_page(labs_for_log, args.site_base),
+                                          encoding="utf-8")
     (target / "search.json").write_text(SPG.search_index(records, decks, units_by_deck), encoding="utf-8")
     decks_by_id = {deck["id"]: deck for deck in decks}
     built_tracks = [t for t in SP.TRACKS if t["status"] == "built"]

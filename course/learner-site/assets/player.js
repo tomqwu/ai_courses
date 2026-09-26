@@ -212,6 +212,8 @@
       localStorage.setItem(progressKey, JSON.stringify({ slide: slides[index].id }));
     } catch (_) { /* private mode: navigation still works */ }
     recordUnit();
+    // The course outline follows the player (#73): it marks the unit this slide belongs to.
+    document.dispatchEvent(new CustomEvent('aps:slide', { detail: { deck: deckId, n: index + 1 } }));
     loadClip();
   }
 
@@ -541,6 +543,10 @@
 
   function start() {
     body.classList.add('deck-ready');
+    // A deep link names a slide on purpose — an outline unit, a search hit, a transcript heading — so
+    // it wins over the saved resume point. Resuming is for arriving at the deck with no slide named.
+    const hashIndex = slides.findIndex(slide => `#${slide.id}` === location.hash);
+    if (hashIndex >= 0) { goTo(hashIndex, { scroll: false }); return; }
     let resumeNote = '';
     try {
       const raw = localStorage.getItem(progressKey);
@@ -556,9 +562,15 @@
         }
       }
     } catch (_) { /* no saved progress */ }
-    const hashIndex = slides.findIndex(slide => `#${slide.id}` === location.hash);
-    goTo(hashIndex >= 0 ? hashIndex : 0, { scroll: false });
+    goTo(0, { scroll: false });
   }
+
+  // Following a link to another slide of this same deck (the outline's units) changes only the
+  // hash; goTo itself uses replaceState, which fires no hashchange, so this never loops.
+  window.addEventListener('hashchange', () => {
+    const target = slides.findIndex(slide => `#${slide.id}` === location.hash);
+    if (target >= 0 && target !== index) goTo(target);
+  });
 
   fetch(assetURL(manifestPath))
     .then(response => (response.ok ? response.json() : Promise.reject(new Error('manifest'))))

@@ -18,7 +18,7 @@ segments, learning paths, playbooks, narration edits, and publishing.
 | `course/06-production/verify.py` | Package gate: artifacts, bands, pointers, anchors, exhibits, narration, site |
 | `course/06-production/pointer-anchors.json` | Line ranges pinned to the text they must contain |
 | `course/06-production/facts.json` | Case-study numbers the course quotes, re-derived by `check_facts.py` |
-| `course/learner-site/` | Site generator (`build_site.py`) and browser checks (`check_player.py`, `check_features.py`) |
+| `course/learner-site/` | Site generator (`build_site.py`; every page in the `site_shell.py` frame) and browser checks (`check_player.py`, `check_features.py`) |
 | `course/05-tracks/`, `course/07-playbooks/` | Paid learning-path bundles; standalone playbooks |
 | `course/check.sh`, `.github/workflows/gate.yml` | The gate, locally and in CI |
 | `ListenToMe/`, `SignUpFlow/`, `ai_qe/` | Case-study clones at pinned commits (git-ignored, read-only) |

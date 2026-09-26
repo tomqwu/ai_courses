@@ -25,6 +25,8 @@ import html
 import re
 from pathlib import Path
 
+import site_shell as SH
+
 COURSE_DIR = Path(__file__).resolve().parents[1]
 
 # ---------------------------------------------------------------- unit model
@@ -405,39 +407,12 @@ def _plural(n: int, noun: str) -> str:
     return f"{n} {noun}" + ("" if n == 1 else "s")
 
 
-def _crumbs(site_base: str, trail: list[tuple[str, str | None]]) -> str:
-    parts = []
-    for label, href in trail:
-        parts.append(f'<a href="{href}">{html.escape(label)}</a>' if href
-                     else f'<span aria-current="page">{html.escape(label)}</span>')
-    return f'<nav class="crumbs" aria-label="Breadcrumb">{"<span>/</span>".join(parts)}</nav>'
-
-
 def _at_a_glance(items: list[tuple[str, str]]) -> str:
     """Microsoft Learn's metadata block: every value is a filter in their catalogue, a fact here."""
     cells = "".join(
         f'<div class="aga-item"><dt>{html.escape(key)}</dt><dd>{html.escape(value)}</dd></div>'
         for key, value in items if value)
     return f'<dl class="at-a-glance">{cells}</dl>'
-
-
-def _doc_page(title: str, description: str, body: str, site_base: str, body_class: str) -> str:
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(title)}</title>
-<meta name="description" content="{html.escape(description)}">
-<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{site_base}/assets/player.css">
-</head>
-<body class="index {body_class}">
-{body}
-</body>
-</html>
-"""
 
 
 def path_cards_html(tracks: list[dict], units_by_deck: dict[str, list[dict]],
@@ -487,26 +462,20 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
     cards = path_cards_html(tracks, units_by_deck, seconds, site_base)
 
     total_units = sum(len(u) for u in units_by_deck.values())
-    body = f"""<header class="site-header">
-  <div class="wrap">
-    <a class="site-brand" href="{site_base}/index.html">{brand}AI Product Studio<span class="brand-destination">Course</span></a>
-    {_crumbs(site_base, [("Course home", f"{site_base}/index.html"), ("Learning paths", None)])}
-    <p class="eyebrow">Learning paths</p>
-    <h1>Four ways into the same method.</h1>
-    <p class="site-lede">The three products this course is built from are three <em>types</em> of AI
+    head = SH.page_head(
+        "Learning paths", "Four ways into the same method.",
+        """The three products this course is built from are three <em>types</em> of AI
       product — an <strong>app</strong>, a <strong>web service</strong>, and a
       <strong>content product</strong> like a learning site, a presentation or a sales pitch. Each
       track path teaches one of those types end to end; the full studio course teaches all three. The
       method is identical in every path — same lessons, labs and quizzes, nothing rewritten or watered
-      down — and each path states exactly what it leaves out.</p>
-    <ul class="site-facts">
+      down — and each path states exactly what it leaves out.""",
+        f"""<ul class="site-facts">
       <li>{len(tracks)} paths</li>
       <li>{len(units_by_deck)} modules · {total_units} units</li>
       <li>Measured durations</li>
-    </ul>
-  </div>
-</header>
-<main class="site-main">
+    </ul>""")
+    body = f"""{head}
   <div class="section-heading">
     <h2>Choose by what you want to build</h2>
     <span class="section-note">A unit is one lesson segment, a lab, or a knowledge check — the level
@@ -528,11 +497,11 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
     <p class="index-footnote">Every duration on these pages is measured from the recorded narration,
       not estimated. Lab times are quoted from each module's own source, because a lab is hours of
       hands-on work and its narration is a single slide.</p>
-  </section>
-</main>"""
-    return _doc_page("Learning paths — AI Product Studio",
-                     "Four learning paths through one AI product course: the full studio course and "
-                     "three single-archetype tracks.", body, site_base, "paths")
+  </section>"""
+    return SH.document("Learning paths — AI Product Studio",
+                       "Four learning paths through one AI product course: the full studio course and "
+                       "three single-archetype tracks.", body, site_base, "paths",
+                       crumbs=[("Course", f"{site_base}/index.html"), ("Learning paths", None)])
 
 
 def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str, list[dict]],
@@ -600,23 +569,15 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
     <ul class="excluded-list">{items}</ul>
   </section>"""
 
-    body = f"""<header class="site-header">
-  <div class="wrap">
-    <a class="site-brand" href="{site_base}/index.html">{brand}AI Product Studio<span class="brand-destination">Course</span></a>
-    {_crumbs(site_base, [("Course home", f"{site_base}/index.html"),
-                         ("Learning paths", f"{site_base}/paths.html"),
-                         (track["title"], None)])}
-    <p class="eyebrow">Learning path · {_plural(len(track['core']) + len(track.get('slice') or {}), 'module')} · {len(units)} units</p>
-    <h1>{html.escape(track['title'])}</h1>
-    <p class="site-lede">{html.escape(track['promise'])}</p>
-    {_at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
-                   ("Role", track["role"]),
-                   ("Subject", track.get("subject", "AI product engineering")),
-                   ("Duration", f"{fmt_minutes(minutes)} of narration + lab time"),
-                   ("Price", track["price"])])}
-  </div>
-</header>
-<main class="site-main">
+    head = SH.page_head(
+        f"Learning path · {_plural(len(track['core']) + len(track.get('slice') or {}), 'module')} · {len(units)} units",
+        html.escape(track["title"]), html.escape(track["promise"]),
+        _at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
+                      ("Role", track["role"]),
+                      ("Subject", track.get("subject", "AI product engineering")),
+                      ("Duration", f"{fmt_minutes(minutes)} of narration + lab time"),
+                      ("Price", track["price"])]))
+    body = f"""{head}
   <section class="path-section">
     <h2>Prerequisites</h2>
     <p>{html.escape(track.get('prereq') or 'None. Module 0 assumes no prior setup beyond a machine that can run Python.')}</p>
@@ -638,10 +599,12 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
       watered down, and the slice of M7/M8 is scoped rather than summarised.</p>
     <p class="index-footnote">Durations are measured from the recorded narration. Lab times are quoted
       from each module's source. Nothing on this page is an estimate presented as a measurement.</p>
-  </section>
-</main>"""
-    return _doc_page(f"{track['title']} — learning path — AI Product Studio",
-                     track["promise"], body, site_base, "path-page")
+  </section>"""
+    return SH.document(f"{track['title']} — learning path — AI Product Studio", track["promise"], body,
+                       site_base, "path-page",
+                       crumbs=[("Course", f"{site_base}/index.html"),
+                               ("Learning paths", f"{site_base}/paths.html"), (track["title"], None)],
+                       body_attrs=f' data-path="{html.escape(track["slug"], quote=True)}"')
 
 
 def _module_row(deck: dict, units: list[dict], minutes: float, site_base: str,
@@ -770,20 +733,15 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
         path_link = f'<a href="{site_base}/paths.html">the learning paths</a>'
     first = units[0]["href"] if units else f"{deck['id']}.html"
 
-    body = f"""<header class="site-header">
-  <div class="wrap">
-    <a class="site-brand" href="{site_base}/index.html">{brand}AI Product Studio<span class="brand-destination">Course</span></a>
-    {_crumbs(site_base, [("Course home", f"{site_base}/index.html"),
-                         ("Learning paths", f"{site_base}/paths.html"), (short, None)])}
-    <p class="eyebrow">Module · {len(units)} units · {fmt_minutes(total)} of narration</p>
-    <h1>{html.escape(short)}</h1>
-    <p class="site-lede">{html.escape(facts['promise'])}</p>
-    {_at_a_glance([("Paths", mediums),
-                   ("Level", tracks_for[0]["track"]["level"] if tracks_for
-                    else "Beginner to intermediate"),
-                   ("Lesson", facts["lesson_length"]),
-                   ("Lab", lab_time(deck["id"]))])}
-    <nav class="module-tabs" aria-label="This module"><ul>
+    head = SH.page_head(
+        f"Module {number} · {len(units)} units · {fmt_minutes(total)} of narration", html.escape(short),
+        html.escape(facts["promise"]),
+        _at_a_glance([("Paths", mediums),
+                      ("Level", tracks_for[0]["track"]["level"] if tracks_for
+                       else "Beginner to intermediate"),
+                      ("Lesson", facts["lesson_length"]),
+                      ("Lab", lab_time(deck["id"]))])
+        + f"""<nav class="module-tabs" aria-label="More in this module"><ul>
       <li><a href="{site_base}/module-{deck['id']}.html" aria-current="page">Overview</a></li>
       <li><a href="{site_base}/{deck['id']}.html">Slides</a></li>
       <li><a href="{site_base}/lesson-{deck['id']}.html">Lesson</a></li>
@@ -792,10 +750,8 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
       <li><a href="{site_base}/handout-{deck['id']}.html">Handout</a></li>
       <li><a href="{site_base}/glossary-{deck['id']}.html">Glossary</a></li>
       <li><a href="{site_base}/transcript-{deck['id']}.html">Transcript</a></li>
-    </ul></nav>
-  </div>
-</header>
-<main class="site-main">
+    </ul></nav>""")
+    body = f"""{head}
   <section class="path-section">
     <h2>Learning objectives</h2>
     <ul class="objectives">{objectives_html}</ul>
@@ -825,42 +781,7 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     <a class="btn-primary" href="{site_base}/{first}">Start this module →</a>
     <a class="btn-quiet" href="{site_base}/transcript-{deck['id']}.html">Read the transcript</a>
     <p class="index-footnote">Part of {path_link}. {'This is the text-first copy: narration and captions are not published here, so units are read and presented rather than played.' if text_only else 'Units carry narration, captions and a transcript.'}</p>
-  </section>
-</main>
-<script src="{site_base}/assets/progress.js" defer></script>
-<script src="{site_base}/assets/search.js" defer></script>
-<script>
-(function () {{
-  return; /* progress is handled by progress.js (aps.progress.v2, which migrates the v1 store) */
-  var KEY = 'aps.progress.v1';
-  var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-progress]'));
-  var done = {{}};
-  try {{ done = JSON.parse(localStorage.getItem(KEY) || '{{}}') || {{}}; }} catch (e) {{ done = {{}}; }}
-  function save() {{ try {{ localStorage.setItem(KEY, JSON.stringify(done)); }} catch (e) {{}} }}
-  function render() {{
-    var n = 0;
-    boxes.forEach(function (b) {{
-      var on = !!done[b.getAttribute('data-progress')];
-      b.checked = on;
-      b.closest('.unit').classList.toggle('is-done', on);
-      if (on) n++;
-    }});
-    var count = document.getElementById('progress-count');
-    var bar = document.querySelector('.progress-bar');
-    var fill = document.getElementById('progress-fill');
-    if (count) count.textContent = n + ' of ' + boxes.length;
-    if (bar) bar.setAttribute('aria-valuenow', String(n));
-    if (fill) fill.style.width = (boxes.length ? (n / boxes.length * 100) : 0) + '%';
-  }}
-  boxes.forEach(function (b) {{
-    b.addEventListener('change', function () {{
-      var k = b.getAttribute('data-progress');
-      if (b.checked) {{ done[k] = 1; }} else {{ delete done[k]; }}
-      save(); render();
-    }});
-  }});
-  render();
-}})();
-</script>"""
-    return _doc_page(f"{short} — module — AI Product Studio", facts["promise"],
-                     body, site_base, "module-page")
+  </section>"""
+    return SH.document(f"{short} — module — AI Product Studio", facts["promise"], body, site_base,
+                       "module-page", crumbs=SH.module_crumbs(site_base, deck, None),
+                       deck_id=deck["id"], current="module")

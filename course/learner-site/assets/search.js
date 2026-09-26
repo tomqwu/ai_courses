@@ -1,7 +1,7 @@
 /* Site search — every unit, slide, lesson heading, lab, knowledge check and glossary term.
  *
  * The index is built at build time (search.json); this is a small client-side matcher with no
- * service behind it, so the site stays static. Press "/" anywhere, or use the search button.
+ * service behind it, so the site stays static. Press "/" or ⌘K / Ctrl+K anywhere, or use a search button.
  * Results are grouped by module and deep-link to the slide, heading or term.
  */
 (function () {
@@ -138,6 +138,12 @@
     else if (e.key === 'ArrowUp') { if (i > 0) hitsEls[i - 1].focus(); else input.focus(); e.preventDefault(); }
   });
   document.addEventListener('keydown', function (e) {
+    // ⌘K / Ctrl+K, the palette convention, works even from inside a field (#73; #80 builds the palette).
+    if ((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === 'k' || e.key === 'K')) {
+      if (document.querySelector('dialog[open]') && !dialog.open) return;
+      e.preventDefault(); if (dialog.open) close(); else open();
+      return;
+    }
     if (e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
       var tag = (e.target.tagName || '').toLowerCase();
       if (['input', 'textarea', 'select'].indexOf(tag) >= 0) return;

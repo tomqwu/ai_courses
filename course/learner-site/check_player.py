@@ -477,7 +477,7 @@ def check_pages(browser: str, port: int) -> list[str]:
     `h1, h2, h3 { color: navy }` beat the element colour on a navy gradient, so every module
     title rendered at 1.00:1. The deck probe could never have caught it.
     """
-    pages = ["index.html", "paths.html"]
+    pages = ["index.html", "paths.html", "evidence.html"]
     for pattern in ("path-*.html", "module-*.html", "transcript-*.html",
                     "lesson-*.html", "lab-*.html", "quiz-*.html", "handout-*.html", "glossary*.html"):
         pages += sorted(p.name for p in SITE_ROOT.glob(pattern))
