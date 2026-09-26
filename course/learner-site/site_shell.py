@@ -92,8 +92,14 @@ def unit_name(unit: dict) -> str:
 def configure(decks: list[dict], units_by_deck: dict[str, list[dict]], tracks: list[dict]) -> None:
     """Record what the outline lists. Called once per build, before any page is written."""
     import site_paths as SP                                     # noqa: PLC0415 - avoids a cycle
+    import site_content as SC                                   # noqa: PLC0415
+    from narration_data import COURSE_DIR                       # noqa: PLC0415
+
+    def terms(deck: dict) -> int:
+        path = COURSE_DIR / deck["source"].rsplit("/", 1)[0] / "glossary.md"
+        return len(SC.parse_glossary(SC.read(path))) if path.is_file() else 0
     _CTX["modules"] = [{"id": d["id"], "number": int(d["id"][1:]), "short": outline_name(d),
-                        "units": units_by_deck.get(d["id"], [])} for d in decks]
+                        "units": units_by_deck.get(d["id"], []), "terms": terms(d)} for d in decks]
     shown = []
     for track in tracks:
         if track["status"] not in ("built", "full"):
@@ -130,7 +136,8 @@ def sidebar(site_base: str, deck_id: str | None = None, current: str | None = No
     """The course outline.
 
     `deck_id` expands that module to its units. `current` names what this page is: "home",
-    "module" (the module overview), a unit id ("M2.1", "lab", "quiz"…), "glossary" or "evidence".
+    "module" (the module overview), a unit id ("M2.1", "lab", "quiz"…), one of the module's texts
+    ("handout", "module-glossary", "transcript"), or the course's "glossary" or "evidence".
     """
     rows = []
     for module in _CTX["modules"]:
@@ -152,6 +159,15 @@ def sidebar(site_base: str, deck_id: str | None = None, current: str | None = No
                     f'{STATUS_ICON}<span class="outline-unit-name">{html.escape(unit_name(unit))}</span>'
                     f'{STATUS_TEXT}</a></li>')
             units = f'<ol class="outline-units" aria-label="Units in Module {module["number"]}">{"".join(items)}</ol>'
+            # The module's reference texts, as the Watch artboard lists them under the units (#74).
+            extras = []
+            for key, label, href in (("handout", "Handout · one page", f"handout-{mid}.html"),
+                                     ("module-glossary", f"Glossary · {module['terms']} terms",
+                                      f"glossary-{mid}.html"),
+                                     ("transcript", "Transcript", f"transcript-{mid}.html")):
+                mark = ' aria-current="page"' if current == key else ""
+                extras.append(f'<li><a href="{site_base}/{href}"{mark}>{label}</a></li>')
+            units += f'<ul class="outline-extras" aria-label="Module {module["number"]} texts">{"".join(extras)}</ul>'
         rows.append(
             f'<li class="outline-module{" is-open" if here else ""}" data-module="{mid}"'
             f' data-module-units="{html.escape(unit_ids)}">'

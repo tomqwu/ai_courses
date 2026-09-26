@@ -83,6 +83,30 @@
     if (count) count.textContent = complete + ' of ' + track.modules.length + ' modules complete';
   }
 
+  // The module page's start point (#74): "Resume · slide N" once the learner has stopped inside the
+  // deck past its cover; otherwise the build's "Start module".
+  function renderStart(s) {
+    document.querySelectorAll('[data-module-start]').forEach(function (box) {
+      var link = box.querySelector('[data-start-link]');
+      var label = box.querySelector('[data-start-label]');
+      var note = box.querySelector('[data-start-note]');
+      if (!link.hasAttribute('data-start-href')) {
+        link.setAttribute('data-start-href', link.getAttribute('href'));
+        if (note) note.setAttribute('data-start-text', note.textContent);
+      }
+      var at = lastSlide(s);
+      if (at && at.deck === box.getAttribute('data-module-start') && at.n > 1) {
+        link.setAttribute('href', base() + '/' + s.last.href);
+        label.textContent = 'Resume · slide ' + at.n;
+        if (note) note.textContent = 'Where you stopped: ' + (s.last.label || 'slide ' + at.n) + '.';
+      } else {
+        link.setAttribute('href', link.getAttribute('data-start-href'));
+        label.textContent = 'Start module';
+        if (note) note.textContent = note.getAttribute('data-start-text');
+      }
+    });
+  }
+
   function base() {
     return (document.body.getAttribute('data-site-base') || '.').replace(/\/$/, '');
   }
@@ -100,6 +124,7 @@
         parseInt(a.getAttribute('data-first'), 10), parseInt(a.getAttribute('data-last'), 10)));
     });
     renderPath(s);
+    renderStart(s);
   }
 
   // The deck page: the unit holding the current slide is "you are here".
