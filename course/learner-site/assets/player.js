@@ -1,13 +1,17 @@
-/* Learner player: one slide at a time, optional narrated playback, captions and transcript.
+/* Watch — the lesson player (#75): one slide at a time, one control bar, a transcript that follows.
  *
  * Deliberate behaviour, each for a reason:
- *   - Narration NEVER autoplays. Pressing Play starts the first narrated slide and then continues.
+ *   - Narration NEVER autoplays. Pressing Play starts the current narrated slide and then continues.
  *   - Auto-next waits a short wall-clock beat between slides so the learner can read, and that beat
  *     is shortened for prefers-reduced-motion (ai_qe has no such branch; this is our addition).
- *   - audio.currentTime is the only clock: captions, the seek bar and the time readout all derive
- *     from it, so nothing can drift.
- *   - A slide with no recording still navigates; the learner is told why the player is absent.
- *   - Progress is remembered per deck in localStorage and offered back on return.
+ *   - audio.currentTime is the only clock: the caption line, the transcript highlight and the time
+ *     readout all derive from it, so nothing can drift.
+ *   - One bar owns every control. The stage and the bar are sized together, so the controls are
+ *     on screen whatever the slide: the bar's height is reserved in the frame maths.
+ *   - The transcript panel lists the approved narration a sentence per line. With captions loaded
+ *     each line is a cue: it is highlighted while spoken, and clicking it seeks there.
+ *   - A slide with no recording still navigates; the transcript and the sources still show.
+ *   - Progress is remembered per deck in localStorage and offered back on return; a deep link wins.
  *   - If captions fail to load, playback still works and a Retry button plus the transcript remain.
  */
 (() => {
@@ -22,22 +26,25 @@
   const siteBase = body.dataset.siteBase || '.';
   const progressKey = `aps:progress:${deckId}`;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const $ = sel => document.querySelector(sel);
 
   const els = {
-    start: document.querySelector('[data-narration-start]'),
-    prev: document.querySelector('[data-nav="prev"]'),
-    next: document.querySelector('[data-nav="next"]'),
-    picker: document.querySelector('[data-slide-picker]'),
-    status: document.querySelector('.slide-status'),
-    message: document.querySelector('.deck-message'),
-    nav: document.querySelector('.deck-navigation'),
-    present: document.querySelector('[data-present]'),
-    reading: document.querySelector('[data-reading]'),
-    notes: document.querySelector('[data-notes]'),
-    drawer: document.querySelector('.deck-drawer'),
-    drawerMeta: document.querySelector('[data-drawer-meta]'),
-    drawerNotes: document.querySelector('[data-drawer-notes]'),
-    closeDrawer: document.querySelector('[data-close-drawer]'),
+    bar: $('.player-bar'),
+    prev: $('[data-nav="prev"]'),
+    next: $('[data-nav="next"]'),
+    status: $('.slide-status'),
+    present: $('[data-present]'),
+    segments: Array.from(document.querySelectorAll('.tl-seg')),
+    lines: $('[data-transcript-lines]'),
+    sources: $('[data-source-list]'),
+    sourcesEmpty: $('[data-sources-empty]'),
+    notes: $('[data-drawer-notes]'),
+    tabs: Array.from(document.querySelectorAll('.panel-tabs [role="tab"]')),
+    upNext: $('[data-up-next]'),
+  };
+  const ui = {
+    play: $('[data-play]'), time: $('[data-time]'), speed: $('[data-speed]'), cc: $('[data-cc]'),
+    auto: $('[data-auto]'), caption: $('[data-caption]'), status: $('[data-status]'), retry: $('[data-retry]'),
   };
 
   let entries = {};
@@ -50,12 +57,14 @@
   let advanceTimer = 0;
   let pendingAdvance = null;
   let frame = 0;
-  let panelEl = null;
+  let activeCue = -1;
+  let rows = [];                   // transcript rows: whole sentences built from the caption cues
 
   const audio = document.createElement('audio');
   audio.preload = 'none';
   audio.setAttribute('aria-label', 'Slide narration');
   audio.dataset.narrationAudio = '';
+  els.bar.append(audio);
 
   const clock = seconds => {
     const value = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds)) : 0;
@@ -69,98 +78,163 @@
     return ['http:', 'https:', 'file:'].includes(url.protocol) ? url.href : null;
   }
 
-  /* ---------------------------------------------------------------- panel */
+  /* ---------------------------------------------------------------- frame */
 
-  function buildPanel() {
-    const panel = document.createElement('section');
-    panel.className = 'narration-panel';
-    panel.setAttribute('aria-label', 'Slide narration, captions and transcript');
-    panel.hidden = true;
-    panel.innerHTML = `
-      <div class="narration-caption" data-caption aria-label="Captions" aria-live="off"></div>
-      <div class="narration-controls">
-        <button type="button" data-play aria-label="Play narration">▶ Play</button>
-        <button type="button" data-replay aria-label="Replay this slide's narration">↺ Replay</button>
-        <label class="narration-seek"><span class="sr-only">Narration position</span>
-          <input data-seek type="range" min="0" max="0" step="0.05" value="0" disabled></label>
-        <span class="narration-time" data-time>0:00 / 0:00</span>
-        <label class="narration-speed"><span class="sr-only">Narration speed</span>
-          <select data-speed aria-label="Narration speed">
-            <option value="0.75">0.75×</option><option value="1" selected>1×</option>
-            <option value="1.25">1.25×</option><option value="1.5">1.5×</option>
-          </select></label>
-        <button type="button" data-cc aria-label="Captions" aria-pressed="true">CC</button>
-        <label class="narration-auto"><input type="checkbox" data-auto checked> Auto-next</label>
-      </div>
-      <div class="narration-meta">
-        <p data-status role="status" aria-live="polite"></p>
-        <button type="button" data-retry hidden>Retry captions</button>
-        <button type="button" data-transcript hidden>Transcript</button>
-      </div>`;
-    els.nav.before(panel);
-    panel.append(audio);
-    panelEl = panel;
-    // Reserve the panel's height so the fixed bar never covers the bottom of a slide. The observer
-    // path is debounced through rAF because mutating the observed element inside its own callback
-    // would resize it again in the same cycle (the ai_qe lesson); `reservePanelHeight` is also called
-    // directly when the panel is shown, so the reservation does not depend on a later animation frame.
-    let resizeFrame = 0;
-    if (window.ResizeObserver) {
-      new ResizeObserver(() => {
-        cancelAnimationFrame(resizeFrame);
-        resizeFrame = requestAnimationFrame(reservePanelHeight);
-      }).observe(panel);
-    }
-    const controls = Object.fromEntries(['play', 'replay', 'seek', 'time', 'speed', 'cc', 'auto',
-      'caption', 'status', 'retry', 'transcript']
-      .map(key => [key, panel.querySelector(`[data-${key}]`)]));
-    controls.panel = panel;
-    return controls;
-  }
-  const ui = buildPanel();
-
-  // Everything between the top of the page and the bottom of the navigation strip, except the
-  // slide itself: the header, the honesty badge, their margins, the panel gap and the nav. It is
-  // measured rather than assumed because the badge only appears on preview decks, and a wrong
-  // constant silently pushes the narration controls under the navigation strip.
-  function fitChrome() {
+  // The stage and the bar are one unit that must fit the viewport, so the controls are always on
+  // screen. Everything above the stage (the top bar, the padding) is measured into --chrome-height,
+  // and the bar's own height into --narration-height; the stylesheet gives both back from the 16:9
+  // frame. Measured rather than assumed, because the bar's height changes with its content.
+  function fitFrame() {
     const root = document.documentElement;
-    const slidesEl = document.querySelector('.slides');
+    const stage = $('.slides');
+    const top = stage ? stage.getBoundingClientRect().top + window.scrollY : 0;
     const gap = parseFloat(getComputedStyle(root).getPropertyValue('--narration-gap')) || 12;
-    const navHeight = els.nav ? els.nav.getBoundingClientRect().height : 0;
-    const slidesTop = slidesEl ? slidesEl.getBoundingClientRect().top : 0;
-    const value = `${Math.ceil(slidesTop + gap * 2 + navHeight)}px`;  // gap above and below the panel
-    if (root.style.getPropertyValue('--chrome-height') !== value) {
-      root.style.setProperty('--chrome-height', value);
-    }
+    const chrome = `${Math.ceil(top + gap)}px`;
+    const bar = `${Math.ceil(els.bar.getBoundingClientRect().height)}px`;
+    if (root.style.getPropertyValue('--chrome-height') !== chrome) root.style.setProperty('--chrome-height', chrome);
+    if (root.style.getPropertyValue('--narration-height') !== bar) root.style.setProperty('--narration-height', bar);
   }
-
-  function reservePanelHeight() {
-    if (!panelEl) return;
-    const root = document.documentElement;
-    const height = panelEl.hidden ? '0px' : `${Math.ceil(panelEl.getBoundingClientRect().height)}px`;
-    if (root.style.getPropertyValue('--narration-height') !== height) {
-      root.style.setProperty('--narration-height', height);
-    }
-    fitChrome();
-  }
+  let resizeFrame = 0;
+  const refit = () => { cancelAnimationFrame(resizeFrame); resizeFrame = requestAnimationFrame(fitFrame); };
+  if (window.ResizeObserver) new ResizeObserver(refit).observe(els.bar);
+  window.addEventListener('resize', refit);
 
   const announce = message => { ui.status.textContent = message; };
   const clearCaption = () => { ui.caption.textContent = ''; };
 
+  /* ---------------------------------------------------------------- transcript + captions */
+
+  function currentCueIndex() {
+    return cueList.findIndex(item => audio.currentTime >= item.start && audio.currentTime < item.end);
+  }
+
+  // Caption cues are sized to be read in two lines, so they break mid-sentence and a sentence can
+  // start mid-cue. The transcript rows are the approved script's sentences instead, timed from the
+  // cues: each word gets a time by its place in its cue, and a sentence runs from its first word to
+  // the next sentence's first word. The gate proves captions and script match word for word, so the
+  // word counts line up.
+  function sentenceRows(cues) {
+    const source = slides[index].querySelector('.slide-script-source');
+    const sentences = Array.from(source ? source.content.children : []).map(li => li.textContent);
+    if (!cues.length || !sentences.length) return [];
+    const words = t => t.split(/\s+/).filter(Boolean);
+    const at = [];
+    cues.forEach(cue => {
+      const ws = words(cue.text);
+      ws.forEach((_, k) => at.push(cue.start + (cue.end - cue.start) * k / ws.length));
+    });
+    const last = cues[cues.length - 1].end;
+    let w = 0;
+    return sentences.map(text => {
+      const start = at[Math.min(w, at.length - 1)] || 0;
+      w += words(text).length;
+      return { start, end: w < at.length ? at[w] : last, text };
+    });
+  }
+
+  function highlight(i) {
+    if (i === activeCue) return;
+    activeCue = i;
+    Array.from(els.lines.children).forEach((li, n) => {
+      const on = n === i;
+      li.classList.toggle('is-active', on);
+      const target = li.querySelector('button') || li;
+      if (on) target.setAttribute('aria-current', 'true'); else target.removeAttribute('aria-current');
+    });
+    // Keep the spoken line in view inside the panel, without scrolling the page.
+    const line = els.lines.children[i];
+    const box = els.lines;
+    if (line && box.scrollHeight > box.clientHeight) {
+      const top = line.offsetTop - box.offsetTop;
+      if (top < box.scrollTop || top + line.offsetHeight > box.scrollTop + box.clientHeight) {
+        box.scrollTop = Math.max(0, top - box.clientHeight / 3);
+      }
+    }
+  }
+
   function renderCaption() {
+    const live = clip && !audioFailed && !audio.seeking;
+    highlight(live ? rows.findIndex(r => audio.currentTime >= r.start && audio.currentTime < r.end) : -1);
+    const i = live ? currentCueIndex() : -1;
     if (!clip || !captionsOn || audioFailed || audio.seeking) { clearCaption(); return; }
-    const cue = cueList.find(item => audio.currentTime >= item.start && audio.currentTime < item.end);
-    const text = cue ? cue.text : '';
+    const text = i >= 0 ? cueList[i].text : '';
     if (ui.caption.textContent !== text) ui.caption.textContent = text;
   }
 
+  // The panel's rows: the caption cues once they are loaded (each a button that seeks to its
+  // start), otherwise the approved script a sentence per line — the same words either way.
+  function renderLines() {
+    activeCue = -1;
+    els.lines.textContent = '';
+    rows = sentenceRows(cueList);
+    if (rows.length) {
+      rows.forEach(cue => {
+        const li = document.createElement('li');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'line-seek';
+        button.dataset.start = String(cue.start);
+        button.textContent = cue.text;
+        button.setAttribute('aria-label', `${clock(cue.start)} — ${cue.text}`);
+        li.append(button);
+        els.lines.append(li);
+      });
+      renderCaption();
+      return;
+    }
+    const source = slides[index].querySelector('.slide-script-source');
+    Array.from(source ? source.content.children : []).forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item.textContent;
+      els.lines.append(li);
+    });
+    if (!els.lines.children.length) {
+      const li = document.createElement('li');
+      li.className = 'panel-empty';
+      li.textContent = 'This slide has no narration.';
+      els.lines.append(li);
+    }
+  }
+
+  function renderSources() {
+    const slide = slides[index];
+    const list = slide.querySelector('.slide-sources-source');
+    els.sources.textContent = '';
+    if (list) els.sources.append(list.content.cloneNode(true));
+    els.sourcesEmpty.hidden = els.sources.children.length > 0;
+    const notes = (slide.querySelector('.slide-notes-source')?.textContent || '').trim();
+    els.notes.textContent = notes || 'No speaker notes for this slide.';
+    els.notes.classList.toggle('drawer-empty', !notes);
+  }
+
+  function selectTab(name, focus) {
+    els.tabs.forEach(tab => {
+      const on = tab.dataset.tab === name;
+      tab.setAttribute('aria-selected', String(on));
+      tab.tabIndex = on ? 0 : -1;
+      document.getElementById(tab.getAttribute('aria-controls')).hidden = !on;
+      if (on && focus) tab.focus();
+    });
+  }
+  els.tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => selectTab(tab.dataset.tab, false));
+    tab.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+      const next = els.tabs[(i + (event.key === 'ArrowRight' ? 1 : els.tabs.length - 1)) % els.tabs.length];
+      selectTab(next.dataset.tab, true);
+      event.preventDefault();
+    });
+  });
+
+  /* ---------------------------------------------------------------- the bar */
+
   function updateTime() {
+    if (!clip) {
+      ui.time.textContent = `${index + 1} / ${slides.length}`;
+      renderCaption();
+      return;
+    }
     const duration = Number.isFinite(audio.duration) ? audio.duration : (clip ? clip.duration : 0) || 0;
-    ui.seek.max = String(duration);
-    ui.seek.disabled = !duration || audioFailed;
-    ui.seek.value = String(Math.min(audio.currentTime || 0, duration));
-    ui.seek.setAttribute('aria-valuetext', `${clock(audio.currentTime)} of ${clock(duration)}`);
     ui.time.textContent = `${clock(audio.currentTime)} / ${clock(duration)}`;
     renderCaption();
   }
@@ -172,14 +246,58 @@
 
   function updatePlaying() {
     const playing = Boolean(advanceTimer) || (!audio.paused && !audio.ended);
-    ui.play.textContent = audioFailed ? 'Retry audio' : playing ? 'Ⅱ Pause' : '▶ Play';
+    ui.play.classList.toggle('is-playing', playing);
     ui.play.setAttribute('aria-label', audioFailed ? 'Retry narration audio' : playing ? 'Pause narration' : 'Play narration');
-    if (els.start) {
-      els.start.textContent = playing ? 'Ⅱ Pause narration' : '▶ Play narration';
-      els.start.setAttribute('aria-pressed', String(playing));
-    }
+    ui.play.setAttribute('aria-pressed', String(playing));
     cancelAnimationFrame(frame);
     if (playing && !advanceTimer) frame = requestAnimationFrame(tick);
+  }
+
+  // Units behind the current slide are filled; the current one is filled up to the slide.
+  function renderTimeline() {
+    const n = index + 1;
+    els.segments.forEach(seg => {
+      const first = Number(seg.dataset.first), last = Number(seg.dataset.last);
+      const fill = seg.querySelector('.tl-fill');
+      const here = n >= first && n <= last;
+      const pct = n > last ? 100 : here ? Math.round((n - first + 1) / (last - first + 1) * 100) : 0;
+      fill.style.width = `${pct}%`;
+      seg.classList.toggle('is-current', here);
+      if (here) seg.setAttribute('aria-current', 'step'); else seg.removeAttribute('aria-current');
+    });
+  }
+
+  /* ---------------------------------------------------------------- up next */
+
+  let units = [];
+  try { units = JSON.parse(body.dataset.units || '[]'); } catch (_) { units = []; }
+  const unitAt = n => units.find(u => n >= u.first && n <= u.last);
+
+  function renderUpNext() {
+    const n = index + 1;
+    const here = unitAt(n);
+    const card = els.upNext;
+    const set = (kind, title, meta, href) => {
+      card.querySelector('[data-up-kind]').textContent = kind;
+      card.querySelector('[data-up-title]').textContent = title;
+      card.querySelector('[data-up-meta]').textContent = meta;
+      card.setAttribute('href', href);
+    };
+    const titleOf = i => slides[i].querySelector('h2')?.textContent.trim() || `Slide ${i + 1}`;
+    if (n >= slides.length) {
+      set('Next module', 'Continue the course', 'The next module’s overview', body.dataset.nextModule || 'index.html');
+      return;
+    }
+    const upcoming = unitAt(n + 1);
+    if (upcoming && upcoming !== here) {
+      if (upcoming.kind === 'lab') { set('Lab', upcoming.name, upcoming.meta, upcoming.href); return; }
+      if (upcoming.kind === 'quiz') { set('Knowledge check', upcoming.name, upcoming.meta, upcoming.href); return; }
+      const count = upcoming.last - upcoming.first + 1;
+      set('Next section', upcoming.name, `Slide ${upcoming.first} · ${count} slide${count === 1 ? '' : 's'} in this section`,
+        `#slide-${upcoming.first}`);
+      return;
+    }
+    set('Next slide', titleOf(n), `Slide ${n + 1}`, `#slide-${n + 1}`);
   }
 
   /* ---------------------------------------------------------------- slides */
@@ -189,23 +307,19 @@
     stop();
     cancelAdvance();
     index = clamped;
-    const reading = body.classList.contains('reading-view');
     slides.forEach((slide, i) => {
-      slide.hidden = reading ? false : i !== index;
+      slide.hidden = i !== index;
       if (i === index) {
         slide.setAttribute('aria-current', 'true');
-        const title = slide.querySelector('h1, h2, h3')?.textContent?.trim()
-          || `Slide ${index + 1}`;
+        const title = slide.querySelector('h1, h2, h3')?.textContent?.trim() || `Slide ${index + 1}`;
         els.status.textContent = `Slide ${index + 1} of ${slides.length} — ${title}`;
       } else {
         slide.removeAttribute('aria-current');
       }
     });
-    if (els.picker) els.picker.value = slides[index].id;
     if (options.scroll !== false) {
       const heading = slides[index].querySelector('h1, h2, h3');
       (heading || slides[index]).focus?.({ preventScroll: true });
-      window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
     }
     try {
       history.replaceState(null, '', `#${slides[index].id}`);
@@ -214,19 +328,22 @@
     recordUnit();
     // The course outline follows the player (#73): it marks the unit this slide belongs to.
     document.dispatchEvent(new CustomEvent('aps:slide', { detail: { deck: deckId, n: index + 1 } }));
+    els.prev.disabled = index === 0;
+    els.next.disabled = index === slides.length - 1;
+    renderTimeline();
+    renderSources();
+    renderUpNext();
     loadClip();
   }
 
   // Unit progress: reaching the last slide of a unit marks it complete in the shared store, and
   // every slide records "where you left off" for the course home. Labs and knowledge checks are
   // completed on their own pages, not by reading their slide.
-  let units = [];
-  try { units = JSON.parse(body.dataset.units || '[]'); } catch (_) { units = []; }
   function recordUnit() {
     const P = window.APSProgress;
     if (!P) return;
     const n = index + 1;
-    const unit = units.find(u => n >= u.first && n <= u.last);
+    const unit = unitAt(n);
     const where = `${deckId}.html#${slides[index].id}`;
     if (unit) {
       if (n === unit.last && unit.id !== 'lab' && unit.id !== 'quiz') P.setUnit(`${deckId}:${unit.id}`, true);
@@ -248,26 +365,21 @@
     audioFailed = false;
     clip = entries[slide.id] && entries[slide.id].audio && entries[slide.id].captions
       ? entries[slide.id] : null;
-    // The panel is the only place captions, the transcript and playback controls live, so it must
-    // be visible whenever a recording exists. It starts hidden to avoid an empty bar on load.
-    ui.panel.hidden = !clip;
-    reservePanelHeight();
-    requestAnimationFrame(reservePanelHeight);
-    const hasCaptions = Boolean(clip);
-    ui.transcript.hidden = !(clip && clip.transcript);
     ui.retry.hidden = true;
-    ui.cc.disabled = !hasCaptions;
+    ui.cc.disabled = !clip;
     ui.play.disabled = !clip;
+    ui.speed.disabled = !clip;
+    ui.caption.hidden = !clip;
+    renderLines();
+    refit();
     if (!clip) {
-      els.message.textContent = entries && Object.keys(entries).length
-        ? 'This slide has no recording. Use the slide controls, or press Play on a narrated slide.'
-        : '';
+      announce(entries && Object.keys(entries).length
+        ? 'This slide has no recording. Read its transcript below, or move on.' : '');
       updatePlaying();
       updateTime();
       return;
     }
-    els.message.textContent = '';
-    // No source is attached until the learner presses Play. A 233-slide site should not open a
+    // No source is attached until the learner presses Play. A 258-slide site should not open a
     // media request per slide the reader never listens to, and a pending load also makes headless
     // verification non-deterministic.
     updatePlaying();
@@ -289,12 +401,12 @@
       if (version !== clipVersion) return;
       cueList = parsed;
       ui.cc.disabled = false;
-      renderCaption();
+      renderLines();
       if (!audioFailed) announce('Narration with synchronized captions.');
     } catch (error) {
       if (version !== clipVersion) return;
       ui.retry.hidden = false;
-      announce('Captions could not load. Retry, or read the transcript.');
+      announce('Captions could not load. Retry, or read the transcript below.');
     }
   }
 
@@ -317,8 +429,8 @@
     window.APSNarrationMedia.play(audio).catch(error => {
       if (version !== clipVersion || error.name === 'AbortError') return;
       updatePlaying();
-      announce(audio.error ? 'Audio could not load. Select Retry audio to try again.'
-                           : 'Playback was paused by your browser. Select Play to continue.');
+      announce(audio.error ? 'Audio could not load. Press Play to try again.'
+                           : 'Playback was paused by your browser. Press Play to continue.');
     });
   }
 
@@ -364,10 +476,12 @@
     }
   }
 
+  const togglePlay = () => ((advanceTimer || (!audio.paused && !audio.ended)) ? pausePlayback() : play());
+
   function onEnded() {
     const nextIndex = index + 1;
     if (nextIndex >= slides.length) {
-      announce('End of deck. Select a slide to review, or press Replay.');
+      announce('End of the module. Up next is below.');
       updatePlaying();
       try { localStorage.setItem(progressKey, JSON.stringify({ slide: slides[index].id, done: true })); } catch (_) {}
       return;
@@ -391,36 +505,12 @@
     if (!audio.getAttribute('src')) return;
     audioFailed = true;
     updatePlaying();
-    announce('Audio could not load. Select Retry audio to try again.');
+    announce('Audio could not load. Press Play to try again.');
   });
 
-  els.prev?.addEventListener('click', () => move(-1));
-  els.next?.addEventListener('click', () => move(1));
-  els.picker?.addEventListener('change', event => {
-    const target = slides.findIndex(slide => slide.id === event.target.value);
-    if (target >= 0) goTo(target);
-  });
-  els.start?.addEventListener('click', () => {
-    if (advanceTimer || (!audio.paused && !audio.ended)) { pausePlayback(); return; }
-    play();
-  });
-  ui.play.addEventListener('click', () => (advanceTimer || (!audio.paused && !audio.ended)) ? pausePlayback() : play());
-  ui.replay.addEventListener('click', () => {
-    if (!clip) return;
-    cancelAdvance();
-    clearCaption();
-    ensureSource();
-    audio.currentTime = 0;
-    play();
-  });
-  ui.seek.addEventListener('input', () => {
-    cancelAdvance();
-    clearCaption();
-    ensureSource();
-    audio.currentTime = Number(ui.seek.value);
-    updateTime();
-    updatePlaying();
-  });
+  els.prev.addEventListener('click', () => move(-1));
+  els.next.addEventListener('click', () => move(1));
+  ui.play.addEventListener('click', togglePlay);
   ui.speed.addEventListener('change', () => { audio.playbackRate = Number(ui.speed.value); });
   ui.cc.addEventListener('click', () => {
     captionsOn = !captionsOn;
@@ -435,38 +525,26 @@
   ui.auto.addEventListener('change', () => {
     if (!ui.auto.checked && pendingAdvance) { cancelAdvance(); updatePlaying(); announce('Auto-next off.'); }
   });
-  ui.transcript.addEventListener('click', () => {
-    if (!clip) return;
-    stop();
-    const dialog = document.createElement('dialog');
-    dialog.className = 'narration-transcript';
-    dialog.setAttribute('aria-label', 'Slide narration transcript');
-    const heading = document.createElement('h2');
-    heading.textContent = 'Narration transcript';
-    const meta = document.createElement('p');
-    meta.className = 'narration-provenance';
-    meta.textContent = [clip.voice, clip.caption_method].filter(Boolean).join(' · ');
-    const text = document.createElement('p');
-    text.className = 'narration-text';
-    text.textContent = clip.transcript || 'No transcript recorded for this slide.';
-    const close = document.createElement('button');
-    close.type = 'button';
-    close.textContent = 'Close transcript';
-    close.addEventListener('click', () => dialog.close());
-    dialog.addEventListener('close', () => { dialog.remove(); ui.transcript.focus(); });
-    dialog.append(heading, meta, text, close);
-    document.body.append(dialog);
-    dialog.showModal();
+  els.segments.forEach(seg => seg.addEventListener('click', () => goTo(Number(seg.dataset.first) - 1)));
+  // Click-to-seek: a transcript line starts the narration from that sentence.
+  els.lines.addEventListener('click', event => {
+    const line = event.target.closest('[data-start]');
+    if (!line || !clip) return;
+    cancelAdvance();
+    ensureSource();
+    audio.currentTime = Number(line.dataset.start) + 0.01;
+    updateTime();
+    play();
   });
 
-  /* ------------------------------------------------- present, read, notes */
+  /* ------------------------------------------------- present */
 
-  // Presentation mode: full screen, chrome trimmed, the slide centred. The frame maths in the
-  // stylesheet already give back the narration panel's height, so the slide stays 16:9 either way.
+  // Presentation mode: full screen, the app chrome and the panels hidden, the stage and its bar
+  // centred. The frame maths already give back the bar's height, so the slide stays 16:9 either way.
   async function enterPresentation() {
     body.classList.add('presentation-mode');
-    if (els.present) els.present.setAttribute('aria-pressed', 'true');
-    requestAnimationFrame(reservePanelHeight);
+    els.present.setAttribute('aria-pressed', 'true');
+    refit();
     try {
       if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
         await document.documentElement.requestFullscreen();
@@ -477,63 +555,35 @@
 
   function leavePresentation() {
     body.classList.remove('presentation-mode');
-    if (els.present) els.present.setAttribute('aria-pressed', 'false');
-    requestAnimationFrame(reservePanelHeight);
+    els.present.setAttribute('aria-pressed', 'false');
+    refit();
   }
 
   function togglePresentation() {
     if (body.classList.contains('presentation-mode')) leavePresentation(); else enterPresentation();
   }
 
-  if (els.present) els.present.addEventListener('click', togglePresentation);
-  window.addEventListener('resize', () => requestAnimationFrame(reservePanelHeight));
+  els.present.addEventListener('click', togglePresentation);
   document.addEventListener('fullscreenchange', () => {
     // Leaving full screen with Esc must not strand the page in presentation styling.
     if (!document.fullscreenElement) leavePresentation();
   });
-
-  function setReading(on) {
-    body.classList.toggle('reading-view', on);
-    if (els.reading) els.reading.setAttribute('aria-pressed', String(on));
-    goTo(index, { scroll: false });
-    announce(on ? 'Reading view: every slide is shown.' : 'One slide at a time.');
-  }
-
-  if (els.reading) els.reading.addEventListener('click', () => setReading(!body.classList.contains('reading-view')));
-
-  function openNotes() {
-    if (!els.drawer || !slides[index]) return;
-    const slide = slides[index];
-    const source = slide.querySelector('.slide-notes-source');
-    const notes = source ? source.textContent.trim() : '';
-    if (els.drawerMeta) {
-      const heading = slide.querySelector('h2');
-      els.drawerMeta.textContent = [heading && heading.textContent.trim(),
-                                    `Slide ${index + 1} of ${slides.length}`]
-        .filter(Boolean).join(' · ');
-    }
-    if (els.drawerNotes) {
-      els.drawerNotes.textContent = notes || 'No speaker notes for this slide.';
-      els.drawerNotes.classList.toggle('drawer-empty', !notes);
-    }
-    els.drawer.showModal();
-  }
-
-  if (els.notes) els.notes.addEventListener('click', openNotes);
-  if (els.closeDrawer) els.closeDrawer.addEventListener('click', () => els.drawer.close());
 
   document.addEventListener('keydown', event => {
     if (document.querySelector('dialog[open]')) return;
     if (event.metaKey || event.ctrlKey || event.altKey) return;
     const tag = (event.target.tagName || '').toLowerCase();
     if (['input', 'select', 'textarea', 'button', 'a'].includes(tag)) return;
-    if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') { move(1); event.preventDefault(); }
-    else if (event.key === 'ArrowLeft' || event.key === 'PageUp') { move(-1); event.preventDefault(); }
-    else if (event.key === 'Home') { goTo(0); event.preventDefault(); }
-    else if (event.key === 'End') { goTo(slides.length - 1); event.preventDefault(); }
-    else if (event.key === 'p' || event.key === 'P') { togglePresentation(); event.preventDefault(); }
-    else if (event.key === 'n' || event.key === 'N') { openNotes(); event.preventDefault(); }
-    else if (event.key === 'Escape') { leavePresentation(); }
+    const key = event.key;
+    if (key === 'ArrowRight' || key === 'PageDown') { move(1); event.preventDefault(); }
+    else if (key === 'ArrowLeft' || key === 'PageUp') { move(-1); event.preventDefault(); }
+    else if (key === ' ') { if (clip) togglePlay(); else move(1); event.preventDefault(); }
+    else if (key === 'Home') { goTo(0); event.preventDefault(); }
+    else if (key === 'End') { goTo(slides.length - 1); event.preventDefault(); }
+    else if (key === 'f' || key === 'F' || key === 'p' || key === 'P') { togglePresentation(); event.preventDefault(); }
+    else if (key === 't' || key === 'T') { selectTab('transcript', true); event.preventDefault(); }
+    else if (key === 'n' || key === 'N') { selectTab('sources', true); event.preventDefault(); }
+    else if (key === 'Escape') { leavePresentation(); }
   });
 
   window.addEventListener('beforeprint', () => slides.forEach(slide => { slide.hidden = false; }));
@@ -543,21 +593,20 @@
 
   function start() {
     body.classList.add('deck-ready');
+    fitFrame();
     // A deep link names a slide on purpose — an outline unit, a search hit, a transcript heading — so
     // it wins over the saved resume point. Resuming is for arriving at the deck with no slide named.
     const hashIndex = slides.findIndex(slide => `#${slide.id}` === location.hash);
     if (hashIndex >= 0) { goTo(hashIndex, { scroll: false }); return; }
-    let resumeNote = '';
     try {
       const raw = localStorage.getItem(progressKey);
       if (raw) {
         const saved = JSON.parse(raw);
         const savedIndex = slides.findIndex(slide => slide.id === saved.slide);
         if (savedIndex > 0) {
-          if (!saved.done) resumeNote = `Resuming at slide ${savedIndex + 1}. Use Previous to go back.`;
           goTo(savedIndex, { scroll: false });
-          // Set the note after goTo/loadClip, which clears the message for a narrated slide.
-          if (resumeNote) els.message.textContent = resumeNote;
+          // Set the note after goTo/loadClip, which replaces the status for a narrated slide.
+          if (!saved.done) announce(`Resumed at slide ${savedIndex + 1}. Previous goes back.`);
           return;
         }
       }
@@ -565,8 +614,8 @@
     goTo(0, { scroll: false });
   }
 
-  // Following a link to another slide of this same deck (the outline's units) changes only the
-  // hash; goTo itself uses replaceState, which fires no hashchange, so this never loops.
+  // Following a link to another slide of this same deck (the outline's units, Up next) changes only
+  // the hash; goTo itself uses replaceState, which fires no hashchange, so this never loops.
   window.addEventListener('hashchange', () => {
     const target = slides.findIndex(slide => `#${slide.id}` === location.hash);
     if (target >= 0 && target !== index) goTo(target);
@@ -577,21 +626,12 @@
     .then(manifest => {
       const deck = (manifest.decks || {})[deckId];
       entries = (deck && deck.slides) || {};
-      if (els.start) {
-        const hasEntries = Object.keys(entries).length > 0;
-        els.start.hidden = !hasEntries;
-        els.start.disabled = !hasEntries;
-        els.start.title = hasEntries
-          ? 'Play this deck with narration; captions and transcript are available'
-          : 'No recordings are published with this copy';
-      }
       start();
     })
     .catch(() => {
       // No manifest: the deck is still fully readable and navigable.
       entries = {};
-      if (els.start) els.start.hidden = true;
       start();
-      els.message.textContent = 'Narration data is unavailable, so this deck is text-only.';
+      announce('Narration data is unavailable, so this deck is text-only.');
     });
 })();

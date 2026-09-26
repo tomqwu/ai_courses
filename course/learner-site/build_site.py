@@ -22,6 +22,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "06-production" / "slides"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "06-production" / "narration"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "06-production"))
 
 from deck_lint import split_slides                      # noqa: E402
 from captions import words
@@ -267,6 +268,7 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
                        .get(f"slide-{index}", {}).get("text", "").strip())
         slides.append({
             "id": f"slide-{index}",
+            "raw": body,
             "number": index,
             "title": title,
             "full_title": raw_title,
@@ -488,8 +490,15 @@ def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
     # The body is one block, centred in the frame: title, content, and — on the cover — the
     # standing metadata about the deck.
     cover_meta = f'<p class="lede cover-meta">{cover_note}</p>' if slide["cover"] else ""
-    # Speaker notes travel with the slide so the drawer can read them without a second request.
+    # Speaker notes, the approved narration (one sentence per line) and the repo pointers travel with
+    # the slide, so the player's panel can show them without a second request (#75).
     notes = html.escape(slide["notes"]) if slide["notes"] else ""
+    script = "".join(f"<li>{html.escape(s)}</li>" for s in sentences(slide.get("script_text", "")))
+    sources = "".join(
+        f'<li><a href="{html.escape(src["url"], quote=True)}" rel="noopener" data-kind="{src["kind"]}">'
+        f'<span class="source-kind">{src["kind"]}</span><code class="source-path">{html.escape(src["pointer"])}</code>'
+        f'<span class="source-open">Open at {src["commit"]}</span></a></li>'
+        for src in slide_sources(slide))
     return (f'<section class="{" ".join(classes)}" id="{slide["id"]}" data-number="{slide["number"]}"'
             f' data-chapter="{html.escape(slide["chapter"], quote=True)}"'
             f'{media}{hidden} aria-roledescription="slide" aria-labelledby="{slide["id"]}-title">'
@@ -501,80 +510,166 @@ def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
             f'{cover_meta}'
             f'</div>'
             f'<div class="slide-notes-source" hidden>{notes}</div>'
+            # Templates, not hidden lists: their rows stay out of the rendered document, so they
+            # can never count towards the slide's type scale or its contrast audit.
+            f'<template class="slide-script-source">{script}</template>'
+            f'<template class="slide-sources-source">{sources}</template>'
             f'</section>')
 
 
+SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[\"“(A-Z0-9])")
+POINTER_TOKEN = re.compile(r"\b(?:ListenToMe|SignUpFlow|ai_qe|course)/[^\s`'\"),;<>]+")
+DECLARED = ("commands", "output", "template", "illustrative")
+
+
+def sentences(text: str) -> list[str]:
+    """The approved narration, one sentence per line — the transcript panel's rows before (or
+    without) captions. The words are exactly the script's; only the line breaks are added."""
+    return [s.strip() for s in SENTENCE.split(" ".join(text.split())) if s.strip()]
+
+
+def _holds(target: Path, spec: str, lines: list[str], V) -> bool:
+    """Whether a cited file (within its cited range) contains the exhibit's lines."""
+    text = target.read_text(encoding="utf-8", errors="replace").splitlines()
+    ranges = V.parse_line_ranges(spec) if spec else None
+    cited = V._exhibit_norm("\n".join(l for lo, hi in ranges for l in text[lo - 1:hi]) if ranges
+                            else "\n".join(text))
+    return any(line in cited for line in lines)
+
+
+def slide_sources(slide: dict) -> list[dict]:
+    """Every repository file a slide cites, in order, as a link at the pinned commit (#75).
+
+    Citations are read the way the gate reads them (`verify.EXHIBIT_REF_RE` and
+    `verify.resolve_case_path`): a prefixed pointer as written, and a bare path such as
+    `specs/014-security-hardening/plan.md` when exactly one tracked file in the clones ends with it.
+    So the chips name the files the exhibit check proved the slide against, and nothing it could not
+    resolve. The kind says where the citation sits: the slide's exhibit (a fenced block with no
+    declared kind, which the gate holds to a true copy), elsewhere on the slide, or only in the notes.
+    """
+    import site_content as SC                                                  # noqa: PLC0415
+    import verify as V                                                         # noqa: PLC0415
+    raw = slide.get("raw", "")
+    # The exhibit's own lines: fenced blocks with no declared kind are true copies of a cited file.
+    exhibit_lines = [V._exhibit_norm(line)
+                     for info, body in re.findall(r"^```([^\n]*)\n(.*?)^```", raw, re.M | re.S)
+                     if not any(k in info for k in DECLARED)
+                     for line in body.splitlines()
+                     if len(V._exhibit_norm(line)) > 3 and not V.EXHIBIT_ELIDE_RE.fullmatch(line.strip())]
+    out, seen = [], set()
+    for where, text in (("slide", raw), ("notes", slide.get("notes", ""))):
+        refs = [(m.group(1), m.group(2)) for m in V.EXHIBIT_REF_RE.finditer(text)]
+        refs += [(t.rstrip(".:").partition(":")[0], t.rstrip(".:").partition(":")[2] or None)
+                 for t in POINTER_TOKEN.findall(text)]
+        for path, spec in refs:
+            target = V.resolve_case_path(path)
+            if target is None or not target.is_file():
+                continue
+            rel = target.relative_to(V.REPO).as_posix()
+            spec = (spec or "").strip().replace("\u2013", "-")
+            pointer = f"{rel}:{spec}" if spec else rel
+            if pointer in seen:
+                continue
+            seen.add(pointer)
+            first = re.match(r"\d+(?:-\d+)?", spec.replace(" ", ""))
+            url = SC.pointer_link(f"{rel}:{first.group(0)}" if first else rel)
+            if not url:
+                continue
+            if where == "notes":
+                kind = "In the notes"
+            elif exhibit_lines and _holds(target, spec, exhibit_lines, V):
+                kind = "Exhibit"
+            else:
+                kind = "On the slide"
+            out.append({"pointer": pointer, "url": url, "kind": kind,
+                        "commit": SC.PINNED.get(rel.split("/", 1)[0], "main")})
+    return out
+
+
+PLAY_ICON = ('<svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+             '<path d="M7 4l13 8-13 8z"/></svg>'
+             '<svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+             '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>')
+CHEVRON = ('<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+           '<path d="{d}"/></svg>')
+PRESENT_ICON = ('<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+                '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>')
+
+
+def voice_label(deck_manifest: dict, provenance: dict, recorded: int, preview: int,
+                text_only: bool) -> str:
+    """The voice disclosure, as a label in the control bar rather than a banner (#75). The wording
+    still comes from each recording's provenance (#57), so it follows the release voice too."""
+    disclosure = synthetic_disclosure(deck_manifest, provenance)
+    if text_only:
+        return ("Text-first copy — the narration is not published here; the transcript below is "
+                "the complete approved narration.")
+    if recorded == 0:
+        return "Not yet recorded — the transcript below is the approved narration."
+    if preview and preview < recorded:
+        return f"Mixed voices — {preview} of {recorded} recordings are the preview voice. {disclosure}"
+    if preview:
+        return f"Preview voice — a free local voice, not the release recording. {disclosure}"
+    return f"Release voice. {disclosure}".strip()
+
+
 def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
-         text_only: bool = False, units: list[dict] | None = None) -> str:
+         text_only: bool = False, units: list[dict] | None = None,
+         unit_meta: dict[str, str] | None = None) -> str:
+    """Watch: the lesson player (#75).
+
+    The slide is the hero. Directly under it one dark bar owns every control — the caption line,
+    previous / play / next, the time, a timeline segmented by the module's units, speed, captions
+    and present — and below the stage a panel holds the transcript (following playback, click to
+    seek) and the sources the slide cites, beside an Up next card. The honesty label lives in the
+    bar's meta line instead of a banner.
+    """
     deck_manifest = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     preview_count = sum(1 for e in deck_manifest.values()
                         if prov_by_audio.get(e.get("audio"), {}).get("basis") == "sentence-measured-preview")
-    mixed = 0 < preview_count < len(deck_manifest)
-    is_preview = preview_count > 0
     total = round(sum(float(e.get("duration", 0) or 0) for e in deck_manifest.values()), 1)
     recorded = len(deck_manifest)
+    label = voice_label(deck_manifest, provenance, recorded, preview_count, text_only)
     if text_only:
         # The recordings exist but are not part of the published copy. The player must see no
         # recordings at all, or it would offer a Play button that fetches files which are not there.
         deck_manifest = {}
 
     if text_only:
-        voice_chip = '<span class="voice-chip is-text">text-first</span>'
-    elif recorded == 0:
-        # A deck with no recordings yet must not claim a voice at all, least of all the release one.
-        voice_chip = '<span class="voice-chip is-text">not yet recorded</span>'
-    elif is_preview and mixed:
-        voice_chip = f'<span class="voice-chip is-preview">{preview_count} of {recorded} preview voice</span>'
-    elif is_preview:
-        voice_chip = '<span class="voice-chip is-preview">preview voice</span>'
-    else:
-        voice_chip = '<span class="voice-chip is-release">release voice</span>'
-
-    if text_only:
         cover_note = (f'<strong>{len(deck["slides"])} slides</strong>'
                       f'<small>Narration is not published with this copy; every slide carries a '
                       f'complete transcript.</small>')
     else:
-        # The synthetic-voice disclosure rides the cover note rather than a footer nobody reads:
-        # say how a thing was produced, where a listener meets it.
+        # The synthetic-voice disclosure rides the cover note too: say how a thing was produced,
+        # where a listener meets it.
         disclosure = synthetic_disclosure(deck_manifest, provenance)
         synthetic = f" {disclosure}" if disclosure else ""
         cover_note = (f'<strong>{len(deck["slides"])} slides · {recorded} narrated</strong>'
                       f'<small>{int(total // 60)}m {int(total % 60)}s of narration with captions and transcript.'
-                      f'{" Free preview voice — the release recording is pending." if is_preview else ""}'
+                      f'{" Free preview voice — the release recording is pending." if preview_count else ""}'
                       f'{synthetic}'
                       f'</small>')
     sections = "\n".join(
         slide_shell(deck, slide, deck_manifest.get(slide["id"]), site_base, cover_note)
         for slide in deck["slides"])
 
-    # Group the picker by chapter, the way the deck is actually structured.
-    groups: list[tuple[str, list[dict]]] = []
-    for slide in deck["slides"]:
-        if not groups or groups[-1][0] != slide["chapter"]:
-            groups.append((slide["chapter"], []))
-        groups[-1][1].append(slide)
-    options = "\n".join(
-        f'<optgroup label="{html.escape(chapter)}">' + "".join(
-            f'<option value="{s["id"]}">{s["number"]}. {html.escape(s["title"][:70])}</option>'
-            for s in slides) + '</optgroup>'
-        for chapter, slides in groups)
-
-    if text_only:
-        badge = ('<p class="voice-badge" role="note"><strong>Text-first copy.</strong> The narration '
-                 'and captions are not published here, so there is no audio to play and Play '
-                 'narration is off. Every transcript is the complete approved narration.</p>')
-    elif not is_preview:
-        badge = ""
-    elif mixed:
-        badge = (f'<p class="voice-badge" role="note">{preview_count} of {recorded} recordings on this '
-                 f'page are preview audio — a free local voice, not the finished release recording. '
-                 f'The rest were recorded separately; each slide\'s transcript names its voice.</p>')
-    else:
-        badge = ('<p class="voice-badge" role="note">Preview narration — a free local voice, not the '
-                 'finished release recording. The transcript is the approved narration and does not '
-                 'change when the release voice is recorded.</p>')
+    units = units or []
+    unit_meta = unit_meta or {}
+    # The timeline: one segment per unit, as wide as its share of the deck. Each segment is a button
+    # that opens its unit's first slide; the player fills the ones behind and at the current slide.
+    segments = "".join(
+        f'<button type="button" class="tl-seg" style="flex-grow:{u["slides"]}" data-first="{u["first"]}"'
+        f' data-last="{u["last"]}" aria-label="{html.escape(SH.unit_name(u), quote=True)}, '
+        f'slides {u["first"]}–{u["last"]}"><span class="tl-fill"></span></button>'
+        for u in units)
+    unit_data = [{"id": u["id"], "first": u["first"], "last": u["last"], "kind": u["kind"],
+                  "label": u["title"] if u["kind"] == "segment" else u["label"],
+                  "name": SH.unit_name(u), "href": SH.unit_href(deck["id"], u),
+                  "meta": unit_meta.get(u["id"], "")} for u in units]
+    number = int(deck["id"][1:])
+    next_module = f"m{number + 1:02d}"
+    next_href = f"module-{next_module}.html" if next_module in DECK_IDS else "index.html"
     return f"""<!doctype html>
 <html lang="en" class="js">
 <head>
@@ -585,48 +680,72 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
 </head>
 <body class="deck-page app-page" data-narration-manifest="{site_base}/narration.json"
       data-narration-deck="{deck['id']}" data-site-base="{site_base}"
-      data-voice="{'preview' if is_preview else 'release'}"
-      data-units="{html.escape(json.dumps([{'id': u['id'], 'first': u['first'], 'last': u['last'], 'label': u['title'] if u['kind'] == 'segment' else u['label']} for u in (units or [])]), quote=True)}"
+      data-voice="{'preview' if preview_count else 'release'}"
+      data-units="{html.escape(json.dumps(unit_data), quote=True)}"
+      data-next-module="{next_href}"
       data-deck-label="{html.escape(deck['label'], quote=True)}">
 <a class="skip-link" href="#slides">Skip to slides</a>
 <div class="app">
 {SH.sidebar(site_base, deck['id'])}
 <div class="app-main">
 {SH.topbar(site_base, SH.module_crumbs(site_base, deck, "Watch"), deck['id'], "watch")}
-<div class="deck-header" role="toolbar" aria-label="Deck tools">
-  <span class="deck-audience">{len(deck['slides'])} slides{' · text-first copy' if text_only else f" · {recorded} narrated · {int(total // 60)}m {int(total % 60)}s"}</span>
-  <div class="deck-tools">
-    <button type="button" class="tool-primary" data-narration-start hidden aria-pressed="false">▶ Play narration</button>
-    <button type="button" data-present aria-pressed="false" title="Full screen presentation">Present ↗</button>
-    <button type="button" data-reading aria-pressed="false" title="Show every slide as a document">Read all</button>
-    <button type="button" data-notes title="Presenter notes for this slide">Sources &amp; notes</button>
-    <a class="tool-link" href="{site_base}/transcript-{deck['id']}.html">Transcript</a>
-    {voice_chip}
-  </div>
-</div>
-{badge}
+<div class="player">
 <main id="slides" class="slides" tabindex="-1" aria-label="{html.escape(deck['label'])}">
 <h1 class="sr-only">{html.escape(deck['label'])}</h1>
 {sections}
 </main>
-<nav class="deck-navigation" aria-label="Slide navigation">
-  <div class="deck-nav-controls">
-    <button type="button" data-nav="prev" aria-label="Previous slide">←</button>
-    <button type="button" data-nav="next" aria-label="Next slide">→</button>
+<div class="player-bar" role="group" aria-label="Player">
+  <p class="player-caption" data-caption aria-live="off"></p>
+  <div class="player-controls">
+    <button type="button" class="pb-icon" data-nav="prev" aria-label="Previous slide">{CHEVRON.format(d="M15 18l-6-6 6-6")}</button>
+    <button type="button" class="pb-play" data-play aria-label="Play narration" disabled>{PLAY_ICON}</button>
+    <button type="button" class="pb-icon" data-nav="next" aria-label="Next slide">{CHEVRON.format(d="M9 6l6 6-6 6")}</button>
+    <span class="pb-time" data-time aria-hidden="true">1 / {len(deck['slides'])}</span>
+    <div class="player-timeline" role="group" aria-label="Module timeline: {len(deck['slides'])} slides in {len(units)} units">{segments}</div>
+    <label class="sr-only" for="pb-speed">Narration speed</label>
+    <select class="pb-speed" id="pb-speed" data-speed disabled>
+      <option value="0.75">0.75×</option><option value="1" selected>1×</option>
+      <option value="1.25">1.25×</option><option value="1.5">1.5×</option>
+    </select>
+    <button type="button" class="pb-cc" data-cc aria-pressed="true" aria-label="Captions" disabled>CC</button>
+    <button type="button" class="pb-icon" data-present aria-pressed="false" aria-label="Present full screen" title="Present (F)">{PRESENT_ICON}</button>
   </div>
-  <p class="slide-status" role="status" aria-live="polite" aria-atomic="true"></p>
-  <label class="slide-picker-label">Go to slide
-    <select data-slide-picker aria-label="Go to slide">{options}</select></label>
-</nav>
-<p class="deck-message" role="status"></p>
-<dialog class="deck-drawer" aria-labelledby="drawer-title">
-  <div class="drawer-heading">
-    <h2 id="drawer-title">Speaker notes</h2>
-    <button type="button" data-close-drawer aria-label="Close notes">Close ×</button>
+  <div class="player-meta">
+    <p class="slide-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <p class="player-status" data-status role="status" aria-live="polite"></p>
+    <button type="button" class="pb-link" data-retry hidden>Retry captions</button>
+    <label class="pb-auto"><input type="checkbox" data-auto checked> Auto-next</label>
+    <p class="voice-label" data-voice-label>{html.escape(label)}</p>
   </div>
-  <p class="drawer-meta" data-drawer-meta></p>
-  <div class="drawer-notes" data-drawer-notes></div>
-</dialog>
+</div>
+<div class="player-below">
+  <section class="player-panel" aria-label="This slide">
+    <div class="panel-tabs" role="tablist" aria-label="This slide">
+      <button type="button" role="tab" id="tab-transcript" aria-controls="panel-transcript" aria-selected="true" data-tab="transcript">Transcript</button>
+      <button type="button" role="tab" id="tab-sources" aria-controls="panel-sources" aria-selected="false" tabindex="-1" data-tab="sources">Sources on this slide</button>
+    </div>
+    <div class="panel-body" role="tabpanel" id="panel-transcript" aria-labelledby="tab-transcript" tabindex="0">
+      <ol class="transcript-lines" data-transcript-lines></ol>
+      <p class="panel-foot"><a href="{site_base}/transcript-{deck['id']}.html">The whole module's transcript →</a></p>
+    </div>
+    <div class="panel-body" role="tabpanel" id="panel-sources" aria-labelledby="tab-sources" tabindex="0" hidden>
+      <ul class="source-list" data-source-list></ul>
+      <p class="panel-empty" data-sources-empty hidden>This slide cites no repository file.</p>
+      <h3 class="notes-title">Speaker notes</h3>
+      <div class="drawer-notes" data-drawer-notes></div>
+    </div>
+  </section>
+  <aside class="up-next" aria-labelledby="up-next-title">
+    <h2 id="up-next-title">Up next</h2>
+    <a class="up-next-card" href="#" data-up-next>
+      <span class="up-kind" data-up-kind></span>
+      <span class="up-title" data-up-title></span>
+      <span class="up-meta" data-up-meta></span>
+    </a>
+    <p class="player-keys">Keys: <kbd>←</kbd> <kbd>→</kbd> slide · <kbd>Space</kbd> play · <kbd>T</kbd> transcript · <kbd>F</kbd> present</p>
+  </aside>
+</div>
+</div>
 </div>
 </div>
 <div class="outline-backdrop" data-outline-backdrop hidden></div>
@@ -756,10 +875,10 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
                  "      <li>Captions on every slide</li>\n"
                  f"      <li>{status}</li>")
         section_note = "Each deck plays one slide at a time. Press play when you are ready."
-        first_howto = ('      <li>Narration never autoplays — press <strong>Play narration</strong> on '
-                       'any deck.</li>\n'
-                       '      <li>Captions are on by default. The full transcript is behind '
-                       '<strong>Transcript</strong>, and the\n'
+        first_howto = ('      <li>Narration never autoplays — press <strong>Play</strong> in the '
+                       'player bar under any slide.</li>\n'
+                       '      <li>Captions are on by default. The transcript sits under the slide and '
+                       'follows the narration, and the\n'
                        f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
                        'covers all nine modules in one file.</li>')
         footnote = ("Speaker notes are the presenter's version; the narration is the learner's. "
@@ -851,10 +970,11 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     <h2>How to use this site</h2>
     <ul>
 {first_howto}
-      <li><strong>Present ↗</strong> goes full screen for a room; <strong>Read all</strong> turns the deck
-          into one scrolling document; <strong>Sources &amp; notes</strong> opens the presenter notes.</li>
-      <li>Keyboard: <kbd>→</kbd>/<kbd>Space</kbd> next, <kbd>←</kbd> previous, <kbd>Home</kbd>/<kbd>End</kbd>
-          first/last, <kbd>Esc</kbd> close.</li>
+      <li><strong>Present</strong> goes full screen for a room; <strong>Read</strong> is the lesson as
+          one document; <strong>Sources on this slide</strong> opens every file a slide cites, with the
+          presenter notes.</li>
+      <li>Keyboard: <kbd>←</kbd> <kbd>→</kbd> slide, <kbd>Space</kbd> play, <kbd>T</kbd> transcript,
+          <kbd>F</kbd> present, <kbd>Home</kbd>/<kbd>End</kbd> first/last, <kbd>Esc</kbd> close.</li>
       <li>Printing a deck prints one 16:9 slide per page.</li>
     </ul>
   </section>
@@ -938,9 +1058,15 @@ def main(argv=None) -> int:
     # the paths once, before the first page is written.
     SH.configure(decks, units_by_deck, SP.TRACKS)
     for deck in decks:
+        folder = COURSE_DIR / deck["source"].rsplit("/", 1)[0]
+        try:
+            questions = len(SC.parse_quiz(SC.read(folder / "quiz.md"), deck["id"])["questions"])
+        except SC.QuizError as error:
+            raise SystemExit(f"knowledge check: {error}")
+        meta = {"lab": f"{SP.lab_time(deck['id'])} hands-on", "quiz": f"{questions} questions"}
         (target / f"{deck['id']}.html").write_text(
             page(deck, manifest, provenance, args.site_base, text_only=args.no_narration,
-                 units=units_by_deck[deck["id"]]),
+                 units=units_by_deck[deck["id"]], unit_meta=meta),
             encoding="utf-8")
         (target / f"transcript-{deck['id']}.html").write_text(
             transcript_page(deck, manifest, provenance, args.site_base, text_only=args.no_narration),

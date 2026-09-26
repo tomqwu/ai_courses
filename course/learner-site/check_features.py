@@ -135,7 +135,30 @@ def run(page, browser, base: str) -> list[str]:
          "outline: the lab page does not mark its unit aria-current")
     need(page.locator('.mode-switch a[aria-current="page"]').inner_text().strip() == "Lab",
          "top bar: the lab page's mode switch does not show Lab as current")
+    # The player works without a mouse (#75): arrows move slides, T opens the transcript, the tabs
+    # answer arrow keys, F presents and F leaves; the Up next card names what follows.
+    page.goto(f"{base}/m03.html#slide-1")
+    page.wait_for_timeout(300)
+    page.locator("#slides").focus()
+    page.keyboard.press("ArrowRight")
+    need(page.evaluate("document.querySelector('.slide[aria-current]').id") == "slide-2",
+         "player: ArrowRight did not move to slide 2")
+    page.keyboard.press("t")
+    need(page.evaluate("document.activeElement.id") == "tab-transcript", "player: T did not focus the transcript tab")
+    page.keyboard.press("ArrowRight")
+    need(page.evaluate("document.activeElement.id") == "tab-sources"
+         and not page.locator("#panel-sources").is_hidden(),
+         "player: the panel tabs do not answer the arrow keys")
+    page.locator("#slides").focus()
+    page.keyboard.press("f")
+    presenting = page.evaluate("document.body.classList.contains('presentation-mode')")
+    page.keyboard.press("f")
+    need(presenting and not page.evaluate("document.body.classList.contains('presentation-mode')"),
+         "player: F did not enter and leave presentation mode")
+    need(page.locator("[data-up-title]").inner_text().strip() != "", "player: the Up next card is empty")
+
     # Keyboard order: skip link, then the outline (with search), then the top bar, then the content.
+    page.goto(f"{base}/lab-m03.html")
     groups = page.evaluate("""() => {
       const sel = 'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
       return [...document.querySelectorAll(sel)].filter(e => {
