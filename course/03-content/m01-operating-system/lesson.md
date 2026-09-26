@@ -7,6 +7,15 @@ Module 0 gave you three shipped products and one loop. This module gives you the
 
 Why does this come before any product type? Because AI agents don't replace process; they raise the stakes for it. When code is generated at agent speed, the bottleneck moves to specifying what you want, verifying what you got, and being honest about what was actually validated (`00-research/02-signupflow-deep-read.md`, §1). The archetypes differ; the operating system is the same — and it's the part most builders skip, then pay for.
 
+**Why governance, in numbers — at the level each number supports.** The case for rules, specs and evidence records is not instructor taste. The course's own evidence dataset carries the independent measurement (`course/03-content/m06-expertise-product/evidence-dataset.md`, rows 1–2):
+
+| Row | Finding | Claim level | What it does and does not show |
+|---|---|---|---|
+| 1 | METR 2025: experienced maintainers **19% slower** with AI on their own repositories (CI +2% to +39%), while *believing* they were 20% faster | Task-level, measured, independent randomized trial, 16 developers, 246 issues | Felt speed and measured speed can point in opposite directions. It does not show AI slows everyone down |
+| 2 | METR's Feb-2026 follow-up: −18% and −4%, **both confidence intervals cross zero**; 57 developers, 800+ tasks | Task-level, inconclusive | The effect is not settled either way — which is itself the argument for measuring your own |
+
+DORA's 2025 report adds a correlation from a practitioner survey: AI adoption goes with higher delivery throughput *and* higher delivery instability, with AI amplifying whatever practices a team already has (`course/00-research/08-domain-currency-2026.md`, Domain 2). Read it as direction, not a measured effect. Together they say one thing: when an agent produces code at machine speed, the impression that it went well is the least reliable signal you have. Everything in this module replaces that impression with something a stranger can check.
+
 The case study throughout is SignUpFlow — the spec-driven SaaS from Module 0 — with ListenToMe and AI × QE supplying the variants and the honesty exemplars. In the lab (`m01-operating-system/lab.md`) you build your own starter repo — `constitution.md`, `AGENTS.md`, spec templates, research log — and run one complete spec → plan → TDD mini-loop on a small CLI feature.
 
 **By the end of this module you can:**
