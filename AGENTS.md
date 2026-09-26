@@ -87,6 +87,7 @@ a piece of work.
 8. After merging, close the issues the PR finished, each with the evidence (commands and output).
 9. **The site deploys itself.** The push to `main` re-runs the gate, and its `deploy` job builds the
    learner site from that commit and publishes it to <https://tomqwu.github.io/ai_courses/> (Pages
-   serves the `gh-pages` branch, which only ever holds build output — never edit it by hand). Check
+   serves the `gh-pages` branch, which only ever holds build output — never edit it by hand; the
+   `deploy` job fails if Pages is set to serve anything else, #88). Check
    the `deploy` job went green on `main`; if it failed, fixing it is part of the same change. Publish
    by hand (`make -C course publish-audio`) only to ship the recordings.
