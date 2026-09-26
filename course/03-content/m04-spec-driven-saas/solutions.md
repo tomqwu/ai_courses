@@ -59,7 +59,8 @@ exist and all four share one `recurrence_id`.
 ## Step 2 — Resolve unknowns
 
 **Reference answer.** Zero `[NEEDS CLARIFICATION]` markers; each unknown either asked (≤3 questions) or
-defaulted in an Assumptions section. **[SIG]** 014 used Assumptions for 90-day retention and 1-hour tokens.
+settled as an explicit default. **[SIG]** 014 wrote 1-hour tokens and ±30 s TOTP as FRs, not Assumptions,
+though its own checklist note says otherwise (`requirements.md:27`).
 
 ## Step 3 — `research.md` (≥3 decisions, each with a rejected alternative)
 

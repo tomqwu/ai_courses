@@ -61,7 +61,7 @@ LINE_RANGE_RE = re.compile(r"^(\d+)(?:[-\u2013](\d+))?$")
 # tracked file in the three clones; an ambiguous name (`README.md`) or a course file is left alone.
 _LINES = r"\d+(?:\s*[-\u2013]\s*\d+)?(?:(?:,\s*|\s+and\s+)\d+(?:\s*[-\u2013]\s*\d+)?)*"
 BARE_POINTER_RE = re.compile(
-    r"`((?!(?:ListenToMe|SignUpFlow|ai_qe|course)/)[A-Za-z0-9_][A-Za-z0-9_./-]*\.[A-Za-z]{1,6}):(" + _LINES + r")`")
+    r"`((?!(?:ListenToMe|SignUpFlow|ai_qe)/)[A-Za-z0-9_][A-Za-z0-9_./-]*\.[A-Za-z]{1,6}):(" + _LINES + r")`")
 PROSE_POINTER_RE = re.compile(
     r"`((?:(?:ListenToMe|SignUpFlow|ai_qe)/)?[A-Za-z0-9_][A-Za-z0-9_./-]*\.[A-Za-z]{1,6})`,?\s*lines?\s+(" + _LINES + r")")
 # A range can stay in bounds and still point at the wrong code after the source moves (#68). An
@@ -85,12 +85,34 @@ def _case_index() -> dict[str, list[str]]:
     return _CASE_INDEX
 
 
+_COURSE_INDEX: dict[str, list[str]] | None = None
+
+
+def _course_index() -> dict[str, list[str]]:
+    """basename -> tracked course/ paths, for course-internal pointers (`08-domain-currency-2026.md:74`)."""
+    global _COURSE_INDEX
+    if _COURSE_INDEX is None:
+        _COURSE_INDEX = {}
+        out = subprocess.run(["git", "-C", str(REPO), "ls-files", "course"], capture_output=True, text=True).stdout
+        for rel in out.split():
+            _COURSE_INDEX.setdefault(Path(rel).name, []).append(rel)
+    return _COURSE_INDEX
+
+
 def resolve_case_path(path: str) -> Path | None:
-    """A repo-prefixed path as-is; a bare one when exactly one tracked file ends with it."""
-    if path.split("/")[0] in CASE_REPOS:
+    """A prefixed path as-is (a case repo or course/); a bare one when exactly one tracked file,
+    first in the clones and then in course/, ends with it. A line range into the course's own
+    research moves when that file is edited, which is how M6's citations of the currency review
+    drifted by seven lines unseen; these are now range-checked and can be anchored too."""
+    if path.split("/")[0] in CASE_REPOS or path.startswith("course/"):
         return REPO / path
-    hits = [c for c in _case_index().get(Path(path).name, []) if c == path or c.endswith("/" + path)]
-    return REPO / hits[0] if len(hits) == 1 else None
+    for index in (_case_index(), _course_index()):
+        hits = [c for c in index.get(Path(path).name, []) if c == path or c.endswith("/" + path)]
+        if len(hits) == 1:
+            return REPO / hits[0]
+        if len(hits) > 1:
+            return None
+    return None
 
 
 def _prose_ranges(spec: str) -> list[tuple[int, int]]:

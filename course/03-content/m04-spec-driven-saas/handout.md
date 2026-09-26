@@ -6,8 +6,8 @@ artifact must survive a stranger, and the checklist gate is the last cheap place
 ## The pipeline
 
 ```
-specify ─ clarify ─ research ─ data-model ─ plan ─ CHECKLIST ─ contracts ─ tasks ─ implement ⇄ converge
-  WHAT     ≤3 Qs      Phase 0     Phase 1     HOW    pass/fail    seams     Phase 2   Ralph loop  until Converged
+specify ─ clarify ─ CHECKLIST ─ plan (research · data-model · contracts) ─ tasks ─ implement ⇄ converge
+  WHAT     ≤3 Qs     before plan  HOW + Constitution Check                   Phase 2   until Converged
 ```
 
 Spec-kit 1.0 names each step `/speckit-<step>`; SignUpFlow's pre-1.0 folder spells them `/speckit.<step>`

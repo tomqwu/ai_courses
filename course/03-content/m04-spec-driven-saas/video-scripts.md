@@ -16,7 +16,7 @@ is not a mistake.
 | Time | On screen | Narration |
 |---|---|---|
 | 0:15 | Terminal: `ls specs/014-security-hardening/` | Open the folder. Six items: `checklists`, `contracts`, `plan.md`, `quickstart.md`, `research.md`, `spec.md`. No `tasks.md`. That absence is real, and it is instructive. |
-| 0:45 | `docs/SPEC_KIT_SETUP.md` **[SIG]** | The commands chain: specify, clarify, plan, checklist, tasks, implement. Each consumes the last one's output. Nothing rides in anyone's head. |
+| 0:45 | `docs/SPEC_KIT_SETUP.md` **[SIG]** | The commands chain: specify, clarify, the checklist gate before planning, plan, tasks, implement. Each consumes the last one's output. Nothing rides in anyone's head. |
 | 1:20 | `specs/014-security-hardening/spec.md`, US1 **[SIG]** | Read US1 aloud: fail authentication five times within five minutes, blocked for fifteen. Six P1 stories, forty-four FRs, twelve success criteria — and not one technology named. |
 | 2:00 | `research.md`, Decision 1 **[SIG]** | Eight decisions, identical anatomy: decision, options, rationale, implementation. Decision one picks Redis and says in-memory is lost on restart and not shared across instances. |
 | 2:35 | `plan.md` Constitution Check **[SIG]** | The gate line: must pass before Phase 0 research, re-check after Phase 1. Seven principles, seven verdicts, zero violations. |
@@ -53,7 +53,7 @@ no questions. If they cannot finish, the folder failed — not they.
 | 1:30 | `spec-template.md`, entities line **[SIG]** | Entities are described "without implementation." That separation also lets research overturn a lean without touching a requirement: 014's spec leans in-memory, research picks Redis, and the requirement never moves. |
 | 2:05 | `spec-template.md`, independently testable **[SIG]** | Each story must be independently testable — implement one and you still have a viable MVP. Every 014 story carries its own Independent Test line. |
 | 2:40 | `spec.md` US1 scenario **[SIG]** | Numbers, not vibes. Five, five, fifteen becomes an FR, a contract row, and a test assertion. "Then the system is secure" is not a scenario; it is a wish. |
-| 3:10 | `spec-template.md`, NEEDS CLARIFICATION **[SIG]** | Drafts may mark unknowns, but the gate requires none remaining. Ask early: 014's own next steps cap clarification at three questions. Or record a default in Assumptions. |
+| 3:10 | `spec-template.md`, NEEDS CLARIFICATION **[SIG]** | Drafts may mark unknowns, but the gate requires none remaining. Ask early: 014's own next steps cap clarification at three questions. Or record a default explicitly: 014 made its token expiry a requirement. |
 | 3:40 | `checklists/requirements.md`, three groups **[SIG]** | Three pass/fail groups: content quality, completeness, readiness. This is the cheapest place to stop a spec that would waste a whole autonomous loop. |
 | 4:10 | `tasks-template.md` and T017 **[SIG]** | Tasks cite exact paths because `AGENTS.md` forbids inventing them: do not invent paths, function names, or identifiers — grep before referencing. A path turns the agent's first action into a confirming grep. |
 | 4:40 | `contracts/rate-limiting.md` **[SIG]** | Contracts exist because sessions do not share memory. Pin shapes, error keys, and a test sketch at the seam. |
