@@ -702,6 +702,41 @@ PRESENT_ICON = ('<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusa
                 '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>')
 
 
+def spoken_times(deck: dict, manifest: dict) -> dict[str, list[float]]:
+    """Each slide's narration sentences, with the second each starts at, read from its captions.
+
+    The same word-position timing the player uses: every caption word gets a time by its place in
+    its cue, and a sentence starts at its first word. Captions and script match word for word (the
+    gate proves it), so the counts line up. Times are taken only from the recording the manifest
+    describes — its audio must hash to the manifest's sha256 — so a build never publishes times read
+    from some other take that happens to be on disk.
+    """
+    import hashlib                                                             # noqa: PLC0415
+    from captions import parse_vtt                                             # noqa: PLC0415
+    entries = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
+    out: dict[str, list[float]] = {}
+    for slide in deck["slides"]:
+        entry = entries.get(slide["id"]) or {}
+        path = SITE_ROOT / entry["captions"].lstrip("/") if entry.get("captions") else None
+        audio = SITE_ROOT / entry["audio"].lstrip("/") if entry.get("audio") else None
+        if not path or not path.is_file() or not audio or not audio.is_file():
+            continue
+        if hashlib.sha256(audio.read_bytes()).hexdigest() != entry.get("sha256"):
+            continue
+        try:
+            cues = parse_vtt(path.read_text(encoding="utf-8"))
+        except ValueError:
+            continue
+        at = [c.start + (c.end - c.start) * k / len(c.text.split())
+              for c in cues for k in range(len(c.text.split()))]
+        starts, w = [], 0
+        for sentence in sentences(slide["script_text"]):
+            starts.append(round(at[min(w, len(at) - 1)], 1) if at else 0.0)
+            w += len(sentence.split())
+        out[slide["id"]] = starts
+    return out
+
+
 def slide_place(deck: dict, slide: dict, units: list[dict]) -> dict:
     """Where a slide sits, for its meta line (#76). A segment's first slide opens the section: it
     carries the big section number and says "Section k of 3"; the rest of the segment names it."""
@@ -1251,7 +1286,10 @@ def main(argv=None) -> int:
         encoding="utf-8")
     (target / "evidence.html").write_text(SPG.evidence_page(labs_for_log, args.site_base),
                                           encoding="utf-8")
-    (target / "search.json").write_text(SPG.search_index(records, decks, units_by_deck), encoding="utf-8")
+    # When each narration sentence is spoken, from the published captions: a search hit on a spoken
+    # sentence opens the player there (#80). A text-first copy publishes no captions, so no times.
+    times = {} if args.no_narration else {deck["id"]: spoken_times(deck, manifest) for deck in decks}
+    (target / "search.json").write_text(SPG.search_index(records, decks, units_by_deck, times), encoding="utf-8")
     decks_by_id = {deck["id"]: deck for deck in decks}
     built_tracks = [t for t in SP.TRACKS if t["status"] == "built"]
     built_modules = {d for t in built_tracks for d in list(t["core"]) + list(t.get("slice") or {})}

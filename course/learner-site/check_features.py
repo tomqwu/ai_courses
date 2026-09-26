@@ -345,23 +345,74 @@ def run(page, browser, base: str) -> list[str]:
     page.goto(f"{base}/lab-m05.html#{target}")
     need(page.locator(".lab-step:visible").get_attribute("id") == target, "lab-m05: a deep link to a step did not open it")
 
-    # Search: "/" opens it; a glossary term comes back with its definition and a slide.
+    # Search is a command palette (#80): "/" and Ctrl/⌘+K open it from any page; results come back
+    # grouped by kind with the matched words marked; ↓ ↵ open a result; every glossary term is found
+    # by its name; a slide found by its narration opens the player where the sentence is spoken.
     page.goto(f"{base}/index.html")
     page.keyboard.press("/")
     page.wait_for_timeout(200)
     need(page.locator("dialog.search-dialog").evaluate("d => d.open"), "search: '/' did not open it")
     page.keyboard.type("fail-closed")
     page.wait_for_timeout(600)
-    kinds = [k.upper() for k in page.eval_on_selector_all(".search-results a", "as => as.map(a => a.innerText)")]
-    need(any(k.startswith(("TERM", "GLOSSARY")) for k in kinds) and any(k.startswith("SLIDE") for k in kinds),
-         f"search: 'fail-closed' did not return a term and a slide ({kinds[:3]})")
+    need(page.locator('[data-group="glossary"] .search-hit').count() >= 1
+         and page.locator('[data-group="slides"] .search-hit').count() >= 1
+         and page.locator(".search-results mark").count() >= 2,
+         "search: 'fail-closed' did not return a glossary term and a slide, with the match marked")
     # A multi-word term opens on its own entry, not on the slides that mention its words.
     page.fill("#aps-search-input", "contract test")
     page.wait_for_timeout(400)
-    first = page.eval_on_selector_all(".search-results a", "as => as.slice(0, 1).map(a => a.getAttribute('href'))")
+    first = page.eval_on_selector_all(".search-hit", "as => as.slice(0, 1).map(a => a.getAttribute('href'))")
     need(first and first[0].endswith("glossary-m03.html#contract-test"),
          f"search: 'contract test' does not open on its glossary entry (first hit {first})")
-    page.keyboard.press("Escape")
+    page.keyboard.press("ArrowDown")
+    page.keyboard.press("Enter")
+    try:
+        page.wait_for_url("**/glossary-m03.html#contract-test", timeout=5000)
+    except Exception:                                   # noqa: BLE001 - reported just below
+        pass
+    need(page.url.endswith("glossary-m03.html#contract-test"), f"search: ↓ ↵ did not open the first hit ({page.url})")
+    for where in ("lab-m03.html", "m02.html"):
+        page.goto(f"{base}/{where}")
+        page.wait_for_timeout(300)
+        page.keyboard.press("Control+k")
+        page.wait_for_timeout(200)
+        need(page.locator("dialog.search-dialog").evaluate("d => d.open"), f"search: Ctrl+K did not open it on {where}")
+        page.keyboard.press("Escape")
+    missed = page.evaluate("""async () => {
+      const idx = await fetch('search.json').then(r => r.json());
+      const miss = [];
+      for (const t of idx.filter(x => x.k === 'term')) {
+        const r = await window.APSSearch.query(t.t);
+        const g = r.groups.find(g => g.key === 'glossary');
+        if (!g || !g.items.some(h => h.it.h === t.h)) miss.push(t.t);
+      }
+      return miss;
+    }""")
+    need(not missed, f"search: {len(missed)} glossary terms are not found by their own name ({missed[:5]})")
+    spoken = page.evaluate("""async () => {
+      const idx = await fetch('search.json').then(r => r.json());
+      const s = idx.find(x => x.k === 'slide' && x.ts && x.s.length > 3);
+      if (!s) return null;
+      const r = await window.APSSearch.query(s.s[3].split(' ').slice(0, 6).join(' '));
+      return { want: s.h, hits: [].concat(...r.groups.map(g => g.items.map(h => h.it.h))) };
+    }""")
+    if spoken:
+        page.keyboard.press("Control+k")
+        page.wait_for_timeout(200)
+        page.keyboard.type(page.evaluate("""async () => {
+          const idx = await fetch('search.json').then(r => r.json());
+          return idx.find(x => x.k === 'slide' && x.ts && x.s.length > 3).s[3].split(' ').slice(0, 6).join(' ');
+        }"""))
+        page.wait_for_timeout(500)
+        hrefs = page.eval_on_selector_all(".search-hit[data-kind=slide]", "as => as.map(a => a.getAttribute('href'))")
+        timed = next((h for h in hrefs if "?t=" in h and h.endswith(spoken["want"].split("#")[1])), None)
+        need(timed, f"search: a slide found by a spoken sentence does not open at its time ({hrefs[:3]})")
+        if timed:
+            page.keyboard.press("Escape")
+            page.goto(f"{base}/{timed.lstrip('./')}")
+            page.wait_for_timeout(700)
+            need("Starts at" in page.locator("[data-status]").inner_text(),
+                 "player: opened from a spoken-sentence hit, it does not say where it starts")
 
     # Reading pages: a table of contents, and pointers linked at a pinned commit.
     for kind in ("lesson", "handout", "glossary"):
