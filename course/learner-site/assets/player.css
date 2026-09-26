@@ -157,7 +157,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 { color: var(--ink-strong); margin: 0; font-family: var(--font-display); }
+h1, h2, h3 { color: var(--ink-strong); margin: 0; font-family: var(--font-display); overflow-wrap: break-word; }
 .slides h1, .slides h2, .slides h3 { font-family: var(--font-slide-display); }
 a { color: var(--accent); text-underline-offset: .2em; }
 button, select, input { font: inherit; }
@@ -355,6 +355,8 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .page-head h1 { font-size: clamp(1.9rem, 3vw, 2.4rem); line-height: 1.1; letter-spacing: -.025em; max-width: 32ch; }
 .page-lede { max-width: 70ch; margin: 12px 0 0; color: var(--ink-soft); font-size: var(--d-5); line-height: 1.55; }
 
+.app-bar-title, .mode-icon { display: none; }
+
 @media (max-width: 700px) {
   .app-bar { gap: 8px; padding: 0 12px; }
   .app-bar-menu span, .app-crumbs { display: none; }
@@ -362,6 +364,29 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   .mode-switch a { flex: 1; padding: 0 6px; }
   .app-content { width: calc(100% - 32px); padding-top: 24px; }
 }
+/* The phone (#81): a 56px top bar with the outline, the page's title and search; the four modes
+   become a bottom tab bar; every control is a 44px touch target; nothing scrolls sideways. */
+@media (max-width: 480px) {
+  :root { --bar-h: 56px; }
+  .app-bar { gap: 4px; padding: 0 4px; }
+  .app-bar .app-bar-menu { width: 44px; padding: 0; justify-content: center; border-color: transparent; }
+  .app-bar-title { display: flex; flex-direction: column; flex: 1; min-width: 0; margin: 0; line-height: 1.25; }
+  .app-bar-title span { color: var(--ink-soft); font-size: var(--d-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .app-bar-title strong { color: var(--ink-strong); font-size: var(--d-4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .app-bar .mode-switch {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    height: 64px; padding: 0 0 env(safe-area-inset-bottom); border-radius: 0; background: var(--surface); border-top: 1px solid var(--line);
+  }
+  .app-bar .mode-switch a { flex-direction: column; gap: 3px; min-height: 64px; padding: 0; border-radius: 0; font-size: var(--d-1); }
+  .app-bar .mode-switch a[aria-current="page"] { background: transparent; box-shadow: none; color: var(--accent-deep); }
+  .mode-icon { display: block; width: 20px; height: 20px; }
+  body:has(.app-bar .mode-switch) { padding-bottom: 64px; }
+  body :is(button, select, .card-action, .btn-primary, .btn-outline, .btn-start, .view-tabs a, .lab-steps a,
+  .outline-modules a, .outline-home, .outline-foot a, .outline-search, .panel-tabs [role="tab"]) { min-height: 44px; }
+  .player-bar .pb-speed, .player-bar .pb-cc { height: 44px; }
+  .evidence-actions button, .progress-tools button { padding: 0 14px; }
+}
+
 @media print {
   .app-outline, .app-bar, .outline-backdrop { display: none !important; }
   .app { display: block; }
@@ -731,7 +756,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   border-radius: .75em; overflow: hidden; background: var(--code-bg);
 }
 .exhibit-head {
-  display: flex; align-items: center; gap: .7em; padding: .6em 1.1em; background: var(--code-head);
+  display: flex; flex-wrap: wrap; align-items: center; gap: .2em .7em; padding: .6em 1.1em; background: var(--code-head);
   font-family: var(--font-mono); font-size: var(--t-chrome); color: var(--dark-ink-soft);
 }
 .exhibit-icon { width: 1.1em; height: 1.1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
@@ -743,7 +768,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   color: var(--dark-ink); white-space: pre-wrap;
 }
 .exhibit pre code { display: block; background: none; border: 0; padding: 0; color: inherit; font-size: 1em; }
-.exhibit .line { display: block; position: relative; padding: 0 1.2em 0 calc(1.2em + 2ch); text-indent: -2ch; }
+.exhibit .line { display: block; position: relative; padding: 0 1.2em 0 calc(1.2em + 2ch); text-indent: -2ch; overflow-wrap: anywhere; }
 .exhibit.is-numbered .line { padding-left: calc(1.2em + 6ch); }
 .exhibit.is-numbered .line::before {
   content: attr(data-n); position: absolute; left: 1.2em; width: 3.5ch;

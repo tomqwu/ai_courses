@@ -129,7 +129,8 @@ def run(page, browser, base: str) -> list[str]:
         need('class="module-tabs"' not in text, f"{built.name}: still shows the module tab row")
         if 'class="mode-switch"' in text:
             modes = re.search(r'<nav class="mode-switch"[^>]*>(.*?)</nav>', text, re.S).group(1)
-            need(re.findall(r">([^<]+)</a>", modes) == ["Watch", "Read", "Lab", "Check"],
+            labels = [re.sub(r"<[^>]+>", "", a).strip() for a in re.findall(r"<a [^>]*>(.*?)</a>", modes, re.S)]
+            need(labels == ["Watch", "Read", "Lab", "Check"],
                  f"{built.name}: the mode switch is not exactly Watch · Read · Lab · Check")
     # Every old per-module URL still resolves, as a view of its mode.
     for deck in sorted(p.stem.split("-")[1] for p in SITE.glob("quiz-m*.html")):
@@ -140,10 +141,10 @@ def run(page, browser, base: str) -> list[str]:
             if not path.exists():
                 problems.append(f"{path.name}: an old URL no longer resolves")
                 continue
-            current = re.search(r'<nav class="mode-switch".*?<a [^>]*aria-current="page"[^>]*>([^<]+)</a>',
+            current = re.search(r'<nav class="mode-switch".*?<a [^>]*aria-current="page"[^>]*>(.*?)</a>',
                                 path.read_text(encoding="utf-8"), re.S)
-            need((current.group(1) if current else None) == mode,
-                 f"{path.name}: shows mode {current.group(1) if current else None!r}, expected {mode!r}")
+            shown = re.sub(r"<[^>]+>", "", current.group(1)).strip() if current else None
+            need(shown == mode, f"{path.name}: shows mode {shown!r}, expected {mode!r}")
     # The outline reflects what was stored, after a reload: paging M2 above recorded its first unit.
     page.goto(f"{base}/module-m02.html")
     page.reload()
@@ -174,7 +175,7 @@ def run(page, browser, base: str) -> list[str]:
     page.goto(f"{base}/lab-m03.html")
     need(page.locator('#app-outline [data-unit="m03:lab"][aria-current="page"]').count() == 1,
          "outline: the lab page does not mark its unit aria-current")
-    need(page.locator('.mode-switch a[aria-current="page"]').inner_text().strip() == "Lab",
+    need(page.locator('.mode-switch a[aria-current="page"]').text_content().strip() == "Lab",
          "top bar: the lab page's mode switch does not show Lab as current")
     # The player works without a mouse (#75): arrows move slides, T opens the transcript, the tabs
     # answer arrow keys, F presents and F leaves; the Up next card names what follows.
@@ -454,6 +455,42 @@ def run(page, browser, base: str) -> list[str]:
     phone.goto(f"{base}/index.html")
     overflow = phone.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
     need(overflow <= 0, f"index at 390px scrolls sideways by {overflow}px")
+    # The phone (#81), 390x844: the player and a lab work with no sideways scroll, the modes are a
+    # bottom tab bar, and every visible control is a 44px touch target.
+    handset = browser.new_context(viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True).new_page()
+    small_js = """() => [...document.querySelectorAll('button, select, .mode-switch a, .card-action, .lab-steps a')]
+      .filter(e => { const r = e.getBoundingClientRect(), s = getComputedStyle(e);
+        return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && r.height < 43.5; })
+      .map(e => (e.getAttribute('aria-label') || e.textContent || e.tagName).trim().slice(0, 30))"""
+    for path in ("m02.html#slide-9", "lab-m02.html", "module-m02.html", "quiz-m02.html", "lesson-m02.html", "index.html"):
+        handset.goto(f"{base}/{path}")
+        handset.wait_for_timeout(400)
+        overflow = handset.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+        need(overflow <= 0, f"{path} at 390px scrolls sideways by {overflow}px")
+        small = handset.evaluate(small_js)
+        need(not small, f"{path} at 390px: controls under 44px tall: {small[:4]}")
+        if path != "index.html":
+            bar = handset.locator(".app-bar .mode-switch")
+            box = bar.bounding_box()
+            need(box and abs(box["y"] + box["height"] - 844) <= 1 and bar.locator("a").count() == 4,
+                 f"{path} at 390px: the four modes are not a bottom tab bar")
+    # No page scrolls sideways on a phone — every built page, not a sample: a single unbroken word in
+    # one lesson heading was enough to push a page 175px wide.
+    wide = []
+    for built in sorted(p for p in SITE.glob("*.html") if not p.name.startswith("_")):
+        handset.goto(f"{base}/{built.name}", wait_until="domcontentloaded")
+        over = handset.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+        if over > 0:
+            wide.append(f"{built.name} (+{over}px)")
+    need(not wide, f"at 390px these pages scroll sideways: {wide[:6]}")
+    handset.goto(f"{base}/m02.html#slide-9")
+    handset.wait_for_timeout(400)
+    slide = handset.locator(".slide[aria-current]").bounding_box()
+    handset.locator("[data-play]").scroll_into_view_if_needed()
+    play = handset.locator("[data-play]").bounding_box()
+    need(slide and slide["width"] >= 360 and play and play["width"] >= 44 and play["height"] >= 44,
+         "player at 390px: the slide is not full width, or Play is not a 44px target")
+    handset.close()
     print(f"  played {played} knowledge-check questions, {len(list(SITE.glob('lab-m*.html')))} lab pages")
     return problems
 
