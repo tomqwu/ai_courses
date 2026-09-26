@@ -329,7 +329,6 @@ function measure() {
     fontsStatus: d.fonts.status,
     kicker: text('.slide:not([hidden]) .kicker'),
     title: text('.slide:not([hidden]) h2'),
-    rail: text('.slide:not([hidden]) .slide-rail'),
     railNum: text('.slide:not([hidden]) .slide-number'),
     panelHeight: w.getComputedStyle(d.documentElement).getPropertyValue('--narration-height').trim(),
     panelBottom: Math.round(d.querySelector('.player-bar').getBoundingClientRect().bottom),
@@ -345,13 +344,19 @@ function measure() {
     chapters: Object.keys(chapters).length,
     segments: d.querySelectorAll('.player-timeline .tl-seg').length,
     titleIds: d.querySelectorAll('.slide h2[id$="-title"]').length,
-    railLinks: d.querySelectorAll('.slide-rail a[href*="transcript-"]').length,
-    moduleLinks: d.querySelectorAll('.slide-rail a[href*="module-"]').length,
     rails: d.querySelectorAll('.slide-rail').length,
-    spine: (function () {
-      var r = d.querySelector('.slide-rail');
-      if (!r) return '';
-      return w.getComputedStyle(r).borderRightWidth;
+    metas: d.querySelectorAll('.slide > .slide-meta').length,
+    proofs: d.querySelectorAll('.slide-proof').length,
+    proofChips: d.querySelectorAll('.slide-proof .slide-meta .evidence-chip').length,
+    // Every slide stays light (#76): the darkest slide background, as a luminance.
+    darkest: (function () {
+      var min = 1;
+      Array.prototype.forEach.call(d.querySelectorAll('.slide'), function (s) {
+        var m = w.getComputedStyle(s).backgroundColor.match(/\d+(\.\d+)?/g) || [255, 255, 255];
+        var l = (0.2126 * m[0] + 0.7152 * m[1] + 0.0722 * m[2]) / 255;
+        if (l < min) min = l;
+      });
+      return Math.round(min * 100) / 100;
     })(),
     // ── the design system's own rules, asserted so they cannot drift again ──
     // Measured across EVERY slide, not just the visible one: in deck-ready mode only slide 1 is
@@ -406,13 +411,21 @@ function measure() {
                      .filter(function (e) { return e.getClientRects().length; });
         if (!kids.length) return;
         var sb = s.getBoundingClientRect();
-        var first = kids[0].getBoundingClientRect();
-        var last = kids[kids.length - 1].getBoundingClientRect();
+        // The body is placed in the space under the meta line (#76), so that is where "above" is
+        // measured from; the meta line is chrome, not content.
+        var meta = s.querySelector('.slide-meta');
+        var topEdge = meta ? meta.getBoundingClientRect().bottom : sb.top;
+        // The extent of the content is the union of its children: on a proof slide the claim and
+        // the exhibit sit side by side, so the first child's top and the last child's bottom
+        // would compare two different columns.
+        var boxes = kids.map(function (k) { return k.getBoundingClientRect(); });
+        var first = { top: Math.min.apply(null, boxes.map(function (b) { return b.top; })) };
+        var last = { bottom: Math.max.apply(null, boxes.map(function (b) { return b.bottom; })) };
         var h2 = s.querySelector('h2'), txt = s.querySelector('.slide-content p, .slide-content li');
         var num = s.querySelector('.slide-number');
         out.push({
           id: s.id,
-          above: Math.round(first.top - sb.top),
+          above: Math.round(first.top - topEdge),
           below: Math.round(sb.bottom - last.bottom),
           contentH: Math.round(last.bottom - first.top),
           frameH: Math.round(sb.height),
@@ -535,7 +548,7 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
             # Every slide is opened and measured: a bullet slide scrolls inside the frame as
             # silently as an exhibit does (#70). Diagrams and code exhibits carry the substance,
             # so those also get the contrast audit at their real layout.
-            audit = bool(slide.get("diagram") or "<pre>" in slide.get("html", ""))
+            audit = bool(slide.get("diagram") or "<pre" in slide.get("html", ""))
             cases.append([deck_id, slide["number"], audit])
     if not cases:
         return []
@@ -696,6 +709,26 @@ def check_units() -> list[str]:
             problems.append(f"{deck_id}: expected in all 3 built paths, "
                             f"found {len(SP.paths_for_module(deck_id))}")
 
+    # Exhibits (#76): every code block is a panel, a panel that copies a cited file names it with its
+    # lines and pinned commit, and every `hl=` mark lands on a highlighted line.
+    exhibits = headed = 0
+    for deck_id in B.DECK_IDS:
+        deck = B.parse_deck(deck_id)
+        units = SP.module_units(deck)
+        for slide in deck["slides"]:
+            h = B.slide_shell(deck, slide, None, ".", "", B.slide_place(deck, slide, units))
+            shown = h.split('<div class="slide-notes-source"')[0]
+            panels = shown.count('<figure class="exhibit')
+            exhibits += panels
+            headed += shown.count('class="exhibit-lines"')
+            if shown.count("<pre") != panels:
+                problems.append(f"{deck_id} {slide['id']}: a code block is not rendered as an exhibit panel")
+            marks = re.findall(r"^```\S*\s.*\bhl=([\d,-]+)", slide.get("raw", ""), re.M)
+            if marks and "is-hl" not in shown:
+                problems.append(f"{deck_id} {slide['id']}: hl={marks[0]} marks no highlighted line")
+    if exhibits and not headed:
+        problems.append("exhibits: no panel names its file, lines and commit — citations are not resolving")
+
     # Declared diagrams: a slide that declares one must render it, and the hand-typed disease
     # this replaces must not come back — no box-drawing characters anywhere, and no slide may
     # encode a flow as three or more text arrows outside a diagram component.
@@ -790,11 +823,17 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
     if not data["title"]:
         problems.append(f"{deck_id}: the current slide has no title")
     if not re.search(r"\d{2} / \d{2}", data["railNum"]):
-        problems.append(f"{deck_id}: slide rail has no 'NN / NN' number ({data['railNum']!r})")
-    if data["rails"] != slide_count:
-        problems.append(f"{deck_id}: {data['rails']} slides carry the editorial rail, expected {slide_count}")
-    if not data["spine"] or float(data["spine"].replace("px", "") or 0) <= 0:
-        problems.append(f"{deck_id}: the rail has no spine rule (border-right is {data['spine']!r})")
+        problems.append(f"{deck_id}: the slide's meta line has no 'NN / NN' number ({data['railNum']!r})")
+    # The four templates (#76): no rail, a meta line on every slide, an Evidence chip on every proof
+    # slide, and no dark slide — the navy proof theme is retired.
+    if data["rails"]:
+        problems.append(f"{deck_id}: {data['rails']} slides still carry the rail")
+    if data["metas"] != slide_count:
+        problems.append(f"{deck_id}: {data['metas']} slides carry the meta line, expected {slide_count}")
+    if data["proofChips"] != data["proofs"]:
+        problems.append(f"{deck_id}: {data['proofChips']} of {data['proofs']} proof slides show the Evidence chip")
+    if data["darkest"] < 0.8:
+        problems.append(f"{deck_id}: a slide background is dark (luminance {data['darkest']}); slides stay light")
     con = data.get("contrast") or {}
     bad = con.get("failures") or []
     for b in sorted(bad, key=lambda x: x["ratio"])[:4]:
@@ -815,15 +854,17 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         problems.append(f"{deck_id}: {len(sysd['spacing'])} distinct spacing values on {worst}, "
                         f"expected <= 14: {sorted(sysd['spacing'], reverse=True)}")
     comp = data["composition"]
-    thin = [c for c in comp if c["body"] and c["title"] / c["body"] < 2.5]
+    # 2.0x, the owner's decision on #71: the 2.5x floor forced ~70px titles and was the main cause
+    # of slides overflowing their frame (#70).
+    thin = [c for c in comp if c["body"] and c["title"] / c["body"] < 2.0]
     if thin:
         c = thin[0]
         problems.append(f"{deck_id}/{c['id']}: title/body is {c['title'] / c['body']:.2f}x, "
-                        f"below the 2.5x hierarchy floor ({len(thin)} slide(s) affected)")
+                        f"below the 2.0x hierarchy floor ({len(thin)} slide(s) affected)")
     small = [c for c in comp if c["frameH"] and c["chrome"] / c["frameH"] < 0.02]
     if small:
         c = small[0]
-        problems.append(f"{deck_id}/{c['id']}: rail chrome is "
+        problems.append(f"{deck_id}/{c['id']}: the meta line is "
                         f"{c['chrome'] / c['frameH'] * 100:.2f}% of the frame height, below the 2% "
                         f"floor that survives a projector ({len(small)} slide(s) affected)")
     off = [c for c in comp if abs(c["above"] - c["below"]) > max(24, c["frameH"] * 0.06)]
@@ -852,12 +893,6 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         problems.append(f"{deck_id}: slide 1 is not styled as the cover")
     if data["titleIds"] != slide_count:
         problems.append(f"{deck_id}: {data['titleIds']} slides have an anchored title, expected {slide_count}")
-    if data["moduleLinks"] != slide_count:
-        problems.append(f"{deck_id}: {data['moduleLinks']} slides link to their module overview, "
-                        f"expected {slide_count}")
-    if data["railLinks"] != slide_count:
-        problems.append(f"{deck_id}: {data['railLinks']} slides link to their transcript, "
-                        f"expected {slide_count}")
     if data["segments"] < 5:
         problems.append(f"{deck_id}: the timeline has {data['segments']} unit segments, expected at least 5")
     for label, key, want in (

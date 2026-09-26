@@ -150,7 +150,7 @@ if inSpeech && (time - lastSpeechTime) >= silenceDuration {
 - Guarantee: never an empty context.
 - Why it pays: 96% core coverage, 95% floor.
 
-```swift
+```swift hl=82
 for segment in utterances.reversed() {
     let cost = TranscriptSegment.promptCharacterCost(segment)
     // Always include the most recent; otherwise stop before …
