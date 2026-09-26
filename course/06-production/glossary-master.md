@@ -71,7 +71,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Benchmark record** *(M6)* — The unit of citable evidence: one finding plus date, sample, method, unit, self-reported vs measured, sponsor, and what claim it can support. Anything unverifiable is listed as such. Lives in `ai_qe/CONTRIBUTING.md`, "Research conventions"; examples in `ai_qe/docs/evidence/benchmarks.md`.
 - **Benefits-realization register** *(M6, M7)* — The pricing-integrity device that ties every claimed saving to a Finance-owned budget row, so claims are reconciled by the client's own finance function rather than by the seller. Lives in `course/00-research/03-ai-qe-deep-read.md` §4.
 - **Beta-discount trade** *(M8)* — A founding-cohort discount explicitly exchanged for a testimonial and a feedback session, agreed at checkout. Honest because the buyer knows what the discount buys. *Where:* `04-sales/pricing-and-platforms.md` (launch-price policy).
-- **Bundle id / TCC** *(M3)* — macOS keys Microphone and Screen Recording grants by bundle id *plus* the binary's code-signing requirement, so a dev build and a release build need separate ids — `ListenToMe/docs/RELEASING.md:18-31`.
+- **Bundle id / TCC** *(M3)* — macOS keys Microphone and Screen Recording grants by bundle id *plus* the binary's code-signing requirement, so a dev build and a release build need separate ids — `ListenToMe/docs/RELEASING.md:41-52`.
 ### C
 
 - **Capped phased pilot** *(M7)* — The bounded engagement stage: 8–10 weeks, five phases (0–4), go/no-go gates signed by the sponsor, frozen acceptance criteria before results are observed. Lives in `ai_qe/_data/engagement.json` and `ai_qe/docs/method/phased-pilot.md`.
@@ -99,7 +99,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 
 - **Deadline honesty** *(M8)* — The rule that a launch deadline must describe a real change — the cart closes, the price ends — because a resetting or recurring deadline teaches the list to wait. *Where:* `04-sales/pricing-and-platforms.md` ("no fake countdowns").
 - **Debounce — the minimum interval between proactive fires** *(M2)* — ListenToMe's default is 8 seconds. `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8,31-40`.
-- **Definition of Done** *(M3)* — Release as the default end of any fix: published, notarized, and verified by downloading the artifact and checking its checksum — `ListenToMe/AGENTS.md`; `ListenToMe/docs/RELEASING.md:11-16`.
+- **Definition of Done** *(M3)* — In ListenToMe, merged to `main` with the required checks green, tests passing and docs updated; publication is a separate, batched step. Only a downloaded, checksum-matched artifact with its tag on the source commit may be called published — `ListenToMe/AGENTS.md:13-18, 55-82`; `ListenToMe/docs/RELEASING.md:33-39`.
 - **Definition of Done (DoD)** *(M1)* — The standard for "shipped," not "built": verify the affected behavior in the installed production app, and treat stale docs as a failure rather than a follow-up. (`ListenToMe/AGENTS.md`, `ListenToMe/CLAUDE.md`)
 - **Deletion test** *(M7)* — Remove one clause from a positioning one-liner; if no row in your table would notice the sentence became false, the clause is decoration and gets cut. Lives in `lesson.md` M7.3.
 - **Deliverability** *(M8)* — Whether email reaches the inbox at all; configured through SPF, DKIM, and DMARC on the sending domain, enforced by Gmail and Yahoo for bulk senders. Upstream of every conversion number. *Where:* `04-sales/launch-plan.md` (header and ops checklist).

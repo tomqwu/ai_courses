@@ -69,7 +69,7 @@ public enum AIProcessingMode: String, CaseIterable, Sendable {
 }
 ```
 
-<!-- NOTES: Open ModelPrivacy.swift on screen and read lines three to thirteen. Four cases, four honest labels. The one to memorize is cloud: it does not say "enhanced"; it says it sends the transcript and context. The README section "AI processing mode" carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud routing as a side effect of configuration. Timing: three minutes. Transition: why the obvious shortcut fails. -->
+<!-- NOTES: Open ModelPrivacy.swift on screen and read the AIProcessingMode enum at the top. Four cases, four honest labels. The one to memorize is cloud: it does not say "enhanced"; it says it sends the transcript and context. The README section "AI processing mode" carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud routing as a side effect of configuration. Timing: three minutes. Transition: why the obvious shortcut fails. -->
 
 ---
 
@@ -128,7 +128,7 @@ public static func isVerifiedLocal(_ data: Data) -> Bool {
 }
 ```
 
-<!-- NOTES: Show lines seventeen to twenty-four. One guard clause: parse the JSON, require remote_host and remote_model to be absent, require details.format non-empty, require model_info non-empty, else return false. Because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Say the trust boundary out loud: this verifies the daemon's self-description, not the daemon. The README states it honestly. Timing: three minutes. Transition: the three defenses around this check. -->
+<!-- NOTES: Show isVerifiedLocal. One guard clause: parse the JSON, require remote_host and remote_model to be absent, require details.format non-empty, require model_info non-empty, else return false. Because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Say the trust boundary out loud: this verifies the daemon's self-description, not the daemon. The README states it honestly. Timing: three minutes. Transition: the three defenses around this check. -->
 
 ---
 
@@ -143,7 +143,7 @@ public static func isVerifiedLocal(_ data: Data) -> Bool {
 - Localhost, 127.0.0.1, and ::1 only
 - Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157`
 
-<!-- NOTES: In local-only mode three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or ::1; anything else throws before a byte of prompt is written. Second, the provider posts /api/show and requires HTTP 200 plus a verified-local metadata result; re-verified every request, so switching models mid-session cannot skip the check. Third, redirects. Open OllamaProvider.swift lines one hundred thirty-eight to one hundred fifty-seven. Timing: three minutes. Transition: why redirects matter. -->
+<!-- NOTES: In local-only mode three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or ::1; anything else throws before a byte of prompt is written. Second, the provider posts /api/show and requires HTTP 200 plus a verified-local metadata result; re-verified every request, so switching models mid-session cannot skip the check. Third, redirects. Open OllamaProvider.swift in the local-only branch of the streaming request. Timing: three minutes. Transition: why redirects matter. -->
 
 ---
 
@@ -263,7 +263,7 @@ awk -v pct="$PCT" -v thr="$THRESHOLD" 'BEGIN { exit !(pct + 0 >= thr + 0) }' || 
         run: ./scripts/check-coverage.sh 95
 ```
 
-<!-- NOTES: Open the CI workflow at lines thirty-six to forty-two and show the coverage step, then open the script itself. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite plus the coverage floor. The two build jobs additionally run a dependency-lock diff, so the artifact you test is built from locked dependencies. Release discipline appears early. Timing: three minutes. Transition: the test CI cannot run. -->
+<!-- NOTES: Open the CI workflow's core job and show the coverage step, then open the script itself. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite plus the coverage floor. The two build jobs additionally run a dependency-lock diff, so the artifact you test is built from locked dependencies. Release discipline appears early. Timing: three minutes. Transition: the test CI cannot run. -->
 
 ---
 
@@ -305,7 +305,7 @@ final class OllamaContractE2ETests: XCTestCase {
         let model = env["LTM_E2E_MODEL"] ?? "llama3.1"
 ```
 
-<!-- NOTES: Open OllamaContractE2ETests.swift lines four to twenty-two. The test calls XCTSkipUnless on the environment variable, so normal swift test and CI never touch the network; make e2e sets the gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses and require non-empty content. The gating pattern matters as much as the test. Timing: three minutes. Transition: the tier only a human can run. -->
+<!-- NOTES: Open OllamaContractE2ETests.swift. The test calls XCTSkipUnless on the environment variable, so normal swift test and CI never touch the network; make e2e sets the gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses and require non-empty content. The gating pattern matters as much as the test. Timing: three minutes. Transition: the tier only a human can run. -->
 
 ---
 
@@ -342,15 +342,15 @@ final class OllamaContractE2ETests: XCTestCase {
 
 ---
 
-## M3.3 — Done ends at a verified download
+## M3.3 — Done is merged; published is proven
 
-- A local build is not the end of the workflow
-- Bump version, push, verify hosted CI
-- Publish the signed, notarized DMG
-- Pin the release to the exact source commit
-- Download the published asset and verify its checksum
+- Done: merged to `main`, checks green, docs updated
+- Publishing is a separate, batched release train
+- Candidate: built and checked locally
+- Verified: installed-app acceptance on affected paths
+- Published: downloaded again, checksum matched, tag pinned
 
-<!-- NOTES: ListenToMe's AGENTS.md makes release the default end of any fix or feature: a local build, a local install, or a draft PR is not the end of the workflow. Six steps: implement and run tests, lint, coverage; verify in the installed production app; bump version and notes; commit, push, verify hosted CI; publish the signed, notarized DMG targeting the exact source commit; and finally download the published asset and verify its checksum and tag metadata. That last step is the one most projects skip. Timing: three minutes. Transition: the mechanics. -->
+<!-- NOTES: ListenToMe's AGENTS.md separates two words most projects blur. Done means merged to main with the three required checks green, tests passing and every affected doc updated. Publication is a separate, batched release train: at most one macOS release a day, never one per merged pull request. The honest status of finished work is "merged to main, riding the next release train". Then the ladder: candidate is built and checked locally, verified adds installed-app acceptance, and published means downloaded again, checksum matched, tag on the exact commit. Claim only the rung your evidence supports. Timing: three minutes. Transition: the top rung in practice. -->
 
 ---
 
@@ -359,10 +359,10 @@ final class OllamaContractE2ETests: XCTestCase {
 - After publishing, download the hosted asset
 - Compare its SHA-256 against the local DMG
 - Create the release with `--target` pinned to the commit
-- If blocked: name the blocker, do not call it released
-- Pointer: `ListenToMe/docs/RELEASING.md:120-134`
+- If blocked: name it, report "merged but not published"
+- Pointer: `ListenToMe/AGENTS.md:55-82`, `ListenToMe/docs/RELEASING.md:33-39`
 
-<!-- NOTES: Open RELEASING.md around lines one hundred twenty to one hundred thirty-four. After publishing, download the hosted asset and compare its SHA-256 against the verified local DMG, and create the release with target pinned to the exact commit so the tag cannot silently point at another commit. The policy has an honesty clause: if a real blocker stops publication, name the blocker and preserve the candidate; do not describe the work as released. Timing: three minutes. Transition: dev and release identities. -->
+<!-- NOTES: Open the verification ladder in AGENTS.md and the matching table in RELEASING.md. After publishing, download the hosted asset and compare its SHA-256 against the verified local DMG, and create the release with target pinned to the exact commit so the tag cannot silently point at another commit. Never replace a published binary. The honesty clause: if a blocker stops publication, name it precisely, preserve the candidate and its evidence, and report the work as merged but not published. Timing: three minutes. Transition: dev and release identities. -->
 
 ---
 
@@ -377,7 +377,7 @@ final class OllamaContractE2ETests: XCTestCase {
 - One shared id: installing one silently invalidates the other
 - The toggle stays on while capture returns nothing
 
-`ListenToMe/docs/RELEASING.md:43-51` · `ListenToMe/README.md:176-179`
+`ListenToMe/docs/RELEASING.md:43-52` · `ListenToMe/README.md:176-180`
 
 <!-- NOTES: Dev builds are a separate app from the release: one bundle id for dev, one for release. The reason is macOS privacy plumbing. TCC, the subsystem holding Microphone and Screen Recording grants, keys permission grants by bundle id plus the binary's code-signing requirement. A Developer ID signature and an Apple Development signature produce requirements that can never satisfy each other. Share one bundle id and installing either silently invalidates the other's grants: a toggle that lies. Timing: three minutes. Transition: competition analysis. -->
 
@@ -415,10 +415,11 @@ final class OllamaContractE2ETests: XCTestCase {
 - Goal: take TinyCopilot from works to trustworthy
 - Red-team test first, then implement
 - Contract test outside CI, coverage floor, comparison table
+- Step 5: tag, checksum, record the rung as candidate
 - Pass gate: `make lab-m3` → 49 passed
 - Both daemon outcomes are valid
 
-<!-- NOTES: Lab M3 is three hours. Step one: write the red-team test first — a mocked /api/show with remote_host set must be rejected in local mode — then implement PrivacyMode, verify_local_model, host enforcement, and redirect refusal. Step two: the real-LLM contract test gated by LAB_E2E. Step three: the coverage floor, with the failure run recorded. Step four: the comparison table. The pass gate is make lab-m3 green: forty-nine passed. Timing: two minutes. Transition: the quiz. -->
+<!-- NOTES: Lab M3 takes TinyCopilot from works to trustworthy. Step 0 parks the shipped solution so the red run is real. Step 1: red-team test first, then the privacy mode, local-model verification, host enforcement and redirect refusal. Step 2: the contract test gated by LAB_E2E. Step 3: the coverage floor and a recorded failure run; 3b: behavioural evals above it. Step 4: the comparison table. Step 5: tag the tested commit, checksum the artifact, and record the rung as candidate. Suite gate: make lab-m3, 49 passed. Timing: three minutes. Transition: the quiz. -->
 
 ---
 
@@ -439,10 +440,10 @@ final class OllamaContractE2ETests: XCTestCase {
 - Privacy is a mode; verify metadata every request
 - A localhost URL proves nothing; fail closed
 - Tier the tests; metrics are the entry fee
-- Done means published, downloaded, checksum-verified
+- Done is merged; published is a verified download
 - Positioning derives from a sourced table
 
-<!-- NOTES: Five sentences to carry out of the module. Privacy is a mode with truthful labels, and metadata is verified per request. A localhost URL proves nothing because a local daemon can serve cloud aliases. Test in tiers and remember that coverage is the entry fee, not the verdict. Done means a verified download, not a local build. Positioning derives from a sourced, qualified table. Timing: two minutes. Transition: the discussion prompt. -->
+<!-- NOTES: Five sentences to carry out of the module. Privacy is a mode with truthful labels, and metadata is verified per request. A localhost URL proves nothing because a local daemon can serve cloud aliases. Test in tiers and remember that coverage is the entry fee, not the verdict. Done means merged, and published means a download you verified yourself. Positioning derives from a sourced, qualified table. Timing: two minutes. Transition: the discussion prompt. -->
 
 ---
 

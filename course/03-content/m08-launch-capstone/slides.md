@@ -73,13 +73,13 @@ title: M8 — Launch: Sales Page, Email Arc, Capstone
 
 | Section | On `04-sales/landing-page.md` |
 |---|---|
-| 1–2 | "Ship three real AI products" + two explicit for/isn't lists |
+| 1–2 | "Ship AI products a skeptical engineer can audit" + for/isn't lists |
 | 3–4 | "Three things are always missing" + Week/Module outcome table |
 | 5 | Tom Wu: three named repos with checkable numbers |
-| 6–8 | Three reserved testimonial slots, real-objection FAQ, three tiers, one CTA |
+| 6–8 | Three reserved testimonial slots, real-objection FAQ, three tiers + a $199 bundle, one CTA |
 
 ```markdown
-# Ship three real AI products. Learn from code that actually shipped.
+# Ship AI products a skeptical engineer can audit.
 
 **This isn't for you if you:**
 - Haven't written code before (start with a general programming course first)
@@ -89,7 +89,7 @@ title: M8 — Launch: Sales Page, Email Arc, Capstone
 
 Pointers: `04-sales/landing-page.md` · `00-research/02-course-market-research.md` §E
 
-<!-- NOTES: Open the landing page beside this slide and check each row. The headline is one falsifiable sentence. The for and isn't lists are explicit. The problem section names three missing things, and the curriculum table lists abilities, not topics. The bio names three repos with numbers you can go open. Section six is three reserved slots with an honesty note, and section eight shows three tiers with the same enroll call to action repeated at top, middle, and bottom. Transition: two of those rows need a second look. Timing: 3 minutes. -->
+<!-- NOTES: Open the landing page beside this slide and check each row. The headline is one falsifiable sentence. The for and isn't lists are explicit. The problem section names three missing things, and the curriculum table lists abilities, not topics. The bio names three repos with numbers you can go open. Section six is three reserved slots with an honesty note, and section eight shows three tiers plus a single-track bundle, with the same enroll call to action repeated at top, middle, and bottom. Transition: two of those rows need a second look. Timing: 3 minutes. -->
 
 ---
 
@@ -168,13 +168,13 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 |---|---|
 | Under $200 | 800–1,200 words |
 | $500+ or cold traffic | 2,000–3,000 words |
-| The course's own page | ~1,900 words of copy / 2,251 total ($399–$1,490) |
+| The course's own page | 2,000+ words of copy, re-measured by the gate ($399–$1,490) |
 
 - "Longer always converts better" is false both directions.
 - Set the word target before you draft.
 - Stakes decide: the more they pay, the more questions.
 
-<!-- NOTES: The rule comes from the research section E. Stakes are the reason: the more a reader pays and the less they know you, the more objections the page must answer. The course's own page targets roughly 1,900 words of copy — 2,251 including authoring notes — for a $399 to $1,490 cold-traffic offer, measured from the file itself. Both failure directions are real — 2,500 words for a $49 product pads and dilutes, while 800 words for a $1,490 cohort leaves the objection teardown unanswered. Pick the band from your M7 price before you write a sentence. Transition: the page is done — now the arc that sends people to it. Timing: 3 minutes. -->
+<!-- NOTES: The rule comes from the research section E. Stakes are the reason: the more a reader pays and the less they know you, the more objections the page must answer. The course's own page runs to more than 2,000 words of copy for a $399 to $1,490 cold-traffic offer; the page states its own count and the gate re-measures it. Both failure directions are real — 2,500 words for a $49 product pads and dilutes, while 800 words for a $1,490 cohort leaves the objection teardown unanswered. Pick the band from your M7 price before you write a sentence. Transition: the page is done — now the arc that sends people to it. Timing: 3 minutes. -->
 
 ---
 

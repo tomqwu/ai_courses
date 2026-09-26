@@ -362,7 +362,7 @@ Follow-ups:    known gaps, deferred work, open questions
 
 `specs/000-user-onboarding/tasks.md`
 
-<!-- NOTES: Open the file and read line three: "Input: Design documents from `/specs/020-user-onboarding/`". The folder is `specs/000-user-onboarding`. The feature was renumbered at some point and the generated task file kept the stale path. Nothing failed, no test caught it, no warning fired — it just sat in a generated artifact waiting for an agent to follow a dead end. Everything in a spec folder is generated output: `/speckit.tasks` wrote that file, `/speckit.checklist` graded the other one. Generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code. Transition: two more, both inside the exemplar folder. -->
+<!-- NOTES: Open the file and read its Input line, near the top: "Input: Design documents from `/specs/020-user-onboarding/`". The folder is `specs/000-user-onboarding`. The feature was renumbered at some point and the generated task file kept the stale path. Nothing failed, no test caught it, no warning fired — it just sat in a generated artifact waiting for an agent to follow a dead end. Everything in a spec folder is generated output: `/speckit.tasks` wrote that file, `/speckit.checklist` graded the other one. Generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code. Transition: two more, both inside the exemplar folder. -->
 
 ---
 

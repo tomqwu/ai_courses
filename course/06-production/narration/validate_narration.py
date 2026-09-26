@@ -50,6 +50,17 @@ def deck_slide_ids(deck_id: str) -> list[str]:
     return [f"slide-{i}" for i in range(1, len(slides) + 1)]
 
 
+# A spoken line location ("lines one hundred twenty to...", "line 717") dates the moment the source
+# moves, and no pointer check can see it inside audio (#68). Speech names the file and the symbol; the
+# slide and the lesson carry the exact range, where verify.py checks it. Counts ("thirty-seven lines")
+# are not locations and pass.
+_NUM = (r"(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|"
+        r"fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|"
+        r"ninety|hundred)")
+SPOKEN_LINE_RE = re.compile(rf"\b(?:at|on|around|to|read|in)\s+lines?\s+{_NUM}\b|\blines?\s+{_NUM}[\w\s-]*?\s(?:to|through)\s+{_NUM}\b",
+                            re.IGNORECASE)
+
+
 def check_scripts(problems: list[str]) -> tuple[dict, int, int]:
     scripts = load_scripts()
     total_words = total_slides = 0
@@ -80,6 +91,10 @@ def check_scripts(problems: list[str]) -> tuple[dict, int, int]:
                 problems.append(f"{deck_id}/{slide_id}: narration is {count} words (max {MAX_WORDS})")
             if re.search(r"<!--|Timing:|Transition:", text):
                 problems.append(f"{deck_id}/{slide_id}: narration contains a presenter directive")
+            spoken = SPOKEN_LINE_RE.search(text)
+            if spoken:
+                problems.append(f"{deck_id}/{slide_id}: narration speaks a line location "
+                                f"({spoken.group(0)!r}); name the file and symbol instead")
             total_words += count
             total_slides += 1
     return scripts, total_slides, total_words

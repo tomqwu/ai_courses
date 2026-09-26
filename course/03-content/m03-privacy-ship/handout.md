@@ -22,7 +22,8 @@ checksum-verified artifact.
 3. **Verify per request, fail closed.** `remote_host`/`remote_model` absent, `details.format` and
    `model_info` non-empty — else reject.
 4. **Refuse redirects.** A 3xx kills the request; text must never be silently forwarded.
-5. **Done = downloaded and checksum-verified**, with the release pinned to the exact commit.
+5. **Done = merged; published = downloaded again and checksum-matched**, tag on the exact commit.
+   Claim only the rung you reached: candidate, verified, published.
 
 ## Commands to keep
 
@@ -41,12 +42,13 @@ python -m pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q
   the fail-closed `isVerifiedLocal` guard.
 - `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157, 208-214` — host check,
   per-request verification, `RejectRedirects`.
-- `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:72-77` — local-first auto-selection.
+- `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95` — local-first auto-selection.
 - `ListenToMe/scripts/check-coverage.sh` + `ListenToMe/.github/workflows/ci.yml:36-42` — the floor.
 - `ListenToMe/Makefile:39-53` + `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22`
   — the gated contract test.
 - `ListenToMe/docs/manual-smoke-test.md:1-7` — what only a human can verify.
-- `ListenToMe/docs/RELEASING.md:18-31, 120-134` — bundle-id separation and checksum verification.
+- `ListenToMe/docs/RELEASING.md:33-39, 41-52` — the published rung, and bundle-id separation.
+- `ListenToMe/AGENTS.md:13-18, 55-82` — done means merged; the candidate/verified/published ladder.
 - `ListenToMe/docs/competition-analysis.md:1-14, 70-80` — sourced table and the one-liner.
 
 ## Three gotchas

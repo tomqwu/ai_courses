@@ -17,11 +17,11 @@
 |---|---|---|
 | 0:00 | `04-sales/landing-page.md` hero | "This is a real page for a real offer, and every claim on it has a file behind it. We are going to read it as a sequence of eight moves, because that is what it is." |
 | 0:20 | The eight-section table | "Destination, qualification, stakes, outcomes, credibility, borrowed trust, objections, price. Each section has exactly one job. When a page underperforms, the fix is usually a section doing someone else's job." |
-| 1:00 | Hero + for/isn't lists | "The headline sells a destination and is falsifiable: ship three real AI products. Then two explicit lists — who this is for, and who it is not for. The second list is not rudeness; it cuts refunds and protects completion." |
+| 1:00 | Hero + for/isn't lists | "The headline sells a destination and is falsifiable: ship AI products a skeptical engineer can audit. Then two explicit lists — who this is for, and who it is not for. The second list is not rudeness; it cuts refunds and protects completion." |
 | 1:50 | Problem section, then curriculum table | "Now the stakes: three things are always missing. Then the curriculum, as outcomes. Watch the difference — this table lists abilities, not topics. Engineer a fail-closed local-only mode is a claim you can hold the author to." |
 | 2:40 | Bio, then testimonials note | "The bio is 100 to 150 words with three named repos. Then the honest part: three reserved testimonial slots and a note saying the section stays honest. No invented social proof. For a technical audience, shipped projects are the proof." |
 | 3:20 | FAQ + pricing tiers + CTA | "The FAQ answers real objections plainly, and pricing shows every tier — $399, $1,490, team from $2,500. One call to action, repeated. Not two. Competing buttons leak the click." |
-| 4:10 | Length table | "Length follows price: 800 to 1,200 words under $200, 2,000 to 3,000 for a $500-plus or cold-traffic offer. This page is about 1,900 words of copy. Set your target from your price before you draft." |
+| 4:10 | Length table | "Length follows price: 800 to 1,200 words under $200, 2,000 to 3,000 for a $500-plus or cold-traffic offer. This page runs to more than 2,000 words of copy. Set your target from your price before you draft." |
 | 4:40 | Blank document | "Open your draft beside this page and write section one now. One falsifiable sentence. Then the two lists." |
 
 **Demo cue.** Scroll `04-sales/landing-page.md` in one continuous pass, pausing only on the reserved-testimonial note and the pricing tiers. The viewer should notice that no number appears without a file behind it.

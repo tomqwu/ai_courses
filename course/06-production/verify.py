@@ -55,6 +55,46 @@ POINTER_RE = re.compile(
     r"`((?:ListenToMe|SignUpFlow|ai_qe)/[^`\s]+(?:,\s*\d+(?:[-\u2013]\d+)?)*)`"
 )
 LINE_RANGE_RE = re.compile(r"^(\d+)(?:[-\u2013](\d+))?$")
+# Two more forms name case-repo lines without the repo prefix, and the gate used to see neither:
+# a bare pointer (`ModelRanking.swift:13-18`, `App/MeetingView.swift:845`) and prose
+# (`MeetingSession.swift`, lines 54–87). Each is checked when its path resolves to exactly one
+# tracked file in the three clones; an ambiguous name (`README.md`) or a course file is left alone.
+_LINES = r"\d+(?:\s*[-\u2013]\s*\d+)?(?:(?:,\s*|\s+and\s+)\d+(?:\s*[-\u2013]\s*\d+)?)*"
+BARE_POINTER_RE = re.compile(
+    r"`((?!(?:ListenToMe|SignUpFlow|ai_qe|course)/)[A-Za-z0-9_][A-Za-z0-9_./-]*\.[A-Za-z]{1,6}):(" + _LINES + r")`")
+PROSE_POINTER_RE = re.compile(
+    r"`((?:(?:ListenToMe|SignUpFlow|ai_qe)/)?[A-Za-z0-9_][A-Za-z0-9_./-]*\.[A-Za-z]{1,6})`,?\s*lines?\s+(" + _LINES + r")")
+# A range can stay in bounds and still point at the wrong code after the source moves (#68). An
+# anchor names what the range must contain: {"<pointer as written>": "symbol" or ["a", "b"]}.
+ANCHORS = ROOT / "06-production" / "pointer-anchors.json"
+_CASE_INDEX: dict[str, list[str]] | None = None
+
+
+def _case_index() -> dict[str, list[str]]:
+    """basename -> tracked repo-relative paths ("ListenToMe/App/MeetingView.swift") in the clones."""
+    global _CASE_INDEX
+    if _CASE_INDEX is None:
+        _CASE_INDEX = {}
+        for repo in CASE_REPOS:
+            if not (REPO / repo / ".git").exists():
+                continue
+            out = subprocess.run(["git", "-C", str(REPO / repo), "ls-files"],
+                                 capture_output=True, text=True).stdout
+            for rel in out.split():
+                _CASE_INDEX.setdefault(Path(rel).name, []).append(f"{repo}/{rel}")
+    return _CASE_INDEX
+
+
+def resolve_case_path(path: str) -> Path | None:
+    """A repo-prefixed path as-is; a bare one when exactly one tracked file ends with it."""
+    if path.split("/")[0] in CASE_REPOS:
+        return REPO / path
+    hits = [c for c in _case_index().get(Path(path).name, []) if c == path or c.endswith("/" + path)]
+    return REPO / hits[0] if len(hits) == 1 else None
+
+
+def _prose_ranges(spec: str) -> list[tuple[int, int]]:
+    return parse_line_ranges(re.sub(r"\s+and\s+", ",", spec).replace(" ", "")) or []
 WEIGHT_RE = re.compile(r"\b(\d{1,3})\s*%")
 # A table row that looks like a rubric weight row: contains a % and a criterion-ish phrase
 RUBRIC_ROW_RE = re.compile(r"^\|.+\|\s*(?:\*\*)?(\d{1,3})\s*%\s*(?:\*\*)?\s*\|")
@@ -155,6 +195,23 @@ def check_pointers(files: list[Path] | None = None) -> tuple[int, int, list[str]
                         f"{_label(f)}: OUT OF RANGE {raw} "
                         f"(lines {lo}-{hi}; file has {n} lines)"
                     )
+        for m in list(BARE_POINTER_RE.finditer(text)) + list(PROSE_POINTER_RE.finditer(text)):
+            path, spec = m.group(1), m.group(2)
+            target = resolve_case_path(path)
+            if target is None or not target.is_file():
+                continue
+            rngs = _prose_ranges(spec) if m.re is PROSE_POINTER_RE else (parse_line_ranges(spec) or [])
+            if not rngs:
+                continue
+            checked += 1
+            if target not in line_counts:
+                line_counts[target] = len(target.read_text(encoding="utf-8", errors="replace").splitlines())
+            n = line_counts[target]
+            for lo, hi in rngs:
+                ranges_checked += 1
+                if not (1 <= lo <= hi <= n):
+                    problems.append(f"{_label(f)}: OUT OF RANGE {path} lines {spec} "
+                                    f"(resolved to {target.relative_to(REPO)}; file has {n} lines)")
     return checked, ranges_checked, problems
 
 
@@ -331,6 +388,41 @@ def check_learner_site() -> list[str]:
     return problems
 
 
+def check_anchors() -> tuple[int, list[str]]:
+    """Every anchored pointer is still cited somewhere, and its range still contains its symbol."""
+    import json                                                              # noqa: PLC0415
+    if not ANCHORS.exists():
+        return 0, []
+    anchors = json.loads(ANCHORS.read_text(encoding="utf-8"))
+    corpus = "\n".join(p.read_text(encoding="utf-8") for p in ROOT.rglob("*.md")
+                       if "tinycopilot" not in p.parts and "slides/out" not in str(p))
+    problems: list[str] = []
+    held = 0
+    for pointer, want in anchors.items():
+        if pointer.startswith("_"):
+            continue
+        tokens = [want] if isinstance(want, str) else list(want)
+        if f"`{pointer}`" not in corpus:
+            problems.append(f"anchor for `{pointer}`: no longer cited anywhere; update or remove the entry")
+            continue
+        path, _, spec = pointer.partition(":")
+        target = resolve_case_path(path)
+        rngs = parse_line_ranges(spec) if spec else None
+        if target is None or not target.is_file() or not rngs:
+            problems.append(f"anchor for `{pointer}`: path does not resolve to one case-repo file")
+            continue
+        lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+        # Whitespace-insensitive, so a phrase the source wraps across two lines still matches.
+        body = " ".join(w for lo, hi in rngs for w in " ".join(lines[lo - 1:hi]).split())
+        missing = [t for t in tokens if " ".join(t.split()) not in body]
+        if missing:
+            where = {t: [i + 1 for i, l in enumerate(lines) if t in l][:3] for t in missing}
+            problems.append(f"ANCHOR MISSED `{pointer}`: {missing} not in those lines (found at {where})")
+        else:
+            held += 1
+    return held, problems
+
+
 def main(argv: list[str]) -> int:
     if "--pointers" in argv:
         checked, ranges, problems = check_pointers()
@@ -360,8 +452,11 @@ def main(argv: list[str]) -> int:
         failed += len(problems)
 
     checked, ranges, problems = check_pointers()
+    held, anchor_problems = check_anchors()
+    problems += anchor_problems
     status = "PASS" if not problems else f"FAIL ({len(problems)})"
-    print(f"[{status}] Repo file pointers ({checked} checked, {ranges} line ranges verified)")
+    print(f"[{status}] Repo file pointers ({checked} checked, {ranges} line ranges verified, "
+          f"{held} anchors held)")
     for p in problems[:25]:
         print("    " + p)
     failed += len(problems)

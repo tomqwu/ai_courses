@@ -21,7 +21,7 @@ number a student adds must carry its own observed run.
 | 3 | Validation record | Commands, counts, date, environment, limitations; the red run kept beside the green | `make lab-m2` → *201 passed, 100% coverage (floor 90)*; `make lab-m3` → *49 passed* |
 | 4 | Release | Pushed version tag or deployed URL, opened in a clean browser and confirmed identical to the tested artifact | `03-content/m08-launch-capstone/lab.md` step 5 |
 | 5 | Discipline artifact | Local-only mode fail-closed **plus** the cloud-alias red-team case as a test | `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift` |
-| 6 | Sales page | Eight sections in the M8.1 order, one CTA, word target set by the M7 price, every claim tagged | `04-sales/landing-page.md` (~1,900 words of copy, measured by `06-production/verify.py`) |
+| 6 | Sales page | Eight sections in the M8.1 order, one CTA, word target set by the M7 price, every claim tagged | `04-sales/landing-page.md` (over 2,000 words of copy; its own length note is re-measured by `06-production/verify.py`) |
 | 7 | 5-email arc | Cart open, objections, proof, final call, survey; one CTA each; deadline real | `04-sales/launch-plan.md` |
 | 8 | Demo | ≤5:30, four beats, ends on the not-verified list | `03-content/m08-launch-capstone/lab.md` step 7 |
 

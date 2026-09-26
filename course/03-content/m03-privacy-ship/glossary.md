@@ -5,7 +5,7 @@
 
 **Bundle id / TCC** — macOS keys Microphone and Screen Recording grants by bundle id *plus* the
 binary's code-signing requirement, so a dev build and a release build need separate ids —
-`ListenToMe/docs/RELEASING.md:18-31`.
+`ListenToMe/docs/RELEASING.md:41-52`.
 
 **Cloud alias** — A model name ending in `:cloud` (or a remote-backed model under a local-sounding
 name) that installs and lists on a local daemon while its inference runs remotely —
@@ -19,9 +19,10 @@ environment gate — `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETest
 threshold; it buys enforcement against untested core logic and nothing else —
 `ListenToMe/scripts/check-coverage.sh`; `ListenToMe/.github/workflows/ci.yml:36-42`.
 
-**Definition of Done** — Release as the default end of any fix: published, notarized, and verified
-by downloading the artifact and checking its checksum — `ListenToMe/AGENTS.md`;
-`ListenToMe/docs/RELEASING.md:11-16`.
+**Definition of Done** — In ListenToMe, merged to `main` with the required checks green, tests
+passing and docs updated; publication is a separate, batched step. Only a downloaded,
+checksum-matched artifact with its tag on the source commit may be called published —
+`ListenToMe/AGENTS.md:13-18, 55-82`; `ListenToMe/docs/RELEASING.md:33-39`.
 
 **Dependency-lock diff** — The CI step that fails a build when the checked-in dependency lock and
 the generated workspace's resolved lock drift apart — `ListenToMe/.github/workflows/ci.yml:24, 35`.

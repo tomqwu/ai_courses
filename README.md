@@ -163,9 +163,13 @@ build_site --check                 9 decks built; fails if a committed transcrip
 check_player --all                 headless browser: the 16:9 frame is measured (ratio,
                                    overflow, font loaded), panel visible, captions
                                    parsed, deep links, Present/Read all/notes all work
+check_features                     headless browser: progress, all 80 knowledge-check
+                                   questions, lab checklists and evidence export, search
 verify.py                          artifacts · rubrics · bundles · decks · sales claims ·
-                                   narration contract · learner site · every file pointer,
-                                   with :N-M line ranges checked against the file
+                                   narration contract (no spoken line numbers) · learner
+                                   site · every file pointer, prefixed, bare or in prose,
+                                   with :N-M ranges checked, and anchored ranges required
+                                   to still contain their symbol (pointer-anchors.json)
 check_facts.py --strict            every pinned number re-derived from the clones; skipped
                                    with a note when the clones are absent
 ```

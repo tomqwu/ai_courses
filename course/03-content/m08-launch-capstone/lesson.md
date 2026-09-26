@@ -25,7 +25,7 @@ Write the 8-section sales-page anatomy for your own product; source every proof 
 
 | # | Section | Its one job | The course's own page |
 |---|---|---|---|
-| 1 | **Transformation headline** | Sell the destination, not the contents — one falsifiable sentence | "Ship three real AI products. Learn from code that actually shipped." |
+| 1 | **Transformation headline** | Sell the destination, not the contents — one falsifiable sentence | "Ship AI products a skeptical engineer can audit." |
 | 2 | **Who it's for — and isn't** | Qualify the right buyer; repel the wrong one (cuts refunds, protects completion) | Two explicit lists: "This is for you if…" / "This isn't for you if…" |
 | 3 | **Problem & stakes** | Name the gap and the cost of leaving it | "Three things are always missing": the hard 20%, the agent workflow, the part after "it works" |
 | 4 | **Curriculum as outcomes** | One ability per module — never a topic list | The Week/Module table; every row reads "You'll leave able to…" |

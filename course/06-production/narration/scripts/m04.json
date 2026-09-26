@@ -87,7 +87,7 @@
     },
     "slide-22": {
       "title": "Drift case 1: the stale path",
-      "text": "Now the part that surprises people: generated files lie. Open the onboarding task file and read line three. It says the input is design documents from the specs zero two zero user onboarding folder. But the folder is specs zero zero zero user onboarding. The feature was renumbered at some point, and the generated task file kept the stale path. Nothing failed. No test caught it, no warning fired. It just sat in a generated artifact, waiting for an agent to follow a dead end. Everything in a spec folder is generated output, and generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code."
+      "text": "Now the part that surprises people: generated files lie. Open the onboarding task file and read its Input line, near the top. It says the input is design documents from the specs zero two zero user onboarding folder. But the folder is specs zero zero zero user onboarding. The feature was renumbered at some point, and the generated task file kept the stale path. Nothing failed. No test caught it, no warning fired. It just sat in a generated artifact, waiting for an agent to follow a dead end. Everything in a spec folder is generated output, and generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code."
     },
     "slide-23": {
       "title": "Drift cases 2–3: count and directory",
