@@ -24,6 +24,7 @@ Normally nobody runs this by hand: the `deploy` job in `.github/workflows/gate.y
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import subprocess
 import sys
@@ -35,7 +36,10 @@ REPO = COURSE.parent
 SITE = COURSE / "learner-site"
 
 # Everything the pages need that build_site.py does not emit itself.
-STATIC_ASSETS = ("player.css", "player.js", "narration-media.js")
+# Every hand-written asset ships: all scripts and stylesheets in assets/, found by glob. A fixed list
+# here once named three files, so progress.js, quiz.js, lab.js and search.js never reached the live
+# site and its search, knowledge checks, lab checklists and progress silently did nothing.
+STATIC_PATTERNS = ("*.js", "*.css")
 AUDIO_DIR = SITE / "assets" / "audio"
 
 
@@ -71,8 +75,9 @@ def stage_site(stage: Path, with_audio: bool) -> None:
 
     assets = stage / "assets"
     assets.mkdir(parents=True, exist_ok=True)
-    for name in STATIC_ASSETS:
-        shutil.copy2(SITE / "assets" / name, assets / name)
+    for pattern in STATIC_PATTERNS:
+        for path in sorted((SITE / "assets").glob(pattern)):
+            shutil.copy2(path, assets / path.name)
     shutil.copytree(SITE / "assets" / "fonts", assets / "fonts", dirs_exist_ok=True)
 
     if with_audio:
@@ -83,6 +88,28 @@ def stage_site(stage: Path, with_audio: bool) -> None:
 
     # Without this, GitHub runs the files through Jekyll first.
     (stage / ".nojekyll").write_text("", encoding="utf-8")
+    missing = missing_assets(stage)
+    if missing:
+        raise SystemExit("refusing to publish: pages reference files the staged site does not contain:\n  "
+                         + "\n  ".join(missing[:20]))
+
+
+ASSET_REF = re.compile(r'(?:src|href)="(?:\.?/)?((?:assets/)[^"#?]+)"')
+
+
+def missing_assets(stage: Path) -> list[str]:
+    """Every assets/ path any staged page loads must be in the staged copy. Audio is exempt in a
+    text-first copy: the player is told there are no recordings and never requests them."""
+    missing: set[str] = set()
+    for page in stage.glob("*.html"):
+        text = page.read_text(encoding="utf-8")
+        for m in ASSET_REF.finditer(text):
+            rel = m.group(1)
+            if rel.startswith("assets/audio/"):
+                continue
+            if not (stage / rel).exists():
+                missing.add(f"{page.name}: {rel}")
+    return sorted(missing)
 
 
 def publish(stage: Path, branch: str, remote: str, dry_run: bool, message: str) -> bool:
