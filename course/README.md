@@ -56,6 +56,9 @@ course/
 │   ├── README.md                  ← bundle index and the honest case for the full course
 │   └── {on-device-app,spec-driven-saas,expertise-product}/
 │                                   ← README · syllabus · sales-page · pricing · bundle-map
+├── 07-playbooks/                   ← 6 standalone playbooks extracted from M1, M3–M6 (drafts, prices proposed)
+│   └── {agent-governance,fail-closed-local,falsifiable-positioning,agent-executable-specs,
+│        tenant-negative-path,evidence-cited-briefing}/   ← playbook · sales
 └── 06-production/                  ← how the package is built and verified (instructor-facing)
     ├── MILESTONES.md              ← public roadmap mirroring the GitHub milestones/issues
     ├── slides/aps.css             ← shared Marp theme (`@theme aps`)

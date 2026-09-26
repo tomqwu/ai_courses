@@ -44,6 +44,12 @@ ARTIFACTS = {
     "lab-rubrics.md": (600, 1100),
     "accessibility.md": (400, 900),
 }
+# Standalone playbooks (#66): each folder is a sellable unit extracted from a module.
+PLAYBOOKS = ROOT / "07-playbooks"
+PLAYBOOK_BAND = (1500, 3000)
+SALES_BAND = (400, 750)
+PLAYBOOK_SECTIONS = ["## The method", "## Template", "## Checklist", "## Worked example",
+                     "## Self-check", "## Limits", "## Sources"]
 BUNDLES = ["on-device-app", "spec-driven-saas", "expertise-product"]
 BUNDLE_FILES = ["README.md", "syllabus.md", "sales-page.md", "pricing.md", "bundle-map.md"]
 
@@ -144,6 +150,38 @@ def check_artifacts() -> list[str]:
             lo, hi = band
             if not (lo <= n <= hi):
                 problems.append(f"{mod}/{name}: {n} words, band {lo}-{hi}")
+    problems += check_playbooks()
+    return problems
+
+
+def check_playbooks() -> list[str]:
+    """Each playbook stands alone: the sections in order, inside its band, with no pointer back into
+    the course's modules or labs (a buyer never saw them), and a sales page that proposes a price."""
+    problems: list[str] = []
+    if not PLAYBOOKS.is_dir():
+        return problems
+    for folder in sorted(p for p in PLAYBOOKS.iterdir() if p.is_dir()):
+        book, sales = folder / "playbook.md", folder / "sales.md"
+        for f, band in ((book, PLAYBOOK_BAND), (sales, SALES_BAND)):
+            if not f.exists():
+                problems.append(f"07-playbooks/{folder.name}/{f.name}: MISSING")
+                continue
+            n = word_count(f)
+            if not (band[0] <= n <= band[1]):
+                problems.append(f"07-playbooks/{folder.name}/{f.name}: {n} words, band {band[0]}-{band[1]}")
+        if book.exists():
+            # Templates carry their own headings inside code fences; only the playbook's count.
+            text = re.sub(r"```.*?```", "", book.read_text(encoding="utf-8"), flags=re.S)
+            at = [text.find("\n" + h) for h in PLAYBOOK_SECTIONS]
+            if -1 in at or at != sorted(at):
+                problems.append(f"07-playbooks/{folder.name}/playbook.md: sections missing or out of order "
+                                f"(need {', '.join(h[3:] for h in PLAYBOOK_SECTIONS)})")
+            body = text.rsplit("\n## Sources", 1)[0]
+            leak = re.search(r"\b(?:Lab M\d|M\d\.\d|in this module|as we saw)\b", body)
+            if leak:
+                problems.append(f"07-playbooks/{folder.name}/playbook.md: not standalone ({leak.group(0)!r})")
+        if sales.exists() and "the owner sets the final price" not in sales.read_text(encoding="utf-8"):
+            problems.append(f"07-playbooks/{folder.name}/sales.md: price not labelled as a proposal")
     return problems
 
 
