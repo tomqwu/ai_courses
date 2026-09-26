@@ -422,7 +422,8 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(deck['label'])} — transcript</title>
-<link rel="preload" href="{site_base}/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{site_base}/assets/player.css">
 </head>
 <body class="transcript">
@@ -442,10 +443,10 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
 
 
 BRAND_MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">'
-              '<rect width="32" height="32" rx="7" fill="#096d69"/>'
-              '<path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#85d5c4" stroke-width="2.3" '
+              '<rect width="32" height="32" rx="7" fill="#2446c8"/>'
+              '<path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" '
               'stroke-linejoin="round" stroke-linecap="round"/>'
-              '<path d="M12.3 18.3h7.4" stroke="#fcfcfa" stroke-width="2.3" stroke-linecap="round"/>'
+              '<path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/>'
               '</svg>')
 
 
@@ -600,7 +601,8 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(deck['label'])} — AI Product Studio</title>
-<link rel="preload" href="{site_base}/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{site_base}/assets/player.css">
 </head>
 <body class="deck-page" data-narration-manifest="{site_base}/narration.json"
@@ -789,7 +791,8 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI Product Studio — narrated course</title>
 <meta name="description" content="Build, ship and sell three kinds of AI product. Nine narrated modules with captions and transcripts.">
-<link rel="preload" href="{site_base}/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{site_base}/assets/player.css">
 </head>
 <body class="index">

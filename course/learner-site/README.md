@@ -27,7 +27,7 @@ recordings is still fully readable, and the player says so instead of failing.
 | `narration.json` | `06-production/narration/manifest.json` | No — copied at build time |
 | `assets/audio/…` | `generate_narration.py` | No — generated (see the narration README) |
 | `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
-| `assets/fonts/source-sans-3.woff2` | Source Sans 3, SIL OFL 1.1 (licence travels with it) | **Yes** |
+| `assets/fonts/*.woff2` | IBM Plex Sans, Bricolage Grotesque, JetBrains Mono (variable, latin + latin-ext), SIL OFL 1.1, each with its `OFL-*.txt` | **Yes** |
 | `build_site.py`, `check_player.py`, `check_features.py` | hand-written | **Yes** |
 
 ## The learner's record
@@ -57,8 +57,8 @@ and what was deliberately changed, is written down rather than implied:
 
 | Borrowed | Detail |
 |---|---|
-| Typeface | Source Sans 3, self-hosted `woff2`, `font-display: swap`, preloaded |
-| Palette | navy `#152e40` · teal `#096d69` · mint `#85d5c4` · ink `#405563` · paper `#fcfcfa` on `#eaf0ec` |
+| Typeface | *Replaced by Studio (#72):* IBM Plex Sans (reading), Bricolage Grotesque (display), JetBrains Mono (code), self-hosted `woff2`, `font-display: swap`, body and display preloaded |
+| Palette | *Replaced by Studio (#72):* ink `#16181d` on paper `#f6f4ef`; cobalt `#2446c8` = act / you are here, amber `#8a5300` on `#fbefd9` = evidence, green `#1e7348` = done |
 | The 16:9 master | `--frame-width: min(100vw - 32px, (100dvh - chrome - narration) * 16/9)`, `.slide { aspect-ratio: 16/9 }` |
 | Container-query type | slide type is sized in `cqw`, so it scales with the frame instead of the viewport |
 | Kicker + title | `M0.1 — Three archetypes` renders as kicker `M0.1` and title `Three archetypes`, exactly ai_qe's `02 / Strategic target state` |
@@ -118,7 +118,7 @@ Components now reference semantic names (`--c-ink`, `--c-rule`, `--c-surface`, `
 `--c-accent`, …) and the slide *kind* redefines them once:
 
 ```css
-.slide-proof, .slide-cover { --c-ink: var(--navy-ink); --c-accent: var(--mint); … }
+.slide-proof, .slide-cover { --c-ink: var(--dark-ink); --c-accent: var(--accent-bright); … }
 ```
 
 No `.slide-proof <component>` colour override remains. Every colour in the stylesheet is a named token —

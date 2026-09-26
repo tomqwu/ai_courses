@@ -429,7 +429,8 @@ def _doc_page(title: str, description: str, body: str, site_base: str, body_clas
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description)}">
-<link rel="preload" href="{site_base}/assets/fonts/source-sans-3.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{site_base}/assets/player.css">
 </head>
 <body class="index {body_class}">

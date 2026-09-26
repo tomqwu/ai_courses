@@ -323,7 +323,8 @@ function measure() {
     aspectRatio: style.aspectRatio,
     overflowing: shown.scrollHeight > shown.clientHeight + 2,
     bodyFont: w.getComputedStyle(d.body).fontFamily,
-    fontLoaded: d.fonts.check('16px "Source Sans 3"'),
+    fontLoaded: d.fonts.check('16px "IBM Plex Sans"') && d.fonts.check('600 32px "Bricolage Grotesque"'),
+    titleFont: w.getComputedStyle(d.querySelector('.slide:not([hidden]) h2') || d.body).fontFamily,
     fontsStatus: d.fonts.status,
     kicker: text('.slide:not([hidden]) .kicker'),
     title: text('.slide:not([hidden]) h2'),
@@ -776,10 +777,12 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         problems.append(f"{deck_id}: the slide frame collapsed to {data['slideWidth']}px wide")
     if data["overflowing"]:
         problems.append(f"{deck_id}: slide 1 overflows its frame, so content is clipped")
-    if "Source Sans 3" not in data["bodyFont"]:
-        problems.append(f"{deck_id}: body font is {data['bodyFont']!r}, not the ported typeface")
+    if "IBM Plex Sans" not in data["bodyFont"]:
+        problems.append(f"{deck_id}: body font is {data['bodyFont']!r}, not IBM Plex Sans (#72)")
+    if "Bricolage Grotesque" not in data.get("titleFont", ""):
+        problems.append(f"{deck_id}: slide titles use {data.get('titleFont')!r}, not Bricolage Grotesque (#72)")
     if not data["fontLoaded"] and data.get("fontsStatus") != "loaded":
-        problems.append(f"{deck_id}: Source Sans 3 was requested but never loaded "
+        problems.append(f"{deck_id}: IBM Plex Sans / Bricolage Grotesque were requested but never loaded "
                         f"(status {data.get('fontsStatus')!r})")
     if not data["kicker"]:
         problems.append(f"{deck_id}: the current slide has no kicker")
