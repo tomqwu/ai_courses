@@ -36,6 +36,7 @@ capture ─▶ transcribe ─▶ store/context ─▶ prompt ─▶ route ─▶
 | Model switch | bump generation; guard every write | stale answer under new model's name |
 | Listener grounding | only *completed* summaries | half-answer treated as fact |
 | Stream end | require `done` **and** visible text | truncation finishes as success |
+| Platform model | one more `LLMProvider`; check availability, measure each role | a model that failed its role ships anyway |
 
 ## Commands to keep
 
@@ -58,6 +59,9 @@ pytest tests/ -m "not e2e" --collect-only -q | tail -1
 - `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:31-40` — the proactive gate.
 - `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md` — gap G06, the scar.
 - `tinycopilot/tests/test_ollama_provider.py` — the failing-stream spec.
+- `ListenToMe/SharedPlatform/AppleIntelligenceProvider.swift:17-25` — a platform model behind the same seam.
+- `course/03-content/m02-ondevice-app/appendix-models-2026-09.md` — the dated model matrix; the lab
+  default stays `qwen3:0.6b`.
 
 ## Three gotchas
 
