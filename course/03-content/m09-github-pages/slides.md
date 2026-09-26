@@ -58,16 +58,21 @@ The prompt is waiting for you. Type after it, then press Enter.
 
 ## Install with one command each
 
-| | Windows | macOS |
-|---|---|---|
-| Package manager | `winget`, inside App Installer | Homebrew, one install line |
-| Git | `winget install --id Git.Git -e --source winget` | `brew install git` |
-| GitHub CLI | `winget install --id GitHub.cli --source winget` | `brew install gh` |
-| Then | **open a new terminal window** | run the setup lines it prints |
+Windows — PowerShell. `winget` ships inside App Installer.
 
-Package names from the maintainers: `github.com/cli/cli`, `github.com/microsoft/winget-pkgs`.
+```powershell
+winget install --id Git.Git -e --source winget
+winget install --id GitHub.cli --source winget
+```
 
-<!-- NOTES: Windows: winget ships in App Installer and needs Windows 10 1809 or later; if it is not recognised, install App Installer from the Store. macOS: Homebrew's own install line, then the shell setup lines it prints, which people skip. The Windows trap is the last row: a window opened before the install cannot see the new command, so open a new window, not a tab. Timing: 3 minutes, plus waiting. Transition: identity and sign-in. -->
+**Then open a new terminal window.** macOS — install Homebrew, run the setup lines it prints, then:
+
+```bash
+brew install git
+brew install gh
+```
+
+<!-- NOTES: Windows: winget ships in App Installer and needs Windows 10 1809 or later; if it is not recognised, install App Installer from the Store. macOS: Homebrew's own install line, then the shell setup lines it prints, which people skip. The Windows trap is the bold line: a window opened before the install cannot see the new command, so open a new window, not a tab. Package names are the maintainers' own: Git.Git in the winget repository, GitHub.cli in the CLI's Windows instructions. Timing: 3 minutes, plus waiting. Transition: identity and sign-in. -->
 
 ---
 

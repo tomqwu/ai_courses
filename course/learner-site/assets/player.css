@@ -1405,3 +1405,11 @@ body.transcript main { padding-bottom: 80px; }
 .capture-consent input { margin-top: 3px; }
 .capture-note { margin: 12px 0 0; font-size: var(--d-2); color: var(--ink); }
 .capture-note code { padding: 1px 4px; background: var(--paper); border: 1px solid var(--line-soft); border-radius: 3px; }
+
+/* Code inside the dark page header. The header is navy, so the body's teal code colour fails
+   contrast there; any path or command a lab puts in its opening lines needs the light ink. */
+.site-header code {
+  color: var(--navy-ink);
+  background: var(--navy-code);
+  border-color: var(--navy-line);
+}

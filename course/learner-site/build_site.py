@@ -516,6 +516,9 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
 
     if text_only:
         voice_chip = '<span class="voice-chip is-text">text-first</span>'
+    elif recorded == 0:
+        # A deck with no recordings yet must not claim a voice at all, least of all the release one.
+        voice_chip = '<span class="voice-chip is-text">not yet recorded</span>'
     elif is_preview and mixed:
         voice_chip = f'<span class="voice-chip is-preview">{preview_count} of {recorded} preview voice</span>'
     elif is_preview:
@@ -674,6 +677,8 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
                       for e in entries.values())
         if text_only:
             chip = '<span class="voice-chip is-text">text-first</span>'
+        elif not entries:
+            chip = '<span class="voice-chip is-text">not yet recorded</span>'
         elif preview:
             chip = '<span class="voice-chip is-preview">preview voice</span>'
         else:

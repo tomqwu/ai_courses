@@ -401,6 +401,10 @@ def fmt_minutes(seconds_value: float) -> str:
 
 # ---------------------------------------------------------------- pages
 
+def _plural(n: int, noun: str) -> str:
+    return f"{n} {noun}" + ("" if n == 1 else "s")
+
+
 def _crumbs(site_base: str, trail: list[tuple[str, str | None]]) -> str:
     parts = []
     for label, href in trail:
@@ -464,7 +468,7 @@ def path_cards_html(tracks: list[dict], units_by_deck: dict[str, list[dict]],
     <span class="path-kicker">{html.escape(track['kicker'])}</span>
     <h3>{html.escape(track['title'])}</h3>
     <span class="path-medium">{html.escape(track['medium'])}</span>
-    <span class="path-meta">{modules} modules · {len(units)} units · {fmt_minutes(minutes)} of narration</span>
+    <span class="path-meta">{modules} module{"" if modules == 1 else "s"} · {len(units)} units · {fmt_minutes(minutes)} of narration</span>
   </a>
   <div class="path-body">
     <p class="path-promise">{html.escape(track['promise'])}</p>
@@ -496,7 +500,7 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
       down — and each path states exactly what it leaves out.</p>
     <ul class="site-facts">
       <li>{len(tracks)} paths</li>
-      <li>9 modules · {total_units} units</li>
+      <li>{len(units_by_deck)} modules · {total_units} units</li>
       <li>Measured durations</li>
     </ul>
   </div>
@@ -601,7 +605,7 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
     {_crumbs(site_base, [("Course home", f"{site_base}/index.html"),
                          ("Learning paths", f"{site_base}/paths.html"),
                          (track["title"], None)])}
-    <p class="eyebrow">Learning path · {len(track['core']) + len(track.get('slice') or {})} modules · {len(units)} units</p>
+    <p class="eyebrow">Learning path · {_plural(len(track['core']) + len(track.get('slice') or {}), 'module')} · {len(units)} units</p>
     <h1>{html.escape(track['title'])}</h1>
     <p class="site-lede">{html.escape(track['promise'])}</p>
     {_at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
