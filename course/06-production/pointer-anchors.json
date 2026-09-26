@@ -5,29 +5,415 @@
   "ListenToMe/AGENTS.md:29-31": "riding the",
   "ListenToMe/AGENTS.md:39-40": "At most one macOS release",
   "ListenToMe/AGENTS.md:57": "not interchangeable",
-  "ListenToMe/AGENTS.md:59-68": ["**candidate**", "**verified**", "**published**"],
-  "ListenToMe/AGENTS.md:55-82": ["verification ladder", "merged but not published"],
-  "ListenToMe/AGENTS.md:13-18, 55-82": ["Definition of done", "verification ladder"],
-  "ListenToMe/AGENTS.md:75-78, 107-110": ["TestFlight", "build 11"],
-  "ListenToMe/docs/RELEASING.md:35-39": ["--target", "merged but not published"],
-  "ListenToMe/docs/RELEASING.md:33-39": ["downloaded again", "--target"],
-  "ListenToMe/docs/RELEASING.md:33-39, 41-52": ["downloaded again", "keys TCC permission grants"],
-  "ListenToMe/docs/RELEASING.md:167-177": ["scripts/release.sh", "notarization"],
+  "ListenToMe/AGENTS.md:59-68": [
+    "**candidate**",
+    "**verified**",
+    "**published**"
+  ],
+  "ListenToMe/AGENTS.md:55-82": [
+    "verification ladder",
+    "merged but not published"
+  ],
+  "ListenToMe/AGENTS.md:13-18, 55-82": [
+    "Definition of done",
+    "verification ladder"
+  ],
+  "ListenToMe/AGENTS.md:75-78, 107-110": [
+    "TestFlight",
+    "build 11"
+  ],
+  "ListenToMe/docs/RELEASING.md:35-39": [
+    "--target",
+    "merged but not published"
+  ],
+  "ListenToMe/docs/RELEASING.md:33-39": [
+    "downloaded again",
+    "--target"
+  ],
+  "ListenToMe/docs/RELEASING.md:33-39, 41-52": [
+    "downloaded again",
+    "keys TCC permission grants"
+  ],
+  "ListenToMe/docs/RELEASING.md:167-177": [
+    "scripts/release.sh",
+    "notarization"
+  ],
   "ListenToMe/docs/RELEASING.md:41-47": "com.tomwu.ListenToMe.dev",
   "ListenToMe/docs/RELEASING.md:41-52": "keys TCC permission grants",
-  "ListenToMe/docs/RELEASING.md:43-52": ["com.tomwu.ListenToMe", "stays on while capture returns nothing"],
+  "ListenToMe/docs/RELEASING.md:43-52": [
+    "com.tomwu.ListenToMe",
+    "stays on while capture returns nothing"
+  ],
   "ListenToMe/docs/RELEASING.md:48": "keys TCC permission grants",
   "ListenToMe/docs/RELEASING.md:49-52": "silently",
   "ListenToMe/README.md:174-180": "Dev builds are a separate app",
   "ListenToMe/README.md:176-180": "keys permission grants",
-  "ListenToMe/docs/competition-analysis.md:7-12": ["Bot-joining", "On-device transcription tools"],
+  "ListenToMe/docs/competition-analysis.md:7-12": [
+    "Bot-joining",
+    "On-device transcription tools"
+  ],
   "ListenToMe/docs/competition-analysis.md:16": "intersection of the privacy-first",
   "ListenToMe/.github/workflows/ci.yml:36-42": "check-coverage.sh 95",
   "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95": "roleDefaults",
   "ModelRanking.swift:80-95": "roleDefaults",
   "ModelPrivacy.swift:15-24": "isVerifiedLocal",
   "ModelPrivacy.swift:17-24": "isVerifiedLocal",
-  "OllamaProvider.swift:138-157": ["RejectRedirects", "isVerifiedLocal"],
+  "OllamaProvider.swift:138-157": [
+    "RejectRedirects",
+    "isVerifiedLocal"
+  ],
   "OllamaProvider.swift:138-142, 208-214": "RejectRedirects",
-  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157": ["RejectRedirects", "api/show"]
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157": [
+    "RejectRedirects",
+    "api/show"
+  ],
+  "ListenToMe/App/DualChannelCapture.swift:8-9": "converting both to mono Float PCM",
+  "ListenToMe/App/DualChannelCapture.swift:8-10": [
+    "converting both to mono Float PCM",
+    "final class DualChannelCapture"
+  ],
+  "ListenToMe/App/DualChannelCapture.swift:143": "source: .you",
+  "ListenToMe/App/DualChannelCapture.swift:324": "source: .others",
+  "ListenToMe/App/DualChannelCapture.swift:143, 324": [
+    "source: .you",
+    "source: .others"
+  ],
+  "ListenToMe/App/SpeechAnalyzerTranscriber.swift:6-39": "unlike SFSpeechRecognizer",
+  "App/SpeechAnalyzerTranscriber.swift:6-39": "unlike SFSpeechRecognizer",
+  "ListenToMe/README.md:374-376": "kAFAssistantErrorDomain 1100",
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:164-166": [
+    "stopDrain",
+    "SFSpeechRecognizer 1100"
+  ],
+  "ListenToMe/App/WhisperKitTranscriber.swift:6-13": "code-switching quality",
+  "ListenToMe/App/MeetingView.swift:106-107": "does not auto-detect or code-switch",
+  "ListenToMe/Sources/ListenToMeCore/Capture.swift:4": "public protocol AudioCapturing",
+  "ListenToMe/Sources/ListenToMeCore/Capture.swift:3-9": [
+    "Real impl lives in the app target",
+    "public protocol AudioCapturing"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:13": "public protocol LLMProvider",
+  "LLMProvider.swift:13-22": [
+    "public protocol LLMProvider",
+    "var maxPromptCharacters",
+    "func streamEvents"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/Transcriber.swift:4": "public protocol Transcribing",
+  "Transcriber.swift:4": "public protocol Transcribing",
+  "ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87": [
+    "func recentContext",
+    "Always include the most recent"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12": "maxChars: Int = 4000",
+  "ContextEngine.swift:12": "maxChars: Int = 4000",
+  "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:3": "Assembles prompt context and decides when to fire a proactive suggestion",
+  "ListenToMe/Sources/ListenToMeCore/ModelRouter.swift:4-6": "Holds the registered providers and routes streaming requests to the active one",
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:582-587": [
+    "func transcriptBudget",
+    "100_000"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/VAD.swift:25-36": "mutating func process(rms value: Float, at time: TimeInterval)",
+  "ListenToMe/SharedPlatform/AppleIntelligenceProvider.swift:17-25": [
+    "unavailableReason",
+    "deviceNotEligible",
+    "appleIntelligenceNotEnabled",
+    "modelNotReady"
+  ],
+  "ListenToMe/SharedPlatform/AppleIntelligenceProvider.swift:80-85": [
+    "appleIntelligenceCharacters",
+    "too long for Apple Intelligence"
+  ],
+  "ListenToMe/SharedPlatform/AppleIntelligenceProvider.swift:42-65": [
+    "func message(for error: Error)",
+    "GenerationError"
+  ],
+  "ListenToMe/App/MeetingView.swift:176-180": [
+    "makeProvider",
+    "AppleIntelligenceProvider()",
+    "OllamaProvider(model:"
+  ],
+  "ListenToMe/docs/SHARED-LIVE-SUMMARY.md:64-68": [
+    "failed the quality gate (3/7 cases",
+    "outside both app targets"
+  ],
+  "ListenToMe/README.md:120-121": "model picker in the left status rail",
+  "ListenToMe/README.md:100": "rolling summary plus open questions",
+  "ListenToMe/README.md:101-105": [
+    "global hotkey",
+    "proactively"
+  ],
+  "ListenToMe/README.md:106": "on-demand, detailed long-reasoning answers",
+  "ListenToMe/README.md:98-106": [
+    "**Listener**",
+    "**Quick**",
+    "**Deep**"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/CopilotRole.swift:5-7": [
+    "case listener",
+    "case quick",
+    "case deep"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:74-78": "auto-refreshes continuously, so speed beats depth",
+  "ListenToMe/App/MeetingView.swift:845": "ModelRanking.roleDefaults",
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:91-111": [
+    "func roleDefaults",
+    "fastPatterns",
+    "strongPatterns"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:13-18, 80-95": [
+    "Token-prefix matching",
+    "local-first",
+    "no local chat model exists"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:66-72": [
+    "looksCloudHosted",
+    ":cloud",
+    "-cloud"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:119-159": [
+    "static let descriptions",
+    "func describe"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:119-143": "static let descriptions",
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:49-54": [
+    "fastPatterns",
+    "strongPatterns"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:13-18": [
+    "Token-prefix matching",
+    "func hasMarker"
+  ],
+  "ModelRanking.swift:13-18": [
+    "Token-prefix matching",
+    "func hasMarker"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:7-18": [
+    "func tokens",
+    "func hasMarker"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:123, 144, 169-170": [
+    "var models: [CopilotRole: String]",
+    "var providers: [CopilotRole: any LLMProvider]",
+    "var responseGenerations"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:204-221": [
+    "func setModel",
+    "cancelResponse(role)",
+    "responseGenerations[role, default: 0] += 1"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:803-880": [
+    "let generation = (responseGenerations[role] ?? 0) + 1",
+    "if generation != responseGenerations[role] { return }"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:204-221,803-880": [
+    "func setModel",
+    "if generation != responseGenerations[role] { return }"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:204-221, 803-880": [
+    "func setModel",
+    "if generation != responseGenerations[role] { return }"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:53, 81-84": [
+    "var listenerSummary",
+    "var lastCompletedListenerSummary",
+    "can't read an empty/partial in-flight summary"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:601-605, 640-653": [
+    "private func clampedContext",
+    "let summary = lastCompletedListenerSummary",
+    "func respondQuick",
+    "func respondDeep"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/Prompt.swift:87": "public enum PromptBuilder",
+  "ListenToMe/Sources/ListenToMeCore/Prompt.swift:129-135": [
+    "let systemPrompt",
+    "No preamble"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/Prompt.swift:137-145": [
+    "let listenerSystemPrompt",
+    "Never invent an owner, deadline, agreement, or completion."
+  ],
+  "ListenToMe/Sources/ListenToMeCore/Prompt.swift:147-152": [
+    "let deepSystemPrompt",
+    "depth is valued over brevity here"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/Prompt.swift:129-152": [
+    "let systemPrompt",
+    "let listenerSystemPrompt",
+    "let deepSystemPrompt"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/Prompt.swift:14-24, 154-201": [
+    "enum ResponseAction",
+    "func instruction(for",
+    "func deepInstruction(for"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/Prompt.swift:245-260": "func systemWithDirectives",
+  "ListenToMe/Sources/ListenToMeCore/QuestionDetector.swift:19-26": [
+    "normalized.hasSuffix(\"?\")",
+    "phraseCues.contains"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8": "debounce: TimeInterval = 8",
+  "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:41-50": [
+    "func shouldFireProactive",
+    "segment.isFinal",
+    "segment.source == .others",
+    "now - lastFire >= debounce"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8, 41-50": [
+    "debounce: TimeInterval = 8",
+    "func shouldFireProactive",
+    "segment.source == .others"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8,41-50": [
+    "debounce: TimeInterval = 8",
+    "func shouldFireProactive",
+    "segment.source == .others"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:3-34": [
+    "NDJSON",
+    "func delta(fromLine",
+    "func isDone"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:42-50": [
+    "lineSource",
+    "injectable for testing"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:159-177": [
+    "api/chat",
+    "bytes.lines"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:42-50, 159-177": [
+    "injectable for testing",
+    "api/chat"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:84-86": "throw OllamaStreamError.server(error)",
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104": [
+    "var completed = false",
+    "var producedContent = false",
+    "OllamaStreamError.incomplete",
+    "OllamaStreamError.empty"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:101": "throw OllamaStreamError.incomplete",
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:216-224": [
+    "enum OllamaStreamError",
+    "case server(String)",
+    "case incomplete",
+    "case empty",
+    "case thinkingOnly"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:216-236": [
+    "enum OllamaStreamError",
+    "case incomplete",
+    "case empty",
+    "case thinkingOnly",
+    "Partial text is kept"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104, 216-236": [
+    "var producedContent",
+    "enum OllamaStreamError"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104,216-236": [
+    "var producedContent",
+    "enum OllamaStreamError"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:62-63": [
+    "quickEvaluation",
+    "thinking: false, temperature: 0, maximumTokens: 3072"
+  ],
+  "ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md:5, 51": [
+    "215 passing Core tests",
+    "97.24% Core coverage",
+    "| G06 |",
+    "finish as success"
+  ],
+  "ListenToMe/docs/SHARED-LIVE-SUMMARY.md:102": [
+    "exhausting the former 1,600-token budget",
+    "3,072 generated tokens"
+  ],
+  "ListenToMe/docs/SHARED-LIVE-SUMMARY.md:8-10": [
+    "five seconds",
+    "24 trimmed characters",
+    "does not poll"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:89-92": "provisionalMinimumCharacters = 24",
+  "ListenToMe/Sources/ListenToMeCore/QuickSummaryContext.swift:65-66": "ConversationStore.provisionalMinimumCharacters",
+  "ListenToMe/docs/SHARED-LIVE-SUMMARY.md:31": "30-second/16-KiB response limit",
+  "ListenToMe/Sources/ListenToMeCore/AutomaticReviewCoordinator.swift:59": "Timers exist only for queued work or a failed request",
+  "ListenToMe/Sources/ListenToMeCore/AutomaticReviewCoordinator.swift:107": [
+    "summaryInterval: Duration = .seconds(30)",
+    "deepInterval: Duration = .seconds(60)"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/AutomaticReviewCoordinator.swift:59, 107": [
+    "Timers exist only for queued work",
+    ".seconds(30)",
+    ".seconds(60)"
+  ],
+  "ListenToMe/docs/SHARED-LIVE-SUMMARY.md:96": [
+    "Full reviews run serially",
+    "30-second minimum",
+    "Deep 60 seconds",
+    "Unchanged input cannot regenerate a completed review"
+  ],
+  "ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17-24": [
+    "isVerifiedLocal",
+    "remote_host",
+    "remote_model"
+  ],
+  "course/00-research/08-domain-currency-2026.md:74": "Discoverability has structurally changed",
+  "08-domain-currency-2026.md:74": "Discoverability has structurally changed",
+  "08-domain-currency-2026.md:75": "AI engines mis-cite",
+  "08-domain-currency-2026.md:76": "Provenance tooling",
+  "08-domain-currency-2026.md:77": "Narrated decks are a commodity",
+  "08-domain-currency-2026.md:78": "Editions",
+  "course/00-research/08-domain-currency-2026.md:25": [
+    "5.1.2(i)",
+    "Article 50"
+  ],
+  "course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-45": "class PrivacyMode",
+  "course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:101-145": [
+    "def verify_local_model",
+    "\"remote_host\" in info"
+  ],
+  "course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:50-92": [
+    "def httpx_transport",
+    "follow_redirects=not reject_redirects",
+    "silently forwarded"
+  ],
+  "course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:46-75": [
+    "_LOOPBACK",
+    "trust_env=trust_env"
+  ],
+  "SignUpFlow/docs/API_AUTHORIZATION.md:101-118": [
+    "## Change Protocol",
+    "tenancy warning listener"
+  ],
+  "SignUpFlow/docs/API_AUTHORIZATION.md:21-22": "HTTPBearer",
+  "SignUpFlow/tests/api/test_scheduling_tenant_boundaries.py:207": "status_code == 401",
+  "SignUpFlow/poetry.lock:1036-1037": [
+    "name = \"fastapi\"",
+    "0.141.1"
+  ],
+  "docs/API_AUTHORIZATION.md:101-118": "## Change Protocol",
+  "docs/API_AUTHORIZATION.md:107-108": "leave database state unchanged",
+  "docs/API_AUTHORIZATION.md:116-118": "tenancy warning listener",
+  "ListenToMe/docs/competition-analysis.md:80": "almost no commercial competitor genuinely fills",
+  "ListenToMe/docs/competition-analysis.md:88": "One-line positioning",
+  "ListenToMe/docs/competition-analysis.md:1-77": [
+    "Last updated: 2026-09",
+    "### MacWhisper"
+  ],
+  "ListenToMe/docs/competition-analysis.md:20-35": [
+    "| Tool |",
+    "**Meetily**"
+  ],
+  "ListenToMe/README.md:7": "capture-and-recall companion",
+  "SignUpFlow/.claude/commands/speckit.specify.md:72-80": "checklists/requirements.md",
+  "SignUpFlow/specs/014-security-hardening/checklists/requirements.md:3": "before proceeding to planning",
+  "SignUpFlow/specs/014-security-hardening/checklists/requirements.md:27": "documented in Assumptions",
+  "SignUpFlow/specs/014-security-hardening/spec.md:218, 232, 251": [
+    "FR-013",
+    "FR-023",
+    "FR-036"
+  ],
+  "SignUpFlow/specs/014-security-hardening/spec.md:350-359": "## Assumptions"
 }

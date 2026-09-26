@@ -12,7 +12,7 @@ title: M2 — The On-Device AI App: Architecture
 **Promise:** trace one real on-device pipeline, then rebuild its core.
 **Duration:** ~75 min lesson + ~3 h lab.
 
-<!-- NOTES: Welcome to Module 2. Today the abstraction ends: we open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs. Then in the lab you rebuild that core in Python as TinyCopilot until 201 tests pass. By the end of this module you will be able to point at a Swift file for every stage and defend each decision. (45 seconds; move to objectives.) -->
+<!-- NOTES: Welcome to Module 2. Today the abstraction ends: we open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs. Then in the lab you rebuild that core in Python as TinyCopilot until 208 tests pass. By the end of this module you will be able to point at a Swift file for every stage and defend each decision. (45 seconds; move to objectives.) -->
 
 ---
 
@@ -56,7 +56,7 @@ final class DualChannelCapture: NSObject, AudioCapturing, @unchecked Sendable {
 
 `ListenToMe/App/DualChannelCapture.swift:8-10`
 
-<!-- NOTES: The header comment on `App/DualChannelCapture.swift:8` says both sources are converted to mono Float PCM and emitted as audio chunks. At line 102 the mic tap tags buffers `.you`; at line 212 the ScreenCaptureKit callback tags them `.others`. That one tag is why the app can label "You" versus "Others" without any diarization. Capture is hardware-bound, so it is kept as small as possible — a rule we will reuse in the lab. (70 seconds; move to the seams.) -->
+<!-- NOTES: The header comment at `ListenToMe/App/DualChannelCapture.swift:8-9` says both sources are converted to mono Float PCM and emitted as audio chunks. The mic tap tags buffers `.you` at `ListenToMe/App/DualChannelCapture.swift:143`; the ScreenCaptureKit callback tags them `.others` at `ListenToMe/App/DualChannelCapture.swift:324`. That one tag is why the app can label "You" versus "Others" without any diarization. Capture is hardware-bound, so it is kept as small as possible — a rule we will reuse in the lab. (70 seconds; move to the seams.) -->
 
 ---
 
@@ -66,7 +66,7 @@ final class DualChannelCapture: NSObject, AudioCapturing, @unchecked Sendable {
 |---|---|---|
 | `AudioCapturing` | what audio arrives | AVAudioEngine, ScreenCaptureKit |
 | `Transcribing` | partials and finals | SpeechAnalyzer, WhisperKit |
-| `LLMProvider` | streamed text | Ollama HTTP client |
+| `LLMProvider` | streamed text | Ollama client (in Core), Apple Intelligence |
 
 ```swift
 public protocol AudioCapturing: Sendable {
@@ -77,11 +77,14 @@ public protocol AudioCapturing: Sendable {
 }
 public protocol LLMProvider: Sendable {
     var id: String { get }
+    var maxPromptCharacters: Int? { get }
     func stream(_ request: LLMRequest) -> AsyncThrowingStream<String, Error>
+    func streamEvents(_ request: LLMRequest)
+        -> AsyncThrowingStream<LLMStreamEvent, Error>
 }
 ```
 
-`ListenToMe/Sources/ListenToMeCore/Capture.swift:4` · `LLMProvider.swift:4`
+`ListenToMe/Sources/ListenToMeCore/Capture.swift:4` · `LLMProvider.swift:13-22`
 
 <!-- NOTES: A seam is a protocol the pure core owns and the platform side implements. Core never names AVFoundation or Ollama; it only names these three protocols. That inversion is what lets the test suite inject mocks. The pay-off: if we add a fourth transcription engine tomorrow, nothing below the `Transcribing` protocol changes — not the store, not the prompts, not the router. (75 seconds; next we look inside the transcription seam.) -->
 
@@ -100,14 +103,14 @@ public protocol LLMProvider: Sendable {
 
 `ListenToMe/Sources/ListenToMeCore/Transcriber.swift`
 
-<!-- NOTES: `Sources/ListenToMeCore/Transcriber.swift` defines `prepare()`, `feed(_:)`, `finish()`. The `prepare()` contract matters: warm up before audio so `feed` never blocks and the meeting's opening seconds are not dropped. `App/SpeechAnalyzerTranscriber.swift:6-39` notes one analyzer per source, unlike `SFSpeechRecognizer`. WhisperKit trades live partials for stronger multilingual quality — `App/MeetingView.swift:84` is why: Apple's on-device Speech selects one primary language. (80 seconds; next the store.) -->
+<!-- NOTES: `Sources/ListenToMeCore/Transcriber.swift` defines `prepare()`, `feed(_:)`, `finish()`. The `prepare()` contract matters: warm up before audio so `feed` never blocks and the meeting's opening seconds are not dropped. `App/SpeechAnalyzerTranscriber.swift:6-39` notes one analyzer per source, unlike `SFSpeechRecognizer`. WhisperKit trades live partials for stronger multilingual quality — `ListenToMe/App/MeetingView.swift:106-107` is why: Apple's on-device Speech selects one primary language. (80 seconds; next the store.) -->
 
 ---
 
 ## The store and its budget
 
 - `ConversationStore.swift` is the single source of truth.
-- Finals log plus one current partial.
+- Finals log plus one partial per source.
 - `recentContext(maxChars:)` walks newest-first.
 - Always keeps the newest, even over budget.
 - Default budget: 4,000 characters.
@@ -122,7 +125,7 @@ public func buildContext(from store: ConversationStore, notes: String?,
 
 `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12`
 
-<!-- NOTES: `apply(_:)` appends finals and replaces partials. The window function walks utterances newest-first, keeping each while it fits, and always includes the most recent one even if it alone exceeds the budget — the window is never empty (`ConversationStore.swift:56-67`). The default is 4,000 characters (`ContextEngine.swift:12`), but `MeetingSession.transcriptBudget(for:)` raises recap and action-item prompts to 100,000 because they must cover the whole conversation (`MeetingSession.swift:419-427`). (85 seconds; a quick word on segmentation.) -->
+<!-- NOTES: `apply(_:)` appends finals and replaces partials. The window function walks utterances newest-first, keeping each while it fits, and always includes the most recent one even if it alone exceeds the budget — the window is never empty (`ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87`). The default is 4,000 characters (`ContextEngine.swift:12`), but `MeetingSession.transcriptBudget(for:)` raises recap and action-item prompts to 100,000 because they must cover the whole conversation (`ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:582-587`). (85 seconds; a quick word on segmentation.) -->
 
 ---
 
@@ -157,7 +160,7 @@ public mutating func process(rms value: Float, at time: TimeInterval) -> Bool {
 
 ## The newest segment always survives
 
-- `ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:56-67`
+- `ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87`
 - Newest-first fit, budget-bounded window.
 - Guarantee: never an empty context.
 - Default 4,000 chars — `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12`.
@@ -168,9 +171,10 @@ public func recentContext(maxChars: Int) -> [TranscriptSegment] {
     var total = 0
     var collected: [TranscriptSegment] = []
     for segment in utterances.reversed() {
+        let cost = TranscriptSegment.promptCharacterCost(segment)
         // Always include the most recent; otherwise stop before exceeding the budget.
-        if !collected.isEmpty && total + segment.text.count > maxChars { break }
-        total += segment.text.count
+        if !collected.isEmpty && total + cost > maxChars { break }
+        total += cost
         collected.append(segment)
     }
     return collected.reversed()
@@ -198,7 +202,7 @@ public func recentContext(maxChars: Int) -> [TranscriptSegment] {
 
 ## Local-first role defaults
 
-`ModelRanking.roleDefaults(from:)` picks automatically.
+`ModelRanking.roleDefaults(from:local:)` picks automatically.
 
 | Role | Curated markers | Else |
 |---|---|---|
@@ -211,7 +215,7 @@ public func recentContext(maxChars: Int) -> [TranscriptSegment] {
 
 `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:49-54`
 
-<!-- NOTES: The logic lives in `Sources/ListenToMeCore/ModelRanking.swift:76-94`, called from `App/MeetingView.swift:717`. Fast markers include flash, mini, nano, lite, small, fast; strong markers include pro, reason, think, coder, code, ultra, max, large. The local-first filter at lines 72-79 is a privacy default, not a speed one: an unpinned pane must never silently send a transcript to Ollama Cloud. The "good for" hints come from `describe(_:)` at lines 101-141. (80 seconds; now the subtle bug.) -->
+<!-- NOTES: The logic lives in `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:91-111`, called from `ListenToMe/App/MeetingView.swift:845`. Fast markers include flash, mini, nano, lite, small, fast; strong markers include pro, reason, think, coder, code, ultra, max, large. The local-first filter (`ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95`) is a privacy default, not a speed one: an unpinned pane must never silently send a transcript to Ollama Cloud. The "good for" hints come from `describe(_:)` and its table (`ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:119-159`). (80 seconds; now the subtle bug.) -->
 
 ---
 
@@ -246,7 +250,7 @@ static func hasMarker(_ model: String, _ marker: String) -> Bool {
 - Switch mid-answer: old tokens die on the floor.
 - Without it, yesterday's model answers under today's name.
 
-<!-- NOTES: `MeetingSession.swift:119-132` is where `setModel` bumps the counter; lines 513-578 are where the streaming loop checks it before every write. The failure this prevents is subtle and embarrassing: a slow answer from the old model finishes after the switch and displays under the new model's name. Users read that as the new model being wrong. Cancellation is a correctness feature, not an optimization. (75 seconds; next, prompts.) -->
+<!-- NOTES: `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:204-221` is where `setModel` calls `cancelResponse`, which bumps the counter; `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:803-880` is where each stream takes a generation and the loop checks it before every write. The failure this prevents is subtle and embarrassing: a slow answer from the old model finishes after the switch and displays under the new model's name. Users read that as the new model being wrong. Cancellation is a correctness feature, not an optimization. (75 seconds; next, prompts.) -->
 
 ---
 
@@ -268,14 +272,14 @@ static func hasMarker(_ model: String, _ marker: String) -> Bool {
 |---|---|
 | Quick | no preamble, answer in 1–3 sentences |
 | Listener | never invent owner, deadline, agreement, completion |
-| Deep | depth over brevity; no padding |
+| Deep | depth over brevity; code when relevant |
 
 - Nine response actions layer on top.
 - Persona directives append to every role.
 
 `ListenToMe/Sources/ListenToMeCore/Prompt.swift`
 
-<!-- NOTES: Read the actual sentences in `Prompt.swift`: Quick at lines 65-71, Listener at 73-81, Deep at 83-88. The Listener contract exists because its summary feeds back into Quick and Deep prompts — one hallucinated owner would propagate everywhere, so it is blocked at the source. `systemWithDirectives` at lines 159-173 appends persona and language to every pane, so a preset like Interview shapes all three roles identically. (80 seconds; proof slide.) -->
+<!-- NOTES: Read the actual sentences in `Prompt.swift`: Quick at `ListenToMe/Sources/ListenToMeCore/Prompt.swift:129-135`, Listener at `ListenToMe/Sources/ListenToMeCore/Prompt.swift:137-145`, Deep at `ListenToMe/Sources/ListenToMeCore/Prompt.swift:147-152`. The Listener contract exists because its summary feeds back into Quick and Deep prompts — one hallucinated owner would propagate everywhere, so it is blocked at the source. `systemWithDirectives` at `ListenToMe/Sources/ListenToMeCore/Prompt.swift:245-260` appends persona and language to every pane, so a preset like Interview shapes all three roles identically. (80 seconds; proof slide.) -->
 
 ---
 
@@ -283,13 +287,13 @@ static func hasMarker(_ model: String, _ marker: String) -> Bool {
 
 ## Only completed summaries ground other roles
 
-- `ListenToMe/Sources/ListenToMeCore/Prompt.swift:73-81` — never-invent contract.
-- `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:40-43` — two summary fields.
+- `ListenToMe/Sources/ListenToMeCore/Prompt.swift:137-145` — never-invent contract.
+- `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:53, 81-84` — two summary fields.
 - `lastCompletedListenerSummary` — injected, safe.
 - In-flight `listenerSummary` — display only, never injected.
 - A half-answer is worse than no answer.
 
-<!-- NOTES: Open `MeetingSession.swift:40-43` and note there are two properties, not one. The live display value is cleared while a refresh streams; the completed value is separate and is what gets injected at lines 435 and 449. The misconception to kill here is "more context is better, inject whatever is on screen." An in-flight summary is a confident-looking half-answer, and Quick would treat it as fact. (75 seconds; M2.3.) -->
+<!-- NOTES: Open `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:53, 81-84` and note there are two properties, not one. The live display value is cleared while a refresh streams; the completed value is separate, and it is the one `clampedContext` reads for both the Quick and the Deep prompt (`ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:601-605, 640-653`). The misconception to kill here is "more context is better, inject whatever is on screen." An in-flight summary is a confident-looking half-answer, and Quick would treat it as fact. (75 seconds; M2.3.) -->
 
 ---
 
@@ -335,7 +339,7 @@ return phraseCues.contains { cue in
 - At least 8 seconds since last fire.
 - One trigger, one answer, then quiet.
 
-<!-- NOTES: `ContextEngine.shouldFireProactive(for:now:)` at `Sources/ListenToMeCore/ContextEngine.swift:31-40` is all four conditions, with the debounce default of 8 seconds at line 8. The `.others` condition is the one people miss: you do not want the app answering your own rhetorical questions. Without the debounce, two heated minutes of questions flood the pane with overlapping suggestions. (70 seconds; now failures.) -->
+<!-- NOTES: `ContextEngine.shouldFireProactive(for:now:)` at `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:41-50` is all four conditions, with the debounce default of 8 seconds at `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8`. The `.others` condition is the one people miss: you do not want the app answering your own rhetorical questions. Without the debounce, two heated minutes of questions flood the pane with overlapping suggestions. (70 seconds; now failures.) -->
 
 ---
 
@@ -351,14 +355,16 @@ return phraseCues.contains { cue in
 ```swift
 public enum OllamaStreamError: LocalizedError {
     case server(String)
+    case unreachable(String)
     case incomplete
     case empty
+    case thinkingOnly
 }
 ```
 
-`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:159-168`
+`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:216-224`
 
-<!-- NOTES: `Sources/ListenToMeCore/OllamaProvider.swift:120-139` reads NDJSON lines; the line source is injectable so tests feed canned lines. The loop tracks `completed` and `producedContent` at lines 67-83. Three typed cases live at lines 159-170, each with a user-facing message. This design is a scar, not a guess: the September 2026 review found the old provider let truncated streams finish as success — gap G06, P0 — while the project showed 215 passing core tests and 97.24% coverage. (85 seconds; proof slide.) -->
+<!-- NOTES: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:42-50` is the line source that yields raw NDJSON lines; it is injectable so tests feed canned lines. The loop tracks `completed` and `producedContent` at `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104`. Five typed cases live at `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:216-236`, each with a user-facing message: the three in the bullets, plus `.unreachable` for a server that never answered and `.thinkingOnly` for a model that reasoned but never answered. This design is a scar, not a guess: the September 2026 review found the old provider let truncated streams finish as success — gap G06, P0 — while the project showed 215 passing core tests and 97.24% coverage. (85 seconds; proof slide.) -->
 
 ---
 
@@ -366,8 +372,8 @@ public enum OllamaStreamError: LocalizedError {
 
 ## Flicker is information; silence is a lie
 
-- `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:67-83`
-- Two booleans: completion flag, content flag.
+- `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104`
+- Two flags decide success: completion and content.
 - `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md` — gap G06.
 - Old provider: truncated streams finished as success.
 - Tests passed; the failure model was wrong.
@@ -390,7 +396,7 @@ public enum OllamaStreamError: LocalizedError {
 
 `ListenToMe/docs/SHARED-LIVE-SUMMARY.md`
 
-<!-- NOTES: `OllamaProvider.swift:49-51` forces `think: false`, temperature 0, and a 3,072-token cap for quick evaluations. Why 3,072? `docs/SHARED-LIVE-SUMMARY.md` line 66 records that live GLM testing exposed planning text despite `think: false`, exhausting the former 1,600-token budget halfway through valid JSON. The cap is the smallest budget that stopped an observed truncation. The shared live-summary engine is documented in the same file: batches, eligibility, caps, serialized reviews. (85 seconds; the lab.) -->
+<!-- NOTES: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:62-63` forces `think: false`, temperature 0, and a 3,072-token cap for quick evaluations. Why 3,072? `ListenToMe/docs/SHARED-LIVE-SUMMARY.md:102` records that live GLM testing exposed planning text despite `think: false`, exhausting the former 1,600-token budget halfway through valid JSON. The cap is the smallest budget that stopped an observed truncation. The shared live-summary engine is documented in the same file: batches, eligibility, caps, serialized reviews. (85 seconds; the lab.) -->
 
 ---
 
@@ -401,8 +407,8 @@ public enum OllamaStreamError: LocalizedError {
 
 | Command | Expected |
 |---|---|
-| `make lab-m2` | 201 passed, 100% coverage; floor 90 |
-| `make lab-m3` | 49 passed |
+| `make lab-m2` | 208 passed, 100% coverage; floor 90 |
+| `make lab-m3` | 56 passed |
 | `make demo` | three role outputs from a real model |
 
 Guide: `course/03-content/m02-ondevice-app/lab.md`

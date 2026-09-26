@@ -8,11 +8,11 @@
 `make lab-m2` runs `pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q`. Verified:
 
 ```
-201 passed, 2 deselected in 0.13s
+208 passed, 2 deselected
 Required test coverage of 90% reached. Total coverage: 100.00%
 ```
 
-Total **460 statements, 0 missed** across the eight source files.
+Total **468 statements, 0 missed** across the eight source files.
 
 **Step 2 is the step students misread.** Deleting a module does not produce failing tests; it produces
 a *collection error*, because `src/tinycopilot/__init__.py:8-34` re-exports all six modules and
@@ -30,8 +30,8 @@ the red run; the test file holds the per-test spec. After a stub imports, red is
 budget-ignoring `recent_context` yields `13 failed, 2 passed`.
 
 Per-file counts: conversation_store **15**, question_detector **32**, prompts **38**, model_router
-**40**, ollama_provider **18**, copilot **17** (160, plus `test_privacy.py`'s **31** = 201).
-**Grading note:** a "201 failed" red run is fabricated; the honest one is an ImportError, exit 4.
+**40**, ollama_provider **21**, copilot **17** (163, plus `test_privacy.py`'s **35** and `test_injection.py`'s **10** = 208).
+**Grading note:** a "208 failed" red run is fabricated; the honest one is an ImportError, exit 4.
 
 ## 1. `conversation_store.py` (Step 3, 15 tests)
 
@@ -110,7 +110,7 @@ token-prefix matching exists to reject. (2) Parsing bare numbers — `"qwen3"` b
 
 **Grading:** ask for the two `gemini` scores; only token-prefix matching yields 12.0 and −8.0.
 
-## 5. `ollama_provider.py` (Step 7, 18 tests)
+## 5. `ollama_provider.py` (Step 7, 21 tests)
 
 **Reference.** `ServerError`, `IncompleteStreamError`, `EmptyResponseError` under `LLMError`.
 `Transport` is `Callable[[str, dict|None], tuple[int, Iterator[str]]]`. `stream_chat` is a generator
@@ -168,8 +168,8 @@ Listener summary, a Quick answer, and a Deep answer. The text varies by model; w
 | Six modules re-implemented | `make lab-m2` exits 0 |
 | Red captured per module | Six ImportError captures (exit 4) in the evidence log |
 | Coverage floor 90 | `make lab-m2` prints `Required test coverage of 90% reached` |
-| Privacy tests preserved | `tests/test_privacy.py` unmodified; its 31 tests are inside `make lab-m2`'s 201 |
+| Privacy tests preserved | `tests/test_privacy.py` unmodified; its 35 tests are inside `make lab-m2`'s 208 |
 | Router matches the spec | `pytest tests/test_model_router.py -q` → 40 passed |
-| Typed stream errors | `pytest tests/test_ollama_provider.py -q` → 18 passed |
+| Typed stream errors | `pytest tests/test_ollama_provider.py -q` → 21 passed |
 | Cancellation proven | `pytest tests/test_copilot.py::TestSetModel -q` green |
 | Demo ran on a real model | `make demo` transcript with model names visible |

@@ -347,13 +347,13 @@ The depth audit that followed the diagram pass found the real cause of the "hell
 depth was in the *spoken* layer (86–103 words a slide, real numbers, real files) while the visible
 face was a 36-word prompt — and the slides that teach a real Swift codebase showed **zero lines of
 code**. A slide that says "newest-first fit, budget-bounded window" and cites
-`ConversationStore.swift:56-67` without showing the loop is asking to be trusted.
+`ConversationStore.swift:76-87` without showing the loop is asking to be trusted.
 
 The fix is the **evidence exhibit**: the cited code, verbatim, on the slide — a code fence under the
 claims (fences were always exempt from the bullet budget; the budget is about prose, not proof). The
 pilot is module m02, five slides: the three protocol seams, the `buildContext` signature with its
-4,000-character default, the eleven-line `recentContext` loop whose guard is the "never empty"
-guarantee, the token-prefix matcher, and the three-case `OllamaStreamError` enum. The narration for
+4,000-character default, the short `recentContext` loop whose guard is the "never empty"
+guarantee, the token-prefix matcher, and the `OllamaStreamError` enum. The narration for
 those five slides was rewritten to walk the code, regenerated with the free local `say` preview
 voice, and the manifest re-verified — the release voice (#21) is still uncut, so this is the window
 in which scripts can change. The narration contract pins captions = transcript = script, so all

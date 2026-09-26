@@ -135,7 +135,7 @@ writers were told to report anything they could not verify. That process found f
 | An off-by-two count presented as fact | M5 lesson said the policy's `admin` class had **80** operations | AST count gives 7/6/2/50/**78** = 143; lesson corrected and the total added |
 | A pointer attributed to the wrong file | M6 lesson placed the `?for=evp` audience views in `briefings/index.md` | Corrected to `ai_qe/index.md:27,29` + `ai_qe/CONTRIBUTING.md:23` |
 | An unmeasured "length check" | Landing page claimed "~2,250 words" in its own authoring note | Measured: 2,251 total / ~1,900 body; corrected in 7 places (and re-measured after the bundle edit) |
-| Prose contradicting the executable spec | M2 lab said the router picks a *distinct* Listener model when ≥3 exist | The Python tests share Listener/Quick; the Swift original differs. Lab now states the divergence explicitly and points at `ModelRanking.swift:76-94` |
+| Prose contradicting the executable spec | M2 lab said the router picks a *distinct* Listener model when ≥3 exist | The Python tests share Listener/Quick; the Swift original differs. Lab now states the divergence explicitly and points at `ModelRanking.swift:91-111` |
 
 Two further "corrections" proposed by writers were **rejected after checking the source**: the
 coverage statuses really are on `coverage.py:18` (as the lesson said), and "Missing review is not

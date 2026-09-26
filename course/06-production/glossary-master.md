@@ -47,7 +47,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **`AudioCapturing` — the capture protocol seam** *(M2)* — Core declares what audio arrives; `App/` supplies `AVAudioEngine` and ScreenCaptureKit. `ListenToMe/Sources/ListenToMeCore/Capture.swift:4`.
 - **`CopilotRole` — the three AI roles as an enum: `listener`, `quick`, `deep`** *(M2)* — Routing, prompts, and cancellation are all keyed by it. `ListenToMe/Sources/ListenToMeCore/CopilotRole.swift:5-7`.
 - **`data-model.md`** *(M4)* — Entities with key fields and no implementation; present when a feature has traditional entities, absent when infrastructure spans many (as in 014). — `SignUpFlow/specs/000-user-onboarding/data-model.md`.
-- **`LLMProvider` — the provider protocol seam** *(M2)* — Core streams text through it; `App/` implements it with Ollama over HTTP. `ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:4`.
+- **`LLMProvider` — the provider protocol seam** *(M2)* — Core streams text through it; `OllamaProvider` implements it over HTTP and `AppleIntelligenceProvider` on device. `ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:13`.
 - **`plan.md`** *(M4)* — Owns HOW: languages, versions, storage, performance targets, project structure with `[NEW]`/`[MODIFY]` annotations. — `SignUpFlow/specs/014-security-hardening/plan.md`.
 - **`PrivacyMode`** *(M3)* — The explicit three-way mode switch (`off`/`local`/`cloud`) a user picks; adding a cloud key never switches it — `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`; TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-45`.
 - **`PromptBuilder` — the pure prompt-construction layer** *(M2)* — A public enum of static functions: context in, request out, no I/O. `ListenToMe/Sources/ListenToMeCore/Prompt.swift`.
@@ -86,7 +86,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Constitution Check** *(M4)* — The plan's per-principle compliance pass; the gate must pass before Phase 0 research and be re-checked after Phase 1 design. — `SignUpFlow/.specify/templates/plan-template.md`.
 - **Constitution Check gate** *(M1)* — The explicit pass/fail checkpoint in `plan.md` that must pass before Phase 0 research and be re-checked after Phase 1 design. (`SignUpFlow/specs/014-security-hardening/plan.md`)
 - **Content as code** *(M6)* — Running published content under the same discipline as software: tests, review gates, hashed media, editions and immutable releases. Lives in `ai_qe/Makefile` and `ai_qe/CONTRIBUTING.md`, "Release validation".
-- **Context window (`recentContext`) — the character-budgeted slice of transcript sent to a prompt** *(M2)* — Newest-first fit, default 4,000 characters, never empty. `ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:56-67`.
+- **Context window (`recentContext`) — the character-budgeted slice of transcript sent to a prompt** *(M2)* — Newest-first fit, default 4,000 characters, never empty. `ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87`.
 - **Contract** *(M4)* — A written interface between the session that designed a feature and the session that implements it: request/response shapes, error keys, key schemas, test sketch. — `SignUpFlow/specs/014-security-hardening/contracts/rate-limiting.md`.
 - **Contract test** *(M3)* — A test that exercises the real seam a mock only assumes — here, NDJSON request shape and stream parsing against a live Ollama daemon — kept outside CI behind an environment gate — `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22`.
 - **Conversion phase** *(M8)* — The last four emails (cart open → objection teardown → proof → final call), which spend the trust the warmup phase earned. *Where:* `04-sales/launch-plan.md`; `00-research/02-course-market-research.md` §E.
@@ -98,7 +98,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 ### D
 
 - **Deadline honesty** *(M8)* — The rule that a launch deadline must describe a real change — the cart closes, the price ends — because a resetting or recurring deadline teaches the list to wait. *Where:* `04-sales/pricing-and-platforms.md` ("no fake countdowns").
-- **Debounce — the minimum interval between proactive fires** *(M2)* — ListenToMe's default is 8 seconds. `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8,31-40`.
+- **Debounce — the minimum interval between proactive fires** *(M2)* — ListenToMe's default is 8 seconds. `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8,41-50`.
 - **Definition of Done** *(M3)* — In ListenToMe, merged to `main` with the required checks green, tests passing and docs updated; publication is a separate, batched step. Only a downloaded, checksum-matched artifact with its tag on the source commit may be called published — `ListenToMe/AGENTS.md:13-18, 55-82`; `ListenToMe/docs/RELEASING.md:33-39`.
 - **Definition of Done (DoD)** *(M1)* — The standard for "shipped," not "built": verify the affected behavior in the installed production app, and treat stale docs as a failure rather than a follow-up. (`ListenToMe/AGENTS.md`, `ListenToMe/CLAUDE.md`)
 - **Deletion test** *(M7)* — Remove one clause from a positioning one-liner; if no row in your table would notice the sentence became false, the clause is decoration and gets cut. Lives in `lesson.md` M7.3.
@@ -123,7 +123,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Functional requirement (FR)** *(M4)* — A numbered "System MUST…" statement, technology-agnostic; 014 has 44. — `SignUpFlow/specs/014-security-hardening/spec.md`.
 ### G
 
-- **Generation token — a per-role counter that invalidates an in-flight stream** *(M2)* — Switch a model, bump the token, and the old stream's deltas stop being written. `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:119-132,513-578`.
+- **Generation token — a per-role counter that invalidates an in-flight stream** *(M2)* — Switch a model, bump the token, and the old stream's deltas stop being written. `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:204-221,803-880`.
 - **Git** *(M9)* — The tool that records versions of a folder on your computer. Installed with `winget install --id Git.Git -e --source winget` or `brew install git`. Lives in `setup/check-setup.sh` and `setup/check-setup.ps1`.
 - **GitHub** *(M9)* — The website that stores copies of repositories and can publish them. Not the same thing as Git: Git runs on your computer, GitHub on the internet. Lives in `lesson.md`, Segment M9.1.
 - **GitHub CLI (`gh`)** *(M9)* — The command that drives GitHub from the terminal: sign in, create a repository, clone. Installed with `winget install --id GitHub.cli --source winget` or `brew install gh`. Lives in `setup/check-setup.sh`.
@@ -153,7 +153,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Launch evidence log** *(M8)* — The record of actual list size, delivery, opens, clicks, conversions by email, and revenue, kept so the next revenue model is derived from observations. *Where:* `04-sales/launch-plan.md` (metrics to record).
 - **Lead product** *(M8)* — The free asset that builds the list before the arc runs; the course uses a 30-minute AI product teardown. *Where:* `04-sales/launch-plan.md` (the free lead product).
 - **Local model** *(M0)* — A model whose weights run on your machine. In M0 the example is `qwen3:0.6b`; the point of pulling one is that no API key and no cloud bill are involved. — `course/03-content/m00-orientation/lesson.md`
-- **Local-first defaults — auto-selection that filters cloud aliases out first** *(M2)* — Cloud is chosen only when no local model exists. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:76-94`.
+- **Local-first defaults — auto-selection that filters cloud aliases out first** *(M2)* — Cloud is chosen only when no local model exists. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95`.
 - **LOCAL_HOSTS / loopback allowlist** *(M3)* — The only hosts local-only mode trusts: `localhost`, `127.0.0.1`, `::1`. Anything else throws before a prompt is written — `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:145-147`.
 - **Loop journal** *(M0)* — The single file, started in M0.2, where a student records one line per loop stage touched by each action step. — `course/03-content/m00-orientation/lesson.md`
 ### M
@@ -161,7 +161,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Manual smoke test** *(M3)* — The tier that covers mic capture, system audio, and live speech-to-text, all of which need a GUI session and manual permission grants — a numbered, repeatable script — `ListenToMe/docs/manual-smoke-test.md:1-7`.
 ### N
 
-- **NDJSON — newline-delimited JSON, Ollama's streaming format** *(M2)* — One JSON object per line carrying a delta or `done: true`. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:120-139`.
+- **NDJSON — newline-delimited JSON, Ollama's streaming format** *(M2)* — One JSON object per line carrying a delta or `done: true`. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:3-34`.
 - **Negative-path test** *(M5)* — A test that asserts the denial and its status code, not the success case: the seven cases in `03-content/m05-security-tests/solutions.md` step 1. (`SignUpFlow/docs/API_AUTHORIZATION.md:21-24`)
 - **No-CI local validation** *(M1, M5)* — SignUpFlow's deliberate policy of running all review, analysis, migrations, tests, and artifact validation locally and recording evidence for the pushed revision instead of requiring hosted checks. (`SignUpFlow/.specify/memory/constitution.md`, "Current Validation Policy (2026-09-13)")
 - **Not-verified list** *(M6)* — Explicit published list of claims that could not be confirmed, kept alongside the verified ones. Lives in `ai_qe/docs/research-log.md`.
@@ -176,10 +176,10 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Package manager** *(M9)* — A tool that installs and updates software with one command: winget on Windows, Homebrew on macOS. Lives in `lesson.md`, Segment M9.1.
 - **Per-seat pricing** *(M7)* — Pricing a SaaS by seat so the unit of price scales with the organization's adoption. Lives in `lesson.md` M7.1, grounded in `SignUpFlow/README.md`'s invitation flow.
 - **Permission role** *(M5)* — What an account may do; exactly one of `admin` or `volunteer`, enforced by a frozenset and by a normalization rule that refuses two roles. (`SignUpFlow/api/roles.py:8,38-53`)
-- **Persona directive — preset guidance appended to every role's system prompt** *(M2)* — Same code path for manual panes and automatic reviews. `ListenToMe/Sources/ListenToMeCore/Prompt.swift:159-173`.
+- **Persona directive — preset guidance appended to every role's system prompt** *(M2)* — Same code path for manual panes and automatic reviews. `ListenToMe/Sources/ListenToMeCore/Prompt.swift:245-260`.
 - **Phase 0 / Phase 1** *(M4)* — Research (decisions with receipts) and design (data-model, contracts, quickstart) phases of a feature. — `SignUpFlow/specs/014-security-hardening/plan.md`.
 - **Positioning one-liner** *(M7)* — A single sentence in the form adjective-wedge × differentiators × audience, derived clause by clause from a comparison table. Lives in `lesson.md` M7.3.
-- **Proactive gate — the four conditions before a proactive answer fires** *(M2)* — Finalized, from `.others`, passes question detection, outside the debounce window. `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:31-40`.
+- **Proactive gate — the four conditions before a proactive answer fires** *(M2)* — Finalized, from `.others`, passes question detection, outside the debounce window. `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:41-50`.
 - **Prompt** *(M9)* — The line in a terminal waiting for you to type, ending in `>` in PowerShell or `%` in the Mac Terminal. Lives in `lesson.md`, Segment M9.1.
 - **Proof asset** *(M0, M8)* — An artifact you already own that carries a page claim: a tagged repo, a dated evidence line, a coverage number, a spec folder, a provenance table, a demo. *Where:* `03-content/m08-launch-capstone/lesson.md` M8.1 inventory table.
 - **Protocol seam — a protocol the pure core declares and platform glue implements** *(M2)* — The three are `AudioCapturing`, `Transcribing`, `LLMProvider`; they are what let tests run without hardware.
@@ -229,13 +229,13 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Transformation headline** *(M8)* — A one-sentence, falsifiable statement of the destination, not the contents. The first of the eight sections. *Where:* `00-research/02-course-market-research.md` §E; `04-sales/landing-page.md`.
 - **Trust boundary** *(M3)* — The honest edge of a guarantee. Local-only mode trusts the installed local Ollama service and its metadata; it verifies a self-description, not the daemon itself — `ListenToMe/README.md`, "Privacy".
 - **Truthful mode label** *(M3)* — A label that names where data goes rather than how good the feature is — e.g. "Ollama Cloud — sends transcript and context" — `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`.
-- **Typed stream errors (`OllamaStreamError`) — the failure model for streaming** *(M2)* — `.server` for an in-stream error event, `.incomplete` when `done` never arrives, `.empty` when no visible text arrives. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:67-83,159-170`.
+- **Typed stream errors (`OllamaStreamError`) — the failure model for streaming** *(M2)* — `.server` for an in-stream error event, `.incomplete` when `done` never arrives, `.empty` when no visible text arrives; `.unreachable` and `.thinkingOnly` cover a dead server and a reasoning-only reply. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104,216-236`.
 ### V
 
 - **VAD — voice activity detection that finds utterance boundaries** *(M2)* — 37 lines: RMS energy, a 0.02 threshold, 0.8 seconds of trailing silence. `ListenToMe/Sources/ListenToMeCore/VAD.swift`.
 - **Value anchor** *(M7)* — What your product replaces — hours, headcount, or a tool subscription — expressed as a comparable amount. Lives in `lab.md` Step 2.
 - **Verified local** *(M0)* — A local model accepted only after metadata proves it is not remote-backed: `remote_host`/`remote_model` absent, format/model-info present. A `localhost` URL alone is not proof. — `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift`
-- **Verified local — a fail-closed metadata check, not a hostname check** *(M2)* — `isVerifiedLocal` rejects a model unless `remote_host` and `remote_model` are absent. `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17`.
+- **Verified local — a fail-closed metadata check, not a hostname check** *(M2)* — `isVerifiedLocal` rejects a model unless `remote_host` and `remote_model` are absent. `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17-24`.
 ### W
 
 - **Warmup phase** *(M8)* — The first three emails (origin story → transformation proof → free tool), which earn trust and make no sales ask. *Where:* `04-sales/launch-plan.md`.

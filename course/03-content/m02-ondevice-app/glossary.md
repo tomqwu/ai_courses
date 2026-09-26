@@ -6,34 +6,34 @@ relative to the course root.
 ## Terms
 
 - **`:cloud` alias — a model a *local* daemon serves from a remote backend.** The name ends in
-  `:cloud`, or `/api/tags` reports a `remote_host`/`remote_model`. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:72-79`;
+  `:cloud` or `-cloud`, or `/api/tags` reports a `remote_host`/`remote_model`. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:66-72`;
   `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/model_router.py`.
 - **`AudioCapturing` — the capture protocol seam.** Core declares what audio arrives; `App/` supplies
   `AVAudioEngine` and ScreenCaptureKit. `ListenToMe/Sources/ListenToMeCore/Capture.swift:4`.
 - **Context window (`recentContext`) — the character-budgeted slice of transcript sent to a prompt.**
   Newest-first fit, default 4,000 characters, never empty.
-  `ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:56-67`.
+  `ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87`.
 - **`CopilotRole` — the three AI roles as an enum: `listener`, `quick`, `deep`.** Routing, prompts,
   and cancellation are all keyed by it. `ListenToMe/Sources/ListenToMeCore/CopilotRole.swift:5-7`.
 - **Debounce — the minimum interval between proactive fires.** ListenToMe's default is 8 seconds.
-  `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8,31-40`.
+  `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:8,41-50`.
 - **Generation token — a per-role counter that invalidates an in-flight stream.** Switch a model, bump
   the token, and the old stream's deltas stop being written.
-  `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:119-132,513-578`.
-- **`LLMProvider` — the provider protocol seam.** Core streams text through it; `App/` implements it
-  with Ollama over HTTP. `ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:4`.
+  `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:204-221,803-880`.
+- **`LLMProvider` — the provider protocol seam.** Core streams text through it; `OllamaProvider`
+  implements it over HTTP and `AppleIntelligenceProvider` on device. `ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:13`.
 - **Local-first defaults — auto-selection that filters cloud aliases out first.** Cloud is chosen only
-  when no local model exists. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:76-94`.
+  when no local model exists. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95`.
 - **NDJSON — newline-delimited JSON, Ollama's streaming format.** One JSON object per line carrying a
-  delta or `done: true`. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:120-139`.
+  delta or `done: true`. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:3-34`.
 - **Partial vs. final — live in-flight text versus a settled utterance.** Partials never enter the
   finalized log; a final with the same id supersedes its partial.
   `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/conversation_store.py`.
 - **Persona directive — preset guidance appended to every role's system prompt.** Same code path for
-  manual panes and automatic reviews. `ListenToMe/Sources/ListenToMeCore/Prompt.swift:159-173`.
+  manual panes and automatic reviews. `ListenToMe/Sources/ListenToMeCore/Prompt.swift:245-260`.
 - **Proactive gate — the four conditions before a proactive answer fires.** Finalized, from `.others`,
   passes question detection, outside the debounce window.
-  `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:31-40`.
+  `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:41-50`.
 - **`PromptBuilder` — the pure prompt-construction layer.** A public enum of static functions: context
   in, request out, no I/O. `ListenToMe/Sources/ListenToMeCore/Prompt.swift`.
 - **Protocol seam — a protocol the pure core declares and platform glue implements.** The three are
@@ -42,12 +42,12 @@ relative to the course root.
   Prevents `gemini` from being demoted as `mini`. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:13-18`.
 - **Typed stream errors (`OllamaStreamError`) — the failure model for streaming.** `.server` for an
   in-stream error event, `.incomplete` when `done` never arrives, `.empty` when no visible text
-  arrives. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:67-83,159-170`.
+  arrives; `.unreachable` and `.thinkingOnly` cover a dead server and a reasoning-only reply. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104,216-236`.
 - **VAD — voice activity detection that finds utterance boundaries.** 37 lines: RMS energy, a 0.02
   threshold, 0.8 seconds of trailing silence. `ListenToMe/Sources/ListenToMeCore/VAD.swift`.
 - **Verified local — a fail-closed metadata check, not a hostname check.** `isVerifiedLocal` rejects a
   model unless `remote_host` and `remote_model` are absent.
-  `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17`.
+  `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17-24`.
 
 ## Terms people get wrong
 

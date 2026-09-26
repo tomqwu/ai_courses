@@ -270,6 +270,10 @@ function next() {
         var sb = slide.getBoundingClientRect();
         out.visibleId = slide.id;
         out.overflowing = slide.scrollHeight > slide.clientHeight + 2;
+        // .slide-content scrolls rather than clipping, so a too-tall exhibit never overflows the
+        // slide itself: it grows a scrollbar the recording cannot scroll. Measure that instead.
+        var content = slide.querySelector(".slide-content");
+        out.contentOverflow = content ? Math.max(0, content.scrollHeight - content.clientHeight) : 0;
         // The deck contrast audit sees slide 1 (a cover, no diagram); these slides carry the
         // diagrams, so they get audited here, at their real layout.
         out.contrast = apsAuditContrast(f.contentWindow, f.contentDocument);
@@ -508,6 +512,11 @@ def check_pages(browser: str, port: int) -> list[str]:
     return problems
 
 
+# Slides whose content scrolls inside the 16:9 frame. Reported as warnings until the slides are
+# refit (#70); `--strict-fit` counts them as failures, which is where the gate should end up.
+FIT_WARNINGS: list[str] = []
+
+
 def check_diagram_geometry(browser: str, port: int) -> list[str]:
     """A declared diagram must fit its slide frame.
 
@@ -564,6 +573,14 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
             if not d.get("insideFrame") or r.get("overflowing"):
                 problems.append(f"{deck_id} slide-{n}: {d.get('kind')} does not fit the slide "
                                 f"frame ({d.get('h')}px tall — the frame clips it)")
+        # A code exhibit with no diagram was measured and then never reported: the overflow flag
+        # only surfaced inside the diagram loop. A clipped exhibit is the same silent failure.
+        if r.get("overflowing") and not r.get("diagrams"):
+            problems.append(f"{deck_id} slide-{n}: the slide overflows its frame, so the code "
+                            f"exhibit or the text under it is clipped")
+        if (r.get("contentOverflow") or 0) > 2:
+            FIT_WARNINGS.append(f"{deck_id} slide-{n}: the content needs {r['contentOverflow']}px of "
+                                f"scrolling — a recorded slide cannot scroll, so that part is never seen")
         bad = (r.get("contrast") or {}).get("failures") or []
         for b in sorted(bad, key=lambda x: x["ratio"])[:3]:
             problems.append(f"{deck_id} slide-{n}: text below WCAG AA — {b['ratio']}:1 "
@@ -921,6 +938,8 @@ def main(argv=None) -> int:
     parser.add_argument("--all", action="store_true", help="check every deck with a built page")
     parser.add_argument("--measure", action="store_true",
                         help="print the measured frame geometry for each deck and exit")
+    parser.add_argument("--strict-fit", action="store_true",
+                        help="fail, not warn, when a slide's content needs scrolling")
     parser.add_argument("--print-skip", action="store_true",
                         help="exit 0 with a note if no browser is installed")
     args = parser.parse_args(argv)
@@ -966,6 +985,12 @@ def main(argv=None) -> int:
             problems.extend(found)
         problems.extend(check_units())
         problems.extend(check_diagram_geometry(browser, port))
+        if args.strict_fit:
+            problems.extend(FIT_WARNINGS)
+        elif FIT_WARNINGS:
+            print(f"\n  {len(FIT_WARNINGS)} slide(s) need scrolling inside the frame (warning, #70):")
+            for w in FIT_WARNINGS:
+                print(f"  ! {w}")
         problems.extend(check_pages(browser, port))
     finally:
         httpd.shutdown()

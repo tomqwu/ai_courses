@@ -8,7 +8,7 @@
 | Min | Activity | Mode | Artifacts |
 |---|---|---|---|
 | 2 | Opening hook: the 96% badge problem | I do | `slides.md` slides 1–2 |
-| 20 | Repo tour + live-build `recent_context` TDD | I do | `ConversationStore.swift:56-67`, `test_conversation_store.py` |
+| 20 | Repo tour + live-build `recent_context` TDD | I do | `ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87`, `test_conversation_store.py` |
 | 12 | Token-prefix: predict the `gemini`/`mini` score | We do | `test_model_router.py` |
 | 8 | Typed stream errors: red, then green | We do | `test_ollama_provider.py` |
 | 28 | Breakout: TDD one assigned module to green | You do | Evidence-log entry |
@@ -67,7 +67,7 @@ Do not assign `conversation_store` — it was built live.
 
 **One deliverable per group, posted before the share-out:** the red output, the green output with its
 test count, and one sentence naming something the test specified that the prompt did not. The
-expected green counts: question_detector 32, prompts 38, model_router 40, ollama_provider 18,
+expected green counts: question_detector 32, prompts 38, model_router 40, ollama_provider 21,
 copilot 17.
 
 ## Discussion prompts (12 min share-out)
@@ -100,9 +100,9 @@ copilot 17.
 
 ## Close (5 min) — script
 
-"Three numbers from today. One: 201 tests, 100% coverage, floor 90 — that is your M2 gate. Two: 49
+"Three numbers from today. One: 208 tests, 100% coverage, floor 90 — that is your M2 gate. Two: 56
 tests in `make lab-m3`; your re-implementation must not break them. Three: the red run is exit 4, an
-ImportError, and it is real evidence — not a fabricated '201 failed.'
+ImportError, and it is real evidence — not a fabricated '208 failed.'
 
 Before Thursday: finish all six modules, capture six red runs and six green runs, and run `make demo`
 once with the model name visible. Post your demo output in the lab thread with the template in

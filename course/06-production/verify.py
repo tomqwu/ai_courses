@@ -112,13 +112,12 @@ def resolve_case_path(path: str) -> Path | None:
     drifted by seven lines unseen; these are now range-checked and can be anchored too."""
     if path.split("/")[0] in CASE_REPOS or path.startswith("course/"):
         return REPO / path
-    for index in (_case_index(), _course_index()):
-        hits = [c for c in index.get(Path(path).name, []) if c == path or c.endswith("/" + path)]
-        if len(hits) == 1:
-            return REPO / hits[0]
-        if len(hits) > 1:
-            return None
-    return None
+    # One match across the clones and course/ together, or nothing: `tests/conftest.py` exists in
+    # SignUpFlow and in two course starters, and range-checking whichever came first checks the
+    # wrong file.
+    hits = [c for index in (_case_index(), _course_index())
+            for c in index.get(Path(path).name, []) if c == path or c.endswith("/" + path)]
+    return REPO / hits[0] if len(hits) == 1 else None
 
 
 def _prose_ranges(spec: str) -> list[tuple[int, int]]:
