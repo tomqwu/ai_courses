@@ -11,7 +11,7 @@
     },
     "slide-3": {
       "title": "M4.1 — The command chain",
-      "text": "Here is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote, so nothing is carried in anyone's head. Specify writes the WHAT, clarify burns a small question budget, then research, data model, and plan add the HOW and the Constitution Check. The checklist gates, contracts pin the seams, and tasks turn it into work. The command definitions live in the dot-claude commands folder and the templates in dot-specify templates, both openable in the clone. Notice there is exactly one gate, and it is cheap."
+      "text": "Here is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote, so nothing is carried in anyone's head. Specify writes the WHAT, clarify burns a small question budget, then research, data model, and plan add the HOW and the Constitution Check. The checklist gates, contracts pin the seams, and tasks turn it into work. Spec-kit one point oh closes the loop: implement, then converge, which checks the code against the spec and adds unmet work as new tasks, until it reports converged. SignUpFlow predates one point oh, so its older, dotted command definitions live in the dot-claude commands folder and the templates in dot-specify templates, both openable in the clone. Notice there is exactly one gate, and it is cheap."
     },
     "slide-4": {
       "title": "Proof: `spec.md` owns WHAT",

@@ -35,8 +35,11 @@
 - **Spec folder** — A self-contained instruction set for one feature (`spec.md`, `research.md`,
   `plan.md`, `contracts/`, `tasks.md`, …); SignUpFlow has 17 under `specs/`. —
   `SignUpFlow/specs/`.
-- **Spec-kit** — The slash-command workflow (`/speckit.specify` → `/speckit.clarify` → `/speckit.plan` →
-  `/speckit.checklist` → `/speckit.tasks` → `/speckit.implement`). — `SignUpFlow/docs/SPEC_KIT_SETUP.md`.
+- **Spec-kit** — GitHub's spec-driven toolkit. Version 1.0 (2026-08-21) runs `/speckit-constitution` once, then
+  `/speckit-specify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-implement` ⇄ `/speckit-converge`, where
+  converge appends unmet work to `tasks.md` until it reports "Converged"; clarify, checklist and analyze are
+  optional. SignUpFlow's pre-1.0 setup spells them `/speckit.*` and has no converge. —
+  `SignUpFlow/docs/SPEC_KIT_SETUP.md:9-18`; github.com/github/spec-kit (read 2026-09-26).
 - **Stranger test** — The one quality test: a fresh agent session with zero conversation memory could
   implement from the artifacts alone. — `course/03-content/m04-spec-driven-saas/lesson.md` (M4.2).
 - **Success criteria (SC)** — Measurable, technology-agnostic outcomes; 014 has 12. —
@@ -51,8 +54,8 @@
   brute-force attempts blocked). Both live in `spec.md`, and mixing them makes both ungradable.
 - **WHAT vs. HOW** — WHAT is user-visible behavior and belongs in `spec.md`; HOW is stack, versions, and
   storage and belongs in `plan.md`. The gate's first rule fails a spec that names a technology.
-- **Generated vs. verified** — Generated means a slash command wrote it (`/speckit.tasks`,
-  `/speckit.checklist`); verified means you grepped its paths and recounted its counts. A "Quality Score:
+- **Generated vs. verified** — Generated means a spec-kit command wrote it (`/speckit-tasks`,
+  `/speckit-checklist`, `/speckit-converge`); verified means you grepped its paths and recounted its counts. A "Quality Score:
   100%" is generated, not verified.
 - **`[P]` vs. `[US#]`** — `[P]` marks a task parallelizable with its neighbours (different files, no
   dependency); `[US#]` ties the task to the user story it serves. They are orthogonal, not synonyms.

@@ -9,9 +9,10 @@
 
 | Criterion | W | Exemplary | Proficient | Developing | Missing | Evidence required |
 |---|---|---|---|---|---|---|
-| Constitution is within cap, with ≥3 principles and an autonomy config | 10 | ≤80 lines; principles are project-specific (not copied); autonomy states YOLO and Git stances plus the "stop and ask" rule | ≤80 lines; ≥3 principles; autonomy present | Over 80 lines or principles are generic restatements | No constitution, or under 3 principles | `constitution.md` + `wc -l` output |
-| `AGENTS.md` is within cap and carries a validation checklist | 10 | ≤200 lines; checklist items map to commands; scope notes split by topic rather than nested | ≤200 lines; checklist present | Over 200 lines, or checklist absent | No `AGENTS.md` | `AGENTS.md` + `wc -l` output |
-| Every rule is imperative and verifiable | 10 | Three sampled rules each survive "what command proves it?" with no rewriting needed | Most rules survive; one or two need a rewrite | Rules are advisory ("be careful", "keep clean") | Rules are prose paragraphs with no imperative | The rule lines, quoted in the submission |
+| Constitution is within cap, with ≥3 principles and an autonomy config | 7 | ≤80 lines; principles are project-specific (not copied); autonomy states YOLO and Git stances plus the "stop and ask" rule | ≤80 lines; ≥3 principles; autonomy present | Over 80 lines or principles are generic restatements | No constitution, or under 3 principles | `constitution.md` + `wc -l` output |
+| `AGENTS.md` is within cap and carries a validation checklist | 7 | ≤200 lines; checklist items map to commands; scope notes split by topic rather than nested | ≤200 lines; checklist present | Over 200 lines, or checklist absent | No `AGENTS.md` | `AGENTS.md` + `wc -l` output |
+| Every rule is imperative and verifiable | 8 | Three sampled rules each survive "what command proves it?" with no rewriting needed | Most rules survive; one or two need a rewrite | Rules are advisory ("be careful", "keep clean") | Rules are prose paragraphs with no imperative | The rule lines, quoted in the submission |
+| `CLAUDE.md` imports the baseline; one hook runs the evidence-log check | 8 | `CLAUDE.md` opens with `@AGENTS.md` and holds only Claude addenda; the pair is ≤200 lines; the check's exit-2 and exit-0 runs are recorded verbatim | Import and `Stop` hook present; one check run recorded | `CLAUDE.md` restates or links to `AGENTS.md`, or the hook is configured but never run | No `CLAUDE.md`, or no hook | `CLAUDE.md`, `.claude/settings.json`, both check outputs |
 
 ## Deliverable B — Spec folder (25)
 
@@ -43,7 +44,7 @@ Regardless of other rows, the lab fails if any of these is true:
 
 1. **Fabricated evidence** — a test count, output line, command, or head SHA that the recorded run does not produce.
 2. **A green run with no red run recorded** — the TDD loop is the deliverable; the red output is its proof.
-3. **Tests weakened to pass** — assertions loosened, tests deleted, skipped, or rewritten after failing to fit the implementation.
+3. **Tests weakened to pass** — assertions loosened, tests deleted, skipped, or rewritten after failing to fit the implementation, or the evidence-log check edited to pass.
 4. **No head SHA in the evidence record** — evidence that cannot be pinned to a revision is a claim, not a record.
 5. **Placeholder brackets left in submitted files** — `[<your rule>]` still visible in `constitution.md` or `AGENTS.md`.
 6. **A failure visible in the raw output but absent from the evidence entry** — selective recording is fabrication by omission.

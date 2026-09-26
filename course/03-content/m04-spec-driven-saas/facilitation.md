@@ -75,6 +75,7 @@ thing to make stranger-testable, and one drift check you now run. That post is t
 | Self-graded checklist passed instantly | All boxes checked, no commands run | "Show me one grep output and one recounted number; until then the checklist is a claim, not a check." |
 | Untestable Then-clause | "Then it works correctly" | "Write the assertion as if you were the test author — if you'd need a decision, the scenario isn't done." |
 | Tasks without a file path | "Update the backend and add tests" | "Grep the repo, name the file, put it in the task; `AGENTS.md` forbids inventing paths." |
+| Old command names on a new install | Types SignUpFlow's `/speckit.specify` into a fresh spec-kit 1.0 project | "SignUpFlow predates 1.0. In Claude Code it is `/speckit-specify`, and implement is followed by `/speckit-converge` — see the table in M4.1." |
 
 ## Post-session checklist
 

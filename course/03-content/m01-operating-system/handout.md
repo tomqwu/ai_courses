@@ -16,6 +16,8 @@ constitution.md  →  AGENTS.md  →  spec.md  →  plan.md (GATE)  →  tasks.m
 |---|---|---|
 | A principle that must never drift | `constitution.md` (≤80 lines) | `tasks.md` |
 | A rule that applies to every agent | `AGENTS.md` (≤200 lines) | the spec |
+| Something only Claude Code needs | `CLAUDE.md`, below `@AGENTS.md` | a second copy of `AGENTS.md` |
+| A rule that must hold every time | a hook in `.claude/settings.json` | a sentence the agent may skip |
 | What users need, no technology | `spec.md` | `plan.md` |
 | Which library, why, and what was rejected | `research.md` / `plan.md` | `spec.md` |
 | The exact file to touch, test first | `tasks.md` | anything else |
@@ -28,7 +30,8 @@ mkdir my-studio && cd my-studio && git init
 python3 -m venv .venv && source .venv/bin/activate && pip install pytest
 python3 -m pytest tests/ -q          # red, then green
 git rev-parse HEAD                   # the revision your evidence pins
-wc -l constitution.md AGENTS.md      # prove the caps: ≤80, ≤200
+wc -l constitution.md AGENTS.md CLAUDE.md   # ≤80; AGENTS.md + CLAUDE.md ≤200
+bash scripts/check-evidence-log.sh; echo $?  # the hook's check: 2 blocks, 0 passes
 ```
 
 ```markdown
@@ -48,8 +51,8 @@ check whether a rule was followed, rewrite it.
 
 - `SignUpFlow/.specify/memory/constitution.md` — 85 lines, the single source of truth.
 - `SignUpFlow/AGENTS.md` — 188 lines; house style, hierarchy, anti-hallucination, PR rules.
-- `SignUpFlow/CLAUDE.md` — 154 lines (2026-09-16); cross-reference plus Claude addenda.
-- `SignUpFlow/docs/SPEC_KIT_SETUP.md` — the slash-command pipeline.
+- `SignUpFlow/CLAUDE.md` — 154 lines (2026-09-16); Claude addenda, but it links to `AGENTS.md` on line 5 where it should import it.
+- `SignUpFlow/docs/SPEC_KIT_SETUP.md` — the pre-1.0 command order (spec-kit 1.0 adds converge).
 - `SignUpFlow/specs/019-sms-notifications/tasks.md` — a real, executable task line.
 - `SignUpFlow/docs/playbooks/validation.md` — the evidence line, the failures, and the limits.
 - `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md` — "do not promote 1.3.0."
@@ -64,6 +67,7 @@ check whether a rule was followed, rewrite it.
 
 - [ ] `constitution.md` exists, ≤80 lines, ≥3 principles, autonomy config present.
 - [ ] `AGENTS.md` exists, ≤200 lines, every rule imperative and verifiable.
+- [ ] `CLAUDE.md` opens with `@AGENTS.md`; the evidence-log check exits 2 on a broken entry, 0 on yours.
 - [ ] `specs/001-todo-command/` has `spec.md` (2 stories), `plan.md` (gate passed), `tasks.md` (≥5 tasks, exact paths, tests first).
 - [ ] The red pytest output is saved, then the green run: `python3 -m pytest tests/ -q` exits 0.
 - [ ] The evidence entry has commands, counts, date, environment, limitations, and the head SHA.

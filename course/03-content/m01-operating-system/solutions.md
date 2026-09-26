@@ -1,9 +1,9 @@
 # Solutions — Lab M1
 
 > Grade the *properties* — under the cap, imperative, verifiable, gate present, red before green — not
-> the prose. The two exemplars are real, submittable artifacts; they are not the only pass.
+> the prose. The three exemplars are real, submittable artifacts; they are not the only pass.
 
-## Exemplar A — `constitution.md` (36 lines, cap 80)
+## Exemplar A — `constitution.md` (17 lines, cap 80)
 
 ```markdown
 # My Studio Constitution
@@ -25,7 +25,7 @@
 - Record commands, counts, environment, limitations and the pushed head SHA.
 ```
 
-## Exemplar B — `AGENTS.md` (48 lines, cap 200)
+## Exemplar B — `AGENTS.md` (25 lines, cap 200)
 
 ```markdown
 # AGENTS.md
@@ -55,24 +55,39 @@ Cross-agent baseline for my-studio. Consumed by any agent that reads AGENTS.md.
 Summary / Changed files / Validation / Follow-ups.
 ```
 
-**Why these pass.** Every line is an action or prohibition a stranger can check; both are under the
-cap; neither copies SignUpFlow's content, only its structure
-(`SignUpFlow/.specify/memory/constitution.md` is 85 lines; `SignUpFlow/AGENTS.md` is 177).
+## Exemplar C — `CLAUDE.md` (6 lines)
+
+```markdown
+@AGENTS.md
+
+## Claude Code addenda
+- A Stop hook runs `scripts/check-evidence-log.sh` after each turn. When it
+  blocks, fix the entry it names; never edit the script or hook to pass.
+- Record the red run in `docs/evidence-log.md` before the green run.
+```
+
+**Why these pass.** Every line is an action or prohibition a stranger can check; all three are under the
+cap (25 + 6 lines load together); `CLAUDE.md` imports the baseline; none copies SignUpFlow's
+content, only its structure
+(`SignUpFlow/.specify/memory/constitution.md` is 85 lines; `SignUpFlow/AGENTS.md` is 188).
 
 ## Step solutions
 
 ### Step 1 — Create the repo
-Reference: a git repo with `.venv` and `pytest`, plus `specs/001-todo-command/`, `docs/`, `tests/`, and
-both log files. Expected: `python3 -m pytest --version` prints a 7.x or 8.x version — **varies**.
-Wrong: (a) no `git init`, so Step 9's evidence has no SHA — signals writing, not shipping. (b) pytest
-installed globally, not in `.venv`. Grading note: run `git rev-parse HEAD` yourself; if it errors, the
-repo was never initialized.
+Reference: the step 1 folders and log files, `.venv` with `pytest`, a `.gitignore` holding `.venv/`,
+and a first commit. Expected: `python3 -m pytest --version` prints 7.x or 8.x (**varies**);
+`git log --oneline` shows `Scaffold starter repo`.
+Wrong: (a) no first commit, so Step 8's entry has no SHA to pin and the hook blocks; it signals
+writing, not shipping. (b) pytest installed globally, not in `.venv`. Grading note: run
+`git rev-parse HEAD` yourself; if it errors, nothing was ever committed.
 
-### Steps 2–3 — `constitution.md` and `AGENTS.md`
-Reference: Exemplars A and B. Expected: `wc -l` → `36 constitution.md`, `48 AGENTS.md` (any ≤80 / ≤200).
+### Steps 2–3 — `constitution.md`, `AGENTS.md`, `CLAUDE.md`
+Reference: Exemplars A, B and C. Expected: `wc -l` → `17 constitution.md`, `25 AGENTS.md`, `6 CLAUDE.md`
+(any ≤80, and ≤200 for the pair); `head -1 CLAUDE.md` → `@AGENTS.md`.
 Wrong: (a) empty `[<your rule>]` brackets left in — the instructor guide calls this "my constitution
 feels fake". (b) "be careful" rules that fail the stranger test. (c) `YOLO Mode: ENABLED`, which
-cannot grade as a safety stance. (d) AGENTS.md over 200 lines with nested prose.
+cannot grade as a safety stance. (d) AGENTS.md over 200 lines with nested prose. (e) `CLAUDE.md`
+restating `AGENTS.md`, or linking instead of `@AGENTS.md`: copies drift, and a link loads nothing at launch.
 Grading note: pick one rule at random and ask "what command proves this was followed?" A real pass
 answers with a command; a plausible fake answers with a feeling.
 
@@ -109,7 +124,7 @@ ERROR tests/test_todo.py
 ModuleNotFoundError: No module named 'todo'
 1 error in 0.03s
 ```
-Exit code 2. That is the line the lab's template records. A student who wants assertion-level red
+Exit code 2, as the lab's template records. A student who wants assertion-level red
 must stub the *name* first — `class TodoStore: pass` in `todo.py` gives `2 failed` (AttributeError
 on `add`), exit 1; an empty `todo.py` still stops at collection (`ImportError: cannot import name
 'TodoStore'`). Either honest capture passes; a fabricated "2 failed" over a `ModuleNotFoundError`
@@ -123,7 +138,7 @@ The count `2` is fixed by the two tests; the timing suffix varies. Wrong: (a) gr
 auto-fail. (b) tests edited after failing to match the implementation. Grading note: the red line must
 precede the green line and name the same command.
 
-### Step 8 — `docs/evidence-log.md`
+### Step 8 — `docs/evidence-log.md` and the hook
 Reference: all six fields, with at least one limitation.
 ```markdown
 ## Evidence — my-studio — todo command — <YYYY-MM-DD>
@@ -137,6 +152,21 @@ Limitations / not verified:
 ```
 Wrong: (a) "all passed" with no command. (b) empty limitations. (c) a placeholder SHA. Grading note:
 `git rev-parse HEAD` must return the SHA printed in the entry.
+**The hook.** As in the lab. Red with the limitation line removed, then green (2026-09-26, Linux,
+bash 5.2):
+```text
+$ bash scripts/check-evidence-log.sh; echo "exit=$?"
+Evidence log: the latest entry in docs/evidence-log.md needs:
+- at least one limitation
+exit=2
+$ bash scripts/check-evidence-log.sh; echo "exit=$?"
+Evidence log: latest entry complete.
+exit=0
+```
+In Claude Code 2.1.283 the same entry made the `Stop` hook exit 2; Claude got the stderr as
+"Stop hook feedback". Wrong: (d) the script loosened or the hook removed to reach
+exit 0 (auto-fail 3). (e) only the green run recorded. Grading note: delete a limitation line and run
+the script yourself; it must exit 2.
 
 ### Step 9 — Commit
 Reference: imperative subject; body with `Summary`, `Changed files`, `Validation`, `Follow-ups`
@@ -149,7 +179,8 @@ recorded command; it must agree with the commit body.
 | Criterion | Self-verification |
 |---|---|
 | Constitution ≤80 lines, ≥3 principles, autonomy config | `wc -l constitution.md`; read the headings |
-| AGENTS.md ≤200 lines, rules verifiable | `wc -l AGENTS.md`; stranger-test 3 rules |
+| AGENTS.md verifiable; `CLAUDE.md` imports it | `wc -l AGENTS.md CLAUDE.md` (≤200); `head -1 CLAUDE.md`; stranger-test 3 rules |
+| Hook wired and tested | `python3 -m json.tool .claude/settings.json`; the check exits 2, then 0 |
 | spec.md has 2 stories, each with Given/When/Then | Search for `Given` — expect ≥2 |
 | plan.md gate explicitly passed | Search `GATE`; confirm a verdict per principle |
 | tasks.md ≥5 tasks with paths, tests first | T001 and T002 order |

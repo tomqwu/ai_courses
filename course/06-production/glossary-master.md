@@ -4,12 +4,12 @@
 > module glossary). Duplicate terms keep the most detailed definition and list every module
 > that uses them. "Where it lives" pointers resolve in the cloned case-study repos.
 
-**158 terms** across 9 modules · **13 shared** by more than one module.
+**159 terms** across 9 modules · **13 shared** by more than one module.
 
 | Module | Terms contributed |
 |---|---|
 | M0 — orientation | 19 |
-| M1 — operating system | 15 |
+| M1 — operating system | 16 |
 | M2 — ondevice app | 16 |
 | M3 — privacy ship | 16 |
 | M4 — spec driven saas | 18 |
@@ -31,7 +31,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Fail-closed** *(M0, M3, M8)* — A local-only mode that rejects anything it cannot verify as local, rather than falling back to a cloud model. The Type 1 discipline artifact. *Where:* `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift`; `03-content/m08-launch-capstone/lesson.md` M8.3.
 - **No-CI local validation** *(M1, M5)* — SignUpFlow's deliberate policy of running all review, analysis, migrations, tests, and artifact validation locally and recording evidence for the pushed revision instead of requiring hosted checks. (`SignUpFlow/.specify/memory/constitution.md`, "Current Validation Policy (2026-09-13)")
 - **Proof asset** *(M0, M8)* — An artifact you already own that carries a page claim: a tagged repo, a dated evidence line, a coverage number, a spec folder, a provenance table, a demo. *Where:* `03-content/m08-launch-capstone/lesson.md` M8.1 inventory table.
-- **Spec-kit** *(M0, M1, M4)* — GitHub's slash-command feature pipeline — constitution, specify, clarify, plan, checklist, tasks, analyze, implement — that produces a folder of artifacts under `specs/`. (`SignUpFlow/docs/SPEC_KIT_SETUP.md`)
+- **Spec-kit** *(M0, M1, M4)* — GitHub's spec-driven toolkit. Version 1.0 (2026-08-21) runs `/speckit-constitution` once, then `/speckit-specify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-implement` ⇄ `/speckit-converge`, where converge appends unmet work to `tasks.md` until it reports "Converged"; clarify, checklist and analyze are optional. SignUpFlow's pre-1.0 setup spells them `/speckit.*` and has no converge. — `SignUpFlow/docs/SPEC_KIT_SETUP.md:9-18`; github.com/github/spec-kit (read 2026-09-26).
 - **Spec-to-Ship Loop** *(M0, M8)* — The six-stage method used in every module: Study → Spec → Build → Validate → Release → Prove, with a real artifact at each stage. — `course/00-research/00-synthesis.md`
 - **Tenant isolation** *(M0, M8)* — Enforcing that every query and route is scoped to one organization, verified with negative-path tests using real JWTs. The Type 2 discipline artifact. *Where:* `SignUpFlow/docs/TESTING.md`; `03-content/m08-launch-capstone/lab.md`.
 - **Test tier** *(M0, M3, M5)* — One layer of the test pyramid run in its own process. SignUpFlow documents seven tiers; the full local suite once recorded "1,464 passed, 21 skipped". — `SignUpFlow/docs/TESTING.md`; `SignUpFlow/docs/playbooks/validation.md`
@@ -61,7 +61,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Acceptance gate** *(M5)* — The point where the product must be proven operable, not merely functional: playbook scenarios, disruption drills, and a manifest that admits unproven rows. (`SignUpFlow/docs/playbooks/coverage.json`; `docs/playbooks/church.md`)
 - **Acceptance scenario** *(M4)* — A Given/When/Then statement inside a user story whose Then-clause is an observable, numeric outcome. — `SignUpFlow/specs/014-security-hardening/spec.md` (US1).
 - **Adjective-wedge** *(M7)* — The leading adjectives of a positioning one-liner that carry the differentiator — the part a competitor would have to rebuild to match. Lives in the derived one-liner at `ListenToMe/docs/competition-analysis.md:80`.
-- **AGENTS.md** *(M1)* — The cross-agent baseline rules file that tools such as Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory read natively. In SignUpFlow it is 188 lines and is restated or cross-referenced by the host-specific files. (`SignUpFlow/AGENTS.md`)
+- **AGENTS.md** *(M1)* — The cross-agent baseline rules file that tools such as Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory read natively; an open format stewarded by the Agentic AI Foundation under the Linux Foundation. Keep one, and have `CLAUDE.md` import it with `@AGENTS.md`. In SignUpFlow it is 188 lines. (`SignUpFlow/AGENTS.md:3`)
 - **Anti-hallucination rules** *(M1)* — Prohibitions that make fabricated facts checkable: do not invent paths, names, commands, or identifiers; grep before referencing; read facts from the canonical source; offer 2–3 options when a request is ambiguous. (`SignUpFlow/AGENTS.md`, "Anti-hallucination")
 - **Archetype** *(M0)* — One of the three product shapes this course builds: on-device app, spec-driven SaaS, expertise product. They differ in technical center of gravity, not in method. — `course/03-content/m00-orientation/lesson.md`
 - **Authorization matrix (executable)** *(M5)* — A dict classifying every mounted route as public/ member/ admin, paired with a test that compares the dict to the live route table and to each route's dependency tree. (`SignUpFlow/api/route_auth_policy.py:8-171`; test in `tests/unit/test_api_route_auth_policy.py`)
@@ -137,6 +137,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Home folder** *(M9)* — The folder a terminal opens in, written `~` on both systems: `C:\Users\ada` on Windows, `/Users/ada` on a Mac. Lives in `lesson.md`, Segment M9.2.
 - **Homebrew** *(M9)* — The package manager for macOS. Installs Apple's Command Line Tools along the way and, on Apple silicon, lives in `/opt/homebrew`. Lives in `lab.md`, Step 1.
 - **Honest-marketing checklist** *(M7)* — Five rules every sales asset must pass: sourced numbers, qualified claims, no invented testimonials, plain refund/deadline policies, price the transformation. Lives in `course/04-sales/pricing-and-platforms.md`.
+- **Hook** *(M1)* — A script Claude Code runs at a lifecycle event, configured in `.claude/settings.json`; exit code 2 blocks the action, which makes it the enforcement layer where a rule is only advice. Lab M1's `Stop` hook runs the evidence-log check. (`03-content/m01-operating-system/lab.md`, step 8)
 ### I
 
 - **Immutable release** *(M6)* — A published edition that is never overwritten; a new one is cut instead. Lives in `ai_qe/CONTRIBUTING.md` and `ai_qe/releases.md`.
@@ -210,7 +211,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Skeptical-engineer test** *(M7)* — Lab M7 Step 5: the three toughest objections your own table invites, each answered with a named row or a repo pointer. Lives in `lab.md` Step 5.
 - **Spec (the WHAT)** *(M1)* — The technology-agnostic statement of what users need: prioritized, independently testable stories with Given/When/Then acceptance scenarios and success criteria. (`SignUpFlow/specs/014-security-hardening/spec.md`)
 - **Spec folder** *(M4)* — A self-contained instruction set for one feature (`spec.md`, `research.md`, `plan.md`, `contracts/`, `tasks.md`, …); SignUpFlow has 17 under `specs/`. — `SignUpFlow/specs/`.
-- **Spec-kit** *(M0, M1, M4)* — GitHub's slash-command feature pipeline — constitution, specify, clarify, plan, checklist, tasks, analyze, implement — that produces a folder of artifacts under `specs/`. (`SignUpFlow/docs/SPEC_KIT_SETUP.md`)
+- **Spec-kit** *(M0, M1, M4)* — GitHub's spec-driven toolkit. Version 1.0 (2026-08-21) runs `/speckit-constitution` once, then `/speckit-specify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-implement` ⇄ `/speckit-converge`, where converge appends unmet work to `tasks.md` until it reports "Converged"; clarify, checklist and analyze are optional. SignUpFlow's pre-1.0 setup spells them `/speckit.*` and has no converge. — `SignUpFlow/docs/SPEC_KIT_SETUP.md:9-18`; github.com/github/spec-kit (read 2026-09-26).
 - **Spec-to-Ship Loop** *(M0, M8)* — The six-stage method used in every module: Study → Spec → Build → Validate → Release → Prove, with a real artifact at each stage. — `course/00-research/00-synthesis.md`
 - **Stable slide ID** *(M6)* — The invariant slide number that routes and shared links resolve against, so a route can reorder without breaking a link. Lives in `ai_qe/_data/briefing_room.json` outlines.
 - **StoryBrand stance** *(M8)* — The positioning rule that the student is the hero and the instructor is the guide; write "you will ship," not "I will teach." *Where:* `00-research/02-course-market-research.md` §E.

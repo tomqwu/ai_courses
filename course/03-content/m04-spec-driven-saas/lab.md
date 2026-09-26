@@ -32,8 +32,9 @@ In your evidence log: the checklist's three pass lines with today's date; the dr
 
 ## Stretch
 
-- Run `/speckit.checklist`-style self-grading on a *previous* project's spec and find one drift case (a stale path or wrong count) — then fix the artifact, not the symptom.
+- Run `/speckit-checklist`-style self-grading on a *previous* project's spec and find one drift case (a stale path or wrong count) — then fix the artifact, not the symptom.
 - Implement story 1 from your own tasks.md in one sitting, tests first, and record the honest Validation section (failures included) in the four-part PR format from M4.3.
+- If you implement with spec-kit 1.0, run `/speckit-converge` after `/speckit-implement` and record its outcome — "Converged", or the `## Phase N: Convergence` tasks it appended. Then run your own drift checks anyway: converge reads your artifacts, it does not audit them.
 
 ## Discussion prompt
 

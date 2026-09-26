@@ -58,6 +58,13 @@ notarized DMGs.
 
 **Curriculum updates (Domain 2).** (1) Re-record the spec-kit walkthrough on v1.0.x. (2) Restructure M1.1 as "one `AGENTS.md`, imported by `CLAUDE.md`" plus a hooks-vs-skills-vs-rules table. (3) Add an eighth test tier: LLM evals with a red-team suite mapped to OWASP GenAI 2026. (4) Add a "governance evidence" segment using METR 2025/2026 and DORA 2025. (5) Reframe "no CI" as an ADR with the 2026 counter-norm and a migration path.
 
+**Corrections to this domain, 2026-09-26.** Found while updating M1 and M4 (#54) against the primary sources; the lessons follow these, not the bullets above.
+
+- *Command spelling.* The v1.0.0 README still lists the dotted slash commands (`/speckit.constitution` …) with dash-named skills beside them; the v1.0.12 README (2026-09-25) says "Invoke each `/speckit-*` skill". Claude Code has installed dash-named skills since 0.4.5 (2026-04-02); other agents use other spellings (`$speckit-specify` in Codex), and spec-kit's reference pages keep the dotted form ([spec-kit README and CHANGELOG at v1.0.0 and v1.0.12](https://github.com/github/spec-kit)).
+- *What 1.0 changed.* `converge` arrived in 0.11.2 (2026-06-18) and `--ai` was removed in 0.10.0 (2026-06-09), both before 1.0. Clarify, checklist and analyze were not removed; they are optional (same CHANGELOG).
+- *Claude Code and `AGENTS.md`.* "Claude Code reads `CLAUDE.md`, not `AGENTS.md`" is out of date: since v2.1.277 it reads `AGENTS.md` when no `CLAUDE.md` exists; when both exist it reads "Your `CLAUDE.md` files only", which is why the `@AGENTS.md` import still matters. A `CLAUDE.md` that only links to `AGENTS.md` leaves Claude to open it "only if it decides to" ([memory docs](https://code.claude.com/docs/en/memory)).
+- *AGENTS.md stewardship* is confirmed by the format's own site source: "now stewarded by the Agentic AI Foundation under the Linux Foundation" ([agentsmd/agents.md](https://github.com/agentsmd/agents.md)). The 60k-projects figure is self-reported and is not used in the course.
+
 ## Domain 3 — Expertise content product (ai_qe)
 
 **What the course assumes** (from `ai_qe/README.md`): Jekyll site, narrated decks with synchronized captions, per-claim citations, `_data/release.yml` editions with immutable releases, Playwright QA, illustrative-not-client scenarios, a consulting funnel.

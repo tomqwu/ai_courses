@@ -31,14 +31,14 @@ title: M4 — The Spec-Driven SaaS: From Idea to Executable Spec
 ## M4.1 — The command chain
 
 ```
-specify ── clarify ── research ── data-model ── plan ── CHECKLIST ── contracts ── tasks
-  WHAT      ≤3 Qs      Phase 0      Phase 1      HOW      pass/fail     seams     Phase 2
+specify ── clarify ── research ── data-model ── plan ── CHECKLIST ── contracts ── tasks ── implement ⇄ converge
+  WHAT      ≤3 Qs      Phase 0      Phase 1      HOW      pass/fail     seams     Phase 2    until Converged
 ```
 
 Each command consumes the previous one's output.
-`docs/SPEC_KIT_SETUP.md`; commands in `.claude/commands/`.
+SignUpFlow predates 1.0: dotted commands in `.claude/commands/`.
 
-<!-- NOTES: This is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote; nothing is carried in anyone's head. `/speckit.specify` writes WHAT; `/speckit.clarify` burns a small question budget; Phase 0 research records decisions; data-model and plan add HOW and the Constitution Check; the checklist gates; contracts pin the seams; tasks turn it into work. The command definitions live in `.claude/commands/` and the templates in `.specify/templates/` — both openable in the clone. Notice there is exactly one gate, and it is cheap. Transition: now walk the folder itself, starting with WHAT. -->
+<!-- NOTES: This is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote; nothing is carried in anyone's head. `/speckit.specify` writes WHAT; `/speckit.clarify` burns a small question budget; Phase 0 research records decisions; data-model and plan add HOW and the Constitution Check; the checklist gates; contracts pin the seams; tasks turn it into work. Spec-kit 1.0 closes the loop: implement, then converge, which checks the code against the spec and appends unmet work as tasks, until it reports Converged. SignUpFlow predates 1.0, so its dotted command definitions live in `.claude/commands/` and the templates in `.specify/templates/` — both openable in the clone. Notice there is exactly one gate, and it is cheap. Transition: now walk the folder itself, starting with WHAT. -->
 
 ---
 

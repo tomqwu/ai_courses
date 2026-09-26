@@ -47,10 +47,10 @@ One canonical source, many delivery files.
 
 - `.specify/memory/constitution.md` — above all agent files
 - `AGENTS.md` — the universal baseline agents read
-- `CLAUDE.md` — cross-references it, then adds Claude addenda
+- `CLAUDE.md` — links to it; yours imports `@AGENTS.md`
 - `.github/copilot-instructions.md` — restates rules for Copilot
 
-<!-- NOTES: Four files, one canonical source. The baseline lives in AGENTS.md and is consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory. Claude Code does not read AGENTS.md natively, so CLAUDE.md links to it at the top and adds Claude-specific addenda. Copilot needs its own restatement file. The constitution is the single source of truth above all of them. Transition: the next slide proves the lengths are real. Timing: 3 minutes. -->
+<!-- NOTES: Four files, one canonical source. The baseline lives in AGENTS.md and is consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory. SignUpFlow's CLAUDE.md links to it at the top and adds Claude-specific addenda. A link is not an import: Claude Code opens a linked file only if it decides to, so your own CLAUDE.md imports AGENTS.md with one at-sign line and both load at launch. Copilot needs its own restatement file. The constitution is the single source of truth above all of them. Transition: the next slide proves the lengths are real. Timing: 3 minutes. -->
 
 ---
 
@@ -180,19 +180,17 @@ Pointer: `SignUpFlow/AGENTS.md:153-161`
 
 <!-- _diagram: flow -->
 
-- `/speckit.constitution`
-- `/speckit.specify`
-- `/speckit.clarify`
-- `/speckit.plan`
-- `/speckit.checklist`
-- `/speckit.tasks`
-- `/speckit.analyze`
-- `/speckit.implement`
+- `/speckit-constitution`
+- `/speckit-specify`
+- `/speckit-plan`
+- `/speckit-tasks`
+- `/speckit-implement`
+- `/speckit-converge`
 
-- Output: a folder of artifacts under `specs/`.
-- 17 spec folders exist in SignUpFlow today.
+- Optional: clarify, checklist, analyze. SignUpFlow uses older dotted names.
+- Output: a folder of artifacts under `specs/`; SignUpFlow has 17.
 
-<!-- NOTES: SignUpFlow builds features through GitHub's spec-kit slash commands, in this order. Each step produces a file, and the files are the interface between your intent and an agent session that has no memory of your conversation. There are seventeen spec folders in the repo, so this is not theory. The pipeline answer to "the agent did the wrong thing" is almost always "the spec did not say". Transition: each artifact has exactly one job. Timing: 3 minutes. -->
+<!-- NOTES: Spec-kit 1.0 runs the constitution once per project, then specify, plan, tasks, implement and converge for each feature; converge checks the code against the spec and adds any unmet work as new tasks. Clarify, checklist and analyze are optional. SignUpFlow's docs still use the older dotted names for the same steps. Each step produces a file, and the files are the interface between your intent and an agent session that has no memory of your conversation. There are seventeen spec folders in the repo, so this is not theory. The pipeline answer to "the agent did the wrong thing" is almost always "the spec did not say". Transition: each artifact has exactly one job. Timing: 3 minutes. -->
 
 ---
 
@@ -357,14 +355,14 @@ Limitations / not verified:
 
 <!-- _diagram: steps -->
 
-- Write `constitution.md` (≤80 lines) and `AGENTS.md` (≤200 lines).
+- Write `constitution.md` (≤80 lines), `AGENTS.md` (≤200), and `CLAUDE.md`.
 - Write `specs/001-todo-command/`: spec, plan with gate, tasks.
 - Run TDD: failing test first, then implement, `pytest -q` green.
-- Record red run, green run, environment, head SHA, limitations.
+- Record red, green, environment, head SHA, limitations; a hook checks.
 
 Pass gate: artifacts exist; `pytest tests/ -q` exits 0.
 
-<!-- NOTES: Two hours. You create a starter repo, write a constitution of at most eighty lines and an AGENTS.md of at most two hundred, then a spec folder for a small todo CLI feature. Then you run the loop for real: write the failing tests, watch them fail, implement, watch them pass, commit. The pass gate is objective: the artifacts exist and pytest exits zero. The evidence entry is not optional — it is the point of the lab. Transition: check your understanding with the quiz. Timing: 3 minutes. -->
+<!-- NOTES: Two hours. You create a starter repo, write a constitution of at most eighty lines and an AGENTS.md of at most two hundred, with a CLAUDE.md that imports it and one hook that checks your evidence log, then a spec folder for a small todo CLI feature. Then you run the loop for real: write the failing tests, watch them fail, implement, watch them pass, commit. The pass gate is objective: the artifacts exist and pytest exits zero. The evidence entry is not optional — it is the point of the lab. Transition: check your understanding with the quiz. Timing: 3 minutes. -->
 
 ---
 
