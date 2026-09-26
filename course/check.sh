@@ -30,6 +30,7 @@ step "narration scripts"          "$PYTHON" 06-production/narration/validate_nar
 step "narration media"            "$PYTHON" 06-production/narration/validate_narration.py
 step "learner site build"         "$PYTHON" learner-site/build_site.py --check
 step "browser check"              "$PYTHON" learner-site/check_player.py --all --print-skip
+step "site features (browser)"    "$PYTHON" learner-site/check_features.py --print-skip
 step "package verification"       "$PYTHON" 06-production/verify.py
 step "aps-tools unit tests"       "$PYTHON" ../aps-tools/test_aps_tools.py
 step "certificate issuer"         "$PYTHON" 06-production/test_issue_certificate.py

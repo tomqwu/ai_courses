@@ -417,6 +417,24 @@ def parse_quiz(text: str, deck_id: str) -> dict:
 
 # ---------------------------------------------------------------- lab parser
 
+def parse_auto_fail(rubrics: str) -> dict | None:
+    """The rubric's auto-fail section, rendered: its heading text and body up to the next `## `.
+
+    A lab page shows these next to the checklist because they decide the lab whatever the
+    checklist says, and a learner should meet them before submitting, not in the grade.
+    """
+    lines = rubrics.splitlines()
+    start = next((i for i, l in enumerate(lines) if re.match(r"^##\s+Auto-fail", l, re.I)), None)
+    if start is None:
+        return None
+    end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
+    body = "\n".join(lines[start + 1:end]).strip()
+    if not body:
+        return None
+    rendered, _, _ = render_document(body)
+    return {"title": lines[start][3:].strip(), "html": rendered}
+
+
 def parse_lab(text: str, deck_id: str) -> dict:
     """Split a lab into its sections and render them; the checklist becomes persisted boxes."""
     title, body = split_title(text)

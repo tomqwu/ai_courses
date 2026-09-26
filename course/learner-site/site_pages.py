@@ -170,7 +170,8 @@ def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict
 
 # ---------------------------------------------------------------- lab page
 
-def lab_page(deck: dict, lab: dict, site_base: str, brand: str) -> tuple[str, dict]:
+def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
+             auto_fail: dict | None = None) -> tuple[str, dict]:
     short = short_label(deck)
     number = int(deck["id"][1:])
     meta = lab["meta"]
@@ -189,6 +190,12 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str) -> tuple[str, di
     <span class="progress-bar" aria-hidden="true"><span data-check-fill></span></span></p>
   {sec['html']}
   <p class="lab-done" data-lab-done hidden><strong>Every item is checked.</strong> This lab now shows as complete on your module and path progress. Record the evidence entry below — the checklist is your claim; the entry is your proof.</p>
+</section>""")
+            if auto_fail and not any('id="auto-fail"' in x for x in sections):
+                sections.append(f"""<section class="lab-section lab-autofail" id="auto-fail" aria-labelledby="auto-fail-title">
+  <h2 id="auto-fail-title">{SC.inline(auto_fail['title'])}</h2>
+  <p class="section-note">From this lab's rubric (<code>lab-rubrics.md</code>). Any one of these fails the lab whatever the checklist shows, so read them before you submit.</p>
+  {auto_fail['html']}
 </section>""")
         elif sec["kind"] == "evidence":
             sections.append(f"""<section class="lab-section lab-evidence" id="{SC.slug(sec['title'])}">

@@ -1212,6 +1212,11 @@ body.transcript main { padding-bottom: 80px; }
 .check-item.is-done label span { color: var(--ink-soft); text-decoration: line-through; }
 .lab-done { margin: 12px 0 0; padding: 10px 14px; background: var(--wash); border-radius: 4px; font-size: var(--d-3); color: var(--ink); }
 .lab-stretch, .lab-discussion { padding: 16px 20px; background: var(--wash); border-radius: 6px; }
+.lab-autofail { padding: 16px 20px; background: var(--proof-bg); border: 1px solid var(--proof-line); border-left: 3px solid var(--proof-ink); border-radius: 6px; }
+.lab-autofail h2 { margin-top: 0; font-size: var(--d-6); }
+.lab-autofail .section-note { color: var(--ink); }
+.lab-autofail ol { margin: 0; padding-left: 1.4em; }
+.lab-autofail li { margin: 0 0 8px; }
 .lab-stretch h2, .lab-discussion h2 { margin-top: 0; font-size: var(--d-6); }
 .evidence-form { margin-top: 18px; padding: 18px 20px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; }
 .evidence-form h3 { margin: 0 0 6px; }

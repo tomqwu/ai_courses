@@ -28,7 +28,7 @@ recordings is still fully readable, and the player says so instead of failing.
 | `assets/audio/…` | `generate_narration.py` | No — generated (see the narration README) |
 | `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
 | `assets/fonts/source-sans-3.woff2` | Source Sans 3, SIL OFL 1.1 (licence travels with it) | **Yes** |
-| `build_site.py`, `check_player.py` | hand-written | **Yes** |
+| `build_site.py`, `check_player.py`, `check_features.py` | hand-written | **Yes** |
 
 ## The learner's record
 
@@ -38,6 +38,16 @@ unit's last slide marks it done; a lab completes when every checklist item is ti
 check at 75%, the certificate threshold. Rings on the module and path cards, a "continue where you
 left off" strip on the course home, and export / import / reset as plain JSON — the learner owns it,
 nothing is uploaded. Press `/` anywhere to search.
+
+`check_features.py` drives all of this in a real browser, from empty storage, the way a learner
+uses it. Ticks survive a reload and reach the rings and the "continue" strip. Every knowledge-check
+question plays to its keyed answer, and no model answer shows before an attempt. A keyboard-only
+wrong answer names the key. Lab M1's checklist persists and exports its evidence entry in the
+Module 1 format, and every lab page shows its rubric's auto-fail list exactly once. `/` finds a
+glossary term together with its slide. The reading pages link pointers at a pinned commit, and the
+course home fits a 390px phone. It runs in the gate after `check_player.py`, and it fails when a
+quiz key names no option or a lab loses its auto-fail list; both were tried by breaking a built
+page.
 
 ## Design system
 

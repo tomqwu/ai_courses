@@ -1002,7 +1002,9 @@ def main(argv=None) -> int:
                 terms_by_deck[deck["id"]] = record["terms"]
             records.append(record)
         lab = SC.parse_lab(SC.read(folder / "lab.md"), deck["id"])
-        html_out, record = SPG.lab_page(deck, lab, args.site_base, BRAND_MARK)
+        rubrics = folder / "lab-rubrics.md"
+        auto_fail = SC.parse_auto_fail(SC.read(rubrics)) if rubrics.is_file() else None
+        html_out, record = SPG.lab_page(deck, lab, args.site_base, BRAND_MARK, auto_fail)
         (target / f"lab-{deck['id']}.html").write_text(html_out, encoding="utf-8")
         record["module"] = SPG.short_label(deck)
         records.append(record)
