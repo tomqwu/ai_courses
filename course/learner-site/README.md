@@ -44,6 +44,12 @@ and the page's own title in the content column. There is no hero band.
   follows the player (`aps:slide`) and marks the current unit `aria-current`.
 - **The top bar** carries the breadcrumb, the module's four modes (Watch · Read · Lab · Check) and
   search, which opens on `/` or ⌘K / Ctrl+K.
+- **Four modes, not nine tabs** (#74). Watch is the deck (its transcript page is a view of Watch);
+  Read is the lesson with its handout and glossary as views (`lesson-`, `handout-`, `glossary-mNN.html`,
+  each keeping its URL so every existing link resolves); Lab and Check are the lab and the knowledge
+  check. The module overview is the module's landing page: it opens on **Start module**, which
+  becomes **Resume · slide N** once the learner has stopped inside the deck. `check_features.py`
+  asserts every module page offers exactly the four modes and every old URL still opens in its mode.
 - **Keyboard order** is skip link → outline (search included) → top bar → content, and
   `check_features.py` asserts it, along with the drawer's Escape and the outline after a reload.
 

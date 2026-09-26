@@ -325,6 +325,9 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .outline-units { margin: 2px 0 6px 19px; padding-left: 8px; border-left: 1px solid var(--line); }
 .outline-units a { padding: 6px 8px; font-size: var(--d-2); }
 .outline-units .status-icon { width: 16px; height: 16px; }
+.outline-extras { margin: 0 0 6px 19px; padding: 4px 0 0 8px; list-style: none; border-left: 1px solid var(--line); }
+.outline-extras a { padding: 5px 8px; color: var(--ink-soft); font-size: var(--d-2); }
+.outline-extras a[aria-current] { color: var(--accent-deep); }
 
 .status-icon { width: 18px; height: 18px; flex: none; }
 .status-icon .st-ring { fill: none; stroke: var(--ink-faint); stroke-width: 1.8; }
@@ -1380,14 +1383,25 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
  * tokens, and one tab bar per module so the deck, the text and the exercises are one place.
  */
 
-.module-tabs { margin: 20px 0 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
-.module-tabs ul { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.module-tabs a {
+/* Read's three views (#74): the lesson, its handout, its glossary — one mode, not three tabs. */
+.view-tabs { display: flex; gap: 4px; margin: 20px 0 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.view-tabs a {
   display: inline-block; padding: 10px 12px; color: var(--ink-soft); font-size: var(--d-3);
   font-weight: 600; text-decoration: none; white-space: nowrap; border-bottom: 2px solid transparent;
 }
-.module-tabs a:hover { color: var(--ink-strong); }
-.module-tabs a[aria-current="page"] { color: var(--accent-deep); border-bottom-color: var(--accent); }
+.view-tabs a:hover { color: var(--ink-strong); }
+.view-tabs a[aria-current="page"] { color: var(--accent-deep); border-bottom-color: var(--accent); }
+
+/* The module's landing point (#74): start, or resume where the learner stopped. */
+.module-start { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin: 0 0 8px; }
+.btn-start {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px;
+  border-radius: 10px; background: var(--accent); color: var(--white);
+  font-weight: 650; font-size: var(--d-5); text-decoration: none;
+}
+.btn-start:hover { background: var(--accent-deep); }
+.btn-start .icon { width: 14px; height: 14px; }
+.module-start-note { margin: 0; color: var(--ink-soft); font-size: var(--d-3); }
 
 .doc-main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
 .doc-main.has-toc { grid-template-columns: 220px minmax(0, 1fr); }

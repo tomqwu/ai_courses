@@ -731,7 +731,6 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
                      f'{html.escape(tracks_for[0]["track"]["title"])}</a>')
     else:
         path_link = f'<a href="{site_base}/paths.html">the learning paths</a>'
-    first = units[0]["href"] if units else f"{deck['id']}.html"
 
     head = SH.page_head(
         f"Module {number} · {len(units)} units · {fmt_minutes(total)} of narration", html.escape(short),
@@ -741,17 +740,18 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
                        else "Beginner to intermediate"),
                       ("Lesson", facts["lesson_length"]),
                       ("Lab", lab_time(deck["id"]))])
-        + f"""<nav class="module-tabs" aria-label="More in this module"><ul>
-      <li><a href="{site_base}/module-{deck['id']}.html" aria-current="page">Overview</a></li>
-      <li><a href="{site_base}/{deck['id']}.html">Slides</a></li>
-      <li><a href="{site_base}/lesson-{deck['id']}.html">Lesson</a></li>
-      <li><a href="{site_base}/lab-{deck['id']}.html">Lab</a></li>
-      <li><a href="{site_base}/quiz-{deck['id']}.html">Knowledge check</a></li>
-      <li><a href="{site_base}/handout-{deck['id']}.html">Handout</a></li>
-      <li><a href="{site_base}/glossary-{deck['id']}.html">Glossary</a></li>
-      <li><a href="{site_base}/transcript-{deck['id']}.html">Transcript</a></li>
-    </ul></nav>""")
+)
+    # The module's landing point (#74): where to begin, or where the learner stopped. The build writes
+    # "Start"; shell.js turns it into "Resume · slide N" from the stored position in this deck.
+    first_unit = units[0] if units else None
+    start = f"""<section class="module-start" data-module-start="{deck['id']}" aria-label="Start this module">
+    <a class="btn-start" href="{site_base}/{first_unit['href'] if first_unit else deck['id'] + '.html'}" data-start-link>
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/></svg>
+      <span data-start-label>Start module</span></a>
+    <p class="module-start-note" data-start-note>{html.escape(f"Begins with the {KIND_LABEL[first_unit['kind']].lower()}, then {len(units) - 1} more units." if first_unit else "")}</p>
+  </section>"""
     body = f"""{head}
+{start}
   <section class="path-section">
     <h2>Learning objectives</h2>
     <ul class="objectives">{objectives_html}</ul>
@@ -778,7 +778,6 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
 {chr(10).join(rows)}
   </ol>
   <section class="path-section">
-    <a class="btn-primary" href="{site_base}/{first}">Start this module →</a>
     <a class="btn-quiet" href="{site_base}/transcript-{deck['id']}.html">Read the transcript</a>
     <p class="index-footnote">Part of {path_link}. {'This is the text-first copy: narration and captions are not published here, so units are read and presented rather than played.' if text_only else 'Units carry narration, captions and a transcript.'}</p>
   </section>"""

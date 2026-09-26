@@ -20,23 +20,19 @@ KIND_TITLES = {
 }
 
 
-def module_tabs(deck_id: str, site_base: str, active: str) -> str:
-    """The per-module navigation: overview · deck · lesson · lab · knowledge check · handout · glossary."""
-    items = [
-        ("overview", "Overview", f"module-{deck_id}.html"),
-        ("deck", "Slides", f"{deck_id}.html"),
-        ("lesson", "Lesson", f"lesson-{deck_id}.html"),
-        ("lab", "Lab", f"lab-{deck_id}.html"),
-        ("quiz", "Knowledge check", f"quiz-{deck_id}.html"),
-        ("handout", "Handout", f"handout-{deck_id}.html"),
-        ("glossary", "Glossary", f"glossary-{deck_id}.html"),
-        ("transcript", "Transcript", f"transcript-{deck_id}.html"),
-    ]
-    lis = ""
-    for key, label, href in items:
-        current = ' aria-current="page"' if key == active else ""
-        lis += f'<li><a href="{site_base}/{href}"{current}>{label}</a></li>'
-    return f'<nav class="module-tabs" aria-label="More in this module"><ul>{lis}</ul></nav>'
+def read_views(deck_id: str, site_base: str, active: str) -> str:
+    """Read is one mode with three views (#74): the lesson, its one-page handout, and its glossary.
+
+    They keep their own URLs, so every link into them — search hits, the master glossary, lessons,
+    certificates — still resolves; what changed is that they are views of Read, not tabs beside it.
+    """
+    items = (("lesson", "Lesson", f"lesson-{deck_id}.html"),
+             ("handout", "Handout", f"handout-{deck_id}.html"),
+             ("glossary", "Glossary", f"glossary-{deck_id}.html"))
+    current = ' aria-current="page"'
+    links = "".join(f'<a href="{site_base}/{href}"{current if key == active else ""}>{label}</a>'
+                    for key, label, href in items)
+    return f'<nav class="view-tabs" aria-label="Read">{links}</nav>'
 
 
 
@@ -61,7 +57,7 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) 
     }
     head = SH.page_head(f"Module {number} · {KIND_TITLES[kind]}",
                         html.escape(title or f"{KIND_TITLES[kind]} — {short}"), ledes[kind],
-                        module_tabs(deck["id"], site_base, kind))
+                        read_views(deck["id"], site_base, kind))
     aside = f'<aside class="doc-aside">{toc}</aside>' if toc else ""
     body_html = f"""{head}
 <div class="doc-main{' has-toc' if toc else ''}">
@@ -80,7 +76,8 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) 
     return SH.document(f"{title or KIND_TITLES[kind]} — AI Product Studio", ledes[kind], body_html,
                        site_base, f"doc-page {kind}-page",
                        crumbs=SH.module_crumbs(site_base, deck, KIND_TITLES[kind]),
-                       deck_id=deck["id"], mode="read"), record
+                       deck_id=deck["id"], current={"glossary": "module-glossary"}.get(kind, kind),
+                       mode="read"), record
 
 
 def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict, site_base: str,
@@ -185,7 +182,7 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
             heading = f"<h2>{SC.inline(sec['title'])}</h2>" if sec["title"] else ""
             sections.append(f'<section class="lab-section {cls}" id="{SC.slug(sec["title"] or "lab")}">{heading}{sec["html"]}</section>')
     head = SH.page_head(f"Module {number} · Lab · pass/fail", SC.inline(lab["title"]), goal,
-                        f'<dl class="at-a-glance">{aga}</dl>{module_tabs(deck["id"], site_base, "lab")}')
+                        f'<dl class="at-a-glance">{aga}</dl>')
     body = f"""{head}
 <div class="doc-main">
   <article class="doc-article lab-article" data-lab="{deck['id']}" data-lab-checks="{lab['checklist_count']}" data-lab-title="{html.escape(lab['title'], quote=True)}">
@@ -239,8 +236,7 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str) -> tuple[str, 
         SC.inline(quiz["title"]),
         "Each question maps to one lesson objective, and the distractors are the misconceptions the "
         "lesson argues against. Multiple choice is checked instantly; short answers reveal the model "
-        "answer only after you have written yours. Best score is kept; 75% is the certificate threshold.",
-        module_tabs(deck["id"], site_base, "quiz"))
+        "answer only after you have written yours. Best score is kept; 75% is the certificate threshold.")
     body = f"""{head}
 <div class="doc-main">
   <article class="doc-article quiz-article" data-quiz="{deck['id']}">

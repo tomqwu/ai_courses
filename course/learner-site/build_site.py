@@ -424,7 +424,7 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
     return SH.document(f"{deck['label']} — transcript", f"The narration of {deck['label']}, slide by slide.",
                        content, site_base, "transcript",
                        crumbs=SH.module_crumbs(site_base, deck, "Transcript"),
-                       deck_id=deck["id"], mode="read")
+                       deck_id=deck["id"], current="transcript", mode="watch")
 
 
 BRAND_MARK = SH.BRAND_MARK

@@ -54,6 +54,12 @@ def run(page, browser, base: str) -> list[str]:
     # the cards and the landing page reflect it; the learner can export it.
     page.goto(f"{base}/index.html")
     need(page.locator("[data-continue]").is_hidden(), "index: a first visit shows 'continue'")
+    # A module's landing point (#74): a first visit is offered the start, at the top of the page.
+    page.goto(f"{base}/module-m02.html")
+    start = page.locator("[data-start-link]")
+    need(start.inner_text().strip() == "Start module" and (start.get_attribute("href") or "").endswith("m02.html#slide-1")
+         and start.bounding_box()["y"] < 900,
+         "module-m02: a first visit is not offered 'Start module' above the fold")
     page.goto(f"{base}/module-m01.html")
     page.check('[data-progress="m01:intro"]')
     page.reload()
@@ -77,6 +83,26 @@ def run(page, browser, base: str) -> list[str]:
         need('id="app-outline"' in text and 'class="app-bar"' in text and 'class="skip-link"' in text,
              f"{built.name}: does not render the shell (outline, top bar and skip link)")
         need('class="site-header' not in text, f"{built.name}: still opens on the hero band")
+        # Four modes, not nine tabs (#74): a module page offers Watch · Read · Lab · Check and nothing
+        # beside them at the top level.
+        need('class="module-tabs"' not in text, f"{built.name}: still shows the module tab row")
+        if 'class="mode-switch"' in text:
+            modes = re.search(r'<nav class="mode-switch"[^>]*>(.*?)</nav>', text, re.S).group(1)
+            need(re.findall(r">([^<]+)</a>", modes) == ["Watch", "Read", "Lab", "Check"],
+                 f"{built.name}: the mode switch is not exactly Watch · Read · Lab · Check")
+    # Every old per-module URL still resolves, as a view of its mode.
+    for deck in sorted(p.stem.split("-")[1] for p in SITE.glob("quiz-m*.html")):
+        for pattern, mode in (("{d}.html", "Watch"), ("lesson-{d}.html", "Read"), ("handout-{d}.html", "Read"),
+                              ("glossary-{d}.html", "Read"), ("transcript-{d}.html", "Watch"),
+                              ("lab-{d}.html", "Lab"), ("quiz-{d}.html", "Check"), ("module-{d}.html", None)):
+            path = SITE / pattern.format(d=deck)
+            if not path.exists():
+                problems.append(f"{path.name}: an old URL no longer resolves")
+                continue
+            current = re.search(r'<nav class="mode-switch".*?<a [^>]*aria-current="page"[^>]*>([^<]+)</a>',
+                                path.read_text(encoding="utf-8"), re.S)
+            need((current.group(1) if current else None) == mode,
+                 f"{path.name}: shows mode {current.group(1) if current else None!r}, expected {mode!r}")
     # The outline reflects what was stored, after a reload: paging M2 above recorded its first unit.
     page.goto(f"{base}/module-m02.html")
     page.reload()
@@ -89,6 +115,9 @@ def run(page, browser, base: str) -> list[str]:
         need("is-done" in (row.get_attribute("class") or "")
              and (row.locator("[data-status-text]").text_content() or "").strip() == "done",
              f"outline: {done[0]} was recorded done but the outline does not say so in words")
+    # …and the module's start point has become the resume point.
+    need(page.locator("[data-start-label]").inner_text().startswith("Resume · slide "),
+         "module-m02: after paging the deck, the start point does not offer to resume")
     todo = page.locator('#app-outline [data-module="m05"] > a')
     need("is-todo" in (todo.get_attribute("class") or "")
          and (todo.locator("[data-status-text]").text_content() or "").strip() == "not started",
