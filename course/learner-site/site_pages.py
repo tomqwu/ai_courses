@@ -1,8 +1,9 @@
 """Page templates for the course text: lesson, handout, glossary, lab and knowledge check.
 
-Every page shares the document shell (`site_paths._doc_page`), the brand, the crumbs and the
-module tab bar, so a learner can move between the deck, the lesson, the lab and the knowledge
-check of one module without losing their place. Progress is read by `progress.js` on every page.
+Every page is rendered in the app shell (`site_shell`, #73): the course outline, the top bar with the
+module's four modes, and the page title in the content column — so a learner can move between the
+deck, the lesson, the lab and the knowledge check of one module without losing their place.
+Progress is read by `progress.js` on every page.
 """
 from __future__ import annotations
 
@@ -11,6 +12,7 @@ import json
 import re
 
 import site_content as SC
+import site_shell as SH
 
 KIND_TITLES = {
     "lesson": "Lesson", "handout": "Handout", "glossary": "Glossary",
@@ -34,51 +36,9 @@ def module_tabs(deck_id: str, site_base: str, active: str) -> str:
     for key, label, href in items:
         current = ' aria-current="page"' if key == active else ""
         lis += f'<li><a href="{site_base}/{href}"{current}>{label}</a></li>'
-    return f'<nav class="module-tabs" aria-label="This module"><ul>{lis}</ul></nav>'
+    return f'<nav class="module-tabs" aria-label="More in this module"><ul>{lis}</ul></nav>'
 
 
-def _shell(title: str, description: str, body: str, site_base: str, body_class: str,
-           scripts: tuple[str, ...] = ("progress.js",)) -> str:
-    tags = "".join(f'<script src="{site_base}/assets/{s}" defer></script>' for s in scripts)
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(title)}</title>
-<meta name="description" content="{html.escape(description)}">
-<link rel="preload" href="{site_base}/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{site_base}/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{site_base}/assets/player.css">
-</head>
-<body class="index doc-page {body_class}">
-{body}
-{tags}
-</body>
-</html>
-"""
-
-
-def _header(deck: dict, short: str, site_base: str, brand: str, eyebrow: str, h1: str, lede: str,
-            active: str, crumbs_html: str) -> str:
-    return f"""<header class="site-header site-header--doc">
-  <div class="wrap">
-    <a class="site-brand" href="{site_base}/index.html">{brand}AI Product Studio<span class="brand-destination">Course</span></a>
-    {crumbs_html}
-    <p class="eyebrow">{html.escape(eyebrow)}</p>
-    <h1>{h1}</h1>
-    <p class="site-lede">{lede}</p>
-    {module_tabs(deck['id'], site_base, active)}
-  </div>
-</header>"""
-
-
-def _crumbs(site_base: str, trail: list[tuple[str, str | None]]) -> str:
-    parts = []
-    for label, href in trail:
-        parts.append(f'<a href="{href}">{html.escape(label)}</a>' if href
-                     else f'<span aria-current="page">{html.escape(label)}</span>')
-    return f'<nav class="crumbs" aria-label="Breadcrumb">{"<span>/</span>".join(parts)}</nav>'
 
 
 def short_label(deck: dict) -> str:
@@ -99,14 +59,12 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) 
         "handout": "The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.",
         "glossary": "Every term the module leans on, with where it lives — a file you can open, not a definition you have to trust.",
     }
-    crumbs = _crumbs(site_base, [("Course home", f"{site_base}/index.html"),
-                                 (short, f"{site_base}/module-{deck['id']}.html"),
-                                 (KIND_TITLES[kind], None)])
-    head = _header(deck, short, site_base, brand, f"Module {number} · {KIND_TITLES[kind]}",
-                   html.escape(title or f"{KIND_TITLES[kind]} — {short}"), ledes[kind], kind, crumbs)
+    head = SH.page_head(f"Module {number} · {KIND_TITLES[kind]}",
+                        html.escape(title or f"{KIND_TITLES[kind]} — {short}"), ledes[kind],
+                        module_tabs(deck["id"], site_base, kind))
     aside = f'<aside class="doc-aside">{toc}</aside>' if toc else ""
     body_html = f"""{head}
-<main class="site-main doc-main{' has-toc' if toc else ''}">
+<div class="doc-main{' has-toc' if toc else ''}">
   {aside}
   <article class="doc-article">
 {rendered}
@@ -114,13 +72,15 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) 
       <p class="index-footnote">Source: <code>course/03-content/{html.escape(deck['source'].split('/')[1])}/{kind}.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
     </footer>
   </article>
-</main>"""
+</div>"""
     record = {"kind": kind, "deck": deck["id"], "title": title or f"{KIND_TITLES[kind]} — {short}",
               "href": f"{kind}-{deck['id']}.html",
               "headings": [{"text": h["text"], "id": h["id"]} for h in headings if h["level"] <= 3],
               "text": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", rendered))[:20000]}
-    return _shell(f"{title or KIND_TITLES[kind]} — AI Product Studio", ledes[kind], body_html,
-                  site_base, f"{kind}-page"), record
+    return SH.document(f"{title or KIND_TITLES[kind]} — AI Product Studio", ledes[kind], body_html,
+                       site_base, f"doc-page {kind}-page",
+                       crumbs=SH.module_crumbs(site_base, deck, KIND_TITLES[kind]),
+                       deck_id=deck["id"], mode="read"), record
 
 
 def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict, site_base: str,
@@ -150,23 +110,22 @@ def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict
             for t in by_letter[k])
         sections.append(f'<section class="glossary-letter" id="g-{k}"><h2>{k}</h2><dl>{rows}</dl></section>')
     shared = sum(1 for t in items if len(t["modules"]) > 1)
-    body = f"""<header class="site-header site-header--doc">
-  <div class="wrap">
-    <a class="site-brand" href="{site_base}/index.html">{brand}AI Product Studio<span class="brand-destination">Course</span></a>
-    {_crumbs(site_base, [("Course home", f"{site_base}/index.html"), ("Glossary", None)])}
-    <p class="eyebrow">Master glossary · {len(items)} terms · {shared} shared across modules</p>
-    <h1>Every term the course leans on.</h1>
-    <p class="site-lede">Merged from the nine module glossaries. Where a term is defined in more than one module the fuller definition is kept and every module is linked.</p>
-    <p class="letter-nav" aria-label="Jump to letter">{letters}</p>
-  </div>
-</header>
-<main class="site-main doc-main">
+    head = SH.page_head(f"Master glossary · {len(items)} terms · {shared} shared across modules",
+                        "Every term the course leans on.",
+                        "Merged from the module glossaries. Where a term is defined in more than one "
+                        "module the fuller definition is kept and every module is linked.",
+                        f'<nav class="letter-nav" aria-label="Jump to letter">{letters}</nav>')
+    body = f"""{head}
+<div class="doc-main">
   <article class="doc-article glossary-all">
 {"".join(sections)}
   </article>
-</main>"""
-    return _shell("Glossary — AI Product Studio", "Every term the course leans on, merged from the nine module glossaries.",
-                  body, site_base, "glossary-page")
+</div>"""
+    return SH.document("Glossary — AI Product Studio",
+                       "Every term the course leans on, merged from the module glossaries.",
+                       body, site_base, "doc-page glossary-page",
+                       crumbs=[("Course", f"{site_base}/index.html"), ("Glossary", None)],
+                       current="glossary")
 
 
 # ---------------------------------------------------------------- lab page
@@ -180,8 +139,9 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
              ("Checklist", f"{lab['checklist_count']} items")]
     aga = "".join(f'<div class="aga-item"><dt>{html.escape(k)}</dt><dd>{SC.inline(v)}</dd></div>'
                   for k, v in facts if v)
-    goal = f'<p class="site-lede">{SC.inline(meta["Goal"])}</p>' if meta.get("Goal") else \
-        '<p class="site-lede">The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, and the evidence entry you export is the format the rubrics grade.</p>'
+    goal = SC.inline(meta["Goal"]) if meta.get("Goal") else \
+        ("The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, "
+         "and the evidence entry you export is the format the rubrics grade.")
     sections = []
     for sec in lab["sections"]:
         if sec["kind"] == "checklist":
@@ -224,33 +184,23 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
             cls = {"stretch": "lab-stretch", "discussion": "lab-discussion"}.get(sec["kind"], "")
             heading = f"<h2>{SC.inline(sec['title'])}</h2>" if sec["title"] else ""
             sections.append(f'<section class="lab-section {cls}" id="{SC.slug(sec["title"] or "lab")}">{heading}{sec["html"]}</section>')
-    crumbs = _crumbs(site_base, [("Course home", f"{site_base}/index.html"),
-                                 (short, f"{site_base}/module-{deck['id']}.html"), ("Lab", None)])
-    head = f"""<header class="site-header site-header--doc">
-  <div class="wrap">
-    <a class="site-brand" href="{site_base}/index.html">{brand}AI Product Studio<span class="brand-destination">Course</span></a>
-    {crumbs}
-    <p class="eyebrow">Module {number} · Lab · pass/fail</p>
-    <h1>{SC.inline(lab['title'])}</h1>
-    {goal}
-    <dl class="at-a-glance">{aga}</dl>
-    {module_tabs(deck['id'], site_base, 'lab')}
-  </div>
-</header>"""
+    head = SH.page_head(f"Module {number} · Lab · pass/fail", SC.inline(lab["title"]), goal,
+                        f'<dl class="at-a-glance">{aga}</dl>{module_tabs(deck["id"], site_base, "lab")}')
     body = f"""{head}
-<main class="site-main doc-main">
+<div class="doc-main">
   <article class="doc-article lab-article" data-lab="{deck['id']}" data-lab-checks="{lab['checklist_count']}" data-lab-title="{html.escape(lab['title'], quote=True)}">
 {"".join(sections)}
     <footer class="doc-footer">
       <p class="index-footnote">Checklist ticks and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/{html.escape(deck['source'].split('/')[1])}/lab.md</code>.</p>
     </footer>
   </article>
-</main>"""
+</div>"""
     record = {"kind": "lab", "deck": deck["id"], "title": lab["title"], "href": f"lab-{deck['id']}.html",
               "headings": [{"text": s["title"], "id": SC.slug(s["title"] or "lab")} for s in lab["sections"] if s["title"]],
               "text": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", "".join(s["html"] for s in lab["sections"])))[:20000]}
-    return _shell(f"{lab['title']} — AI Product Studio", meta.get("Goal", "The module lab."), body,
-                  site_base, "lab-page", ("progress.js", "lab.js")), record
+    return SH.document(f"{lab['title']} — AI Product Studio", meta.get("Goal", "The module lab."), body,
+                       site_base, "doc-page lab-page", crumbs=SH.module_crumbs(site_base, deck, "Lab"),
+                       deck_id=deck["id"], current="lab", mode="lab", scripts=("lab.js",)), record
 
 
 # ---------------------------------------------------------------- knowledge check
@@ -284,20 +234,15 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str) -> tuple[str, 
     <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
   <div class="q-explain" hidden><p class="q-explain-title">Model answer</p><p>{q['rationale_html']}</p></div>
 </section>""")
-    crumbs = _crumbs(site_base, [("Course home", f"{site_base}/index.html"),
-                                 (short, f"{site_base}/module-{deck['id']}.html"), ("Knowledge check", None)])
-    head = f"""<header class="site-header site-header--doc">
-  <div class="wrap">
-    <a class="site-brand" href="{site_base}/index.html">{brand}AI Product Studio<span class="brand-destination">Course</span></a>
-    {crumbs}
-    <p class="eyebrow">Module {number} · Knowledge check · {quiz['mc']} multiple choice + {quiz['short']} short answer</p>
-    <h1>{SC.inline(quiz['title'])}</h1>
-    <p class="site-lede">Each question maps to one lesson objective, and the distractors are the misconceptions the lesson argues against. Multiple choice is checked instantly; short answers reveal the model answer only after you have written yours. Best score is kept; 75% is the certificate threshold.</p>
-    {module_tabs(deck['id'], site_base, 'quiz')}
-  </div>
-</header>"""
+    head = SH.page_head(
+        f"Module {number} · Knowledge check · {quiz['mc']} multiple choice + {quiz['short']} short answer",
+        SC.inline(quiz["title"]),
+        "Each question maps to one lesson objective, and the distractors are the misconceptions the "
+        "lesson argues against. Multiple choice is checked instantly; short answers reveal the model "
+        "answer only after you have written yours. Best score is kept; 75% is the certificate threshold.",
+        module_tabs(deck["id"], site_base, "quiz"))
     body = f"""{head}
-<main class="site-main doc-main">
+<div class="doc-main">
   <article class="doc-article quiz-article" data-quiz="{deck['id']}">
     <p class="quiz-score" data-quiz-score role="status" aria-live="polite"></p>
 {"".join(blocks)}
@@ -311,12 +256,52 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str) -> tuple[str, 
       <p class="index-footnote">Scores are stored in this browser only. Source: <code>course/03-content/{html.escape(deck['source'].split('/')[1])}/quiz.md</code> — the answer key with rationale and objective references is the same file.</p>
     </footer>
   </article>
-</main>"""
+</div>"""
     record = {"kind": "quiz", "deck": deck["id"], "title": quiz["title"], "href": f"quiz-{deck['id']}.html",
               "headings": [{"text": f"Question {q['n']}", "id": f"q{q['n']}-stem"} for q in quiz["questions"]],
               "text": " ".join(q["stem_text"] for q in quiz["questions"])[:20000]}
-    return _shell(f"{quiz['title']} — AI Product Studio", "The module knowledge check, interactive.",
-                  body, site_base, "quiz-page", ("progress.js", "quiz.js")), record
+    return SH.document(f"{quiz['title']} — AI Product Studio", "The module knowledge check, interactive.",
+                       body, site_base, "doc-page quiz-page",
+                       crumbs=SH.module_crumbs(site_base, deck, "Knowledge check"),
+                       deck_id=deck["id"], current="quiz", mode="check", scripts=("quiz.js",)), record
+
+
+# ---------------------------------------------------------------- evidence log
+
+def evidence_page(labs: list[dict], site_base: str) -> str:
+    """"Your evidence log" (#73): every lab's evidence entry, as the learner wrote it, in one place.
+
+    The entries live in this browser's progress store, so the page is a frame that `evidence.js`
+    fills: one row per lab with its checklist state and the entry in the Module 1 format, and copy
+    and download for the whole log. Nothing is uploaded.
+    """
+    rows = "".join(
+        f'<li class="evidence-row" data-evidence-lab="{lab["deck"]}"'
+        f' data-lab-title="{html.escape(lab["title"], quote=True)}" data-lab-checks="{lab["checks"]}">'
+        f'<h2><a href="{site_base}/lab-{lab["deck"]}.html">{SC.inline(lab["title"])}</a></h2>'
+        f'<p class="evidence-state" data-evidence-state>Module {int(lab["deck"][1:])} · no entry yet</p>'
+        f'<pre class="evidence-entry" data-evidence-entry hidden></pre></li>'
+        for lab in labs)
+    head = SH.page_head(
+        "Your evidence log", "Every lab's evidence entry, in one place.",
+        "Each entry is the one you wrote on the lab page: commands with results, environment, revision "
+        "and limitations, in the Module 1 format the rubrics grade. They are stored in this browser "
+        "only, so copy or download the whole log to keep it with your project.")
+    body = f"""{head}
+<div class="evidence-log" data-evidence-log>
+  <div class="evidence-actions">
+    <button type="button" class="btn-primary" data-log-copy>Copy the whole log</button>
+    <button type="button" data-log-download>Download evidence-log.md</button>
+    <span class="evidence-log-count" data-log-count role="status" aria-live="polite"></span>
+  </div>
+  <ol class="evidence-rows">{rows}</ol>
+  <noscript><p>The log is read from this browser's saved progress, which needs JavaScript. Each lab page still shows its own entry.</p></noscript>
+</div>"""
+    return SH.document("Your evidence log — AI Product Studio",
+                       "Every lab's evidence entry, as you wrote it, in one place.", body, site_base,
+                       "doc-page evidence-page",
+                       crumbs=[("Course", f"{site_base}/index.html"), ("Your evidence log", None)],
+                       current="evidence", scripts=("evidence.js",))
 
 
 def search_index(records: list[dict], decks: list[dict], units_by_deck: dict) -> str:

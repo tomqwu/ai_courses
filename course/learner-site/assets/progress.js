@@ -7,7 +7,8 @@
  *     units:   { "m03:M3.1": <ms>, "m03:lab": <ms>, ... },   // unit id → completed at
  *     quizzes: { "m03": { score: 7, total: 8, at: <ms> } },   // best score per module
  *     labs:    { "m03": { checks: { "m03-lab-1": true }, evidence: {...}, at: <ms> } },
- *     last:    { href: "m03.html#slide-5", label: "...", at: <ms> } }
+ *     last:    { href: "m03.html#slide-5", label: "...", at: <ms> },
+ *     path:    "on-device-app" }                              // the path the outline shows
  *
  * The learner owns it: export and import are plain JSON, and nothing is uploaded — the
  * course's evidence discipline applied to the learner's own record.
@@ -80,11 +81,33 @@
     setLast: function (href, label) {
       var s = load(); s.last = { href: href, label: label, at: Date.now() }; save();
     },
+    path: function () { return load().path || null; },
+    setPath: function (slug) {
+      var s = load(); if (s.path !== slug) { s.path = slug; save(); }
+    },
+    // The evidence entry in the Module 1 format — one formatter, used by the lab page and by the
+    // evidence log, so the two can never disagree about what an entry looks like.
+    evidenceMarkdown: function (v, labTitle) {
+      v = v || {};
+      var get = function (k) { return (v[k] || '').trim(); };
+      var today = new Date().toISOString().slice(0, 10);
+      var lines = ['## Evidence — ' + (get('project') || '<project>') + ' — ' + labTitle + ' — ' + (get('date') || today),
+        'Commands (with results):'];
+      get('commands').split('\n').filter(function (l) { return l.trim(); }).forEach(function (l) { lines.push('- ' + l.trim()); });
+      if (!get('commands')) lines.push('- <command> → <result>');
+      lines.push('Environment: ' + (get('environment') || '<OS, Python version, daemon state>'));
+      lines.push('Revision: ' + (get('revision') || '<git rev-parse HEAD>'));
+      lines.push('Limitations / not verified:');
+      get('limitations').split('\n').filter(function (l) { return l.trim(); }).forEach(function (l) { lines.push('- ' + l.trim()); });
+      if (!get('limitations')) lines.push('- <what this run does not prove>');
+      return lines.join('\n');
+    },
     exportJSON: function () { return JSON.stringify(load(), null, 2); },
     importJSON: function (text) {
       var data = JSON.parse(text);
       if (!data || data.v !== 2 || typeof data.units !== 'object') throw new Error('not an AI Product Studio progress file');
-      state = { v: 2, units: data.units || {}, quizzes: data.quizzes || {}, labs: data.labs || {}, last: data.last || null };
+      state = { v: 2, units: data.units || {}, quizzes: data.quizzes || {}, labs: data.labs || {}, last: data.last || null,
+                path: data.path || null };
       save();
     },
     reset: function () { state = empty(); save(); }

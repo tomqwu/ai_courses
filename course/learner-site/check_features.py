@@ -11,6 +11,11 @@ persists and exports its evidence entry in the Module 1 format, the rubric's aut
 every lab page, search opens on "/" and finds a term with its slide, the reading pages link
 pointers at a pinned commit, and the landing page leads with linked proof and fits a phone.
 
+The app shell (#73) is held to its done-when: every page renders the outline and the top bar and
+none opens on a hero, the outline reflects stored progress after a reload and follows the player,
+the keyboard order is skip link → outline (search included) → top bar → content, and below 1024px
+the outline is a drawer that opens, closes on Escape and hands focus back.
+
 Each browser context starts with empty storage, so nothing a learner saved is read or changed.
 Needs the Python Playwright package (CI installs it for check_player.py); the browser is found the
 same way check_player.py finds it.
@@ -65,6 +70,77 @@ def run(page, browser, base: str) -> list[str]:
     rings = page.eval_on_selector_all("[data-ring-units]", "els => els.map(e => e.getAttribute('aria-label'))")
     need(any(r and not r.startswith("0 of") for r in rings), f"index: no progress ring reflects progress ({rings[:3]})")
     need('"m01:intro"' in page.evaluate("window.APSProgress.exportJSON()"), "progress export lacks a ticked unit")
+
+    # The shell (#73): one frame on every page, and no page opens on the old hero band.
+    for built in sorted(p for p in SITE.glob("*.html") if not p.name.startswith("_")):
+        text = built.read_text(encoding="utf-8")
+        need('id="app-outline"' in text and 'class="app-bar"' in text and 'class="skip-link"' in text,
+             f"{built.name}: does not render the shell (outline, top bar and skip link)")
+        need('class="site-header' not in text, f"{built.name}: still opens on the hero band")
+    # The outline reflects what was stored, after a reload: paging M2 above recorded its first unit.
+    page.goto(f"{base}/module-m02.html")
+    page.reload()
+    done = sorted(k for k in units() if k.startswith("m02:"))
+    module_cls = page.locator('#app-outline [data-module="m02"] > a').get_attribute("class") or ""
+    need("is-progress" in module_cls or "is-done" in module_cls,
+         f"outline: M2 does not show as started after a reload ({module_cls!r})")
+    if done:
+        row = page.locator(f'#app-outline [data-unit="{done[0]}"]')
+        need("is-done" in (row.get_attribute("class") or "")
+             and (row.locator("[data-status-text]").text_content() or "").strip() == "done",
+             f"outline: {done[0]} was recorded done but the outline does not say so in words")
+    todo = page.locator('#app-outline [data-module="m05"] > a')
+    need("is-todo" in (todo.get_attribute("class") or "")
+         and (todo.locator("[data-status-text]").text_content() or "").strip() == "not started",
+         "outline: an untouched module is not marked 'not started'")
+    # It follows the player: a deep link to M2.2 makes that unit "you are here".
+    first = page.locator('#app-outline [data-unit="m02:M2.2"]').get_attribute("data-first")
+    page.goto(f"{base}/m02.html#slide-{first}")
+    page.wait_for_timeout(300)
+    need(page.locator('#app-outline [data-unit="m02:M2.2"][aria-current]').count() == 1
+         and page.locator('#app-outline [aria-current]').count() == 1,
+         "outline: the deck's current unit is not the one marked aria-current")
+    # A lab page names itself in the outline and in the mode switch.
+    page.goto(f"{base}/lab-m03.html")
+    need(page.locator('#app-outline [data-unit="m03:lab"][aria-current="page"]').count() == 1,
+         "outline: the lab page does not mark its unit aria-current")
+    need(page.locator('.mode-switch a[aria-current="page"]').inner_text().strip() == "Lab",
+         "top bar: the lab page's mode switch does not show Lab as current")
+    # Keyboard order: skip link, then the outline (with search), then the top bar, then the content.
+    groups = page.evaluate("""() => {
+      const sel = 'a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])';
+      return [...document.querySelectorAll(sel)].filter(e => {
+        const s = getComputedStyle(e); return s.visibility !== 'hidden' && s.display !== 'none' && e.getClientRects().length;
+      }).map(e => e.classList.contains('skip-link') ? 'skip' : e.closest('#app-outline')
+        ? (e.matches('[data-search-open]') ? 'search' : 'outline')
+        : e.closest('.app-bar') ? 'bar' : e.closest('#content') ? 'content' : 'other');
+    }""")
+    last = {g: max(i for i, x in enumerate(groups) if x == g) for g in set(groups)}
+    firsts = {g: groups.index(g) for g in set(groups)}
+    need(groups[:1] == ["skip"] and "search" in firsts
+         and last.get("outline", -1) < firsts.get("bar", -1) < firsts.get("content", -1)
+         and last.get("bar", -1) < firsts.get("content", -1),
+         f"keyboard order is not skip → outline → top bar → content ({groups[:6]} …)")
+    page.keyboard.press("Tab")
+    need(page.evaluate("document.activeElement.classList.contains('skip-link')"),
+         "the first Tab does not land on the skip link")
+    page.keyboard.press("Enter")
+    need(page.evaluate("document.activeElement.id") == "content", "the skip link does not move focus to the content")
+    # Below 1024px the outline is a drawer: hidden, opened from the top bar, closed by Escape.
+    tablet = browser.new_context(viewport={"width": 800, "height": 900}).new_page()
+    tablet.goto(f"{base}/lesson-m02.html")
+    hidden = lambda: tablet.locator("#app-outline").evaluate("n => getComputedStyle(n).visibility") == "hidden"
+    need(hidden(), "outline at 800px: not collapsed to a drawer")
+    tablet.click("[data-outline-toggle]")
+    tablet.wait_for_timeout(350)
+    need(not hidden() and tablet.get_attribute("[data-outline-toggle]", "aria-expanded") == "true"
+         and tablet.evaluate("!!document.activeElement.closest('#app-outline')"),
+         "outline at 800px: the drawer did not open with focus inside it")
+    tablet.keyboard.press("Escape")
+    tablet.wait_for_timeout(350)
+    need(hidden() and tablet.evaluate("document.activeElement.matches('[data-outline-toggle]')"),
+         "outline at 800px: Escape did not close the drawer and return focus to its button")
+    tablet.close()
 
     # Knowledge checks: every question on every page, played to its keyed answer.
     quiz_pages = sorted(SITE.glob("quiz-m*.html"))

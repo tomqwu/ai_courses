@@ -21,14 +21,31 @@ recordings is still fully readable, and the player says so instead of failing.
 | `lesson-mNN.html`, `handout-mNN.html`, `glossary-mNN.html`, `glossary.html` | the module Markdown, rendered by `site_content.py` with every repo pointer linked at the pinned commit | No — generated |
 | `lab-mNN.html` | `lab.md` — the acceptance checklist as persisted checkboxes, commands with copy buttons, an evidence-entry form | No — generated |
 | `quiz-mNN.html` | `quiz.md` — the knowledge check, playable; the parser fails the build on a question with zero or two keyed answers | No — generated |
+| `evidence.html` | "Your evidence log": every lab's evidence entry from this browser's progress, copied or downloaded as one file | No — generated |
 | `search.json` | every unit, slide (with its narration), lesson and lab heading, question and glossary term | No — generated |
 | `proof.json` | what the build measured about itself: pointers resolved, facts re-derived, lab runs, narration contract | No — generated |
-| `assets/progress.js`, `quiz.js`, `lab.js`, `search.js` | hand-written | **Yes** |
+| `assets/progress.js`, `shell.js`, `quiz.js`, `lab.js`, `search.js`, `evidence.js` | hand-written | **Yes** |
 | `narration.json` | `06-production/narration/manifest.json` | No — copied at build time |
 | `assets/audio/…` | `generate_narration.py` | No — generated (see the narration README) |
 | `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
 | `assets/fonts/*.woff2` | IBM Plex Sans, Bricolage Grotesque, JetBrains Mono (variable, latin + latin-ext), SIL OFL 1.1, each with its `OFL-*.txt` | **Yes** |
-| `build_site.py`, `check_player.py`, `check_features.py` | hand-written | **Yes** |
+| `build_site.py`, `site_shell.py`, `site_pages.py`, `site_paths.py`, `site_content.py`, `site_proof.py`, `check_player.py`, `check_features.py` | hand-written | **Yes** |
+
+## The shell
+
+Every page is one frame (`site_shell.py`, #73): a skip link, the course outline, a 64px top bar,
+and the page's own title in the content column. There is no hero band.
+
+- **The outline** (264px; a drawer below 1024px) lists the learner's path with a segmented progress
+  bar, every module, and — inside a module — its units: Introduction, the three segments, the lab, the
+  knowledge check and the summary. It is rendered from `site_paths.module_units`, so it cannot list a
+  unit the site does not have. `assets/shell.js` marks each row done, in progress or not started from
+  the stored progress: a different shape and a word for each, never a colour alone. On a deck page it
+  follows the player (`aps:slide`) and marks the current unit `aria-current`.
+- **The top bar** carries the breadcrumb, the module's four modes (Watch · Read · Lab · Check) and
+  search, which opens on `/` or ⌘K / Ctrl+K.
+- **Keyboard order** is skip link → outline (search included) → top bar → content, and
+  `check_features.py` asserts it, along with the drawer's Escape and the outline after a reload.
 
 ## The learner's record
 
@@ -37,7 +54,8 @@ so a server-backed store can replace it later without touching the pages that re
 unit's last slide marks it done; a lab completes when every checklist item is ticked; a knowledge
 check at 75%, the certificate threshold. Rings on the module and path cards, a "continue where you
 left off" strip on the course home, and export / import / reset as plain JSON — the learner owns it,
-nothing is uploaded. Press `/` anywhere to search.
+nothing is uploaded. The same store remembers the path the learner last opened, which the outline
+shows. Press `/` or ⌘K anywhere to search.
 
 `check_features.py` drives all of this in a real browser, from empty storage, the way a learner
 uses it. Ticks survive a reload and reach the rings and the "continue" strip. Every knowledge-check

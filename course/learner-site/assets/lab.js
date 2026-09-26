@@ -66,16 +66,7 @@
     function build() {
       var v = {};
       fields.forEach(function (f) { v[f.getAttribute('data-evidence')] = f.value.trim(); });
-      var today = new Date().toISOString().slice(0, 10);
-      var lines = ['## Evidence — ' + (v.project || '<project>') + ' — ' + root.getAttribute('data-lab-title') + ' — ' + (v.date || today), 'Commands (with results):'];
-      (v.commands || '').split('\n').filter(function (l) { return l.trim(); }).forEach(function (l) { lines.push('- ' + l.trim()); });
-      if (!(v.commands || '').trim()) lines.push('- <command> → <result>');
-      lines.push('Environment: ' + (v.environment || '<OS, Python version, daemon state>'));
-      lines.push('Revision: ' + (v.revision || '<git rev-parse HEAD>'));
-      lines.push('Limitations / not verified:');
-      (v.limitations || '').split('\n').filter(function (l) { return l.trim(); }).forEach(function (l) { lines.push('- ' + l.trim()); });
-      if (!(v.limitations || '').trim()) lines.push('- <what this run does not prove>');
-      out.value = lines.join('\n');
+      out.value = P ? P.evidenceMarkdown(v, root.getAttribute('data-lab-title')) : '';
       return v;
     }
     fields.forEach(function (f) { f.addEventListener('input', function () { var v = build(); if (P) P.setLabEvidence(deck, v); }); });
