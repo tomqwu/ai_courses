@@ -91,7 +91,7 @@ names both, and its break-even reproduces from its own inputs; a plausible fake 
 
 Exemplar (the Quiz M7 model answer, extended): *"the free, open-source, fully offline release-notes
 copilot for small teams — bring your own repo, keep your history private, draft notes in one
-command."* Calibration: ListenToMe's live version at `ListenToMe/docs/competition-analysis.md:80`.
+command."* Calibration: ListenToMe's live version at `ListenToMe/docs/competition-analysis.md:88`.
 
 | Clause | Column / capability that proves it |
 |---|---|

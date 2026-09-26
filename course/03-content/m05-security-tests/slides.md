@@ -64,13 +64,13 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 | Situation | Status |
 |---|---|
 | Invalid bearer token | `401` |
-| Missing bearer token, protected route | `403` |
+| Missing bearer token, protected route | doc `403`; runtime and test `401` |
 | Authenticated actor names foreign org | `403` |
 | Guessed resource identifier | `404` |
 
 `SignUpFlow/docs/API_AUTHORIZATION.md:21-24`
 
-<!-- NOTES: Four rows, and each one is a decision rather than an accident. Invalid bearer token is 401 because the credential itself failed — nothing is known about the requester. Missing bearer token stays at 403 because that is FastAPI HTTPBearer's default, and SignUpFlow documents the behavior it actually has instead of "fixing" it to 401 on REST-purism grounds. An explicit foreign organization is 403: valid credential, wrong tenant, a policy denial. The last row is the important one: a guessed resource identifier returns 404. Hold that thought for the next slide. Transition: why 404, and not 403? -->
+<!-- NOTES: Four rows, and each one is a decision rather than an accident. Invalid bearer token is 401 because the credential itself failed — nothing is known about the requester. Missing bearer token is the row that drifted: the doc says HTTPBearer's 403, but on the pinned FastAPI 0.141.1 HTTPBearer answers 401, and SignUpFlow's own boundary test asserts 401. The test kept up; the doc did not. mini-flow pins 403 explicitly, so its choice is written down and tested either way. An explicit foreign organization is 403: valid credential, wrong tenant, a policy denial. The last row is the important one: a guessed resource identifier returns 404. Hold that thought for the next slide. Transition: why 404, and not 403? -->
 
 ---
 
@@ -185,14 +185,14 @@ def normalize_roles(roles: Iterable[str]) -> list[str]:
 ## M5.2 — The authorization matrix, made executable
 
 - `api/route_auth_policy.py` classifies every route, five classes.
-- `public` 7 · `public-token` 6 · `public-callback` 2.
+- `public` 7 · `public-token` 6 · `public-callback` 4.
 - `member` 50 · `admin` 78.
 - `ROUTE_AUTH_POLICY` is the executable source of truth.
 - The doc describes intent; the dict encodes it.
 
 `SignUpFlow/api/route_auth_policy.py:8-171` · `docs/API_AUTHORIZATION.md:3`
 
-<!-- NOTES: This is the heart of M5.2. `api/route_auth_policy.py` names every FastAPI operation and assigns it to exactly one of five policy classes. The counts in the current clone are seven public operations, six scoped-token operations, two public callbacks, fifty member operations, and seventy-eight admin operations. The ROUTE_AUTH_POLICY dict at line 166 is the executable source of truth, and `docs/API_AUTHORIZATION.md` opens by saying exactly that. A matrix written only in prose rots the first time someone adds a route; a dict plus a test does not. Transition: here is the test that keeps it true. -->
+<!-- NOTES: This is the heart of M5.2. `api/route_auth_policy.py` names every FastAPI operation and assigns it to exactly one of five policy classes. The counts in the current clone are seven public operations, six scoped-token operations, four public callbacks, fifty member operations, and seventy-eight admin operations. The ROUTE_AUTH_POLICY dict at line 168 is the executable source of truth, and `docs/API_AUTHORIZATION.md` opens by saying exactly that. A matrix written only in prose rots the first time someone adds a route; a dict plus a test does not. Transition: here is the test that keeps it true. -->
 
 ---
 
@@ -205,17 +205,17 @@ def normalize_roles(roles: Iterable[str]) -> list[str]:
 - Test walks `app.routes`; asserts set equality.
 - Then walks each route's dependency tree.
 
-`SignUpFlow/tests/unit/test_api_route_auth_policy.py` (37 lines)
+`SignUpFlow/tests/unit/test_api_route_auth_policy.py` (38 lines)
 
-<!-- NOTES: The enforcement is 37 lines, and it catches three failure classes. Missing and stale are both set equality between the policy dict and the live route table: add a route without classifying it and the assertion fails; leave an entry for a deleted route and it fails in reverse. Miswiring is the subtle one — for each classified route the test collects the names of its dependency tree and asserts that admin routes depend on `get_current_admin_user`, member routes on `get_current_user`, and public routes on neither. A policy entry that says admin while the route accidentally wired the member dependency is caught mechanically. Transition: this test is a hope until you have seen it fail. -->
+<!-- NOTES: The enforcement is 38 lines, and it catches three failure classes. Missing and stale are both set equality between the policy dict and the live route table: add a route without classifying it and the assertion fails; leave an entry for a deleted route and it fails in reverse. Miswiring is the subtle one — for each classified route the test collects the names of its dependency tree and asserts that admin routes depend on `get_current_admin_user`, member routes on `get_current_user`, and public routes on neither. A policy entry that says admin while the route accidentally wired the member dependency is caught mechanically. Transition: this test is a hope until you have seen it fail. -->
 
 ---
 
 ## Proof M5.2 — matrix + gate + protocol
 
-- `SignUpFlow/api/route_auth_policy.py:8-171` — 5 classes, 143 operations.
+- `SignUpFlow/api/route_auth_policy.py:8-171` — 5 classes, 145 operations.
 - `SignUpFlow/tests/unit/test_api_route_auth_policy.py` — drift test.
-- `SignUpFlow/docs/API_AUTHORIZATION.md:59-76` — six-step change protocol.
+- `SignUpFlow/docs/API_AUTHORIZATION.md:101-118` — six-step change protocol.
 - `SignUpFlow/api/roles.py:38-53` — normalization refusals.
 - `SignUpFlow/docs/playbooks/church.md:19` — volunteer + `worship_leader`.
 
@@ -233,7 +233,7 @@ PUBLIC_OPERATIONS = {
 }
 ```
 
-<!-- NOTES: Proof slide for M5.2. Count the classes yourself when you open the file — five sets, 143 operations total. The six-step protocol at lines 59 to 76 of the authorization doc is what you will write into your own contribution guide: change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin and foreign admin, assert forbidden writes leave the database unchanged, refresh the OpenAPI snapshot, then run the matrix and scheduling regressions locally. The protocol closes with the rule that kills the shortcut: do not use the tenancy warning listener as authorization. Transition: step four is the one teams skip, and M5.3 is about proving things like it. -->
+<!-- NOTES: Proof slide for M5.2. Count the classes yourself when you open the file — five sets, 145 operations total. The six-step protocol at the end of the authorization doc is what you will write into your own contribution guide: change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin and foreign admin, assert forbidden writes leave the database unchanged, refresh the OpenAPI snapshot, then run the matrix and scheduling regressions locally. The protocol closes with the rule that kills the shortcut: do not use the tenancy warning listener as authorization. Transition: step four is the one teams skip, and M5.3 is about proving things like it. -->
 
 ---
 
@@ -248,7 +248,7 @@ PUBLIC_OPERATIONS = {
 5. Refresh the OpenAPI snapshot and client.
 6. Run the matrix and scheduling regressions locally.
 
-`SignUpFlow/docs/API_AUTHORIZATION.md:59-76`
+`SignUpFlow/docs/API_AUTHORIZATION.md:101-118`
 
 <!-- NOTES: Read these as a checklist you can paste into a pull-request template. Step two is where the shortcut lives — apply actor-derived tenant and ownership filters in the route query itself, not in a helper you hope gets called. Step three names five actors: anonymous, invalid, member, same-tenant admin, and foreign admin. Step four is the one most teams skip: a denied write that mutates the database anyway is a security bug wearing a test-green costume, so assert the denial *and* the unchanged row. Step six is local, because SignUpFlow runs no CI. Transition: that brings us to acceptance — seven tiers and an honest manifest. -->
 

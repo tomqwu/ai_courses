@@ -51,13 +51,13 @@ Price it, package it, position it — from evidence.
 - 13 competitor rows + ListenToMe, dated 2026-09
 - Unconfirmed details marked "approximately" or "reportedly"
 - Price column carries model, price, and channel
-- Commercial tiers run about $8–149/mo
+- Commercial tiers run about $7–149/mo
 - Read rows, never headlines
 
 ```markdown
 # Competition Analysis
 
-_Last updated: 2026-08. All pricing and feature facts are stated as of 2026;
+_Last updated: 2026-09. All pricing and feature facts are stated as of 2026;
 where a detail could not be confirmed from a primary source, it is qualified
 with "approximately" or "reportedly."_
 ```
@@ -87,7 +87,7 @@ with "approximately" or "reportedly."_
 | Natively | Free personal; Pro via lifetime/yearly | A Pro tier above a complete free core |
 
 - Free still has a business model attached
-- "Code open for inspection" against $8–149/mo rivals
+- "Code open for inspection" against $7–149/mo rivals
 - Paid tier never repairs a deliberately crippled core
 - Pointer: `ListenToMe/docs/competition-analysis.md:30,35`
 
@@ -359,14 +359,14 @@ fixed costs.
 
 ## Derive the one-liner from the table
 
-> "ListenToMe is the free, open-source, fully on-device meeting copilot for macOS — bring your own model, run it private, and shape it to any conversation." (`ListenToMe/docs/competition-analysis.md:80`)
+> "ListenToMe is the free, open-source, fully on-device meeting copilot for macOS — bring your own model, run it private, and shape it to any conversation." (`ListenToMe/docs/competition-analysis.md:88`)
 
 | Clause | Column that proves it |
 |---|---|
 | free | Price — nothing else free-and-open |
 | open-source | Privacy/AI — closed rivals |
-| fully on-device | On-device? — only MacWhisper, Natively |
-| bring your own model | Multi-model/BYO — most read "no picker" |
+| fully on-device | On-device? — no commercial row |
+| bring your own model | Multi-model/BYO — commercial rows: "no picker" |
 | run it private | Privacy — local Ollama, no audio leaves |
 | shape it to any conversation | Focus — 18 presets vs one vertical |
 

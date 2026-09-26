@@ -4,7 +4,7 @@ Alphabetical. Each term: definition, then where it lives (repo pointer or course
 
 **Adjective-wedge.** The leading adjectives of a positioning one-liner that carry the differentiator —
 the part a competitor would have to rebuild to match. Lives in the derived one-liner at
-`ListenToMe/docs/competition-analysis.md:80`.
+`ListenToMe/docs/competition-analysis.md:88`.
 
 **Benefits-realization register.** The pricing-integrity device that ties every claimed saving to a
 Finance-owned budget row, so claims are reconciled by the client's own finance function rather than

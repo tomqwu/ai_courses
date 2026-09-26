@@ -45,13 +45,13 @@ Routes protect themselves with `Depends(get_current_user)` or `Depends(get_curre
 | Situation | Status | Why |
 |---|---|---|
 | Invalid bearer token | `401` | The credential itself failed — nothing is known about the requester. |
-| Missing bearer token on a protected route | `403` | FastAPI `HTTPBearer`'s default, retained deliberately and documented. |
+| Missing bearer token on a protected route | doc: `403`; runtime and test: `401` | The document says HTTPBearer's `403`; on the pinned FastAPI 0.141.1 (`SignUpFlow/poetry.lock:1036-1037`) HTTPBearer answers `401`, and SignUpFlow's own boundary test asserts it (`SignUpFlow/tests/api/test_scheduling_tenant_boundaries.py:207`). |
 | Authenticated actor naming an explicit foreign organization | `403` | Valid credential, wrong tenant — a policy denial, not an auth failure. |
 | Guessed resource identifier | `404` | "a guessed resource identifier is looked up inside the actor's tenant and returns `404` whether it is foreign or absent." |
 
 The last row is the anti-enumeration mechanism. If a foreign id returned `403` ("exists, but not yours"), an attacker with a valid account could walk your id space and map which resources exist. Instead, target rows are loaded *through the actor's organization* first — `get_person_in_actor_org` queries `Person.id == person_id AND Person.org_id == actor.org_id` and raises `404` if nothing matches (`api/dependencies.py`, lines 61–66) — so a foreign person and a nonexistent person are indistinguishable. The `docs/API_AUTHORIZATION.md` scheduling table applies the pattern per route family: availability reads load "the target person through the actor's organization first; same-tenant peers receive `403`, foreign or absent people receive `404`" (line 47). Enumeration dies because both answers look like a miss.
 
-One subtlety: many teams "fix" the missing-bearer case to `401` on REST-purism grounds. SignUpFlow instead documents the behavior it actually has (HTTPBearer's `403`) and tests it. The lesson is not which code is philosophically correct — it is that a status contract must be *deliberate and enforced*, because an undocumented status code is an unspecified information channel.
+One subtlety, and it is a live drift case: the document still says a missing bearer token "retains FastAPI HTTPBearer's `403`" (`SignUpFlow/docs/API_AUTHORIZATION.md:21-22`), but the framework moved to `401` and the repo's own test moved with it. The test is the contract that held; the prose is the one that rotted. The lab's mini-flow pins `403` explicitly with `HTTPBearer(auto_error=False)` and says why in a comment, so its choice is written down and tested whichever code you prefer. The lesson is not which code is philosophically correct — it is that a status contract must be *deliberate and enforced*, because an undocumented status code is an unspecified information channel.
 
 ### Action step
 
@@ -76,7 +76,7 @@ The separation is executable in `api/roles.py`. `normalize_roles` sorts an admin
 
 **The executable authorization matrix.** Knowing the rules is not enough — SignUpFlow checks that every mounted route obeys them, on every test run. `api/route_auth_policy.py` classifies every FastAPI operation by name into exactly five policy classes: `public` (7 operations — `signup`, `login`, `health_check`, …), `public-token` (scoped-token routes: invitation accept/verify, refresh, password reset, calendar feed), `public-callback` (the Twilio webhooks, disabled by default), `member` (50 operations), and `admin` (78 operations, including `create_invitation`, `solve_schedule`, `publish_solution`) — 143 classified operations in total. The `ROUTE_AUTH_POLICY` dict is the executable source of truth; `docs/API_AUTHORIZATION.md` opens by saying exactly that (lines 3–9).
 
-The enforcement is `tests/unit/test_api_route_auth_policy.py` — 37 lines that fail on three classes of drift:
+The enforcement is `tests/unit/test_api_route_auth_policy.py` — 38 lines that fail on three classes of drift:
 
 - **Missing:** the test walks the live route table (`app.routes`, filtered to `/api` plus `/health`/`/ready`) and asserts `set(ROUTE_AUTH_POLICY) == set(routes)` — add a route without classifying it and set equality fails.
 - **Stale:** the same assertion fails in reverse when a policy entry names a route that no longer exists.
@@ -84,7 +84,7 @@ The enforcement is `tests/unit/test_api_route_auth_policy.py` — 37 lines that 
 
 A policy entry that says `admin` while the route accidentally wired `get_current_user` is caught mechanically. This is the matrix made executable: the doc describes intent, the dict encodes it, the test compares the dict to the live app.
 
-**The six-step change protocol.** `docs/API_AUTHORIZATION.md` (lines 59–76) prescribes how to change authorization safely:
+**The six-step change protocol.** `SignUpFlow/docs/API_AUTHORIZATION.md:101-118` prescribes how to change authorization safely:
 
 1. Add or change the route's explicit entry in `api/route_auth_policy.py`.
 2. Apply actor-derived tenant and ownership filters **in the route query itself** — not in a helper you hope gets called.

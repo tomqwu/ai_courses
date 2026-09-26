@@ -24,7 +24,7 @@ EVIDENCE    command + counts + date + head SHA + limitations
 | Foreign id requested | `404` | Looked up inside the actor's tenant; foreign and absent look identical |
 | Actor names a foreign org | `403` | Valid credential, wrong tenant — a policy denial |
 | Invalid bearer token | `401` | The credential itself failed |
-| Missing bearer token | `403` | HTTPBearer's documented default, retained on purpose |
+| Missing bearer token | `403` (mini-flow) | Pinned and tested; SignUpFlow: doc 403, test 401 |
 | Person leads a ministry | `volunteer` + qualification | Qualifications never confer authority |
 | Route added, not classified | Test fails | Set equality against the live route table |
 | Scenario not yet proven | Status `blocked` + `manual` tier | Deleting the row fails collection instead |
@@ -57,7 +57,7 @@ Limitations / not verified:
 - `SignUpFlow/api/roles.py:38-53` — `normalize_roles` refusals.
 - `SignUpFlow/api/route_auth_policy.py:8-171` — five classes, the executable matrix.
 - `SignUpFlow/tests/unit/test_api_route_auth_policy.py` — missing, stale, miswired.
-- `SignUpFlow/docs/API_AUTHORIZATION.md:59-76` — the six-step change protocol.
+- `SignUpFlow/docs/API_AUTHORIZATION.md:101-118` — the six-step change protocol.
 - `SignUpFlow/docs/TESTING.md:38-50` — seven tiers, separate processes.
 - `SignUpFlow/docs/playbooks/coverage.json` + `tests/playbooks/coverage.py:19,43-46` — the manifest.
 - `SignUpFlow/tests/playbooks/examples/food-bank.json` — the minimal fixture shape.

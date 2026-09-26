@@ -197,7 +197,7 @@ make pass-gate
 1. **Fixing before recording.** The four `make stepN` red runs and the two `LEAK` lines are half
    the evidence; a submission that starts green has no "before".
 2. **Filtering in Python after the fetch.** The predicate belongs in the query
-   (`SignUpFlow/docs/API_AUTHORIZATION.md:59-76`): "Every query that can reach organization data must
+   (`SignUpFlow/docs/API_AUTHORIZATION.md:101-118`): "Every query that can reach organization data must
    carry the concrete tenant predicate required by the route's policy."
 3. **Weakening the guard to match the app.** Any diff under `mini-flow/tests/test_lab*.py` other
    than the un-skip is an auto-fail.

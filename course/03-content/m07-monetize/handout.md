@@ -24,7 +24,7 @@ Rule for all three: a price below your cost floor is not a price, it is a subsid
 4. **Gate what is not proven.** Registered-but-404 routes (`BILLING_ENABLED=false`, `SMS_ENABLED=false`);
    "core scheduling must not require either paid integration" (`SignUpFlow/AGENTS.md`).
 5. **One-liner = adjective-wedge × differentiators × audience.** Every clause maps to a column; run
-   the deletion test (`ListenToMe/docs/competition-analysis.md:80`).
+   the deletion test (`ListenToMe/docs/competition-analysis.md:88`).
 
 ## Worksheet template (paste into `docs/pricing.md`)
 
@@ -41,7 +41,7 @@ Rationale ≥150 words, citing specific table rows: <…>
 
 ## Pointers to open
 
-- `ListenToMe/docs/competition-analysis.md` — 14-row price table and the one-liner (line 80).
+- `ListenToMe/docs/competition-analysis.md` — 14-row price table and the one-liner (line 88).
 - `ListenToMe/docs/RELEASING.md` — the direct-channel machinery.
 - `SignUpFlow/README.md` — "Provider-backed Features"; `SignUpFlow/AGENTS.md` — the gating rule.
 - `ai_qe/index.md`, `ai_qe/discovery.md`, `ai_qe/_data/engagement.json` — the funnel and staged engagement.

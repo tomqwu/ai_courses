@@ -43,7 +43,7 @@ The pattern is structural, not stylistic. Every tool that charges monthly runs p
 
 BYOK moves the bill, not the data: it "is not local — your prompt still travels to a cloud provider" (08, cross-cutting). Direction, not fact: secondary reports say seat-only pricing fell while hybrid and outcome models rose to ~41–43% of AI SaaS (same section). *Evidence: a pricing vendor's blog, secondary — teach the direction, not the percentage.*
 
-**Where "free & open-source" positions.** ListenToMe prices at $0 — MIT-licensed, "code open for inspection" — against a category running $8–149/mo (`competition-analysis.md`). Free is a price with a business model attached, and the syllabus names the paying surfaces: the reputation funnel, support, and a Pro tier (`course/01-design/curriculum.md`, M7.1). The reputation funnel is working on you right now — the repo, README, coverage badge, and 13-competitor analysis are the marketing. The Pro tier is not hypothetical: Natively, the open-source peer, prices "Free personal; Pro via lifetime/yearly" (`competition-analysis.md` row). Open-source does not mean no revenue; it means the paid tier sits *above* a complete free core, never as a repair of a crippled one.
+**Where "free & open-source" positions.** ListenToMe prices at $0 — MIT-licensed, "code open for inspection" — against paid tiers running from about $7 to $149.99/mo in the table's Price column (`ListenToMe/docs/competition-analysis.md:20-35`). Free is a price with a business model attached, and the syllabus names the paying surfaces: the reputation funnel, support, and a Pro tier (`course/01-design/curriculum.md`, M7.1). The reputation funnel is working on you right now — the repo, README, coverage badge, and 13-competitor analysis are the marketing. The Pro tier is not hypothetical: Natively, the open-source peer, prices "Free personal; Pro via lifetime/yearly" (`competition-analysis.md` row). Open-source does not mean no revenue; it means the paid tier sits *above* a complete free core, never as a repair of a crippled one.
 
 **The wedge competitors cannot match without rebuilding.** The table names the category's two structural tensions: privacy vs convenience — "nearly every commercial product processes audio and runs its AI in the cloud, even when it markets itself as 'local-first' — the local part is usually just audio *capture*" — and opinionated vs open, where most products lock you to one undisclosed transcription engine and one summarization LLM (`competition-analysis.md:14`). ListenToMe's privacy + BYO-model position is defensible not because it is secret but because copying it destroys the incumbent business model: their monthly price *pays for* cloud ASR and cloud LLM compute; genuinely on-device transcription with a bring-your-own local model removes the cost base the subscription is priced on. A durable pricing differentiator is expensive to copy in **business-model terms**, not merely in code terms.
 
@@ -167,7 +167,7 @@ Length by price: 800–1,200 words under $200; 2,000–3,000 words for $500+ or 
 
 **The one-liner, derived not composed.** Module 3.3 derived ListenToMe's positioning clause-by-clause from its comparison table; the formula generalizes to every product: **adjective-wedge × differentiators × audience.** ListenToMe's:
 
-> "ListenToMe is the free, open-source, fully on-device meeting copilot for macOS — bring your own model, run it private, and shape it to any conversation." (`ListenToMe/docs/competition-analysis.md:80`)
+> "ListenToMe is the free, open-source, fully on-device meeting copilot for macOS — bring your own model, run it private, and shape it to any conversation." (`ListenToMe/docs/competition-analysis.md:88`)
 
 Trace each clause to a column, which is what makes it falsifiable instead of mood music:
 
@@ -175,8 +175,8 @@ Trace each clause to a column, which is what makes it falsifiable instead of moo
 |---|---|
 | "free" | **Price** — the field runs Free tiers up to $149.99/mo; nothing else in the copilot shape is free-and-open |
 | "open-source" | **Privacy / AI features** — rivals are closed, undisclosed pipelines; "code open for inspection" has no counterpart |
-| "fully on-device" | **On-device?** — only MacWhisper and Natively also answer Yes |
-| "bring your own model" | **Multi-model/BYO** — most rows read "no picker"; only MacWhisper/Natively compare |
+| "fully on-device" | **On-device?** — no commercial row; the open-source peers Natively, Meetily and MacWhisper also answer Yes |
+| "bring your own model" | **Multi-model/BYO** — commercial rows read "no picker"; the four open-source peers answer Yes |
 | "run it private" | **Privacy** — BYO local Ollama means "no audio need leave the machine" |
 | "shape it to any conversation" | **Focus** — rivals pin one vertical (sales for tl;dv, interviews for Cluely, files for MacWhisper); 18 use-case presets serve many |
 

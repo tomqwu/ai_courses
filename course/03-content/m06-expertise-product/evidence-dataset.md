@@ -17,7 +17,7 @@
 |---|---|---|---|---|
 | 1 | Developers completed real maintenance tasks **19% slower** with AI assistance (CI +2% to +39%); they *expected* 24% faster and *believed* 20% faster afterward | Task-level (negative) | Measured — independent RCT, 16 experienced maintainers, 246 issues | METR early-2025 study (via `ai_qe/docs/evidence/benchmarks.md`) |
 | 2 | METR's Feb-2026 follow-up: −18% and −4% point estimates, **both confidence intervals cross zero**; 57 devs, 800+ tasks | Task-level (inconclusive) | Measured — independent, selection bias limited | METR follow-up (via `ai_qe/docs/evidence/benchmarks.md`) |
-| 3 | Codex users completed a coding task **55.8% faster** | Task-level | Measured — but vendor-affiliated, 95 freelancers, one synthetic task | Peng et al. 2023 (via `ai_qe/docs/evidence/benchmarks.md`) |
+| 3 | GitHub Copilot users completed a coding task **55.8% faster** | Task-level | Measured — but vendor-affiliated, 95 freelancers, one synthetic task | Peng et al. 2023 (via `ai_qe/docs/evidence/benchmarks.md`) |
 | 4 | AI assistance associated with **+26.1%** completed tasks (SE 10.3) | Task-level | Measured, large-N field data | Cui et al. (via `ai_qe/docs/evidence/benchmarks.md`) |
 | 5 | Developers with Copilot access produced **+8.7% more pull requests** | Output metric (≠ time saved) | Measured — vendor-published quasi-experiment | GitHub/Accenture (via `ai_qe/docs/evidence/benchmarks.md`) |
 | 6 | Organizations report average efficiency/productivity gains around **10–15%**, rarely monetized as savings | Task-level | Self-reported consultancy estimates — not audited savings | Bain (via `ai_qe/docs/evidence/benchmarks.md`) |

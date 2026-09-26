@@ -34,7 +34,7 @@ about what you have not proven."
 ## Close (5 min)
 
 "Three things to take away. First, the rule: every query filters by `org_id`, and the filter lives in
-the query, not in Python after the fetch — `docs/API_AUTHORIZATION.md:59-76`. Second, the guard: your
+the query, not in Python after the fetch — `docs/API_AUTHORIZATION.md:101-118`. Second, the guard: your
 route policy is a dict and your test compares it to the live app, so a miswired dependency fails
 before a customer finds it — `tests/unit/test_api_route_auth_policy.py`. Third, the honesty:
 `docs/playbooks/coverage.json` has four statuses, and `blocked` is better than deleted, because a
@@ -71,7 +71,7 @@ row instead would be worse."* **Deliverable to post:** the manifest row plus the
 1. **"Foreign keys are enough — we don't need org filters."** *Follow-up probe:* "Which mechanism
    fails first if that is true?" *Strong answer:* none of them save you — a primary-key lookup
    returns the foreign row before any membership check can matter; the filter in the query is the
-   control (`docs/API_AUTHORIZATION.md:59-76`), and a warning log is only observability
+   control (`docs/API_AUTHORIZATION.md:101-118`), and a warning log is only observability
    (`:74-76`).
 2. **"A guessed foreign id should return 403 so the client knows it is not allowed."**
    *Probe:* "What does that tell an attacker with a valid account?" *Strong answer:* it confirms
@@ -93,7 +93,7 @@ row instead would be worse."* **Deliverable to post:** the manifest row plus the
 |---|---|
 | Drift test won't fail when miswired | Check the test compares the **policy file to the live route table** (`app.routes`), not two static lists (`02-instructor/instructor-guide.md`, M5 row). |
 | Mocked auth in the isolation tier | Ask them to show the real JWT fixture; mocked auth belongs in `tests/unit/`, not in the tenancy evidence. |
-| "Denied" without the unchanged-row assert | Say the sentence: "step 4 of the change protocol is assert forbidden writes leave the database unchanged" (`docs/API_AUTHORIZATION.md:65`). |
+| "Denied" without the unchanged-row assert | Say the sentence: "step 4 of the change protocol is assert forbidden writes leave the database unchanged" (`docs/API_AUTHORIZATION.md:107-108`). |
 | Everything marked `automated` | Ask which tier executes each row; a row with no executable tier fails the validator. |
 | Deleting an inconvenient scenario | Demonstrate the pre-collection failure, then have them restore it and set `blocked` + `manual`. |
 
