@@ -21,10 +21,11 @@ from miniflow.db import get_db
 from miniflow.models import Person
 from miniflow.security import verify_token
 
-# SignUpFlow documents HTTPBearer's historical 403 for a missing token and retains it on purpose
-# (docs/API_AUTHORIZATION.md:21-24). Newer FastAPI releases - including the 0.141 line both repos
-# pin - default to 401 instead. The starter pins the *documented* contract explicitly: the lesson
-# is that a status code is a contract you write down and test, not a framework default you inherit.
+# SignUpFlow's doc still says a missing token "retains FastAPI HTTPBearer's 403"
+# (docs/API_AUTHORIZATION.md:21-22), but on the 0.141 line both repos pin HTTPBearer answers 401,
+# and SignUpFlow's own boundary test asserts 401 - its doc drifted, its test did not. This starter
+# pins 403 explicitly instead of inheriting either default: the lesson is that a status code is a
+# contract you write down and test, not a framework default you inherit.
 security = HTTPBearer(auto_error=False)
 
 
