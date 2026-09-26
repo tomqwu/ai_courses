@@ -30,6 +30,14 @@ class PrivacyMode(Enum):
 
     Adding a cloud key never switches modes by itself - the user's explicit
     choice does.
+
+    A platform's private cloud (M3.1's middle tier, such as Apple's Private
+    Cloud Compute) is not LOCAL. Supporting it would mean a fourth member with
+    its own label, "platform private cloud", and a guard that asks the
+    platform framework which route it will take; ``verify_local_model`` must
+    keep returning False for such a model, because a daemon's metadata only
+    describes models it runs itself. Until that member exists, those requests
+    belong to CLOUD.
     """
 
     OFF = "off"

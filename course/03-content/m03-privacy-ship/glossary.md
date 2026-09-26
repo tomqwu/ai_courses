@@ -46,7 +46,7 @@ you *shipped* is the verdict — `ListenToMe/docs/reviews/2026-09-10/design-and-
 
 **`PrivacyMode`** — The explicit three-way mode switch (`off`/`local`/`cloud`) a user picks;
 adding a cloud key never switches it — `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`;
-TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-37`.
+TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-45`.
 
 **Redirect refusal (`RejectRedirects`)** — A transport that refuses every 3xx instead of following
 it, so meeting text can never be silently forwarded — the Swift URLSession delegate is
@@ -67,7 +67,7 @@ e.g. "Ollama Cloud — sends transcript and context" —
 
 **`verify_local_model()`** — The fail-closed `/api/show` check: `remote_host` and `remote_model`
 absent, `details.format` and `model_info` present and non-empty —
-`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:93-135`.
+`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:101-143`.
 
 ## Terms people get wrong
 

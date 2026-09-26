@@ -88,6 +88,7 @@ Produce `docs/competition.md` for **your** product idea:
 - **Every cell sourced** with the URL you checked, or marked **"unverified."** No memory-only pricing.
 - **Qualify uncertain claims** exactly as ListenToMe does — "approximately," "reportedly" (`ListenToMe/docs/competition-analysis.md:3`).
 - **Derive a one-line positioning statement** and annotate each clause with the column that proves it, the way the "free / open-source / fully on-device / bring your own model" clauses trace to Price, On-device?, and Multi-model/BYO columns (`competition-analysis.md:70-80`).
+- **Name the tier in your privacy column** — on-device, platform private cloud, or third-party cloud (M3.1, "Three tiers, not two"). If your product uses more than one, the one-liner says which runs when; "on-device" alone is reserved for the tier your fail-closed check enforces.
 
 ## Step 5 — Tag and checksum the artifact (~15 min)
 

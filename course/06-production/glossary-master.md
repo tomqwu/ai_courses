@@ -49,11 +49,11 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **`data-model.md`** *(M4)* — Entities with key fields and no implementation; present when a feature has traditional entities, absent when infrastructure spans many (as in 014). — `SignUpFlow/specs/000-user-onboarding/data-model.md`.
 - **`LLMProvider` — the provider protocol seam** *(M2)* — Core streams text through it; `App/` implements it with Ollama over HTTP. `ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:4`.
 - **`plan.md`** *(M4)* — Owns HOW: languages, versions, storage, performance targets, project structure with `[NEW]`/`[MODIFY]` annotations. — `SignUpFlow/specs/014-security-hardening/plan.md`.
-- **`PrivacyMode`** *(M3)* — The explicit three-way mode switch (`off`/`local`/`cloud`) a user picks; adding a cloud key never switches it — `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`; TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-37`.
+- **`PrivacyMode`** *(M3)* — The explicit three-way mode switch (`off`/`local`/`cloud`) a user picks; adding a cloud key never switches it — `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`; TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-45`.
 - **`PromptBuilder` — the pure prompt-construction layer** *(M2)* — A public enum of static functions: context in, request out, no I/O. `ListenToMe/Sources/ListenToMeCore/Prompt.swift`.
 - **`research.md`** *(M4)* — Phase 0 decisions: options evaluated, rationale, and the rejected alternatives. — `SignUpFlow/specs/014-security-hardening/research.md`.
 - **`tasks.md`** *(M4)* — Phase 2 output: checkbox tasks `[ID] [P?] [US#]`, tests first, exact file paths, checkpoints per story. — `SignUpFlow/specs/000-user-onboarding/tasks.md`.
-- **`verify_local_model()`** *(M3)* — The fail-closed `/api/show` check: `remote_host` and `remote_model` absent, `details.format` and `model_info` present and non-empty — `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:93-135`.
+- **`verify_local_model()`** *(M3)* — The fail-closed `/api/show` check: `remote_host` and `remote_model` absent, `details.format` and `model_info` present and non-empty — `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:101-143`.
 ### A
 
 - **Absolute path** *(M9)* — A folder address that starts from the top of the disk, such as `C:\Users\ada\code` or `/Users/ada/code`. It means the same thing wherever you are. Lives in `lesson.md`, Segment M9.2.

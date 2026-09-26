@@ -154,10 +154,9 @@ uncertainty qualified as in `ListenToMe/docs/competition-analysis.md:3` ("approx
 
 **Common wrong answers.** Prices from memory; a one-liner of adjectives ("powerful, modern,
 private") with no column behind any word; five rows of one shape (five bot-joiners), which cannot
-support a wedge.
+support a wedge; "fully on-device" for a product with a cloud fallback (M3.1's other two tiers).
 
-**Grading note.** Open one row's source URL at random. If the cell does not match the page, treat
-every other cell as suspect.
+**Grading note.** Open one row's source URL at random. If it does not match, suspect every cell.
 
 ## Step 5 — Tag and checksum the artifact
 
