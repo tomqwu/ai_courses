@@ -71,6 +71,16 @@ class TestVerifyLocalModel:
         assert "cloud alias" in reason
         assert "send the transcript and context off this device" in reason
 
+    @pytest.mark.parametrize("key", ["remote_host", "remote_model"])
+    @pytest.mark.parametrize("value", ["", None])
+    def test_a_remote_key_present_but_empty_still_fails(self, key, value):
+        # ModelPrivacy.isVerifiedLocal requires the key to be absent (`== nil`): a JSON null or an
+        # empty string is still the daemon reporting a remote side, so it fails closed too.
+        show = {key: value, "details": {"format": "gguf"}, "model_info": {"a": 1}}
+        ok, reason = verify_local_model(BASE_URL, "m", transport=show_transport(show))
+        assert ok is False
+        assert key in reason
+
     def test_remote_model_alone_also_fails(self):
         show = {"remote_model": "glm-5.3", "details": {"format": "gguf"}, "model_info": {"a": 1}}
         ok, _ = verify_local_model(BASE_URL, "m", transport=show_transport(show))

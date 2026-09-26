@@ -1,6 +1,6 @@
 # Deep-Read Report: SignUpFlow (The Spec-Driven AI SaaS)
 
-> Source: subagent deep-read of /Users/tomwu/ai_courses/SignUpFlow (all claims grounded in files read directly from the repo).
+> Source: subagent deep-read of the `SignUpFlow/` clone, a sibling of `course/` in the workspace root (all claims grounded in files read directly from the repo).
 
 ## 1. The Product and the Archetype Lesson
 
@@ -25,8 +25,8 @@ The product itself is technically ordinary — CRUD + scheduling. What makes it 
 **Tasks → implementation:** tasks cite exact paths. Implementation can run as a **Ralph loop** (constitution "Context A"): an agent picks the highest-priority incomplete spec, completes ALL acceptance criteria, outputs `<promise>DONE</promise>` (`scripts/ralph-loop.sh`). Sprint-completion specs (023, 024) record what shipped.
 
 **Governance stack:**
-- `.specify/memory/constitution.md` (v1.1.0, 79 lines) — "single source of truth above all agent files": context detection (Ralph loop vs interactive chat), principles (Native First; Test-Driven Implementation; Simplicity & YAGNI; Safety & Reliability — email/SMS/billing disabled by default), autonomy config (YOLO disabled; Git commit autonomy enabled), and the current validation policy (2026-09-13): no CI, everything local, evidence recorded per revision.
-- **AGENTS.md** (177 lines) — universal baseline consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, Factory; CLAUDE.md cross-references it for Claude Code; `.github/copilot-instructions.md` restates for Copilot. House style: imperative voice; every rule *verifiable* ("Filter every query by org_id," not "Be careful with multi-tenancy"); runnable commands over prose; ~200-line cap; markdown only. Includes safety rules (never commit secrets; no destructive ops without explicit per-action authorization; stop and ask when unsure), a validation checklist (black/ruff/mypy/tests/secrets-grep/migration-exists), PR rules, and a 5-level instruction hierarchy (user request > repo rules > path-scoped Copilot rules > strategy doc > inferred best practice; "follow the more specific and safer one").
+- `.specify/memory/constitution.md` (v1.1.0, 85 lines) — "single source of truth above all agent files": context detection (Ralph loop vs interactive chat), principles (Native First; Test-Driven Implementation; Simplicity & YAGNI; Safety & Reliability — email/SMS/billing disabled by default), autonomy config (YOLO disabled; Git commit autonomy enabled), and the current validation policy (2026-09-13): no CI, everything local, evidence recorded per revision.
+- **AGENTS.md** (188 lines) — universal baseline consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, Factory; CLAUDE.md cross-references it for Claude Code; `.github/copilot-instructions.md` restates for Copilot. House style: imperative voice; every rule *verifiable* ("Filter every query by org_id," not "Be careful with multi-tenancy"); runnable commands over prose; ~200-line cap; markdown only. Includes safety rules (never commit secrets; no destructive ops without explicit per-action authorization; stop and ask when unsure), a validation checklist (black/ruff/mypy/tests/secrets-grep/migration-exists), PR rules, and a 5-level instruction hierarchy (user request > repo rules > path-scoped Copilot rules > strategy doc > inferred best practice; "follow the more specific and safer one").
 - **Anti-hallucination rules:** don't invent paths/functions/commands — grep first; read schema/config facts from canonical source, not memory; when ambiguous, present 2-3 differentiated options; research tasks carry a hard-stop checklist (≥3 angles, sources read in full, limitations included).
 - **Rule graduation pipeline:** `docs/source-repos.md` tracks external sources (pending → extracted → promoted); `docs/research-log.md` records dated observations *separate from promoted rules*; stable observations must be tested on a real change before promotion into AGENTS.md/CLAUDE.md, then upstreamed to `tomqwu/GenAI_Common`. "Observations never become silent rules."
 - **Local code review** (docs/ai-pr-review.md): review the complete diff locally; check correctness, security, org isolation, authorization, migrations, negative-path coverage; record findings with severity and file/line refs and the reviewed head/base SHAs in the PR; invalidate stale evidence after changes; "Missing review is not approval"; reviewer agents must not merge. It explicitly supersedes a retired Ollama PR-review gate ("Ollama is not a code-review provider").
@@ -87,7 +87,7 @@ Bonus micro-lesson: **verify generated artifacts** — `specs/000-user-onboardin
 - 17 spec folders (000, 001, 011–024, COMPLETED-000); spec 014: 8 user stories, 44 FRs, 7 edge cases, 12 success criteria, 6 contracts (~4,700 lines).
 - 15 API route families in CLAUDE.md; 24 router modules in api/routers/; billing/SMS registered but feature-gated off.
 - Playbooks: BO-01..12 + CH-01..08 + CH-D01..03 + BB-01..08 + BB-D01..03; 14 baseline members + 1 replacement; 12 events = 84-slot horizon; widths 360px/1440px; balanced-load tolerance "maximum difference one."
-- AGENTS.md 177 lines, CLAUDE.md 143, constitution 79 — all under the ~200-line cap.
+- AGENTS.md 188 lines, CLAUDE.md 143, constitution 79 — all under the ~200-line cap.
 - Solver: 357-line heuristics.py; health = 100 − soft_score/10; fairness penalty 10/assignment; change-min weight 100; 3 REST constraint predicates; constraints package ~440 lines.
 - 48 top-level docs/*.md files.
 

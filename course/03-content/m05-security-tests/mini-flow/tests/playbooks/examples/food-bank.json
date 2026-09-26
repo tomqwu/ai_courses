@@ -1,0 +1,17 @@
+{
+  "id": "food-bank",
+  "version": 1,
+  "workflow": "six_week_roster",
+  "name": "Food Bank acceptance sandbox",
+  "event": "Packing shift",
+  "secondary_event": "Preparation",
+  "critical_role": "coordinator",
+  "roles": {"packer": 2, "coordinator": 1},
+  "drills": [
+    {
+      "id": "PF-04",
+      "operation": "Block both coordinators for week 4 and attempt publication",
+      "expected": "Regeneration must not publish an incomplete roster; prior roster stays live"
+    }
+  ]
+}

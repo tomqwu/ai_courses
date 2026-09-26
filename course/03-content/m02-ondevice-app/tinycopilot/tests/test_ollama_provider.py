@@ -22,6 +22,7 @@ from tinycopilot.ollama_provider import (
     LLMError,
     OllamaProvider,
     ServerError,
+    httpx_transport,
 )
 
 MESSAGES = [{"role": "user", "content": "ping"}]
@@ -177,6 +178,16 @@ class TestRealHttpxTransport:
         assert captured["follow_redirects"] is False
         assert captured["base_url"] == BASE_URL
 
+    def test_a_loopback_transport_ignores_proxy_settings(self, monkeypatch):
+        captured = self._install_fake_httpx(monkeypatch, lines=[json.dumps({"done": True})])
+        httpx_transport(BASE_URL)("/api/tags", None)
+        assert captured["trust_env"] is False
+
+    def test_a_remote_transport_keeps_proxy_settings(self, monkeypatch):
+        captured = self._install_fake_httpx(monkeypatch, lines=[json.dumps({"done": True})])
+        httpx_transport("https://ollama.com")("/api/tags", None)
+        assert captured["trust_env"] is True
+
     def test_default_transport_refuses_a_3xx(self, monkeypatch):
         self._install_fake_httpx(monkeypatch, status=302)
         provider = OllamaProvider(BASE_URL, "m")
@@ -227,3 +238,50 @@ class TestRealHttpxTransport:
         provider = OllamaProvider(BASE_URL, "m")
         with pytest.raises(IncompleteStreamError, match="connection lost"):
             list(provider.stream_chat(MESSAGES))
+
+class TestLoopbackNeverTakesAProxy:
+    """Real sockets, no internet: a proxy in the environment must not see a loopback request.
+
+    httpx honours HTTP_PROXY by default, and NO_PROXY rarely lists loopback, so without
+    trust_env=False a local-only request - transcript and all - is handed to whatever proxy the
+    shell exports. The URL check still passes; only the transport can close this.
+    """
+
+    @staticmethod
+    def _server(seen):
+        import http.server
+        import threading
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):  # noqa: N802 - http.server's naming
+                seen.append(self.path)
+                body = b'{"models": []}'
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, *args):
+                pass
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        return server
+
+    def test_the_request_goes_to_the_daemon_not_the_proxy(self, monkeypatch):
+        to_daemon, to_proxy = [], []
+        daemon, proxy = self._server(to_daemon), self._server(to_proxy)
+        try:
+            proxy_url = f"http://127.0.0.1:{proxy.server_address[1]}"
+            for var in ("HTTP_PROXY", "http_proxy", "ALL_PROXY", "all_proxy"):
+                monkeypatch.setenv(var, proxy_url)
+            for var in ("NO_PROXY", "no_proxy"):
+                monkeypatch.delenv(var, raising=False)
+            status, lines = httpx_transport(f"http://127.0.0.1:{daemon.server_address[1]}")("/api/tags", None)
+            assert status == 200 and "".join(lines) == '{"models": []}'
+            assert to_daemon == ["/api/tags"]
+            assert to_proxy == [], "a loopback request was handed to the proxy in the environment"
+        finally:
+            daemon.shutdown()
+            proxy.shutdown()

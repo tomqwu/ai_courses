@@ -19,7 +19,7 @@ WCAG AA (7:1+). `--aps-fg` `#f2f4f8` sits on `--aps-bg` `#0f1115`, headings use 
   terminal's colour.
 - **Alt text rule.** No external assets are used; diagrams are ASCII or tables. If a presenter adds a
   visual, its alt text carries the takeaway *and* the pointer — e.g. "Table: four SignUpFlow
-  instruction files with line counts 79, 177, 143, 119."
+  instruction files with line counts 85, 188, 154, 127."
 - **Print/PDF.** `@media print` flips to white background with `#111318` text, so the handout and an
   exported deck stay readable without colour.
 

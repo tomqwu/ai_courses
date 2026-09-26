@@ -1,0 +1,2 @@
+# The private issuer key never leaves the machine that signed with it.
+issuer-key.json

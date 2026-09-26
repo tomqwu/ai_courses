@@ -11,8 +11,8 @@ and every module follows one fixed unit grammar:
 This course already had every level; it just did not surface one. The mapping is:
 
     Learning path  = a track bundle in course/05-tracks/   (4 of them)
-    Module         = m00-m08                               (9)
-    Unit           = a lesson segment, plus intro/lab/quiz/summary (63 total)
+    Module         = m00-m08, plus the free m09            (10)
+    Unit           = a lesson segment, plus intro/lab/quiz/summary (70 total)
 
 Durations are *measured* from the narration manifest, not estimated, which is the one place this
 deliberately beats the model it copies. Lab times are quoted from the module's own source because a
@@ -58,7 +58,7 @@ def module_units(deck: dict) -> list[dict]:
     * a module that marks fewer segments than it declares (m08 has no ``M8.1`` heading at all)
       still opens segment 1 at the first content slide, which is what the declared count means.
 
-    ``check_player.py`` asserts the result covers all 233 slides exactly once, so a future edit to a
+    ``check_player.py`` asserts the result covers every slide exactly once, so a future edit to a
     deck that breaks a boundary fails the gate rather than silently mis-grouping a unit.
     """
     number = int(NUM.match(deck["id"]).group(1))
@@ -297,6 +297,30 @@ TRACKS = [
         "status": "built",
         "page": "path-expertise-product.html",
     },
+    {
+        # Free and standalone: the on-ramp for anyone who cannot yet clone a repository, and a
+        # publishable page for any product in the course. Outside the paid course's certificate.
+        # Case study: ai_qe, which is itself a GitHub Pages site.
+        "slug": "github-pages",
+        "title": "Ship a Website with GitHub Pages",
+        "medium": "Website",
+        "kicker": "Free · Start here if the terminal is new",
+        "promise": "From nothing installed to a public product catalog: Git, the GitHub CLI, "
+                   "folders, cloning and publishing, on Windows and macOS.",
+        "core": ["m09"],
+        "slice": {},
+        "excluded": [
+            ("The paid course, M0–M8 — this path is free and stands alone", "m00", "m08"),
+        ],
+        "price": "Free",
+        "level": "Beginner",
+        "role": "New to the terminal · Small-business owner",
+        "subject": "Git · GitHub CLI · GitHub Pages",
+        "measured": None,
+        "counts_source": "the module itself",
+        "status": "built",
+        "page": "path-github-pages.html",
+    },
 ]
 
 TRACK_BY_SLUG = {t["slug"]: t for t in TRACKS}
@@ -377,6 +401,10 @@ def fmt_minutes(seconds_value: float) -> str:
 
 # ---------------------------------------------------------------- pages
 
+def _plural(n: int, noun: str) -> str:
+    return f"{n} {noun}" + ("" if n == 1 else "s")
+
+
 def _crumbs(site_base: str, trail: list[tuple[str, str | None]]) -> str:
     parts = []
     for label, href in trail:
@@ -431,12 +459,16 @@ def path_cards_html(tracks: list[dict], units_by_deck: dict[str, list[dict]],
             status = '<span class="voice-chip is-text">page not built yet</span>'
             href, target = f"{site_base}/index.html", "Browse the modules"
         modules = len(track["core"]) + len(track.get("slice") or {})
+        unit_ids = ",".join(f"{u['deck']}:{u['id']}" for u in units)
+        ring = (f'<span class="ring" data-ring-units="{unit_ids}" role="img" aria-label="progress">'
+                f'<span class="ring-core" data-ring-label>0%</span></span>')
         cards.append(f"""<article class="path-card">
   <a class="path-cover" href="{href}">
+    {ring}
     <span class="path-kicker">{html.escape(track['kicker'])}</span>
     <h3>{html.escape(track['title'])}</h3>
     <span class="path-medium">{html.escape(track['medium'])}</span>
-    <span class="path-meta">{modules} modules · {len(units)} units · {fmt_minutes(minutes)} of narration</span>
+    <span class="path-meta">{modules} module{"" if modules == 1 else "s"} · {len(units)} units · {fmt_minutes(minutes)} of narration</span>
   </a>
   <div class="path-body">
     <p class="path-promise">{html.escape(track['promise'])}</p>
@@ -468,7 +500,7 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
       down — and each path states exactly what it leaves out.</p>
     <ul class="site-facts">
       <li>{len(tracks)} paths</li>
-      <li>9 modules · {total_units} units</li>
+      <li>{len(units_by_deck)} modules · {total_units} units</li>
       <li>Measured durations</li>
     </ul>
   </div>
@@ -573,7 +605,7 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
     {_crumbs(site_base, [("Course home", f"{site_base}/index.html"),
                          ("Learning paths", f"{site_base}/paths.html"),
                          (track["title"], None)])}
-    <p class="eyebrow">Learning path · {len(track['core']) + len(track.get('slice') or {})} modules · {len(units)} units</p>
+    <p class="eyebrow">Learning path · {_plural(len(track['core']) + len(track.get('slice') or {}), 'module')} · {len(units)} units</p>
     <h1>{html.escape(track['title'])}</h1>
     <p class="site-lede">{html.escape(track['promise'])}</p>
     {_at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
@@ -711,6 +743,13 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
             time_text = f'{fmt_minutes(seconds_value)} slide · {lab_time(deck["id"])} hands-on'
         else:
             time_text = fmt_minutes(seconds_value)
+        extra = ""
+        if unit["kind"] == "lab":
+            extra = f'<a class="unit-open" href="{site_base}/lab-{deck["id"]}.html">Checklist →</a>'
+        elif unit["kind"] == "quiz":
+            extra = f'<a class="unit-open" href="{site_base}/quiz-{deck["id"]}.html">Take it →</a>'
+        elif unit["kind"] == "segment":
+            extra = f'<a class="unit-open" href="{site_base}/lesson-{deck["id"]}.html">Read →</a>'
         rows.append(f"""<li class="unit" data-unit="{deck['id']}:{html.escape(unit['id'])}">
   <label class="unit-check">
     <input type="checkbox" data-progress="{deck['id']}:{html.escape(unit['id'])}">
@@ -719,7 +758,8 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     <span class="unit-title">{html.escape(unit['title'])}</span>
     <span class="unit-time">{html.escape(time_text)}</span>
   </label>
-  <a class="unit-open" href="{site_base}/{unit['href']}">Open →</a>
+  {extra}
+  <a class="unit-open" href="{site_base}/{unit['href']}">Slides →</a>
 </li>""")
 
     if len(tracks_for) == 1 and tracks_for[0]["track"].get("page"):
@@ -742,6 +782,16 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
                     else "Beginner to intermediate"),
                    ("Lesson", facts["lesson_length"]),
                    ("Lab", lab_time(deck["id"]))])}
+    <nav class="module-tabs" aria-label="This module"><ul>
+      <li><a href="{site_base}/module-{deck['id']}.html" aria-current="page">Overview</a></li>
+      <li><a href="{site_base}/{deck['id']}.html">Slides</a></li>
+      <li><a href="{site_base}/lesson-{deck['id']}.html">Lesson</a></li>
+      <li><a href="{site_base}/lab-{deck['id']}.html">Lab</a></li>
+      <li><a href="{site_base}/quiz-{deck['id']}.html">Knowledge check</a></li>
+      <li><a href="{site_base}/handout-{deck['id']}.html">Handout</a></li>
+      <li><a href="{site_base}/glossary-{deck['id']}.html">Glossary</a></li>
+      <li><a href="{site_base}/transcript-{deck['id']}.html">Transcript</a></li>
+    </ul></nav>
   </div>
 </header>
 <main class="site-main">
@@ -763,7 +813,9 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
       <span class="progress-bar" role="progressbar" aria-labelledby="progress-count"
             aria-valuemin="0" aria-valuemax="{len(units)}" aria-valuenow="0"><span id="progress-fill"></span></span></p>
     <p class="progress-note">Progress is stored in this browser only — there are no accounts on this
-      site, so nothing is uploaded and nothing follows you to another device.</p>
+      site, so nothing is uploaded and nothing follows you to another device. Slides mark a unit done
+      when you reach its last slide; a lab when every checklist item is ticked; the knowledge check at
+      75%. <a href="{site_base}/index.html">Export or import</a> your progress from the course home.</p>
   </div>
   <ol class="unit-list">
 {chr(10).join(rows)}
@@ -774,8 +826,11 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     <p class="index-footnote">Part of {path_link}. {'This is the text-first copy: narration and captions are not published here, so units are read and presented rather than played.' if text_only else 'Units carry narration, captions and a transcript.'}</p>
   </section>
 </main>
+<script src="{site_base}/assets/progress.js" defer></script>
+<script src="{site_base}/assets/search.js" defer></script>
 <script>
 (function () {{
+  return; /* progress is handled by progress.js (aps.progress.v2, which migrates the v1 store) */
   var KEY = 'aps.progress.v1';
   var boxes = Array.prototype.slice.call(document.querySelectorAll('[data-progress]'));
   var done = {{}};

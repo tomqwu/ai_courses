@@ -5,7 +5,7 @@
 
 **Bundle id / TCC** — macOS keys Microphone and Screen Recording grants by bundle id *plus* the
 binary's code-signing requirement, so a dev build and a release build need separate ids —
-`ListenToMe/docs/RELEASING.md:18-31`.
+`ListenToMe/docs/RELEASING.md:41-52`.
 
 **Cloud alias** — A model name ending in `:cloud` (or a remote-backed model under a local-sounding
 name) that installs and lists on a local daemon while its inference runs remotely —
@@ -19,9 +19,10 @@ environment gate — `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETest
 threshold; it buys enforcement against untested core logic and nothing else —
 `ListenToMe/scripts/check-coverage.sh`; `ListenToMe/.github/workflows/ci.yml:36-42`.
 
-**Definition of Done** — Release as the default end of any fix: published, notarized, and verified
-by downloading the artifact and checking its checksum — `ListenToMe/AGENTS.md`;
-`ListenToMe/docs/RELEASING.md:11-16`.
+**Definition of Done** — In ListenToMe, merged to `main` with the required checks green, tests
+passing and docs updated; publication is a separate, batched step. Only a downloaded,
+checksum-matched artifact with its tag on the source commit may be called published —
+`ListenToMe/AGENTS.md:13-18, 55-82`; `ListenToMe/docs/RELEASING.md:33-39`.
 
 **Dependency-lock diff** — The CI step that fails a build when the checked-in dependency lock and
 the generated workspace's resolved lock drift apart — `ListenToMe/.github/workflows/ci.yml:24, 35`.
@@ -35,7 +36,7 @@ app degrades, it does not stop — `ListenToMe/README.md`, "AI processing mode".
 
 **LOCAL_HOSTS / loopback allowlist** — The only hosts local-only mode trusts:
 `localhost`, `127.0.0.1`, `::1`. Anything else throws before a prompt is written —
-`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:106-108`.
+`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:145-147`.
 
 **Manual smoke test** — The tier that covers mic capture, system audio, and live speech-to-text,
 all of which need a GUI session and manual permission grants — a numbered, repeatable script —
@@ -46,13 +47,13 @@ you *shipped* is the verdict — `ListenToMe/docs/reviews/2026-09-10/design-and-
 
 **`PrivacyMode`** — The explicit three-way mode switch (`off`/`local`/`cloud`) a user picks;
 adding a cloud key never switches it — `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`;
-TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-37`.
+TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-45`.
 
 **Redirect refusal (`RejectRedirects`)** — A transport that refuses every 3xx instead of following
 it, so meeting text can never be silently forwarded — the Swift URLSession delegate is
-`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:151-157`; the Python twin builds httpx with
+`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`; the Python twin builds httpx with
 `follow_redirects=False` and raises on 3xx in
-`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
+`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:50-92`.
 
 **Test tier** — The cheapest layer that can actually observe a risk: unit (mocked) → contract (real
 model, your machine) → human smoke (real audio, real permissions) — `ListenToMe/docs/manual-smoke-test.md`.
@@ -67,7 +68,7 @@ e.g. "Ollama Cloud — sends transcript and context" —
 
 **`verify_local_model()`** — The fail-closed `/api/show` check: `remote_host` and `remote_model`
 absent, `details.format` and `model_info` present and non-empty —
-`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:93-135`.
+`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:101-145`.
 
 ## Terms people get wrong
 

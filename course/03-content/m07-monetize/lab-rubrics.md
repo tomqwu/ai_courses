@@ -2,19 +2,19 @@
 
 > Lab M7 is an open-ended, artifact-producing lab, so it is graded against observable evidence rather
 > than a single correct answer. It counts as one of the eight module labs in the 60% lab component of
-> `course/01-design/assessment-and-rubrics.md` (labs 60% / quizzes 20% / capstone 20%). Cohort students
-> are reviewed by the instructor in the week-7 workshop; self-paced students are peer-reviewed against
-> these tables. **Pass = ≥80 total, no criterion scored Missing, and no auto-fail condition present.**
+> `course/01-design/assessment-and-rubrics.md`. Cohort students are reviewed by the instructor in the
+> week-7 workshop; self-paced students are peer-reviewed against these tables. **Pass = ≥80 total, no criterion scored Missing, and no auto-fail condition present.**
 > Weights sum to 100 across the three tables.
 
 ## Table A — Pricing evidence and decision (Lab M7 Steps 1–2) · 45 points
 
 | Criterion | Wt | Exemplary | Proficient | Developing | Missing | Evidence required |
 |---|---|---|---|---|---|---|
-| Sourced competitor table | 20 | ≥5 rows actually visited; every price cell has URL + retrieval date; unconfirmed cells qualified "approximately/reportedly" | ≥5 rows; all cells dated; one or two qualifiers absent | 5 rows but some cells undated or unsourced | <5 rows, or prices from memory | `docs/pricing.md` table |
-| Cost floor arithmetic | 10 | Floor in dollars, each line named (hosting, API keys, amortized dev), break-even sales/month computed | Floor numeric; break-even implied not computed | Floor listed but not numeric | No floor, or a qualitative "it's cheap" | Floor block in worksheet |
+| Sourced competitor table | 15 | ≥5 rows actually visited; every price cell has URL + retrieval date; unconfirmed cells qualified "approximately/reportedly" | ≥5 rows; all cells dated; one or two qualifiers absent | 5 rows but some cells undated or unsourced | <5 rows, or prices from memory | `docs/pricing.md` table |
+| Cost floor arithmetic | 10 | Fixed lines in dollars, inputs tagged source/assumption; break-even = floor ÷ (price − fee − variable), reproducible from the inputs | Floor and break-even computed; one input untagged | Floor numeric; break-even missing or wrong | No floor, or a figure with no arithmetic | Floor + break-even block |
+| Inference-cost line | 5 | Calls × tokens ÷ 1,000 × rate, inputs tagged; who pays named per tier; each paying tier capped or priced above it | Line and who pays present; one tier uncapped | A figure with no inputs, or "AI is cheap" | No line for a product that calls a model | Inference line in worksheet |
 | Comparator band and value anchor | 5 | Band stated as min–max with row names; anchor names what is replaced and its worth | Both present; band rows unnamed | One of the two present | Neither present | Worksheet lines |
-| Model matches cost structure | 5 | Chosen model explicitly derived from the cost column (recurring → subscription; none → one-time) with the row named | Model stated with a one-line reason | Model stated with a generic reason | Subscription with no recurring per-user cost identified | Worksheet "Chosen model" line |
+| Model matches cost structure | 5 | Chosen model derived from the cost line it matches (M7.1 taxonomy), with the row named | Model stated with a one-line reason | Model stated with a generic reason | Subscription with no recurring per-user cost identified | Worksheet "Chosen model" line |
 | Rationale | 5 | ≥150 words, names ≥3 specific competitor rows, defends the price in both directions | ≥150 words, names ≥2 rows | Present but <150 words or names no row | Absent or copied | Rationale block |
 
 ## Table B — Positioning and packaging (Steps 3–4) · 35 points
@@ -47,7 +47,8 @@ These fail Lab M7 regardless of the score above.
 4. **A positioning one-liner with zero traceable clauses** — no clause maps to a column, so the
    deletion test cannot be run.
 5. **No "NOT included" line for any tier** — the packaging page claims completeness no tier can support.
-6. **A price stated below the student's own stated cost floor** without acknowledging the subsidy.
+6. **A price below the student's own cost floor**, or a paid tier below its own inference-cost
+   line, with the subsidy unacknowledged.
 
 ## Scoring notes
 
@@ -55,6 +56,8 @@ These fail Lab M7 regardless of the score above.
   numbers can both be Exemplary if each defends the number with the table and the floor.
 - A subscription is defensible without recurring compute only if the student names a recurring
   *service* line (hosting, sync, support).
-- The floor line is the most commonly faked row: ask for the arithmetic, not the figure.
+- The floor line is the most commonly faked row: ask for the arithmetic, not the figure. Recompute
+  one break-even from the inputs; if it does not reproduce, the floor row is Developing.
+- A product with no model calls earns the inference row by saying so in one line.
 - Partial credit below the stated band follows the Developing column; a row is Missing only when the
   artifact contains nothing observable.

@@ -2,7 +2,7 @@
 
 > Three segments, each **5 minutes** at ~130 words/min (≈650 words). Total file ≈ 15 min.
 > Narration is written to be read aloud. Every file pointer shown on screen is also announced verbally.
-> Pointers marked **[SIG]** resolve in `/Users/tomwu/ai_courses/SignUpFlow`.
+> Pointers marked **[SIG]** resolve in the `SignUpFlow/` clone (a sibling of `course/` in the workspace root).
 
 ## M4.1 — The artifact pipeline in full
 
@@ -16,7 +16,7 @@ is not a mistake.
 | Time | On screen | Narration |
 |---|---|---|
 | 0:15 | Terminal: `ls specs/014-security-hardening/` | Open the folder. Six items: `checklists`, `contracts`, `plan.md`, `quickstart.md`, `research.md`, `spec.md`. No `tasks.md`. That absence is real, and it is instructive. |
-| 0:45 | `docs/SPEC_KIT_SETUP.md` **[SIG]** | The commands chain: specify, clarify, plan, checklist, tasks, implement. Each consumes the last one's output. Nothing rides in anyone's head. |
+| 0:45 | `docs/SPEC_KIT_SETUP.md` **[SIG]** | The commands chain: specify, clarify, the checklist gate before planning, plan, tasks, implement. Each consumes the last one's output. Nothing rides in anyone's head. |
 | 1:20 | `specs/014-security-hardening/spec.md`, US1 **[SIG]** | Read US1 aloud: fail authentication five times within five minutes, blocked for fifteen. Six P1 stories, forty-four FRs, twelve success criteria — and not one technology named. |
 | 2:00 | `research.md`, Decision 1 **[SIG]** | Eight decisions, identical anatomy: decision, options, rationale, implementation. Decision one picks Redis and says in-memory is lost on restart and not shared across instances. |
 | 2:35 | `plan.md` Constitution Check **[SIG]** | The gate line: must pass before Phase 0 research, re-check after Phase 1. Seven principles, seven verdicts, zero violations. |
@@ -53,7 +53,7 @@ no questions. If they cannot finish, the folder failed — not they.
 | 1:30 | `spec-template.md`, entities line **[SIG]** | Entities are described "without implementation." That separation also lets research overturn a lean without touching a requirement: 014's spec leans in-memory, research picks Redis, and the requirement never moves. |
 | 2:05 | `spec-template.md`, independently testable **[SIG]** | Each story must be independently testable — implement one and you still have a viable MVP. Every 014 story carries its own Independent Test line. |
 | 2:40 | `spec.md` US1 scenario **[SIG]** | Numbers, not vibes. Five, five, fifteen becomes an FR, a contract row, and a test assertion. "Then the system is secure" is not a scenario; it is a wish. |
-| 3:10 | `spec-template.md`, NEEDS CLARIFICATION **[SIG]** | Drafts may mark unknowns, but the gate requires none remaining. Ask early: 014's own next steps cap clarification at three questions. Or record a default in Assumptions. |
+| 3:10 | `spec-template.md`, NEEDS CLARIFICATION **[SIG]** | Drafts may mark unknowns, but the gate requires none remaining. Ask early: 014's own next steps cap clarification at three questions. Or record a default explicitly: 014 made its token expiry a requirement. |
 | 3:40 | `checklists/requirements.md`, three groups **[SIG]** | Three pass/fail groups: content quality, completeness, readiness. This is the cheapest place to stop a spec that would waste a whole autonomous loop. |
 | 4:10 | `tasks-template.md` and T017 **[SIG]** | Tasks cite exact paths because `AGENTS.md` forbids inventing them: do not invent paths, function names, or identifiers — grep before referencing. A path turns the agent's first action into a confirming grep. |
 | 4:40 | `contracts/rate-limiting.md` **[SIG]** | Contracts exist because sessions do not share memory. Pin shapes, error keys, and a test sketch at the seam. |
@@ -85,7 +85,7 @@ does not exist. All three passed review, because nobody read them against their 
 | 1:20 | `AGENTS.md`, PR rules **[SIG]** | Run `make test-all` for every PR; there is no CI, so record commands, outcomes, limitations, and the pushed head SHA. Merge only after local validation and review are recorded. Never fabricate status checks or treat missing evidence as success. |
 | 1:55 | `docs/ai-pr-review.md` **[SIG]** | The review policy is a file: Ollama is not a code-review provider. Record head and base SHAs, inspect the full diff, check security, organization isolation, migrations, negative paths; report findings with severity and file and line. |
 | 2:30 | `docs/ai-pr-review.md`, line 21 **[SIG]** | Two hard lines. Do not claim independent review when the builder performed the review itself. And AGENTS rule four: missing review is not approval. |
-| 3:00 | `specs/000-user-onboarding/tasks.md`, line 3 **[SIG]** | Drift one. Line three says design documents come from `specs/020-user-onboarding`. The folder is `specs/000-user-onboarding`. The feature was renumbered; the generated file kept the dead path. |
+| 3:00 | `specs/000-user-onboarding/tasks.md`, line 3 **[SIG]** | Drift one. The Input line says design documents come from `specs/020-user-onboarding`. The folder is `specs/000-user-onboarding`. The feature was renumbered; the generated file kept the dead path. |
 | 3:40 | `specs/014-security-hardening/checklists/requirements.md` **[SIG]** | Drift two. It prints "five times P1" — while the spec marks six P1 stories, and the same checklist's notes list all six. The 100% score missed it. |
 | 4:15 | `tasks.md` migrations tasks **[SIG]** | Drift three. The tasks file writes migrations into `migrations/versions/`. No such directory. Migrations live in `alembic/versions/`. |
 | 4:40 | `AGENTS.md`, step 6 **[SIG]** | Countermeasures already in the repo: search for stale commands, counts, and feature-state claims before declaring done; grep the repo before referencing. Grep every path, recount every count. |

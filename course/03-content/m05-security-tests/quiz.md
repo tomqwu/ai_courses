@@ -29,12 +29,12 @@ B. The policy dict in `api/route_auth_policy.py` against the live route table �
 C. The README's route list against `CLAUDE.md`'s route list.
 D. Each route's docstring against its dependency declarations.
 
-**Q5.** Which tier pairing matches what each tier proves (per `docs/TESTING.md`)?
+**Q5.** Your product drafts the notice that goes to volunteers, and a model writes it. The failure you fear is a notice that names a volunteer who is not on the roster. Which tier can observe that failure, and what does a passing result license you to say?
 
-A. Unit tier uses real JWT; API tier mocks the database for speed.
-B. API tier proves authentication over real HTTP with real JWT; integration tier uses the real DB (mocking it is a named anti-pattern); browser tier runs Playwright against a disposable live app; contract tier snapshots OpenAPI.
-C. All seven tiers run in one pytest process for a single evidence count.
-D. Playwright tests replace the web tier, so HTMX workflows need no coverage.
+A. The integration tier, by asserting the notice string against a fixture; a passing run means the notice is correct.
+B. The eighth tier — a behavioural eval over a fixed input set where the right answer is known, run through the real prompt path — and a passing run licenses only "this model, on these inputs, behaved this way on this date"; the seven deterministic tiers cannot observe it because the output differs every run.
+C. The contract tier, since the notice is part of the API surface.
+D. No tier can; model output is inherently untestable, so it belongs in the manual tier forever.
 
 **Q6.** The browser playbook checks every published roster itself rather than trusting the solver's metrics. What does the independent oracle verify, and why isn't a health score of 100 enough?
 
@@ -59,7 +59,7 @@ D. It verifies only the critical role, since other roles are soft constraints.
 
 **Q4 — B.** Set equality between `ROUTE_AUTH_POLICY` and the live routes catches missing/stale; the dependency-tree walk catches miswiring — the mechanism in `tests/unit/test_api_route_auth_policy.py` against `api/route_auth_policy.py`. *(Objective M5.2.)*
 
-**Q5 — B.** Unit = mocked auth; API/security = real JWT on isolated SQLite; integration = real DB (mocking it is the named anti-pattern in `AGENTS.md`); browser = Playwright on a disposable live app; contract = OpenAPI snapshots (`docs/TESTING.md`); tiers run in separate processes. *(Objective M5.3.)*
+**Q5 — B.** The seven tiers in `docs/TESTING.md` all assert on deterministic output — unit on mocked auth, API/security on real JWT over isolated SQLite, integration on the real database (mocking it is the named anti-pattern in `AGENTS.md`), browser on Playwright against a disposable live app, contract on OpenAPI snapshots. A drafted notice is different every run and still has to be right, so the tier that can observe it is a behavioural eval. (A) mistakes a fixture for an oracle: one expected string tests one phrasing, not the behaviour. (D) is the counsel of despair, and the manifest has a better answer — `mini-flow`'s MF-05 carries exactly this scenario as `blocked` with a `manual` tier until an eval suite exists (`course/03-content/m05-security-tests/mini-flow/tests/playbooks/coverage.json`). The licence a passing eval gives you is a measurement with a denominator and a date, in the same sense as M6's claim levels: never "the assistant is accurate". *(Objective M5.3 — `docs/TESTING.md`, and Segment M3.2 for the eval tier.)*
 
 **Q6 — B.** The oracle checks role counts, distinct qualified assignees, non-overlap, and balanced loads "before publication at both browser widths" (`docs/playbooks/README.md`); health = 0.0 with any hard violation, else `max(0.0, 100.0 - soft_score/10)` (`api/core/solver/heuristics.py`) — the solver cannot grade its own homework. *(Objective M5.3.)*
 

@@ -15,7 +15,7 @@
     },
     "slide-4": {
       "title": "Proof: the mode enum and its labels",
-      "text": "Here is the proof, and now it is on the slide: the AIProcessingMode enum from ModelPrivacy.swift, lines three through thirteen. Four cases: off, local, apple, cloud. Four labels, each written to be true rather than to sell, and the code block is the enum itself. The one to memorize is cloud: it does not say enhanced; it says it sends the transcript and context. Read the labels on the slide — they are the strings the app actually ships. The README section on AI processing mode carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud without a deliberate, visible choice; the mode is the contract, and the label tells the truth about it."
+      "text": "Here is the proof, and now it is on the slide: the AIProcessingMode enum at the top of ModelPrivacy.swift. Four cases: off, local, apple, cloud. Four labels, each written to be true rather than to sell, and the code block is the enum itself. The one to memorize is cloud: it does not say enhanced; it says it sends the transcript and context. Read the labels on the slide — they are the strings the app actually ships. The README section on AI processing mode carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud without a deliberate, visible choice; the mode is the contract, and the label tells the truth about it."
     },
     "slide-5": {
       "title": "A localhost URL proves nothing",
@@ -27,11 +27,11 @@
     },
     "slide-7": {
       "title": "Proof: `isVerifiedLocal` fails closed",
-      "text": "This guard is the exhibit on the slide: ModelPrivacy.swift, lines seventeen to twenty-four, one guard clause. Parse the JSON. Require the remote host and remote model fields to be absent. Require the details format and the model info to be non-empty. Otherwise return false — and because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Follow the guard line by line: every condition must hold for the function to say true, and any surprise says false. The trust boundary is the daemon's self-description, verified structurally. A localhost URL or a model name alone is insufficient — that is exactly what the doc comment states."
+      "text": "This guard is the exhibit on the slide: the isVerifiedLocal function in ModelPrivacy.swift, one guard clause. Parse the JSON. Require the remote host and remote model fields to be absent. Require the details format and the model info to be non-empty. Otherwise return false — and because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Follow the guard line by line: every condition must hold for the function to say true, and any surprise says false. The trust boundary is the daemon's self-description, verified structurally. A localhost URL or a model name alone is insufficient — that is exactly what the doc comment states."
     },
     "slide-8": {
       "title": "Three defenses around the check",
-      "text": "In local-only mode, three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or the IPv6 loopback address. Anything else throws before a single byte of your prompt is written. Second, the provider posts to the show endpoint and requires an HTTP two hundred response plus a verified-local metadata result, and this is re-verified on every request, so switching models mid-session cannot skip the check. Third, redirects. You can read all three defenses in OllamaProvider.swift, lines ninety-nine to one hundred nineteen."
+      "text": "In local-only mode, three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or the IPv6 loopback address. Anything else throws before a single byte of your prompt is written. Second, the provider posts to the show endpoint and requires an HTTP two hundred response plus a verified-local metadata result, and this is re-verified on every request, so switching models mid-session cannot skip the check. Third, redirects. You can read all three defenses together in OllamaProvider.swift, in the local-only branch of the streaming request."
     },
     "slide-9": {
       "title": "Redirects refused",
@@ -55,7 +55,7 @@
     },
     "slide-14": {
       "title": "Proof: the floor bites in CI",
-      "text": "The coverage step sits in the continuous integration workflow at lines thirty-six to forty-two — the YAML on the slide is that step, and the logic lives in the script it calls. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite with the coverage floor. The two build jobs also run a dependency-lock diff, so the artifact you test is built from locked dependencies rather than whatever resolves that day. That is release discipline appearing in the pipeline, not in a document: the floor is invoked with a literal ninety-five in the job step, where every contributor can read it."
+      "text": "The coverage step is the core job in the continuous integration workflow — the YAML on the slide is that step, and the logic lives in the script it calls. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite with the coverage floor. The two build jobs also run a dependency-lock diff, so the artifact you test is built from locked dependencies rather than whatever resolves that day. That is release discipline appearing in the pipeline, not in a document: the floor is invoked with a literal ninety-five in the job step, where every contributor can read it."
     },
     "slide-15": {
       "title": "The contract test CI can't run",
@@ -63,7 +63,7 @@
     },
     "slide-16": {
       "title": "Proof: a test that skips, not hides",
-      "text": "This test is OllamaContractE2ETests.swift, lines four to twenty-two, and the skip is the exhibit: XCTSkipUnless on an environment variable, so a normal swift test run and continuous integration never touch the network — the test is skipped loudly, with a message that says how to run it, not hidden behind a silent pass. The make e2e target sets that gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses, and require non-empty streamed content. Skipped is a state CI reports honestly; a test that cannot run in CI but can run on your Mac is still worth shipping."
+      "text": "This test is OllamaContractE2ETests.swift, and the skip is the exhibit: XCTSkipUnless on an environment variable, so a normal swift test run and continuous integration never touch the network — the test is skipped loudly, with a message that says how to run it, not hidden behind a silent pass. The make e2e target sets that gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses, and require non-empty streamed content. Skipped is a state CI reports honestly; a test that cannot run in CI but can run on your Mac is still worth shipping."
     },
     "slide-17": {
       "title": "The tier only a human can run",
@@ -75,11 +75,11 @@
     },
     "slide-19": {
       "title": "M3.3 — Done ends at a verified download",
-      "text": "ListenToMe's AGENTS.md makes release the default end of any fix or feature. A local build, a local install, or a draft pull request is not the end of the workflow. There are six steps: implement and run tests, lint, and coverage; verify in the installed production app; bump the version and notes; commit, push, and verify hosted continuous integration; publish the signed, notarized disk image targeting the exact source commit; and finally, download the published asset and verify its checksum. That last step is the one most projects skip."
+      "text": "ListenToMe's AGENTS.md separates two words most projects blur. A change is done when it is merged to main with the three required checks green, its tests passing, and every affected doc updated. Publication is a separate, batched step, a release train: at most one macOS release a day, and never one release per merged pull request. So the status report for finished work is honest and short: merged to main, riding the next release train. Then the file names three rungs, and you claim only the one your evidence supports. A candidate is built and checked locally. Verified adds installed-app acceptance for the paths the change affects. And published means the asset was downloaded again, its checksum matched the local artifact, and the tag sits on the exact source commit."
     },
     "slide-20": {
       "title": "Proof: download it and check the hash",
-      "text": "The mechanics are in the releasing document, around lines one hundred twenty to one hundred thirty-four. After publishing, you download the hosted asset and compare its SHA-256 hash against the verified local disk image, and you create the release with the target pinned to the exact commit, so the tag cannot silently point at a different one. The policy also has an honesty clause: if a real blocker stops publication, name the blocker and preserve the candidate. Do not describe the work as released."
+      "text": "Here is the top rung in practice, from the verification ladder in AGENTS.md and the same table in the releasing document. After publishing, you download the hosted asset and compare its SHA-256 hash against the verified local disk image, and you create the release with the target pinned to the exact commit, so the tag cannot silently point at a different one. A published version's binary is never replaced. And the honesty clause: if a real blocker stops publication, name it precisely, preserve the candidate and its evidence, and report the work as merged but not published. Never describe it as released."
     },
     "slide-21": {
       "title": "Two bundle ids, on purpose",
@@ -87,7 +87,7 @@
     },
     "slide-22": {
       "title": "Competition analysis as an engineering artifact",
-      "text": "The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is twelve rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first."
+      "text": "The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is fourteen rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first."
     },
     "slide-23": {
       "title": "The one-liner and its columns",
@@ -95,7 +95,7 @@
     },
     "slide-24": {
       "title": "Lab M3 — Harden, Prove, Position",
-      "text": "Lab M3 is three hours and takes TinyCopilot from works to trustworthy. Step one, write the red-team test first: a mocked show response with a remote host set must be rejected in local mode. Then implement the privacy mode, the local model verification, host enforcement, and redirect refusal. Step two, add the real-language-model contract test, gated by the LAB_E2E environment variable. Step three, set the coverage floor and record a failure run. Step four, build the comparison table. The pass gate is make lab-m3 finishing green with forty-nine tests passed."
+      "text": "Lab M3 takes TinyCopilot from works to trustworthy. Step zero parks the shipped solution, so your red run is real. Step one, write the red-team test first: a mocked show response with a remote host set must be rejected in local mode. Then implement the privacy mode, the local model verification, host enforcement, and redirect refusal. Step two adds the real-language-model contract test, gated by the LAB_E2E environment variable. Step three sets the coverage floor and records a failure run, and step three-b adds behavioural evals above it. Step four builds the comparison table. Step five tags the tested commit and checksums the built artifact, and you record it as a candidate, because nothing is published yet. The suite gate is make lab-m3 finishing green, every test passed."
     },
     "slide-25": {
       "title": "Quiz M3",
@@ -103,7 +103,7 @@
     },
     "slide-26": {
       "title": "Recap",
-      "text": "Five sentences to carry out of this module. Privacy is a mode, with truthful labels, and metadata is verified on every request. A localhost URL proves nothing, because a local daemon can serve cloud aliases. Test in tiers, and remember that coverage is the entry fee, not the verdict. Done means a verified download, not a local build. And positioning derives from a sourced, qualified table."
+      "text": "Five sentences to carry out of this module. Privacy is a mode, with truthful labels, and metadata is verified on every request. A localhost URL proves nothing, because a local daemon can serve cloud aliases. Test in tiers, and remember that coverage is the entry fee, not the verdict. Done means merged, and published means a download you verified yourself. And positioning derives from a sourced, qualified table."
     },
     "slide-27": {
       "title": "Discussion prompt",

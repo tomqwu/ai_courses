@@ -1,9 +1,10 @@
 # Facilitation M5 — Multi-Tenant Security & the Acceptance Gate
 
 > One 90-minute cohort session for Module 5. Students arrive with Lab M4 done (a spec folder that
-> passed the requirements checklist) and leave with the four Lab M5 steps started and one induced
-> failure recorded. Mode labels: **I do** (instructor demonstrates), **We do** (whole room), **You
-> do** (breakout).
+> passed the requirements checklist) and the `mini-flow/` starter installed (`make setup`, then
+> `make lab-m5` green), and leave with the four Lab M5 steps started and one induced failure
+> recorded. Mode labels: **I do** (instructor demonstrates), **We do** (whole room), **You do**
+> (breakout).
 
 ## Timing table (sums to 90)
 
@@ -14,7 +15,7 @@
 | 12 | Breakout 1: hunt the unfiltered query | We do | Each group posts the leaky line + org |
 | 8 | Debrief 1: which failure class is it? | We do | Whiteboard of the seven negative cases |
 | 12 | Live miswire: drift test red → green | I do | `tests/unit/test_api_route_auth_policy.py` |
-| 14 | Breakout 2: write your route policy + drift test | You do | `route_policy.py` + failing test output |
+| 14 | Breakout 2: complete the route policy, then break it | You do | `route_auth_policy.py` diff + failing test output |
 | 6 | Debrief 2: what the red run proved | We do | Two groups paste their red output |
 | 10 | Manifest demo: delete a scenario, watch collection die | I do | `docs/playbooks/coverage.json`, `plugin.py:37-45` |
 | 8 | Breakout 3: honesty audit of your own manifest | You do | One row with status ≠ `automated` |
@@ -33,7 +34,7 @@ about what you have not proven."
 ## Close (5 min)
 
 "Three things to take away. First, the rule: every query filters by `org_id`, and the filter lives in
-the query, not in Python after the fetch — `docs/API_AUTHORIZATION.md:59-76`. Second, the guard: your
+the query, not in Python after the fetch — `docs/API_AUTHORIZATION.md:101-118`. Second, the guard: your
 route policy is a dict and your test compares it to the live app, so a miswired dependency fails
 before a customer finds it — `tests/unit/test_api_route_auth_policy.py`. Third, the honesty:
 `docs/playbooks/coverage.json` has four statuses, and `blocked` is better than deleted, because a
@@ -48,17 +49,17 @@ Groups of **3–4**. Rotate three roles: **driver** (shares screen, types), **sk
 attacker: "can I enumerate ids? can I write?"), **recorder** (owns the posted deliverable). Timeboxed;
 the driver must be a different person in each breakout.
 
-**Breakout 1 — hunt the unfiltered query (12 min).** Exact prompt: *"Run
-`grep -rn "db.query(" app/ | grep -v org_id`. For each hit, paste the line, name the route that
-reaches it, and write the status code a foreign id would return after the fix. If you have no hits,
-invent one: write a plausible query that omits `org_id` and say which of the seven negative cases
+**Breakout 1 — hunt the unfiltered query (12 min).** Exact prompt: *"Run `make demo` in
+`mini-flow/`, then `grep -n "db.query(Event)" src/miniflow/routers/events.py`. For each hit without
+`org_id`, paste the line, name the route that reaches it, and write the status code a foreign id
+returns now and must return after the fix. Then say which test in `tests/test_lab1_isolation.py`
 catches it."* **Deliverable to post:** the leaky line plus its route and intended status code.
 
-**Breakout 2 — write your route policy + drift test (14 min).** Exact prompt: *"List every mounted
-route, assign each to `public` / `member` / `admin`, and write the set-equality assertion against
-`app.routes` plus the dependency-tree check. Then deliberately miswire one `admin` route to
-`get_current_user`, run it, and paste the red output."* **Deliverable to post:** the policy dict and
-the raw red run.
+**Breakout 2 — complete the route policy, then break it (14 min).** Exact prompt: *"Run
+`make step3`. Classify the unclassified route in `src/miniflow/route_auth_policy.py` and get to
+green. Then deliberately miswire `create_event` in `routers/events.py` to `get_current_user`, run
+`make step3` again, and paste the red output — it must name the route and the missing dependency."*
+**Deliverable to post:** the policy diff and the raw red run.
 
 **Breakout 3 — honesty audit (8 min).** Exact prompt: *"Pick one scenario you cannot currently
 prove. Give it a status from `automated`/`partial`/`manual`/`blocked` and the tiers that justify it —
@@ -70,7 +71,7 @@ row instead would be worse."* **Deliverable to post:** the manifest row plus the
 1. **"Foreign keys are enough — we don't need org filters."** *Follow-up probe:* "Which mechanism
    fails first if that is true?" *Strong answer:* none of them save you — a primary-key lookup
    returns the foreign row before any membership check can matter; the filter in the query is the
-   control (`docs/API_AUTHORIZATION.md:59-76`), and a warning log is only observability
+   control (`docs/API_AUTHORIZATION.md:101-118`), and a warning log is only observability
    (`:74-76`).
 2. **"A guessed foreign id should return 403 so the client knows it is not allowed."**
    *Probe:* "What does that tell an attacker with a valid account?" *Strong answer:* it confirms
@@ -92,7 +93,7 @@ row instead would be worse."* **Deliverable to post:** the manifest row plus the
 |---|---|
 | Drift test won't fail when miswired | Check the test compares the **policy file to the live route table** (`app.routes`), not two static lists (`02-instructor/instructor-guide.md`, M5 row). |
 | Mocked auth in the isolation tier | Ask them to show the real JWT fixture; mocked auth belongs in `tests/unit/`, not in the tenancy evidence. |
-| "Denied" without the unchanged-row assert | Say the sentence: "step 4 of the change protocol is assert forbidden writes leave the database unchanged" (`docs/API_AUTHORIZATION.md:65`). |
+| "Denied" without the unchanged-row assert | Say the sentence: "step 4 of the change protocol is assert forbidden writes leave the database unchanged" (`docs/API_AUTHORIZATION.md:107-108`). |
 | Everything marked `automated` | Ask which tier executes each row; a row with no executable tier fails the validator. |
 | Deleting an inconvenient scenario | Demonstrate the pre-collection failure, then have them restore it and set `blocked` + `manual`. |
 

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalog</title>
+  <!-- Edit these two lines: they are what a search engine and a shared link show. -->
+  <meta name="description" content="Small-batch stoneware, thrown and glazed by hand.">
+  <meta property="og:title" content="Harbour Clay Studio — Catalog">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#grid">Skip to products</a>
+
+  <header class="masthead">
+    <div class="wrap">
+      <h1 id="store-name">Your catalog</h1>
+      <p id="store-tagline" class="tagline"></p>
+      <p id="store-note" class="note"></p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="controls" aria-label="Find a product">
+      <div id="filters" class="filters" role="group" aria-label="Category"></div>
+      <div class="finders">
+        <label class="field">
+          <span>Search</span>
+          <input id="search" type="search" placeholder="Mug, bowl, gift…" autocomplete="off">
+        </label>
+        <label class="field">
+          <span>Sort</span>
+          <select id="sort">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+            <option value="name">Name</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <div id="grid" class="grid"></div>
+
+    <noscript>
+      <p class="status">This catalog needs JavaScript to list the products. Turn it on, or contact
+        the studio directly.</p>
+    </noscript>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p><a id="store-contact" href="#">Contact the studio</a></p>
+      <p>© <span id="year"></span> · Published with GitHub Pages</p>
+    </div>
+  </footer>
+
+  <!-- products.js first: it defines the catalog that app.js draws. -->
+  <script src="products.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

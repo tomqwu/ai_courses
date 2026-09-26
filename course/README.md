@@ -6,7 +6,7 @@ Built from a deep study of three production open-source repositories by the same
 
 | Archetype | Case-study repo (cloned here) | Proof assets |
 |---|---|---|
-| 1. Native on-device AI app | `../ListenToMe/` — macOS/iOS meeting copilot | 96% core coverage · notarized releases · 12-competitor analysis |
+| 1. Native on-device AI app | `../ListenToMe/` — macOS/iOS meeting copilot | 96% core coverage · notarized releases · 13-competitor analysis |
 | 2. Spec-driven AI SaaS | `../SignUpFlow/` — volunteer-scheduling platform | 1,464 dated tests · 7 tiers · 17 spec folders |
 | 3. Expertise content product | `../ai_qe/` — "AI × QE" briefing site | 116 cited slides · provenance · published self-audit |
 
@@ -24,7 +24,13 @@ course/
 │   ├── 01-listentome-deep-read.md ← architecture, privacy engineering, release discipline (with file pointers)
 │   ├── 02-signupflow-deep-read.md ← spec-kit methodology, 7-tier testing, multi-tenant security
 │   ├── 02-course-market-research.md ← how to create/sell courses: frameworks, completion stats, pricing, platforms (all cited)
-│   └── 03-ai-qe-deep-read.md      ← evidence discipline, audience routing, editions, consulting funnel
+│   ├── 03-ai-qe-deep-read.md      ← evidence discipline, audience routing, editions, consulting funnel
+│   ├── 04-platform-review-2026.md ← the September 2026 review: verdict, findings, positioning, platform plan, roadmap
+│   ├── 05-platform-build-options-2026.md ← build vs buy: LMSes, merchants of record, reference architectures, labs, video
+│   ├── 06-competitive-landscape-2026.md  ← 28 competitors, price bands, gaps, demand signals, threats
+│   ├── 07-course-design-practice-2026.md ← what changed in learning science and cohort economics since 02-
+│   ├── 08-domain-currency-2026.md ← is each archetype's curriculum current (Apple FM, spec-kit 1.0, AI search)
+│   └── 09-content-audit-2026.md   ← module-by-module audit with pointers and the top-15 fixes
 ├── 01-design/                      ← course design (read first)
 │   ├── positioning.md             ← concept, audience, promise, differentiation, pricing ladder, voice standards
 │   ├── curriculum.md              ← master syllabus: 9 modules, objectives, labs, quizzes (the authoring brief)
@@ -32,14 +38,15 @@ course/
 │   └── assessment-and-rubrics.md  ← grading weights, quiz rules, lab standard, capstone rubric
 ├── 02-instructor/
 │   └── instructor-guide.md         ← cohort cadence, workshop scripts (I do/We do/You do), stuck-point table, grading workflow
-├── 03-content/                    ← the course itself (9 modules, 8 artifacts each)
+├── 03-content/                    ← the course itself (9 modules, 8 artifacts each, plus the free M9)
 │   ├── mNN-*/                     ← lesson.md · lab.md · quiz.md · slides.md (Marp + notes) · solutions.md
 │   │                                · video-scripts.md · handout.md · facilitation.md · glossary.md
 │   │                                · lab-rubrics.md · accessibility.md
 │   ├── m00-orientation/           ← + lab
 │   ├── m02-ondevice-app/         ← + tinycopilot/ (runnable, tested lab code)
 │   ├── m06-expertise-product/    ← + evidence-dataset.md (student-facing claims data)
-│   └── m08-launch-capstone/      ← the capstone lab
+│   ├── m08-launch-capstone/      ← the capstone lab
+│   └── m09-github-pages/         ← free and standalone: tools, folders, cloning, a catalog on GitHub Pages
 ├── 04-sales/                       ← the course's own go-to-market
 │   ├── landing-page.md           ← complete sales-page copy (~1,900 words, publish-ready)
 │   ├── pricing-and-platforms.md  ← price ladder ($399 self-paced / $1,490 cohort / $2.5k team) with decision record
@@ -49,12 +56,16 @@ course/
 │   ├── README.md                  ← bundle index and the honest case for the full course
 │   └── {on-device-app,spec-driven-saas,expertise-product}/
 │                                   ← README · syllabus · sales-page · pricing · bundle-map
+├── 07-playbooks/                   ← 6 standalone playbooks extracted from M1, M3–M6 (drafts, prices proposed)
+│   └── {agent-governance,fail-closed-local,falsifiable-positioning,agent-executable-specs,
+│        tenant-negative-path,evidence-cited-briefing}/   ← playbook · sales
 └── 06-production/                  ← how the package is built and verified (instructor-facing)
     ├── MILESTONES.md              ← public roadmap mirroring the GitHub milestones/issues
     ├── slides/aps.css             ← shared Marp theme (`@theme aps`)
     ├── slides/build.sh · Makefile ← render/validate every deck (HTML/PDF)
     ├── slides/deck_lint.py        ← enforces bullets, per-slide notes, proof slide
     ├── verify.py                  ← artifacts, bands, rubrics, bundles, 900+ pointers
+    ├── check_facts.py · facts.json ← re-derives the pinned case-study numbers from the clones; reports drift
     ├── build-glossary.py          ← merges the nine module glossaries
     ├── glossary-master.md         ← 137 merged terms (13 shared across modules)
     ├── certificate.md             ← completion certificate + issuance rules (SHA-bounded)
@@ -63,7 +74,7 @@ course/
         ├── DESIGN.md              ← what this borrows from ai_qe, and what it deliberately changes
         ├── README.md              ← operator's guide: generate, validate, swap the voice
         ├── scripts/mNN.json       ← the approved narration words for each deck
-        ├── voices: elevenlabs (release) · say (free preview) · pronunciations.json
+        ├── voices: elevenlabs (release) · say / espeak-ng (free preview) · pronunciations.json
         ├── generate_narration.py · validate_narration.py · import_narration.py
         ├── captions.py · providers.py · narration_data.py
         └── test_captions.py (32) · test_providers.py (13)
@@ -91,7 +102,8 @@ course/
 
 **To sell it:** `04-sales/` is publish-ready: landing-page copy, pricing rationale grounded in 2025–26 platform benchmarks, and a full launch plan with the 7-email arc.
 
-**To run the labs yourself:** the Module 2/3 labs use `03-content/m02-ondevice-app/tinycopilot/` — a complete, tested Python reference implementation that mirrors ListenToMe's architecture (see its README). **Verified status as shipped:** `make lab-m2` → 191 passed, 100% coverage (floor 90 enforced); `make lab-m3` → 49 passed; `make e2e` → 2 passed against a live Ollama daemon; `make demo` → three role outputs. Requirements: Python 3.11+ (TinyCopilot itself also runs on 3.10), pytest, httpx, and Ollama (`ollama pull qwen3:0.6b` for a local model).
+**To run the labs yourself:** the Module 2/3 labs use `03-content/m02-ondevice-app/tinycopilot/` — a complete, tested Python reference implementation that mirrors ListenToMe's architecture (see its README). **Verified status as shipped:** `make lab-m2` → 208 passed, 100% coverage (floor 90 enforced); `make lab-m3` → 56 passed; `make e2e` → 2 passed against a live Ollama daemon; `make demo` → three role outputs. Requirements: Python 3.11+ (TinyCopilot itself also runs on 3.10), pytest, httpx, and Ollama (`ollama pull qwen3:0.6b` for a local model).
+The Module 5 lab uses `03-content/m05-security-tests/mini-flow/` — a deliberately incomplete FastAPI + SQLAlchemy + JWT multi-tenant starter mirroring SignUpFlow's auth shape (see its README for the intentional gaps). **Verified status as shipped:** `make lab-m5` → 51 passed, 23 skipped, 100% coverage (floor 90 enforced); `make pass-gate` → 11 failed, 63 passed on the starter by design, 74 passed once the four lab fixes are in; `make demo` → two `LEAK` lines. Requirements: Python 3.11+, `make setup` (no compiled dependencies, no database server).
 
 
 ## Course at a glance
@@ -123,7 +135,7 @@ writers were told to report anything they could not verify. That process found f
 | An off-by-two count presented as fact | M5 lesson said the policy's `admin` class had **80** operations | AST count gives 7/6/2/50/**78** = 143; lesson corrected and the total added |
 | A pointer attributed to the wrong file | M6 lesson placed the `?for=evp` audience views in `briefings/index.md` | Corrected to `ai_qe/index.md:27,29` + `ai_qe/CONTRIBUTING.md:23` |
 | An unmeasured "length check" | Landing page claimed "~2,250 words" in its own authoring note | Measured: 2,251 total / ~1,900 body; corrected in 7 places (and re-measured after the bundle edit) |
-| Prose contradicting the executable spec | M2 lab said the router picks a *distinct* Listener model when ≥3 exist | The Python tests share Listener/Quick; the Swift original differs. Lab now states the divergence explicitly and points at `ModelRanking.swift:76-94` |
+| Prose contradicting the executable spec | M2 lab said the router picks a *distinct* Listener model when ≥3 exist | The Python tests share Listener/Quick; the Swift original differs. Lab now states the divergence explicitly and points at `ModelRanking.swift:91-111` |
 
 Two further "corrections" proposed by writers were **rejected after checking the source**: the
 coverage statuses really are on `coverage.py:18` (as the lesson said), and "Missing review is not

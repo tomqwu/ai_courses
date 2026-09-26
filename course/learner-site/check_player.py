@@ -50,6 +50,27 @@ CHROME_CANDIDATES = [
 
 
 def find_browser() -> str | None:
+    """A Chrome/Chromium binary: an explicit path first, then Playwright's cache, then the usual places.
+
+    `CHROME_PATH` is the escape hatch for any runner; `PLAYWRIGHT_BROWSERS_PATH` is what a Playwright
+    install (local or in CI) already sets, so a Linux runner with the Playwright Chromium needs no
+    extra configuration. Fixed paths alone made the gate silently skip on every Linux machine.
+    """
+    import os                                                                     # noqa: PLC0415
+    import glob                                                                   # noqa: PLC0415
+    explicit = os.environ.get("CHROME_PATH")
+    if explicit and Path(explicit).exists():
+        return explicit
+    pw_root = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
+    roots = [pw_root] if pw_root else []
+    roots += [str(Path.home() / ".cache" / "ms-playwright"), "/opt/pw-browsers"]
+    for root in roots:
+        for pattern in ("chromium-*/chrome-linux/chrome", "chromium-*/chrome-linux64/chrome",
+                        "chromium-*/chrome-mac*/Chromium.app/Contents/MacOS/Chromium",
+                        "chromium_headless_shell-*/chrome-linux/headless_shell"):
+            hits = sorted(glob.glob(str(Path(root) / pattern)))
+            if hits:
+                return hits[-1]
     for candidate in CHROME_CANDIDATES:
         if candidate and Path(candidate).exists():
             return candidate
@@ -230,7 +251,7 @@ var CASES = __CASES__;
 var results = [], i = 0, f = null;
 function next() {
   if (i >= CASES.length) { document.getElementById("out").textContent = JSON.stringify(results); return; }
-  var c = CASES[i++], deck = c[0], n = c[1];
+  var c = CASES[i++], deck = c[0], n = c[1], audit = c[2];
   try { localStorage.clear(); } catch (e) {}   // the player resumes from localStorage and that
                                                 // beats the deep link — start each case clean
   if (f) document.body.removeChild(f);
@@ -249,9 +270,13 @@ function next() {
         var sb = slide.getBoundingClientRect();
         out.visibleId = slide.id;
         out.overflowing = slide.scrollHeight > slide.clientHeight + 2;
-        // The deck contrast audit sees slide 1 (a cover, no diagram); these slides carry the
-        // diagrams, so they get audited here, at their real layout.
-        out.contrast = apsAuditContrast(f.contentWindow, f.contentDocument);
+        // .slide-content scrolls rather than clipping, so a too-tall exhibit never overflows the
+        // slide itself: it grows a scrollbar the recording cannot scroll. Measure that instead.
+        var content = slide.querySelector(".slide-content");
+        out.contentOverflow = content ? Math.max(0, content.scrollHeight - content.clientHeight) : 0;
+        // The deck contrast audit sees slide 1 (a cover, no diagram); the slides that carry a
+        // diagram or an exhibit get audited here, at their real layout. Every slide is measured.
+        if (audit) { out.contrast = apsAuditContrast(f.contentWindow, f.contentDocument); }
         out.diagrams = [];
         Array.prototype.forEach.call(slide.querySelectorAll(".diagram"), function (dg) {
           var r = dg.getBoundingClientRect();
@@ -452,7 +477,8 @@ def check_pages(browser: str, port: int) -> list[str]:
     title rendered at 1.00:1. The deck probe could never have caught it.
     """
     pages = ["index.html", "paths.html"]
-    for pattern in ("path-*.html", "module-*.html", "transcript-*.html"):
+    for pattern in ("path-*.html", "module-*.html", "transcript-*.html",
+                    "lesson-*.html", "lab-*.html", "quiz-*.html", "handout-*.html", "glossary*.html"):
         pages += sorted(p.name for p in SITE_ROOT.glob(pattern))
     pages = [p for p in pages if (SITE_ROOT / p).exists()]
     if not pages:
@@ -486,43 +512,56 @@ def check_pages(browser: str, port: int) -> list[str]:
     return problems
 
 
+# Slides whose content scrolls inside the 16:9 frame. A recording cannot scroll, so the gate runs
+# with `--strict-fit` and fails them (#70); without it they are listed as warnings, for drafting.
+FIT_WARNINGS: list[str] = []
+
+
 def check_diagram_geometry(browser: str, port: int) -> list[str]:
-    """A declared diagram must fit its slide frame.
+    """A declared diagram must fit its slide frame, and no slide's content may need scrolling.
 
     The frames are 16:9 with overflow hidden, so an oversized diagram is silently clipped —
-    invisible content, not a style bug. This is measured, not assumed: every slide that
-    declares a diagram is opened by deep link and its component measured against the frame
-    box in a real layout.
+    invisible content, not a style bug. This is measured, not assumed: every slide is opened by
+    deep link and its diagram and its content box are measured against the frame in a real
+    layout.
     """
     sys.path.insert(0, str(SITE_ROOT))
     import build_site as B                                                      # noqa: PLC0415
     cases = []
     for deck_id in B.DECK_IDS:
         for slide in B.parse_deck(deck_id)["slides"]:
-            # Diagrams and code exhibits both carry the substance, and the frame clips silently
-            # either way — both get opened and measured.
-            if slide.get("diagram") or "<pre>" in slide.get("html", ""):
-                cases.append([deck_id, slide["number"]])
+            # Every slide is opened and measured: a bullet slide scrolls inside the frame as
+            # silently as an exhibit does (#70). Diagrams and code exhibits carry the substance,
+            # so those also get the contrast audit at their real layout.
+            audit = bool(slide.get("diagram") or "<pre>" in slide.get("html", ""))
+            cases.append([deck_id, slide["number"], audit])
     if not cases:
         return []
     page = SITE_ROOT / DIAGRAM_PROBE_PAGE
     page.write_text(DIAGRAM_PROBE_TEMPLATE.replace("/*CONTRAST*/", CONTRAST_JS)
                                          .replace("__CASES__", json.dumps(cases)),
                     encoding="utf-8")
+    # The probe opens every case in turn, so its time grows with the course. A fixed budget was
+    # enough at 30-odd cases and ran out at 85, leaving the page reporting "pending": scale it.
+    budget_ms = max(40000, 1500 * len(cases))
     try:
-        dom = dump_dom(browser, f"http://127.0.0.1:{port}/{DIAGRAM_PROBE_PAGE}", budget_ms=40000)
+        dom = dump_dom(browser, f"http://127.0.0.1:{port}/{DIAGRAM_PROBE_PAGE}", budget_ms=budget_ms)
     finally:
         page.unlink(missing_ok=True)
     match = re.search(r'<pre id="out">(.*?)</pre>', dom, re.S)
     if not match:
         return ["diagram geometry: probe did not report"]
+    raw = html_lib.unescape(match.group(1)).strip()
+    if raw == "pending":
+        return [f"diagram geometry: probe still running after {budget_ms} ms of virtual time "
+                f"for {len(cases)} slides — raise the per-slide budget"]
     try:
-        results = json.loads(html_lib.unescape(match.group(1)))
+        results = json.loads(raw)
     except ValueError:
         return ["diagram geometry: unreadable probe output"]
     by_case = {(r.get("deck"), r.get("slide")): r for r in results}
     problems: list[str] = []
-    for deck_id, n in cases:
+    for deck_id, n, _audit in cases:
         r = by_case.get((deck_id, n))
         if not r or r.get("error"):
             problems.append(f"{deck_id} slide-{n}: geometry probe failed "
@@ -535,6 +574,14 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
             if not d.get("insideFrame") or r.get("overflowing"):
                 problems.append(f"{deck_id} slide-{n}: {d.get('kind')} does not fit the slide "
                                 f"frame ({d.get('h')}px tall — the frame clips it)")
+        # A code exhibit with no diagram was measured and then never reported: the overflow flag
+        # only surfaced inside the diagram loop. A clipped exhibit is the same silent failure.
+        if r.get("overflowing") and not r.get("diagrams"):
+            problems.append(f"{deck_id} slide-{n}: the slide overflows its frame, so the code "
+                            f"exhibit or the text under it is clipped")
+        if (r.get("contentOverflow") or 0) > 2:
+            FIT_WARNINGS.append(f"{deck_id} slide-{n}: the content needs {r['contentOverflow']}px of "
+                                f"scrolling — a recorded slide cannot scroll, so that part is never seen")
         bad = (r.get("contrast") or {}).get("failures") or []
         for b in sorted(bad, key=lambda x: x["ratio"])[:3]:
             problems.append(f"{deck_id} slide-{n}: text below WCAG AA — {b['ratio']}:1 "
@@ -580,8 +627,10 @@ def check_units() -> list[str]:
                 d for tr in SP.TRACKS if tr["status"] == "built"
                 for d in list(tr["core"]) + list(tr.get("slice") or {})}:
             problems.append(f"{deck_id}: in a built path but has no module page")
-    if total != 63:
-        problems.append(f"unit model yields {total} units, expected 63")
+    # 63 units for M0-M8, plus 7 for the free M9 (intro, three segments, lab, quiz, summary). Kept
+    # as a literal on purpose: a deck edit that moves a unit boundary should fail here, not re-count.
+    if total != 70:
+        problems.append(f"unit model yields {total} units, expected 70")
     # Independent cross-check: the unit model derives 17 segments for the On-Device path from the
     # decks alone, while `bundle-map.md` states "17 of 27 teaching segments" by hand. If a deck
     # edit changes a boundary, the two stop agreeing — which is the whole point of asserting it.
@@ -890,6 +939,8 @@ def main(argv=None) -> int:
     parser.add_argument("--all", action="store_true", help="check every deck with a built page")
     parser.add_argument("--measure", action="store_true",
                         help="print the measured frame geometry for each deck and exit")
+    parser.add_argument("--strict-fit", action="store_true",
+                        help="fail, not warn, when a slide's content needs scrolling")
     parser.add_argument("--print-skip", action="store_true",
                         help="exit 0 with a note if no browser is installed")
     args = parser.parse_args(argv)
@@ -935,6 +986,12 @@ def main(argv=None) -> int:
             problems.extend(found)
         problems.extend(check_units())
         problems.extend(check_diagram_geometry(browser, port))
+        if args.strict_fit:
+            problems.extend(FIT_WARNINGS)
+        elif FIT_WARNINGS:
+            print(f"\n  {len(FIT_WARNINGS)} slide(s) need scrolling inside the frame (warning, #70):")
+            for w in FIT_WARNINGS:
+                print(f"  ! {w}")
         problems.extend(check_pages(browser, port))
     finally:
         httpd.shutdown()

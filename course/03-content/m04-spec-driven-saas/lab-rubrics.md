@@ -33,18 +33,20 @@
 
 ## Group 4 — Stranger test, the pass gate (step 7) · 15
 
+The evidence log states which path ran: **scripted** (the `stranger-prompt.md` agent session, the self-paced default) or **peer** (cohort). Both produce the same `=== STRANGER REPORT ===`; the rows below grade the report, not the path.
+
 | Criterion | Wt | Exemplary | Proficient | Developing | Missing | Evidence required |
 |---|---|---|---|---|---|---|
-| Stranger implements story 1 | 10 | A peer or fresh agent session implements story 1 with zero questions the folder should have answered; transcript recorded | One or two questions, both genuinely outside the folder's scope | Several questions the folder should have answered | No stranger test attempted | Transcript, or the stranger's session log |
-| Residual questions and sharpening | 5 | Each residual question names the artifact that starved it; sharpened line shown before/after | Questions listed; one artifact sharpened | Questions listed, artifacts unchanged | No record | Evidence log; the edited artifact |
+| Stranger implements story 1 | 10 | Report shows **zero spec-owed Q/A rows**, every row labelled, path stated; scenario table filled | Zero spec-owed rows after a re-run; first run's rows labelled | One or more spec-owed rows left unlabelled or unfixed | No report, or a report with the `Counts` block missing | The verbatim report(s), the path used, and each row's label, in the evidence log |
+| Residual questions and sharpening | 5 | Each spec-owed row names the artifact that starved it; sharpened line shown before/after; environment-owed labels argued | Rows listed; one artifact sharpened | Rows listed, artifacts unchanged | No record | Evidence log; the edited artifact |
 
 ## Auto-fail conditions
 
 These fail Lab M4 **regardless of the other rows** (per `01-design/assessment-and-rubrics.md`, fabrication
 is the only fail):
 
-1. **Fabricated evidence** — any grep transcript, checklist output, or stranger session not produced by
-   the commands or person it claims.
+1. **Fabricated evidence** — any grep transcript, checklist output, or stranger report not produced by
+   the commands, session, or person it claims; a report with edited `Counts` or deleted Q/A rows.
 2. **A cited path that does not exist and was left unfixed** — including the real `migrations/versions/`
    drift when the repo uses `alembic/versions/`.
 3. **A self-graded checklist with no drift-check output** — "all checks passed" with no grep or recount
@@ -56,5 +58,5 @@ is the only fail):
 ## Scoring
 
 Sum the weights of rows graded Proficient or better. **Pass = 70 or above, no auto-fail, and Group 4 not
-Missing** — the stranger test is the module's pass gate. For self-paced students the evidence log is the
-submission.
+Missing** — the stranger test is the module's pass gate on either path. For self-paced students the
+evidence log with the scripted report is the submission.

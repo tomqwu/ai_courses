@@ -10,7 +10,7 @@ the operator's guide.
 cd course
 
 make narration-plan      # what would be generated, and the character count a paid voice bills on
-make narration-preview   # free, offline, sentence-accurate preview voice (needs macOS `say` + ffmpeg)
+make narration-preview   # free, offline, sentence-accurate preview voice (macOS `say` or Linux `espeak-ng`, plus ffmpeg)
 make site                # build the learner site
 make check               # validate scripts, media, decks, and the site build
 ```
@@ -83,8 +83,8 @@ python3 generate_narration.py plan
 python3 generate_narration.py plan --deck m04
 
 # preview voice — free, offline
-python3 generate_narration.py generate --provider say
-python3 generate_narration.py generate --provider say --deck m00 --slide slide-3 --force
+python3 generate_narration.py generate --provider preview          # say on macOS, espeak-ng on Linux
+python3 generate_narration.py generate --provider espeak --deck m00 --slide slide-3 --force
 
 # release voice — needs ELEVENLABS_API_KEY
 python3 generate_narration.py generate --provider elevenlabs --deck m00
@@ -175,13 +175,13 @@ recordings are all preview.
 
 | Symptom | Cause and fix |
 |---|---|
-| `provider unavailable: ELEVENLABS_API_KEY is not set` | Use `--provider say`, or export the key. The key is read from the environment only and never written to disk. |
+| `provider unavailable: ELEVENLABS_API_KEY is not set` | Use `--provider preview` (`say` on macOS, `espeak-ng` on Linux: `apt-get install espeak-ng ffmpeg`), or export the key. The key is read from the environment only and never written to disk. |
 | `another generation run is already in progress` | A previous run is still going, or a stale `.generate.lock` exists. Check with `pgrep -fl generate_narration`, then delete the lock. |
 | `network failure calling ElevenLabs … may have been charged` | Do **not** blind-retry: a second call could bill twice for the same sentence. Check provider history first. |
 | `captions differ from the approved script` | The script was edited after recording. Re-record that slide (`--force`), or revert the script. |
 | `duration drift … vs … recorded` | The file was replaced or re-encoded. Re-record the slide. |
 | `cc stayed disabled` (browser check) | The `.vtt` is missing or not valid WebVTT. Run `validate_narration.py` without `--no-media`. |
-| Preview sounds robotic | It is `say`, not the release voice. That is the point of the label: set the key and run `make narration`. |
+| Preview sounds robotic | It is `say` or `espeak-ng`, not the release voice. That is the point of the label: set the key and run `make narration`. |
 
 ## What is committed, and what is generated
 

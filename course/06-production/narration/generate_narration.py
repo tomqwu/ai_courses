@@ -3,7 +3,7 @@
 
 Usage
   python3 generate_narration.py plan                      # what would be generated, and the cost
-  python3 generate_narration.py generate --provider say   # free local preview, no key needed
+  python3 generate_narration.py generate --provider preview   # free local preview (say on macOS, espeak-ng on Linux)
   python3 generate_narration.py generate --provider elevenlabs --deck m00
   python3 generate_narration.py verify                    # run the validation contract
 
@@ -32,18 +32,22 @@ from captions import (build_cues, check_caption_words, load_pronunciations, spok
 from narration_data import (DECK_IDS, EDITION, MANIFEST_PATH, NARRATION_DIR, PRONUNCIATIONS_PATH, PROVENANCE_PATH,
                             VOICE_PATH, audio_abs, audio_rel, load_manifest, load_scripts, read_json,
                             save_manifest, sha256_file, slide_sort_key, write_json)
-from providers import ElevenLabsProvider, ProviderError, SayProvider, available_cost_estimate, probe_duration
+from providers import (PREVIEW_PROVIDERS, ElevenLabsProvider, ProviderError, available_cost_estimate,
+                       preview_provider_for_this_machine, probe_duration)
 
 
 def build_provider(args):
     """Return (provider, basis, voice_label). `basis` records how the timing was obtained."""
     voice_cfg = read_json(VOICE_PATH, {}) or {}
-    if args.provider == "say":
-        preview = voice_cfg.get("preview", {})
-        provider = SayProvider(voice=args.voice or preview.get("voice", "Samantha"),
-                               rate=preview.get("rate", 175),
-                               gap_seconds=preview.get("gap_seconds", 0.28))
-        return provider, "sentence-measured-preview", preview.get("label", "macOS say (preview)")
+    if args.provider == "preview":
+        args.provider = preview_provider_for_this_machine()
+    if args.provider in PREVIEW_PROVIDERS:
+        preview = (voice_cfg.get("preview", {}) or {}).get(args.provider, {})
+        kwargs = {k: preview[k] for k in ("voice", "rate", "gap_seconds") if k in preview}
+        if args.voice:
+            kwargs["voice"] = args.voice
+        provider = PREVIEW_PROVIDERS[args.provider](**kwargs)
+        return provider, "sentence-measured-preview", preview.get("label", f"{provider.name} (preview)")
     provider = ElevenLabsProvider(
         voice_id=args.voice or voice_cfg.get("voice_id", ""),
         model_id=voice_cfg.get("model_id", "eleven_v3"),
@@ -86,7 +90,7 @@ def cmd_plan(args) -> int:
     print(f"\nalready recorded: {recorded}/{estimate['slides']} slides (manifest complete={manifest.get('complete')})")
     if provider == "elevenlabs" and not __import__("os").environ.get("ELEVENLABS_API_KEY"):
         print("\nNOTE: ELEVENLABS_API_KEY is not set, so `generate --provider elevenlabs` will refuse.\n"
-              "      Use `--provider say` for a free local preview, or export the key for the release voice.")
+              "      Use `--provider preview` for a free local voice (say on macOS, espeak-ng on Linux), or export the key.")
     return 0
 
 
@@ -209,7 +213,7 @@ def _generate(args) -> int:
             continue
         todo.append((deck_id, slide_id, slide))
 
-    workers = args.workers or (4 if args.provider == "say" else 1)
+    workers = args.workers or (4 if args.provider in PREVIEW_PROVIDERS else 1)
     if todo:
         print(f"synthesizing {len(todo)} slide(s) with {workers} worker(s)…")
 
@@ -235,7 +239,7 @@ def _generate(args) -> int:
             "voice": voice_label, "caption_method": method,
             "generated_at": stamp, "received_at": stamp, "receipt": result.receipt, "evidence": None,
             "note": ("Local preview voice generated on this machine; not the release voice."
-                     if args.provider == "say" else
+                     if args.provider in PREVIEW_PROVIDERS else
                      "Generated against a paid voice; the provider receipt is the API response recorded here."),
         }
         return record, prov, result.duration, len(cues), method
@@ -290,12 +294,13 @@ def main(argv=None) -> int:
 
     p_plan = sub.add_parser("plan", help="report slides/characters to generate (no writes)")
     p_plan.add_argument("--deck", action="append")
-    p_plan.add_argument("--provider", choices=["elevenlabs", "say"])
+    p_plan.add_argument("--provider", choices=["elevenlabs", "say", "espeak", "preview"])
     p_plan.set_defaults(func=cmd_plan)
 
     p_gen = sub.add_parser("generate", help="synthesize audio + captions")
-    p_gen.add_argument("--provider", choices=["elevenlabs", "say"], default=None,
-                       help="defaults to voice.json's provider; 'say' needs no API key")
+    p_gen.add_argument("--provider", choices=["elevenlabs", "say", "espeak", "preview"], default=None,
+                       help="defaults to voice.json's provider; 'say' (macOS), 'espeak' (Linux) and "
+                            "'preview' (whichever this machine has) need no API key")
     p_gen.add_argument("--deck", action="append", help="limit to a deck id (repeatable)")
     p_gen.add_argument("--slide", action="append", help="limit to a slide id (repeatable)")
     p_gen.add_argument("--voice", help="override the voice id/name")

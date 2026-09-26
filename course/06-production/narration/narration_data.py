@@ -27,7 +27,7 @@ PRONUNCIATIONS_PATH = NARRATION_DIR / "pronunciations.json"
 VOICE_PATH = NARRATION_DIR / "voice.json"
 
 EDITION = "aps-1.0.0"
-DECK_IDS = ["m00", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08"]
+DECK_IDS = ["m00", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08", "m09"]
 
 # Slide-count floor/ceiling for a narration script, in words. The floor exists so a "narration"
 # cannot be a stub; the ceiling keeps a slide's narration under about a minute.

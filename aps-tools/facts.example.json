@@ -1,0 +1,41 @@
+{
+  "_comment": "Copy this next to your docs, point the paths at your own repository, and run: python3 facts_drift.py --facts facts.json --base . --docs docs/ --strict. Derivations are data, never code — see the README.",
+  "agents_md.lines": {
+    "pinned": 188,
+    "pinned_date": "2026-09-16",
+    "derive": {"kind": "file_lines", "path": "SignUpFlow/AGENTS.md"},
+    "literals": ["AGENTS.md is 188 lines", "188-line"],
+    "note": "The rule file an agent reads on every task; the budget is 200 lines."
+  },
+  "constitution.lines": {
+    "pinned": 85,
+    "pinned_date": "2026-09-16",
+    "derive": {"kind": "file_lines", "path": "SignUpFlow/.specify/memory/constitution.md"},
+    "literals": ["85-line constitution"]
+  },
+  "core.swift_files": {
+    "pinned": 45,
+    "pinned_date": "2026-09-16",
+    "derive": {"kind": "glob_count", "glob": "ListenToMe/Sources/**/*.swift"},
+    "literals": ["45 Swift source files"]
+  },
+  "core.swift_lines": {
+    "pinned": 5194,
+    "pinned_date": "2026-09-16",
+    "derive": {"kind": "glob_lines", "glob": "ListenToMe/Sources/**/*.swift"},
+    "literals": ["5,194 lines"]
+  },
+  "health_score.line": {
+    "pinned": 193,
+    "pinned_date": "2026-09-16",
+    "derive": {"kind": "line_of", "path": "SignUpFlow/api/cli/main.py", "pattern": "Health score"},
+    "literals": ["main.py:193"],
+    "note": "A pointer with a line number is a fact too: it moves when the file above it changes."
+  },
+  "competitors.rows": {
+    "pinned": 14,
+    "pinned_date": "2026-09-16",
+    "derive": {"kind": "table_rows", "path": "ListenToMe/docs/competition-analysis.md", "after": "## Comparison table"},
+    "literals": ["14-row competitor table", "14 competitors"]
+  }
+}

@@ -33,7 +33,7 @@ Alphabetical. Each term: definition, then where it lives.
 
 1. `SignUpFlow/AGENTS.md:57-61` — the P0 rule in the baseline every agent reads; read the exact wording before paraphrasing it.
 2. `SignUpFlow/docs/API_AUTHORIZATION.md` — the status contract, the executable matrix, and the six-step change protocol in one file.
-3. `SignUpFlow/tests/unit/test_api_route_auth_policy.py` — 37 lines that catch missing, stale, and miswired routes; the shortest complete drift test in the course.
+3. `SignUpFlow/tests/unit/test_api_route_auth_policy.py` — 38 lines that catch missing, stale, and miswired routes; the shortest complete drift test in the course.
 4. `SignUpFlow/tests/playbooks/coverage.py` — the four statuses and the two coupling rules that make the manifest honest by construction.
 5. `SignUpFlow/docs/playbooks/church.md` — a real actors table, a weekly operating rhythm, and CH-01..CH-08 acceptance criteria.
 6. `SignUpFlow/docs/TESTING.md` — the seven-tier table and the reason tiers run in separate processes.

@@ -27,7 +27,7 @@
 - Read code aloud by structure, not punctuation: "in `recent_context`, walk segments newest-first,
   break when the next line would exceed the budget, but never break before the first segment."
 - **Announce every file pointer verbally as well as showing it.** "I am opening
-  `Sources/ListenToMeCore/ConversationStore.swift`, lines 56 through 67" — a viewer who cannot see the
+  `Sources/ListenToMeCore/ConversationStore.swift`, lines 76 through 87" — a viewer who cannot see the
   screen still needs the path. Do the same in captions.
 
 ## Transcript structure

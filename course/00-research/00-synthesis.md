@@ -25,7 +25,7 @@ Across all three repos, the same engineering culture shows up — call it the **
    positioning) execute)        edits)        tests)
 ```
 
-1. **Study before solutioning.** ListenToMe's v1 spec began with a 12-competitor analysis that positioned the product at an empty market corner ("the transparent, on-device BYOK inverse of Cluely"). ai_qe's first principle: "Baseline before solutioning." SignUpFlow's research.md files evaluate options with pros/cons before committing. Positioning is a research artifact, not a slogan.
+1. **Study before solutioning.** ListenToMe's v1 spec began with a 13-competitor analysis that positioned the product at an empty market corner ("the transparent, on-device BYOK inverse of Cluely"). ai_qe's first principle: "Baseline before solutioning." SignUpFlow's research.md files evaluate options with pros/cons before committing. Positioning is a research artifact, not a slogan.
 
 2. **Spec what agents can execute.** All three repos write machine-consumable intent: ListenToMe's design specs contain protocol-level interfaces and non-goals; SignUpFlow's spec-kit produces spec/research/data-model/plan/tasks/contracts artifacts, each with acceptance criteria a different agent session can verify; ai_qe's `_data/*.json` files make slide counts, routes, and gates reconcile by construction. The spec is the interface between human intent and agent execution.
 
@@ -39,7 +39,7 @@ Across all three repos, the same engineering culture shows up — call it the **
 
 ## Ten transferable principles (the course's spine)
 
-1. **Positioning is engineering.** A 12-competitor comparison table with qualified, sourced claims (ListenToMe) is a stronger product decision tool than any brainstorm.
+1. **Positioning is engineering.** A 13-competitor comparison table with qualified, sourced claims (ListenToMe) is a stronger product decision tool than any brainstorm.
 2. **Write specs agents can execute** — interfaces, non-goals, acceptance criteria, test-first tasks with exact file paths.
 3. **Constrain agents with verifiable rules, layered by scope**, and keep instruction files under ~200 lines.
 4. **Separate the testable core from platform glue** with protocols/seams (ListenToMeCore vs App/; pure data models vs Jekyll rendering).

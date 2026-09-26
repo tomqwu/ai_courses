@@ -19,7 +19,7 @@ segment is the rule plus the three mechanisms that make it true."
 | 2:00 | `api/dependencies.py:46-58` | `verify_org_member` compares `person.org_id != org_id` and raises 403 "Access denied: not a member of this organization". Routes that take an explicit org or person call it before any query. |
 | 3:30 | `api/dependencies.py:78-121` | The tenant-bound reload. The JWT's `sub` and `org_id` claims are both required; the person is reloaded by id **and** tenant **and** active status. A deleted or deactivated person invalidates the credential. The token points at a row; it does not replace it. |
 | 5:00 | `AGENTS.md:58` | "Never read user state from the request body." The body is attacker-controlled. The moment a route trusts `org_id` from JSON, no downstream filter saves you. |
-| 6:00 | `docs/API_AUTHORIZATION.md:21-24` | The four-row status contract. 401 invalid token; 403 missing token (HTTPBearer's default, documented rather than "fixed"); 403 explicit foreign org; 404 guessed id. |
+| 6:00 | `docs/API_AUTHORIZATION.md:21-24` | The four-row status contract. 401 invalid token; missing token: the doc says 403, but the pinned FastAPI answers 401 and SignUpFlow's own test asserts 401 — the doc drifted; 403 explicit foreign org; 404 guessed id. |
 | 7:30 | `api/dependencies.py:61-66` | Why 404. `get_person_in_actor_org` filters by id **and** the actor's org, so foreign and absent look identical. A uniform 403 confirms existence and lets an account enumerate your id space. |
 | 9:00 | `AGENTS.md:59`; `docs/playbooks/coverage.json` BO-02 | Bootstrap: signup atomically creates org plus first admin; no public empty-org endpoint; later accounts need single-use invitations. Growth is invitation-only by construction. |
 
@@ -36,7 +36,7 @@ write your own project's P0 rule and status table in imperative voice.
 **Recording notes.**
 - Enlarge the `filter(...)` call and the four-row table; those are the two things viewers must read.
 - If over time, cut the signup bootstrap beat to one sentence — it returns in M5.2.
-- Do not say the 403-on-missing-token is "wrong" or "a FastAPI bug". It is documented and tested.
+- Do not call either code "wrong". The point is that SignUpFlow's doc and its test disagree, and the test is the one that ran.
 - Do not quote any test count in this segment; the evidence number belongs to M5.3 and carries a date.
 
 ## M5.2 — RBAC done right: permissions ≠ qualifications
@@ -53,10 +53,10 @@ that refusal is a data-model decision, and how the whole authorization surface b
 | 0:15 | `api/roles.py:8`; `CLAUDE.md` "RBAC" | One `roles` JSON array, two vocabularies. Permission roles: exactly `admin` or `volunteer`. Qualifications: `usher`, `coach`, `worship_leader`, `sound`, `musician`, `children_leader`. Different questions: what may this account do vs. what can this person do. |
 | 1:45 | `docs/playbooks/church.md:14-24` | The actors table. The Worship coordinator is `volunteer + worship_leader`; the Ministry approver is "Human organizational responsibility". No department-scoped manager level exists. |
 | 3:00 | `api/roles.py:38-53` | `normalize_roles`. Exact matches are permission roles; everything else is a qualification; `"ADMIN"` raises "is an ambiguous permission role"; two permission roles raise "Select exactly one account access role". Drift fails loudly. |
-| 4:30 | `api/route_auth_policy.py:8-171` | The executable matrix. Five classes: public (7), public-token (6), public-callback (2), member (50), admin (78). `ROUTE_AUTH_POLICY` is the source of truth; `docs/API_AUTHORIZATION.md:3` says so. |
-| 6:00 | `tests/unit/test_api_route_auth_policy.py` | 37 lines, three failure classes. Missing and stale are set equality against the live route table; miswiring walks each route's dependency tree — admin routes must depend on `get_current_admin_user`, member routes on `get_current_user`, public routes on neither. |
-| 7:30 | `docs/API_AUTHORIZATION.md:59-76` | The six-step change protocol, read as a PR checklist. Emphasise step 2 (filter in the route query itself, not a helper) and step 4 (assert forbidden writes leave the database unchanged). |
-| 8:45 | `docs/API_AUTHORIZATION.md:74-76` | Close the fence: "Do not use the tenancy warning listener as authorization." A warning log is observability; the filter is the control. |
+| 4:30 | `api/route_auth_policy.py:8-171` | The executable matrix. Five classes: public (7), public-token (6), public-callback (4), member (50), admin (78). `ROUTE_AUTH_POLICY` is the source of truth; `docs/API_AUTHORIZATION.md:3` says so. |
+| 6:00 | `tests/unit/test_api_route_auth_policy.py` | 38 lines, three failure classes. Missing and stale are set equality against the live route table; miswiring walks each route's dependency tree — admin routes must depend on `get_current_admin_user`, member routes on `get_current_user`, public routes on neither. |
+| 7:30 | `docs/API_AUTHORIZATION.md:101-118` | The six-step change protocol, read as a PR checklist. Emphasise step 2 (filter in the route query itself, not a helper) and step 4 (assert forbidden writes leave the database unchanged). |
+| 8:45 | `docs/API_AUTHORIZATION.md:116-118` | Close the fence: "Do not use the tenancy warning listener as authorization." A warning log is observability; the filter is the control. |
 
 **Demo cue.** Open `api/route_auth_policy.py` and show one `admin` name, then open the matching route
 in the routers and point at `Depends(get_current_admin_user)`. Then state the miswire out loud: if

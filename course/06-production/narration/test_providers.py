@@ -28,7 +28,8 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from captions import build_cues, check_caption_words, words
-from providers import ElevenLabsProvider, ProviderError, SayProvider, split_sentences
+from providers import (EspeakProvider, ElevenLabsProvider, ProviderError, SayProvider, preview_provider_for_this_machine,
+                       split_sentences)
 
 HAVE_FFMPEG = bool(shutil.which("ffmpeg")) and bool(shutil.which("ffprobe"))
 SENTENCE_A = "The pipeline records a decision, not just a result."
@@ -265,11 +266,13 @@ class TestElevenLabsAdapter(unittest.TestCase):
 
 
 class TestPreviewProvider(unittest.TestCase):
-    @unittest.skipUnless(HAVE_FFMPEG and shutil.which("say"), "say and ffmpeg are required")
-    def test_preview_measures_each_sentence(self):
+    """The two local engines share one contract: every sentence measured, every word captioned."""
+
+    def _check(self, provider):
         text = f"{SENTENCE_A} {SENTENCE_B}"
         with tempfile.TemporaryDirectory() as tmp:
-            result = SayProvider().synthesize(text, Path(tmp) / "s.mp3")
+            result = provider.synthesize(text, Path(tmp) / "s.mp3")
+            self.assertGreater(result.duration, 1.0)
         self.assertEqual(result.method, "sentence-measured")
         self.assertEqual(len(result.sentences), len(split_sentences(text)))
         # The measured sentences must be ordered and inside the clip.
@@ -278,9 +281,43 @@ class TestPreviewProvider(unittest.TestCase):
             self.assertGreaterEqual(start, previous)
             self.assertGreater(end, start)
             previous = end
+        self.assertLessEqual(previous, result.duration + 0.15)
         cues = build_cues(text, result, {})
         check_caption_words(cues, text)
         self.assertEqual(words(" ".join(c.text for c in cues)), words(text))
+        self.assertEqual(result.receipt["sentences"], 2)
+
+    @unittest.skipUnless(HAVE_FFMPEG and shutil.which("say"), "say and ffmpeg are required")
+    def test_say_measures_each_sentence(self):
+        self._check(SayProvider())
+
+    @unittest.skipUnless(HAVE_FFMPEG and (shutil.which("espeak-ng") or shutil.which("espeak")),
+                         "espeak-ng and ffmpeg are required")
+    def test_espeak_measures_each_sentence(self):
+        self._check(EspeakProvider())
+
+    def test_a_missing_engine_says_what_to_install(self):
+        with mock.patch("providers.shutil.which", return_value=None):
+            with self.assertRaises(ProviderError) as ctx:
+                EspeakProvider()
+            self.assertIn("espeak-ng", str(ctx.exception))
+            with self.assertRaises(ProviderError):
+                SayProvider()
+            with self.assertRaises(ProviderError):
+                preview_provider_for_this_machine()
+
+    def test_preview_picks_the_engine_this_machine_has(self):
+        with mock.patch("providers.shutil.which", side_effect=lambda name: "/bin/x" if name == "say" else None):
+            self.assertEqual(preview_provider_for_this_machine(), "say")
+        with mock.patch("providers.shutil.which", side_effect=lambda name: "/bin/x" if name == "espeak-ng" else None):
+            self.assertEqual(preview_provider_for_this_machine(), "espeak")
+
+    @unittest.skipUnless(HAVE_FFMPEG and (shutil.which("espeak-ng") or shutil.which("espeak")),
+                         "espeak-ng and ffmpeg are required")
+    def test_a_sentence_starting_with_a_dash_is_spoken_not_parsed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            result = EspeakProvider().synthesize("-v is not a flag here. It is spoken.", Path(tmp) / "s.mp3")
+        self.assertEqual(len(result.sentences), 2)
 
 
 if __name__ == "__main__":

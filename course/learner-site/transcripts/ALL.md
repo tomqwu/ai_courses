@@ -11,6 +11,7 @@ Every word spoken in the course, in order. The words are the approved narration 
 - [M6 — The Expertise Product: Evidence, Routing, Editions](#m06) — 28 slides, 16m 14s
 - [M7 — Monetize: Pricing, Packaging, Positioning](#m07) — 28 slides, 15m 47s
 - [M8 — Launch: Sales Page, Email Arc, Capstone](#m08) — 27 slides, 14m 21s
+- [M9 — Ship a Product Catalog with GitHub Pages](#m09) — 25 slides, 0m 0s
 
 <a id="m00"></a>
 
@@ -19,7 +20,7 @@ Every word spoken in the course, in order. The words are the approved narration 
 
 **19 slides · 19 narrated · 10m 2s of audio**
 
-**Voice:** mixed — 18 of 19 recordings are preview audio; the rest were recorded separately. The words below are the approved narration.
+**Voice:** mixed — 18 of 19 recordings are preview audio, the rest are not. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -47,7 +48,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *31.2s · sentence-measured*
 
-> ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is twelve rows, each claim sourced and dated, which is positioning work done as research.
+> ListenToMe is a real macOS meeting copilot you can download and run. It captures your microphone and the meeting's system audio, transcribes locally, then streams AI answers through whichever model you pick: local Ollama, or a cloud provider with your own key. Its proof assets are openable files. The 96% core-coverage badge in the README is a number produced by a test run, not a marketing line. The competition analysis is fourteen rows, each claim sourced and dated, which is positioning work done as research.
 
 ### Slide 5 — Type 2 — SignUpFlow (spec-driven SaaS)
 
@@ -77,7 +78,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *32.7s · sentence-measured*
 
-> Open each of these files as you go. The twelve-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first.
+> Open each of these files as you go. The fourteen-row competitor table is Study, because positioning is research you can cite. The first principle in the AI and QE principles file is literally baseline before solutioning: measure before you claim. Spec appears as Given/When/Then acceptance stories in a security-hardening spec. Note that spec 014 has no tasks file, so the tasks format is best read from spec 019, which has one. Build turns a spec into checkbox tasks that cite exact file paths, tests first.
 
 ### Slide 10 — Stages 4–6 — real artifacts
 
@@ -95,13 +96,13 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *33.2s · sentence-measured*
 
-> Everything in this segment is a command you type, not a concept you remember. Clone the three case studies, verify you have Python 3.11 or newer, install Ollama and pull a small local model, run SignUpFlow's solver on the sample data, run TinyCopilot's test suite, and post your first win. The whole sequence takes under fifteen minutes, and most of that is download time. Do it in order, and do not skip the test suite. It is the exact acceptance gate you will re-implement in Module 2, and seeing it green now tells you your environment is real.
+> Everything in this segment is a command you type, not a concept you remember. Clone the three case studies, verify you have Python 3.11 or newer, install Ollama and pull a small local model, run SignUpFlow's solver on the sample data, and post your first win. The whole sequence takes about thirty minutes, and most of that is download time. Do it in order, and before Module 1 do not skip the TinyCopilot test suite. It is the exact acceptance gate you will re-implement in Module 2, and seeing it green now tells you your environment is real.
 
 ### Slide 13 — First ship-win — clone and run the solver
 
 *36.7s · sentence-measured*
 
-> Clone the three repositories first, then, inside SignUpFlow, run make setup. That installs the Poetry environment, runs migrations, and seeds data. The init command writes three YAML files: organization, people, and events. The solve command runs the real greedy scheduler. On the sample workspace it prints a health score of 100.0 out of 100, with zero hard and zero soft violations and a fairness standard deviation of 0.43. Capture that health-score line and keep the raw terminal output, because it is your first artifact. Do not retype it from memory.
+> Clone the three repositories first, then, inside SignUpFlow, run make setup. That installs the Poetry environment, runs migrations, and seeds data. The init command writes three YAML files: organization, people, and events. The solve command runs the real greedy scheduler. On the sample workspace it prints a health-score line, the violation counts, and a fairness standard deviation. The numbers are whatever the revision you cloned produces; at the current head the sample scores zero out of one hundred with two hard violations, and that is fine. Capture the whole block around the health-score line and keep the raw terminal output, because the run record is your first artifact, not the number. Do not retype it from memory.
 
 ### Slide 14 — Local LLM in three commands
 
@@ -119,7 +120,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *35.0s · sentence-measured*
 
-> The lab has six steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, run the TinyCopilot tests, and post to the community. The goal is every tool installed and proven with real output, and the three pass gates are solver output with a health score, an ollama list showing at least one model, and a TinyCopilot suite that is green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is the only automatic fail.
+> The lab has five steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, start your evidence log, and post to the community. The goal is every tool installed and proven with real output, and the pass gate is two things: the solver block with its health-score line, and an ollama list showing at least one model. Before Module 1, run the TinyCopilot suite; it is the Module 2 gate, green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is the only automatic fail.
 
 ### Slide 17 — Quiz M0
 
@@ -146,7 +147,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **25 slides · 25 narrated · 14m 23s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -174,13 +175,13 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *30.0s · sentence-measured*
 
-> Segment one is governance, and it starts with the stack. Four files, one canonical source. The baseline lives in AGENTS.md, and Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory all read it. Claude Code does not read AGENTS.md natively, so CLAUDE.md links to it at the top and adds Claude-specific addenda. Copilot needs its own restatement file under .github. The constitution sits above all of the agent files as the single source of truth.
+> Segment one is governance, and it starts with the stack. Four files, one canonical source. The baseline lives in AGENTS.md, and Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory all read it. SignUpFlow's CLAUDE.md links to it at the top and adds Claude-specific addenda. A link is not an import: Claude Code opens a linked file only if it decides to. So in your own repo, CLAUDE.md imports AGENTS.md with a single at-sign line, and both load at launch. Copilot needs its own restatement file under .github. The constitution sits above all of the agent files as the single source of truth.
 
 ### Slide 5 — Proof: the stack, with real line counts
 
 *37.3s · sentence-measured*
 
-> These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is seventy-nine lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred seventy-seven. CLAUDE.md is one hundred forty-three, and the Copilot instructions file is one hundred nineteen. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.
+> These lengths are real, and you can check them yourself — and the constitution's own head is now on the slide. The constitution is eighty-five lines, and it opens with one sentence of purpose: a roster and scheduling system with email and SMS notifications. AGENTS.md is one hundred eighty-eight. CLAUDE.md is one hundred fifty-four, and the Copilot instructions file is one hundred twenty-seven. All four sit under the roughly two-hundred-line cap that the house style sets. Open them in your own clone and count if you want to verify. Why the cap matters: a rule file an agent cannot hold in context is a rule file it will not follow.
 
 ### Slide 6 — House style: a rule must be verifiable
 
@@ -198,7 +199,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *34.2s · sentence-measured*
 
-> A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is seventy-nine lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands.
+> A constitution is not a longer AGENTS.md. It holds only the few things that must never drift. SignUpFlow's version is eighty-five lines with four principles: Native First, which prefers plain Poetry and SQLite over Docker locally; Test-Driven Implementation; Simplicity and YAGNI; and Safety and Reliability. Safety is concrete. Email and SMS are disabled by default, and payments must be mocked or disabled locally. Autonomy is fixed too: YOLO mode is disabled, and agents may commit finished work but never run unchecked destructive commands.
 
 ### Slide 9 — Precedence: five levels, one tie-breaker
 
@@ -222,7 +223,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *34.9s · sentence-measured*
 
-> Segment two is specification. SignUpFlow builds features through GitHub's spec-kit slash commands, in this order: constitution, specify, clarify, plan, checklist, tasks, analyze, and implement. Each step produces a file, and those files are the interface between your intent and an agent session that has no memory of your conversation. The output is a folder of artifacts under specs. Seventeen spec folders exist in the repo today, so this is not theory. The pipeline's answer to the agent did the wrong thing is almost always the spec did not say.
+> Segment two is specification. SignUpFlow builds features with GitHub's spec-kit. Version one point oh runs the constitution once per project, then five steps for each feature: specify, plan, tasks, implement, and converge. Converge checks the code against the spec and adds any unmet work as new tasks. Clarify, checklist, and analyze are optional. SignUpFlow's own docs still use the older dotted command names for the same steps. Each step produces a file, and those files are the interface between your intent and an agent session that has no memory of your conversation. The output is a folder of artifacts under specs. Seventeen spec folders exist in the repo today, so this is not theory. The pipeline's answer to the agent did the wrong thing is almost always the spec did not say.
 
 ### Slide 13 — Each artifact has one job
 
@@ -282,7 +283,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *35.1s · sentence-measured*
 
-> Now you build your own version of all of it. Lab M1 takes about two hours. You create a starter repo and write a constitution of at most eighty lines and an AGENTS.md of at most two hundred. Then a spec folder for a small todo command feature: the spec, a plan with its gate, and tasks. Then you run the TDD loop for real: failing test first, watch it fail, implement, watch pytest pass. You record the red run, the green run, the environment, the head SHA, and your limitations. The pass gate is objective: the artifacts exist and pytest exits zero.
+> Now you build your own version of all of it. Lab M1 takes about two hours. You create a starter repo and write a constitution of at most eighty lines and an AGENTS.md of at most two hundred, with a CLAUDE.md that imports it and one hook that checks your evidence log. Then a spec folder for a small todo command feature: the spec, a plan with its gate, and tasks. Then you run the TDD loop for real: failing test first, watch it fail, implement, watch pytest pass. You record the red run, the green run, the environment, the head SHA, and your limitations. The pass gate is objective: the artifacts exist and pytest exits zero.
 
 ### Slide 23 — Quiz M1
 
@@ -294,7 +295,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *45.8s · sentence-measured*
 
-> Six lines, one idea each. Governance: a seventy-nine-line constitution above a one-hundred-seventy-seven-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.
+> Six lines, one idea each. Governance: a eighty-five-line constitution above a one-hundred-eighty-eight-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.
 
 ### Slide 25 — Discussion prompt
 
@@ -309,7 +310,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **26 slides · 26 narrated · 15m 4s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -319,7 +320,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *29.6s · sentence-measured*
 
-> Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until one hundred ninety-one tests pass. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision.
+> Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until its whole test suite passes. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision.
 
 ### Slide 2 — By the end you can…
 
@@ -343,7 +344,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *46.8s · sentence-measured*
 
-> A seam is a protocol the pure core owns and the platform side implements, and the core declares three of them. The table shows all three; the code shows two. AudioCapturing exposes a status stream, a chunk stream, and start and stop, and the app implements it with AVAudioEngine and ScreenCaptureKit. Transcribing says partials and finals arrive, implemented by SpeechAnalyzer or WhisperKit. LLMProvider is the smallest: an id and one streaming function returning an async throwing stream of strings, implemented by an Ollama HTTP client. The core never names AVFoundation or Ollama; it only names these protocols, and that inversion is what lets the test suite inject mocks. Add a fourth transcription engine tomorrow, and nothing below the Transcribing protocol changes.
+> A seam is a protocol the pure core owns and the platform side implements, and the core declares three of them. The table shows all three; the code shows the first. AudioCapturing exposes a status stream, a chunk stream, and start and stop, and the app implements it with AVAudioEngine and ScreenCaptureKit. Transcribing says partials and finals arrive, implemented by SpeechAnalyzer or WhisperKit. LLMProvider is the smallest: an id, a prompt-size limit, and two streaming functions, one for the answer and one that also carries the model's reasoning. Two providers implement it: an Ollama client in the core, and an Apple Intelligence provider on the platform side. The core never names AVFoundation or Ollama; it only names these protocols, and that inversion is what lets the test suite inject mocks. Add a fourth transcription engine tomorrow, and nothing below the Transcribing protocol changes.
 
 ### Slide 6 — Three engines, one seam
 
@@ -355,7 +356,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *44.6s · sentence-measured*
 
-> ConversationStore is the single source of truth. It keeps a log of finals plus one current partial, and applying a result appends finals and replaces the partial. The context window walks utterances newest-first, keeping each while it fits, and always keeps the newest even if that one alone exceeds the budget, so the window is never empty. The code on this slide is the real signature from ContextEngine: buildContext takes the store, optional notes, and a maxChars budget that defaults to 4,000 characters. Recap and action-item prompts get 100,000, because they have to cover the whole conversation. Notice the budget is a parameter with a default at the call surface, not a constant buried in a function body — tests can see it and labs can vary it.
+> ConversationStore is the single source of truth. It keeps a log of finals plus one current partial per speaker source, and applying a result appends a final or replaces that source's partial. The context window walks utterances newest-first, keeping each while it fits, and always keeps the newest even if that one alone exceeds the budget, so the window is never empty. The code on this slide is the real signature from ContextEngine: buildContext takes the store, optional notes, and a maxChars budget that defaults to 4,000 characters. Recap and action-item prompts get 100,000, because they have to cover the whole conversation. Notice the budget is a parameter with a default at the call surface, not a constant buried in a function body — tests can see it and labs can vary it.
 
 ### Slide 8 — When the engine gives no partials
 
@@ -367,7 +368,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *43.0s · sentence-measured*
 
-> This is the first proof slide, and it sets a pattern for the course: every claim we make has a file pointer you can open, and that pointer resolves. The loop is eleven lines. It walks utterances newest-first and breaks before exceeding the budget, but only once something is already collected. That is the entire guarantee, and it lives in the guard: the newest segment is always included, even when it alone blows the budget, so the context window is never empty. The default budget of 4,000 characters lives in ContextEngine. Read the loop rather than trusting the bullets — the comment in the source states exactly what to verify. The 96 percent core coverage badge and the 95 percent floor are downstream consequences of this kind of layering.
+> This is the first proof slide, and it sets a pattern for the course: every claim we make has a file pointer you can open, and that pointer resolves. The loop is short. It walks utterances newest-first, charges each one its prompt cost, and breaks before exceeding the budget, but only once something is already collected. That is the entire guarantee, and it lives in the guard: the newest segment is always included, even when it alone blows the budget, so the context window is never empty. The default budget of 4,000 characters lives in ContextEngine. Read the loop rather than trusting the bullets — the comment in the source states exactly what to verify. The 96 percent core coverage badge and the 95 percent floor are downstream consequences of this kind of layering.
 
 ### Slide 10 — M2.2 — Three roles, three models
 
@@ -433,25 +434,25 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *48.5s · sentence-measured*
 
-> Ollama streams newline-delimited JSON over the chat endpoint, and it can return HTTP 200 and then an error object inside the stream, so the provider types its failures as an enum with three cases. A server error is an in-stream error event. Incomplete means the lines ended without a done flag, and empty means the stream completed with no visible text. Each case carries a user-facing message, so truncation can never finish as success. Ollama's own API documentation now shows the final line of a stream carrying done: true plus a done reason such as stop — the provider trusts none of that until the answer is complete and non-empty. This design is a scar, not a guess: a review found the old provider let truncated streams pass while two hundred and fifteen core tests were green and coverage sat above ninety-seven percent.
+> Ollama streams newline-delimited JSON over the chat endpoint, and it can return HTTP 200 and then an error object inside the stream, so the provider types its failures as an enum. A server error is an in-stream error event, and unreachable means the daemon never answered. Incomplete means the lines ended without a done flag. Empty means the stream completed with no visible text, and thinking-only means the model reasoned but never answered. Each case carries a user-facing message, so truncation can never finish as success. Ollama's own API documentation now shows the final line of a stream carrying done: true plus a done reason such as stop — the provider trusts none of that until the answer is complete and non-empty. This design is a scar, not a guess: a review found the old provider let truncated streams pass while two hundred and fifteen core tests were green and coverage sat above ninety-seven percent.
 
 ### Slide 21 — Flicker is information; silence is a lie
 
 *28.3s · sentence-measured*
 
-> Open the review and read gap G06. The test suite validated what had been built, and what had been built was wrong. Two booleans, a completion flag and a content flag, are what the streaming loop now tracks. The fix was not more coverage; it was an honest failure model. Swallowing stream errors to avoid UI flicker is exactly backwards, because the user then gets a silently incomplete answer instead of a retry affordance. Flicker is information; silence is a lie.
+> Open the review and read gap G06. The test suite validated what had been built, and what had been built was wrong. A completion flag and a content flag are what the streaming loop now tracks, with a third that tells an empty answer from one spent entirely on reasoning. The fix was not more coverage; it was an honest failure model. Swallowing stream errors to avoid UI flicker is exactly backwards, because the user then gets a silently incomplete answer instead of a retry affordance. Flicker is information; silence is a lie.
 
 ### Slide 22 — Budgets come from observation
 
 *36.7s · sentence-measured*
 
-> Every number on this slide is a cost ceiling, not a feature. Quick evaluation forces thinking off and temperature zero. The 3,072-token cap was chosen from a real truncation: live testing showed planning text leaking through even with thinking off, which exhausted the former 1,600-token budget halfway through valid JSON. The cap is the smallest budget that stopped that observed truncation. Speech batches run five seconds with a twenty-four character eligibility rule, and response caps are thirty seconds or sixteen kibibytes. Summaries refresh every thirty seconds and Deep every sixty, serially.
+> Every number on this slide is a cost ceiling, not a feature. Quick evaluation forces thinking off and temperature zero. The 3,072-token cap was chosen from a real truncation: live testing showed planning text leaking through even with thinking off, which exhausted the former 1,600-token budget halfway through valid JSON. The cap is the smallest budget that stopped that observed truncation. Speech batches run five seconds with a twenty-four character eligibility rule, and response caps are thirty seconds or sixteen kibibytes. Full reviews run serially, with at least thirty seconds between Summary runs and sixty between Deep runs, and never as periodic polling.
 
 ### Slide 23 — Lab M2 — Build TinyCopilot's core
 
 *35.3s · sentence-measured*
 
-> Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports one hundred ninety-one tests passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model.
+> Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports every test passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model.
 
 ### Slide 24 — Quiz M2 — eight questions
 
@@ -478,7 +479,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **27 slides · 27 narrated · 14m 58s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -506,7 +507,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *40.8s · sentence-measured*
 
-> Here is the proof, and now it is on the slide: the AIProcessingMode enum from ModelPrivacy.swift, lines three through thirteen. Four cases: off, local, apple, cloud. Four labels, each written to be true rather than to sell, and the code block is the enum itself. The one to memorize is cloud: it does not say enhanced; it says it sends the transcript and context. Read the labels on the slide — they are the strings the app actually ships. The README section on AI processing mode carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud without a deliberate, visible choice; the mode is the contract, and the label tells the truth about it.
+> Here is the proof, and now it is on the slide: the AIProcessingMode enum at the top of ModelPrivacy.swift. Four cases: off, local, apple, cloud. Four labels, each written to be true rather than to sell, and the code block is the enum itself. The one to memorize is cloud: it does not say enhanced; it says it sends the transcript and context. Read the labels on the slide — they are the strings the app actually ships. The README section on AI processing mode carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud without a deliberate, visible choice; the mode is the contract, and the label tells the truth about it.
 
 ### Slide 5 — A localhost URL proves nothing
 
@@ -524,13 +525,13 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *41.9s · sentence-measured*
 
-> This guard is the exhibit on the slide: ModelPrivacy.swift, lines seventeen to twenty-four, one guard clause. Parse the JSON. Require the remote host and remote model fields to be absent. Require the details format and the model info to be non-empty. Otherwise return false — and because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Follow the guard line by line: every condition must hold for the function to say true, and any surprise says false. The trust boundary is the daemon's self-description, verified structurally. A localhost URL or a model name alone is insufficient — that is exactly what the doc comment states.
+> This guard is the exhibit on the slide: the isVerifiedLocal function in ModelPrivacy.swift, one guard clause. Parse the JSON. Require the remote host and remote model fields to be absent. Require the details format and the model info to be non-empty. Otherwise return false — and because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Follow the guard line by line: every condition must hold for the function to say true, and any surprise says false. The trust boundary is the daemon's self-description, verified structurally. A localhost URL or a model name alone is insufficient — that is exactly what the doc comment states.
 
 ### Slide 8 — Three defenses around the check
 
 *37.7s · sentence-measured*
 
-> In local-only mode, three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or the IPv6 loopback address. Anything else throws before a single byte of your prompt is written. Second, the provider posts to the show endpoint and requires an HTTP two hundred response plus a verified-local metadata result, and this is re-verified on every request, so switching models mid-session cannot skip the check. Third, redirects. You can read all three defenses in OllamaProvider.swift, lines ninety-nine to one hundred nineteen.
+> In local-only mode, three layers run before every chat request. First, the base URL host must be localhost, 127.0.0.1, or the IPv6 loopback address. Anything else throws before a single byte of your prompt is written. Second, the provider posts to the show endpoint and requires an HTTP two hundred response plus a verified-local metadata result, and this is re-verified on every request, so switching models mid-session cannot skip the check. Third, redirects. You can read all three defenses together in OllamaProvider.swift, in the local-only branch of the streaming request.
 
 ### Slide 9 — Redirects refused
 
@@ -566,7 +567,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *34.9s · sentence-measured*
 
-> The coverage step sits in the continuous integration workflow at lines thirty-six to forty-two — the YAML on the slide is that step, and the logic lives in the script it calls. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite with the coverage floor. The two build jobs also run a dependency-lock diff, so the artifact you test is built from locked dependencies rather than whatever resolves that day. That is release discipline appearing in the pipeline, not in a document: the floor is invoked with a literal ninety-five in the job step, where every contributor can read it.
+> The coverage step is the core job in the continuous integration workflow — the YAML on the slide is that step, and the logic lives in the script it calls. The workflow has three jobs: the macOS app build, the iOS app build, and the core suite with the coverage floor. The two build jobs also run a dependency-lock diff, so the artifact you test is built from locked dependencies rather than whatever resolves that day. That is release discipline appearing in the pipeline, not in a document: the floor is invoked with a literal ninety-five in the job step, where every contributor can read it.
 
 ### Slide 15 — The contract test CI can't run
 
@@ -578,7 +579,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *39.1s · sentence-measured*
 
-> This test is OllamaContractE2ETests.swift, lines four to twenty-two, and the skip is the exhibit: XCTSkipUnless on an environment variable, so a normal swift test run and continuous integration never touch the network — the test is skipped loudly, with a message that says how to run it, not hidden behind a silent pass. The make e2e target sets that gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses, and require non-empty streamed content. Skipped is a state CI reports honestly; a test that cannot run in CI but can run on your Mac is still worth shipping.
+> This test is OllamaContractE2ETests.swift, and the skip is the exhibit: XCTSkipUnless on an environment variable, so a normal swift test run and continuous integration never touch the network — the test is skipped loudly, with a message that says how to run it, not hidden behind a silent pass. The make e2e target sets that gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses, and require non-empty streamed content. Skipped is a state CI reports honestly; a test that cannot run in CI but can run on your Mac is still worth shipping.
 
 ### Slide 17 — The tier only a human can run
 
@@ -592,17 +593,17 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 > On September tenth, twenty twenty-six, a production review of the one point three point zero candidate produced a thirty-four-item gap inventory, each item with a priority and an evidence class. The team had two hundred fifteen passing core tests and ninety-seven point two four percent coverage in hand. The review still recommended not promoting the release. Item G01 is the privacy hole from earlier in this module, sitting happily inside ninety-seven percent coverage, because the tests tested what was built. Tests validate what you built. Review validates what you shipped.
 
-### Slide 19 — M3.3 — Done ends at a verified download
+### Slide 19 — M3.3 — Done is merged; published is proven
 
 *33.5s · sentence-measured*
 
-> ListenToMe's AGENTS.md makes release the default end of any fix or feature. A local build, a local install, or a draft pull request is not the end of the workflow. There are six steps: implement and run tests, lint, and coverage; verify in the installed production app; bump the version and notes; commit, push, and verify hosted continuous integration; publish the signed, notarized disk image targeting the exact source commit; and finally, download the published asset and verify its checksum. That last step is the one most projects skip.
+> ListenToMe's AGENTS.md separates two words most projects blur. A change is done when it is merged to main with the three required checks green, its tests passing, and every affected doc updated. Publication is a separate, batched step, a release train: at most one macOS release a day, and never one release per merged pull request. So the status report for finished work is honest and short: merged to main, riding the next release train. Then the file names three rungs, and you claim only the one your evidence supports. A candidate is built and checked locally. Verified adds installed-app acceptance for the paths the change affects. And published means the asset was downloaded again, its checksum matched the local artifact, and the tag sits on the exact source commit.
 
 ### Slide 20 — Proof: download it and check the hash
 
 *29.3s · sentence-measured*
 
-> The mechanics are in the releasing document, around lines one hundred twenty to one hundred thirty-four. After publishing, you download the hosted asset and compare its SHA-256 hash against the verified local disk image, and you create the release with the target pinned to the exact commit, so the tag cannot silently point at a different one. The policy also has an honesty clause: if a real blocker stops publication, name the blocker and preserve the candidate. Do not describe the work as released.
+> Here is the top rung in practice, from the verification ladder in AGENTS.md and the same table in the releasing document. After publishing, you download the hosted asset and compare its SHA-256 hash against the verified local disk image, and you create the release with the target pinned to the exact commit, so the tag cannot silently point at a different one. A published version's binary is never replaced. And the honesty clause: if a real blocker stops publication, name it precisely, preserve the candidate and its evidence, and report the work as merged but not published. Never describe it as released.
 
 ### Slide 21 — Two bundle ids, on purpose
 
@@ -614,7 +615,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *31.2s · sentence-measured*
 
-> The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is twelve rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first.
+> The other half of shipping is knowing and proving what your product is against what already exists. ListenToMe's competition analysis is built like a test suite. It opens with a dated header stating that where a detail could not be confirmed from a primary source, it is qualified with approximately or reportedly. The table is fourteen rows by nine columns, and every competitor entry ends with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud, even when it markets itself as local-first.
 
 ### Slide 23 — The one-liner and its columns
 
@@ -626,7 +627,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *35.8s · sentence-measured*
 
-> Lab M3 is three hours and takes TinyCopilot from works to trustworthy. Step one, write the red-team test first: a mocked show response with a remote host set must be rejected in local mode. Then implement the privacy mode, the local model verification, host enforcement, and redirect refusal. Step two, add the real-language-model contract test, gated by the LAB_E2E environment variable. Step three, set the coverage floor and record a failure run. Step four, build the comparison table. The pass gate is make lab-m3 finishing green with forty-nine tests passed.
+> Lab M3 takes TinyCopilot from works to trustworthy. Step zero parks the shipped solution, so your red run is real. Step one, write the red-team test first: a mocked show response with a remote host set must be rejected in local mode. Then implement the privacy mode, the local model verification, host enforcement, and redirect refusal. Step two adds the real-language-model contract test, gated by the LAB_E2E environment variable. Step three sets the coverage floor and records a failure run, and step three-b adds behavioural evals above it. Step four builds the comparison table. Step five tags the tested commit and checksums the built artifact, and you record it as a candidate, because nothing is published yet. The suite gate is make lab-m3 finishing green, every test passed.
 
 ### Slide 25 — Quiz M3
 
@@ -638,7 +639,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *25.0s · sentence-measured*
 
-> Five sentences to carry out of this module. Privacy is a mode, with truthful labels, and metadata is verified on every request. A localhost URL proves nothing, because a local daemon can serve cloud aliases. Test in tiers, and remember that coverage is the entry fee, not the verdict. Done means a verified download, not a local build. And positioning derives from a sourced, qualified table.
+> Five sentences to carry out of this module. Privacy is a mode, with truthful labels, and metadata is verified on every request. A localhost URL proves nothing, because a local daemon can serve cloud aliases. Test in tiers, and remember that coverage is the entry fee, not the verdict. Done means merged, and published means a download you verified yourself. And positioning derives from a sourced, qualified table.
 
 ### Slide 27 — Discussion prompt
 
@@ -653,7 +654,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 18m 16s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -669,13 +670,13 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *38.0s · sentence-measured*
 
-> Read these as six verbs, not topics: each is something you will do in the lab. You will walk a production spec folder artifact by artifact, run the chain from specify through clarify, plan, checklist, and tasks, and judge specs by the stranger test. You will enforce the checklist gate's pass rules, record change with severity-tagged review, and catch drift in generated artifacts. The last two separate a demo from a deliverable. Anyone can generate a beautiful spec folder; the discipline is reviewing it locally with findings that name a severity and a file. If you remember two things today: the stranger test and the drift checks.
+> Read these as six verbs, not topics: each is something you will do in the lab. You will walk a production spec folder artifact by artifact, run the chain from specify through clarify, the checklist gate, plan, and tasks, and judge specs by the stranger test. You will enforce the checklist gate's pass rules, record change with severity-tagged review, and catch drift in generated artifacts. The last two separate a demo from a deliverable. Anyone can generate a beautiful spec folder; the discipline is reviewing it locally with findings that name a severity and a file. If you remember two things today: the stranger test and the drift checks.
 
 ### Slide 3 — M4.1 — The command chain
 
 *33.0s · sentence-measured*
 
-> Here is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote, so nothing is carried in anyone's head. Specify writes the WHAT, clarify burns a small question budget, then research, data model, and plan add the HOW and the Constitution Check. The checklist gates, contracts pin the seams, and tasks turn it into work. The command definitions live in the dot-claude commands folder and the templates in dot-specify templates, both openable in the clone. Notice there is exactly one gate, and it is cheap.
+> Here is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote, so nothing is carried in anyone's head. Specify writes the WHAT and its own requirements checklist, and clarify burns a small question budget. The checklist gates before any planning. Then plan adds the HOW: research decisions, the data model, contracts that pin the seams, and the Constitution Check. Tasks turn it into work. Spec-kit one point oh closes the loop: implement, then converge, which checks the code against the spec and adds unmet work as new tasks, until it reports converged. SignUpFlow predates one point oh, so its older, dotted command definitions live in the dot-claude commands folder and the templates in dot-specify templates, both openable in the clone. Notice there is exactly one gate, and it is cheap.
 
 ### Slide 4 — Proof: `spec.md` owns WHAT
 
@@ -705,7 +706,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *41.5s · sentence-measured*
 
-> The quickstart is six hundred forty-three lines of timed deployment with exact commands, plus prerequisites, a verification checklist, and troubleshooting. The requirements checklist is fifty lines and grades three groups: Content Quality, Requirement Completeness, and Feature Readiness. Its first rule bans implementation details — a spec-quality rule, enforced by a checklist. And the verdict is on the slide, verbatim: all checks passed, quality score one hundred percent, all checklist items passed. It was validated on October twenty-second, twenty twenty-five, generated by the speckit checklist command. The grade is a gate output, not a self-assessment in a README.
+> The quickstart is six hundred forty-three lines of timed deployment with exact commands, plus prerequisites, a verification checklist, and troubleshooting. The requirements checklist is fifty lines and grades three groups: Content Quality, Requirement Completeness, and Feature Readiness. Its first rule bans implementation details — a spec-quality rule, enforced by a checklist. And the verdict is on the slide, verbatim: all checks passed, quality score one hundred percent, all checklist items passed. It was validated on October twenty-second, twenty twenty-five, by the specify step's own quality check, which writes this file before planning. The grade is a gate output, not a self-assessment in a README.
 
 ### Slide 9 — Proof: `tasks.md` — Phase 2, and the gap
 
@@ -741,7 +742,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *42.6s · sentence-measured*
 
-> What about what you genuinely do not know yet? Drafts may mark a requirement with a needs-clarification placeholder — for example, a requirement that authenticates users without naming the method. But the checklist's Requirement Completeness group requires that no markers remain before planning. There are two resolution paths. The clarify command runs before plan on a deliberately small budget; this feature's next steps cap it at three questions. Or you document a default in Assumptions, which is how this spec settled ninety-day log retention, one-hour token expiry, and a thirty-second TOTP tolerance. An honest footnote: the clarify command definition says up to five questions, a drift we will return to.
+> What about what you genuinely do not know yet? Drafts may mark a requirement with a needs-clarification placeholder — for example, a requirement that authenticates users without naming the method. But the checklist's Requirement Completeness group requires that no markers remain before planning. There are two resolution paths. The clarify command runs before plan on a deliberately small budget; this feature's next steps cap it at three questions. Or you record a default explicitly. This spec wrote its one-hour token expiry and thirty-second TOTP tolerance as functional requirements, while its own generated checklist note claims they sit in Assumptions. Check the note against the spec. An honest footnote: the clarify command definition says up to five questions, a drift we will return to.
 
 ### Slide 15 — The gate's pass rules
 
@@ -789,7 +790,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *40.0s · sentence-measured*
 
-> Now the part that surprises people: generated files lie. Open the onboarding task file and read line three. It says the input is design documents from the specs zero two zero user onboarding folder. But the folder is specs zero zero zero user onboarding. The feature was renumbered at some point, and the generated task file kept the stale path. Nothing failed. No test caught it, no warning fired. It just sat in a generated artifact, waiting for an agent to follow a dead end. Everything in a spec folder is generated output, and generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code.
+> Now the part that surprises people: generated files lie. Open the onboarding task file and read its Input line, near the top. It says the input is design documents from the specs zero two zero user onboarding folder. But the folder is specs zero zero zero user onboarding. The feature was renumbered at some point, and the generated task file kept the stale path. Nothing failed. No test caught it, no warning fired. It just sat in a generated artifact, waiting for an agent to follow a dead end. Everything in a spec folder is generated output, and generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code.
 
 ### Slide 23 — Drift cases 2–3: count and directory
 
@@ -834,7 +835,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **25 slides · 25 narrated · 16m 32s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -868,7 +869,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *39.9s · sentence-measured*
 
-> Four rows, and each one is a decision rather than an accident. An invalid bearer token returns 401, because the credential itself failed and nothing is known about the requester. A missing bearer token on a protected route stays at 403, because that is FastAPI HTTPBearer's default, and SignUpFlow documents the behavior it actually has instead of fixing it on REST-purism grounds. An authenticated actor who names a foreign organization gets 403: valid credential, wrong tenant, a policy denial. And a guessed resource identifier returns 404. Hold on to that last one, because it is the mechanism on the next slide.
+> Four rows, and each one is a decision rather than an accident. An invalid bearer token returns 401, because the credential itself failed and nothing is known about the requester. A missing bearer token is the row that drifted. The document says 403, HTTPBearer's old default. On the FastAPI version SignUpFlow pins, HTTPBearer now answers 401, and SignUpFlow's own boundary test asserts 401. The test kept up and the document did not. An authenticated actor who names a foreign organization gets 403: valid credential, wrong tenant, a policy denial. And a guessed resource identifier returns 404. Hold on to that last one, because it is the mechanism on the next slide.
 
 ### Slide 6 — M5.1 — Enumeration dies at `404`
 
@@ -904,19 +905,19 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *40.0s · sentence-measured*
 
-> Knowing the rules is not enough. Every mounted route has to obey them. The file route_auth_policy.py names every FastAPI operation and assigns it to exactly one of five policy classes. In the current clone there are seven public operations, six scoped-token operations, two public callbacks, fifty member operations, and seventy-eight admin operations, which is 143 classified operations in total. The route auth policy dictionary is the executable source of truth, and the authorization document opens by saying exactly that. A matrix written only in prose rots the first time someone adds a route. A dictionary plus a test does not.
+> Knowing the rules is not enough. Every mounted route has to obey them. The file route_auth_policy.py names every FastAPI operation and assigns it to exactly one of five policy classes. In the current clone there are seven public operations, six scoped-token operations, four public callbacks, fifty member operations, and seventy-eight admin operations, which is 145 classified operations in total. The route auth policy dictionary is the executable source of truth, and the authorization document opens by saying exactly that. A matrix written only in prose rots the first time someone adds a route. A dictionary plus a test does not.
 
 ### Slide 12 — M5.2 — Three classes of drift
 
 *37.3s · sentence-measured*
 
-> The enforcement is 37 lines, and it catches three failure classes. Missing means a route with no policy entry; stale means a policy entry with no route. Both are set equality between the policy dictionary and the live route table, so an unclassified route fails the assertion, and an entry for a deleted route fails in reverse. Miswiring is the subtle one. For each classified route, the test collects its dependency tree and asserts that admin routes depend on the admin gate, member routes on the member dependency, and public routes on neither. A policy entry that says admin while the route wired the member dependency is caught mechanically.
+> The enforcement is one short test file, and it catches three failure classes. Missing means a route with no policy entry; stale means a policy entry with no route. Both are set equality between the policy dictionary and the live route table, so an unclassified route fails the assertion, and an entry for a deleted route fails in reverse. Miswiring is the subtle one. For each classified route, the test collects its dependency tree and asserts that admin routes depend on the admin gate, member routes on the member dependency, and public routes on neither. A policy entry that says admin while the route wired the member dependency is caught mechanically.
 
 ### Slide 13 — Proof M5.2 — matrix + gate + protocol
 
 *51.7s · sentence-measured*
 
-> This is the proof slide for M5.2, and the exhibit is the policy file's own docstring: reviewed authentication policy for every mounted API operation, deliberately keyed by FastAPI operation name, because a unit test compares this mapping with the live route table — so a new API route cannot ship without an explicit public, token, member, or administrator classification. Count the classes yourself when you open the file: five sets, 143 operations total. The six-step protocol is what you will write into your own contribution guide. Change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin, and foreign admin actors, assert that forbidden writes leave the database unchanged, and refresh the OpenAPI snapshot.
+> This is the proof slide for M5.2, and the exhibit is the policy file's own docstring: reviewed authentication policy for every mounted API operation, deliberately keyed by FastAPI operation name, because a unit test compares this mapping with the live route table — so a new API route cannot ship without an explicit public, token, member, or administrator classification. Count the classes yourself when you open the file: five sets, 145 operations in all. The six-step protocol is what you will write into your own contribution guide. Change the policy entry, apply actor-derived filters in the route query itself, add real-JWT tests for anonymous, invalid, member, same-tenant admin, and foreign admin actors, assert that forbidden writes leave the database unchanged, and refresh the OpenAPI snapshot.
 
 ### Slide 14 — M5.2 — The six-step change protocol
 
@@ -997,7 +998,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 16m 14s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -1178,7 +1179,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **28 slides · 28 narrated · 15m 47s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -1206,7 +1207,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *36.1s · sentence-measured*
 
-> This is the file where the pattern is recorded: the competition analysis document, holding twelve competitor rows dated August 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.
+> This is the file where the pattern is recorded: the competition analysis document, holding thirteen competitor rows plus ListenToMe, dated September 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about seven to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.
 
 ### Slide 5 — Recurring compute sets the model
 
@@ -1359,7 +1360,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 **27 slides · 27 narrated · 14m 21s of audio**
 
-**Voice:** preview narration — a free local voice, not the finished release recording. The words below are the approved narration and do not change when the release voice is recorded.
+**Voice:** preview narration — a free local voice, not the finished release recording. The narration is spoken by a synthesized voice, not a human recording. The words below are the approved narration and do not change when the release voice is recorded.
 
 The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
 
@@ -1393,7 +1394,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *40.7s · sentence-measured*
 
-> Open the course's landing page beside this and check each row — and the headline and the is-not list are now on the slide. The headline is one falsifiable sentence: ship three real AI products, learn from code that actually shipped. The for and is-not lists are explicit — not for you if you have never written code, want prompt-engineering trivia, or need an enterprise compliance curriculum. The problem section names three things that are always missing, and the curriculum table lists abilities rather than topics. The proof section is three named repos with checkable numbers. The testimonial section has three reserved slots — reserved, not filled — a real-objection FAQ, three tiers, and one CTA.
+> Open the course's landing page beside this and check each row — and the headline and the is-not list are now on the slide. The headline is one falsifiable sentence: ship AI products a skeptical engineer can audit. The for and is-not lists are explicit — not for you if you have never written code, want prompt-engineering trivia, or need an enterprise compliance curriculum. The problem section names three things that are always missing, and the curriculum table lists abilities rather than topics. The proof section is three named repos with checkable numbers. The testimonial section has three reserved slots — reserved, not filled — a real-objection FAQ, three tiers plus a single-track bundle, and one CTA.
 
 ### Slide 6 — Section 4 is where technical pages fail
 
@@ -1423,7 +1424,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *30.8s · sentence-measured*
 
-> Length follows price, and the reason is stakes. The more a reader pays and the less they know you, the more objections the page has to answer. Under two hundred dollars, target eight hundred to twelve hundred words. Five hundred dollars or more, or cold traffic, target two to three thousand. The course's own page runs about nineteen hundred words of copy for a three hundred ninety-nine to one thousand four hundred ninety dollar offer. Longer always converts better is false in both directions, so set your word target before you draft.
+> Length follows price, and the reason is stakes. The more a reader pays and the less they know you, the more objections the page has to answer. Under two hundred dollars, target eight hundred to twelve hundred words. Five hundred dollars or more, or cold traffic, target two to three thousand. The course's own page runs to more than two thousand words of copy for a three hundred ninety-nine to one thousand four hundred ninety dollar offer, and the gate re-measures that count every run. Longer always converts better is false in both directions, so set your word target before you draft.
 
 ### Slide 11 — M8.2 — Two phases, seven emails
 
@@ -1526,3 +1527,115 @@ The text below is what is spoken on each slide, in order. It is the same text as
 *27.8s · sentence-measured*
 
 > This is the closing prompt of the course. Name the one claim on your draft page you are least sure you can source, then either point at the artifact that makes it honest, such as a test badge, a dated evidence line, a spec folder, or the demo, or write the honest placeholder sentence if no artifact exists yet. Then do the useful half: read a peer's post and name a proof asset they already own but forgot. The course answered this exact problem with three reserved slots and a badge strip.
+
+<a id="m09"></a>
+
+# M9 — Ship a Product Catalog with GitHub Pages
+## Narration transcript
+
+**25 slides · 0 narrated · 0m 0s of audio**
+
+
+The text below is what is spoken on each slide, in order. It is the same text as the captions and the approved narration script, checked word for word by `course/06-production/narration/validate_narration.py`.
+
+---
+
+### Slide 1
+
+> Welcome to Module 9, Ship a Product Catalog with GitHub Pages. This module is free and has no prerequisites. If you have never opened a terminal, start here. By the end you will have your tools installed and proven, a repository you cloned, changed and pushed yourself, and a public product catalog at your own address on GitHub Pages. Every command is given twice, once for Windows and once for macOS, side by side, so you never have to translate.
+
+### Slide 2 — By the end you can…
+
+> Here are the five things you will be able to do. Install Git and the GitHub CLI, and prove the setup with a script instead of a guess. Move through your folders from the terminal. Clone a repository, change it, and push the change back. Publish a static site with GitHub Pages. And state what Pages allows and what it forbids, because that last one shapes the whole design of your catalog. The lab checks all five, and so does the quiz.
+
+### Slide 3 — M9.1 — Four things, one job each
+
+> Four names, one job each. The terminal is a window where you type commands instead of clicking. Git records versions of a folder, and each saved version is called a commit. GitHub is a website that stores a copy of that folder, called a repository, and can publish it as a site. And gh, the GitHub CLI, lets you drive GitHub from the terminal without clicking through the website. Git lives on your computer. GitHub lives on the internet. The CLI connects them.
+
+### Slide 4 — Open a terminal
+
+> Open a terminal now. On Windows, press the Windows key, type terminal, and press Enter. On a Mac, press Command and Space, type terminal, and press Enter. You will see a line that ends in your folder name and a symbol. That line is the prompt, and it is simply waiting for you to type. Everything in this module is typed after the prompt, and you press Enter to run it. The Windows commands here are for PowerShell, which is what the Windows Terminal opens by default.
+
+### Slide 5 — Install with one command each
+
+> Each system has a package manager that installs software from one command. On Windows it is win get, which ships inside Microsoft's App Installer. On a Mac it is Homebrew, installed with one line from Homebrew's own instructions. Then Git and the GitHub CLI are one command each. Two traps. On a Mac, Homebrew finishes by printing a few setup lines; run them, or brew will not be found. On Windows, a terminal that was already open cannot see a newly installed command, so close it and open a new window, not just a new tab.
+
+### Slide 6 — Tell Git who you are, then sign in
+
+> Every commit records a name and an email, so tell Git yours once, for every repository on this computer. Use the email on your GitHub account, or the private no reply address GitHub offers if you would rather not publish your own. Then sign in with gh auth login. It asks four things: choose GitHub dot com, then HTTPS, then yes to using your GitHub credentials for Git, then log in with a web browser. It shows a one-time code, opens your browser, and you paste the code there. After that, Git can push without asking for a password.
+
+### Slide 7 — Proof: a script, not a feeling
+
+> This is the setup check, run for real under PowerShell. It looks at four things: Git, the GitHub CLI, your name and email, and whether you are signed in. Each one prints pass or fail, and every fail prints the exact command that fixes it. This machine is missing the CLI and is not signed in, and it says so, with the fix underneath. The rule is simple. Fix the first fail, open a new terminal window, and run it again until it says four of four. A script that proves your setup beats a feeling that you probably finished.
+
+### Slide 8 — Action step — M9.1
+
+> Your first action step. Run the setup check until it says four of four, and paste the whole output into a new file called evidence dot md. You will add to that file for the rest of this module. Keep every failure you hit on the way, together with the line that fixed it. That record is worth more than a clean one, because it is exactly what the next person needs.
+
+### Slide 9 — M9.2 — You are always somewhere
+
+> The terminal always has a current folder, the way a file window always shows one. When it opens, that is your home folder. Five commands cover almost everything, and they are the same on Windows and on a Mac. P W D prints where you are. L S lists what is there. C D followed by a name goes into a folder. C D dot dot goes up one level. And C D tilde goes straight home from anywhere. To see the folder in a normal window, type start dot on Windows, or open dot on a Mac. And press Tab to finish long names for you.
+
+### Slide 10 — Paths: absolute, relative, and the slash
+
+> A path that starts from the top of the disk is absolute. A path that starts from where you are is relative. Windows writes folders with a backslash and macOS with a forward slash, but PowerShell accepts the forward slash too, so a path like code slash my catalog works on both systems. One trap costs beginners more time than any other: a folder name with a space in it. Either wrap the name in quotes, or better, never use spaces in project names. Use a hyphen instead.
+
+### Slide 11 — Clone: a copy, with its history
+
+> Cloning copies a repository to your computer, with its whole history. There are two ways and they do the same thing. G H repo clone takes the short owner and name, and uses the sign-in you just set up. Git clone takes the full address, which is what you will see on any repository's green Code button. Either one makes a new folder named after the repository, inside the folder you are in right now. That is the most common beginner mistake: cloning from your home folder and then looking for it in code. Check where you are first.
+
+### Slide 12 — The loop that sends a change back
+
+> Once a folder is a repository, every change goes back through the same four commands, always in this order. Git status shows what changed since your last commit. Git add dot chooses every change in this folder for the next commit, and it prints nothing, which is success. Git commit saves those changes as one version, with a message that says what changed. And git push sends your new commits to GitHub. Read git status before and after, every time. Afterwards, a clean working tree means everything went.
+
+### Slide 13 — Proof: the loop, run for real
+
+> Here is that loop, run for real on the catalog starter. Before the commit, git status lists five new files. The commit saves six files as one version with a short code. The push ends with a line saying main arrow main, which means GitHub now has it. And the final status says nothing to commit, working tree clean. Your short codes will be different, but the shape will be exactly this. That last line is the proof the change went.
+
+### Slide 14 — Action step — M9.2
+
+> Your second action step. Go to your code folder, clone this course with either command, go into the new folder and list what is there. Then go back up one level and print where you are, to prove it. Paste both outputs into your evidence file. You now know how to find anything on your computer from the terminal.
+
+### Slide 15 — M9.3 — Five files, and you edit one
+
+> The catalog starter is five files, and you edit one of them. Products dot J S holds your store's name, your contact link, and your list of products. The page itself is index dot H T M L, where you change one description line. The colours live in the stylesheet. The app script draws the cards, the category buttons, the search and the sort, and you never need to touch it. And there is one empty file with a strange name, which you keep. It tells GitHub Pages to publish your files exactly as they are.
+
+### Slide 16 — Why the data is a script, not JSON
+
+> Each product is one small block: an id, a name, a category, a price as a plain number, and a one-line summary. Add an image if you have one, and a buy link if you run a checkout elsewhere. Why is this a script and not a data file? Because a browser will not let a page opened from your disk read a separate data file, but it will run a script. So you preview your catalog with a double-click, with no server, and what you see is exactly what the world will see.
+
+### Slide 17 — Same pattern, larger site
+
+> This is not a toy pattern. AI times Q E, the expertise case study in this course, is itself a GitHub Pages site. It keeps its four briefing cards in one data file, and a template loops over that file to draw them. Your catalog keeps its products in one data file, and a script draws them. The difference is how each is published. Your catalog publishes a branch exactly as it is. AI times Q E runs a workflow that builds the site and runs its own checks before it deploys. Same host, two modes, and a site can grow from one to the other.
+
+### Slide 18 — Publish from a branch
+
+> Publishing takes four clicks, once. In your repository, open Settings, then Pages. Under build and deployment, set the source to deploy from a branch. Choose the main branch and the root folder, and save. Then wait. GitHub says a change can take up to ten minutes to appear, and the Actions tab shows the run while it happens. Your address is your username, dot github dot io, slash your repository name. After this, every push republishes the site on its own. You never repeat these steps.
+
+### Slide 19 — The limits, from GitHub's own page
+
+> GitHub publishes the limits, and for a catalog they are generous. A published site can be up to one gigabyte. Bandwidth has a soft limit of one hundred gigabytes a month, and builds a soft limit of ten an hour. A single deployment times out after ten minutes. Pages is free for public repositories on a free account; publishing from a private one needs a paid plan. Keep each photo small and you will never come near any of these.
+
+### Slide 20 — A catalog, not a shop
+
+> One rule shapes the whole design, and it comes from the same GitHub page. Pages is not allowed to be used as free hosting to run an online business or an e-commerce site, or any site whose main purpose is taking payments. A catalog that describes your products is fine. A shop is not. That is why the starter has no cart and no checkout. Each product can link out to a checkout that runs somewhere built for payments, and without one, the button simply says ask about this and opens an email.
+
+### Slide 21 — Action step — M9.3
+
+> Your third action step. Replace the six sample products with at least three of your own, real ones or the product you are building in this course. Preview the page with a double-click. Then write one line in your evidence file saying where each product's button will point: a checkout you run elsewhere, or ask about this for now.
+
+### Slide 22 — Lab M9 — Publish your product catalog
+
+> The lab takes you from nothing installed to a live catalog, in eight steps, in sixty to ninety minutes, most of it waiting for installs. You make an account and prove your setup. You make a code folder and clone the course. You create your own public repository called my catalog, copy the starter in, and make it yours. You commit and push. Then you publish, open the address on your phone, change a price, and watch it republish. Every step says what to paste into your evidence file.
+
+### Slide 23 — Quiz M9 — what it checks
+
+> The knowledge check has eight questions. It asks why Windows needs a new terminal window after an install, what a missing name and email actually stops you doing, where a clone lands and why, what push does that commit does not, and why your catalog links out to a checkout instead of taking payments. The two short answers are practical: fix a classmate's broken setup, and publish a shop owner's products on the same day.
+
+### Slide 24 — Recap
+
+> To recap. Install your tools with win get or Homebrew, and prove them with the setup check until it says four of four. Move around with print working directory, list, change directory, up one level, and make directory. Send every change back with status, add, commit and push. Publish once from the main branch, and every push republishes. And remember the boundary: GitHub Pages shows your products, and a checkout somewhere else sells them.
+
+### Slide 25 — Discussion prompt
+
+> Before you go, post your catalog's address and the one setup step that took you longest, with the line that fixed it. Then open a classmate's catalog on your phone, and tell them the first thing you tapped that did not do what you expected. That one sentence is the most useful feedback their page will get this week.

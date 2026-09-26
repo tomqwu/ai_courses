@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 from collections.abc import Iterator
 from typing import Callable
+from urllib.parse import urlparse
 
 import httpx
 
@@ -42,6 +43,10 @@ class EmptyResponseError(LLMError):
 Transport = Callable[[str, "dict | None"], "tuple[int, Iterator[str]]"]
 
 
+#: Loopback hosts. A request to one of these never needs a proxy, so none is allowed to take it.
+_LOOPBACK = frozenset({"localhost", "127.0.0.1", "::1"})
+
+
 def httpx_transport(base_url: str, reject_redirects: bool = True, timeout: float = 120.0) -> Transport:
     """Build the real streaming transport over httpx.
 
@@ -50,14 +55,23 @@ def httpx_transport(base_url: str, reject_redirects: bool = True, timeout: float
     ``reject_redirects=True`` (the default) the client is created with
     ``follow_redirects=False`` and a 3xx is refused: this is the Python twin
     of ListenToMe's ``RejectRedirects`` URLSession delegate.
+
+    For a loopback daemon the client ignores the environment (``trust_env=False``):
+    httpx otherwise honours ``HTTP_PROXY``, and ``NO_PROXY`` rarely lists loopback,
+    so a local-only request - transcript included - would be handed to whatever
+    proxy the shell exports while the URL still reads localhost. A remote daemon
+    keeps the environment, so a corporate proxy still works for cloud mode.
     """
     base = base_url.rstrip("/")
+    host = (urlparse(base if "://" in base else f"http://{base}").hostname or "").lower()
+    trust_env = host not in _LOOPBACK
 
     def transport(path: str, payload: "dict | None") -> "tuple[int, Iterator[str]]":
         client = httpx.Client(
             base_url=base,
             follow_redirects=not reject_redirects,
             timeout=timeout,
+            trust_env=trust_env,
         )
         try:
             if payload is None:

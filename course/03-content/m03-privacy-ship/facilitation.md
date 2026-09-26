@@ -54,7 +54,8 @@ a positioning one-liner, annotated with the column that proves it.
    concludes that untestable guarantees tend to be unenforced ones.
 2. **Your daemon has only `:cloud` aliases and local mode rejects everything. Is the lab broken?**
    Follow-up: "What would 'fixing' it cost you?" A strong answer says it is fail-closed working,
-   documents the daemon state, and proves the contract seam with a mocked NDJSON stream — never
+   documents the daemon state, and still runs the contract test — it is a contract test, not a
+   privacy test, so it runs in default mode against whatever the router picks — and never
    weakens the metadata check.
 3. **The 1.3.0 review said no at 97.24% coverage. What would you have written as G01's fix?**
    Follow-up: "How would you prove the fix, given CI cannot reach a daemon?" A strong answer names
@@ -71,7 +72,7 @@ Aligned with `course/02-instructor/instructor-guide.md` §4.
 | Stuck point | Symptom | 30-second intervention |
 |---|---|---|
 | `verify_local_model` fails everything | No local model pulled | Intended. The red-team test passes while live mode rejects — fail-closed working. Pull `qwen3:0.6b` to see the accept path. |
-| Cloud-only daemon treated as a bug | "My lab is broken" | That is the M3 lab environment. Document it; use the mocked-stream contract path. |
+| Cloud-only daemon treated as a bug | "My lab is broken" | That is the M3 lab environment. Document it; the contract test still runs in default mode against the router's pick. |
 | Fail-open slip | Check skips when `details` is absent | Ask: "What does your code return when the key is missing?" Then require an explicit `False`. |
 | Redirect defense untested | Test only asserts an exception type | Require `FakeTransport(status=302)` and a `match="redirect"` assertion; note that no request may be forwarded. |
 | Memory-only competitor prices | Cells with no URL | Randomly pick one cell, open its source live. If it does not match, mark the rest suspect. |

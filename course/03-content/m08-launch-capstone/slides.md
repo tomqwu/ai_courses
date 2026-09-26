@@ -31,7 +31,17 @@ title: M8 — Launch: Sales Page, Email Arc, Capstone
 
 ## The page is a sequence, not a pile
 
-- Eight sections, in order, each with one job.
+<!-- _diagram: flow -->
+
+- Destination
+- Qualification
+- Stakes
+- Outcomes
+- Credibility
+- Borrowed trust
+- Objections
+- Price
+
 - Sell the destination first; prove it second.
 - Order carries the conversion, not the volume.
 - Restructured onto it: one creator, 1% to 8%.
@@ -61,35 +71,36 @@ title: M8 — Launch: Sales Page, Email Arc, Capstone
 <!-- _class: proof -->
 ## Proof: the course's own page maps row for row
 
-| Section | On `04-sales/landing-page.md` |
+| Section | On `course/04-sales/landing-page.md` |
 |---|---|
-| 1–2 | "Ship three real AI products" + two explicit for/isn't lists |
+| 1–2 | "Ship AI products a skeptical engineer can audit" + for/isn't lists |
 | 3–4 | "Three things are always missing" + Week/Module outcome table |
 | 5 | Tom Wu: three named repos with checkable numbers |
-| 6–8 | Three reserved testimonial slots, real-objection FAQ, three tiers, one CTA |
+| 6–8 | Reserved testimonial slots, objection FAQ, three tiers + $199 bundle, one CTA |
 
 ```markdown
-# Ship three real AI products. Learn from code that actually shipped.
-
 **This isn't for you if you:**
-- Haven't written code before (start with a general programming course first)
-- Want prompt-engineering trivia or "AI side hustle" content with no building
+- Haven't written code before …
+- Want prompt-engineering trivia or "AI side hustle" content …
 - Need an enterprise AI-governance compliance curriculum
 ```
 
-Pointers: `04-sales/landing-page.md` · `00-research/02-course-market-research.md` §E
-
-<!-- NOTES: Open the landing page beside this slide and check each row. The headline is one falsifiable sentence. The for and isn't lists are explicit. The problem section names three missing things, and the curriculum table lists abilities, not topics. The bio names three repos with numbers you can go open. Section six is three reserved slots with an honesty note, and section eight shows three tiers with the same enroll call to action repeated at top, middle, and bottom. Transition: two of those rows need a second look. Timing: 3 minutes. -->
+<!-- NOTES: Open the landing page beside this slide and check each row. The headline is one falsifiable sentence. The for and isn't lists are explicit. The problem section names three missing things, and the curriculum table lists abilities, not topics. The bio names three repos with numbers you can go open. Section six is three reserved slots with an honesty note, and section eight shows three tiers plus a single-track bundle, with the same enroll call to action repeated at top, middle, and bottom. Transition: two of those rows need a second look. Timing: 3 minutes. -->
 
 ---
 
 ## Section 4 is where technical pages fail
 
+| | A topic line | An outcome line |
+|---|---|---|
+| Week 3 | "covers privacy" | "run an LLM locally — you'll ship a hardened local-only mode" |
+| It names | content | a change in the reader |
+| The buyer can | only imagine the outcome | hold you to it; it maps to a lab |
+
 - Abilities, not topics: one per module.
 - "Engineer a fail-closed local-only mode" is checkable.
-- Example: "Week 3: run an LLM locally"
-- A topic list asks the reader to imagine the outcome.
-- Pointer: `04-sales/landing-page.md`, curriculum table.
+- No nameable ability means the module is not finished.
+- Pointer: `04-sales/landing-page.md:83`, curriculum table.
 
 <!-- NOTES: Technical authors default to a syllabus: week three covers privacy. That describes content, not a change in the reader, and the reader cannot evaluate it. The house standard is an outcome line — "Week 3: run an LLM locally; you'll ship a hardened local-only mode." Same content, but now it is a claim the buyer can hold you to, and it maps straight to a lab checkpoint. Write one line per module; if you cannot name the ability, the module is not finished. Transition: section eight is the pricing discipline. Timing: 3 minutes. -->
 
@@ -109,12 +120,21 @@ Pointers: `04-sales/landing-page.md` · `00-research/02-course-market-research.m
 
 ## No testimonials yet? Say so.
 
+```markdown
+> *Beta cohort: testimonials land here. … Until then, this section
+> stays honest: no invented social proof. The three repos above are
+> the pre-beta proof.*
+
+**[Reserved for beta-cohort testimonials —
+3 slots: before/after/result format]**
+```
+
 - The course had no students when the page was written.
 - It invented none; it reserved three slots.
-- Slots labeled before/after/result format.
 - The badge strip carried the section instead.
-- Repos are social proof for technical buyers.
 - A founder-written quote is fabrication.
+
+Pointers: `04-sales/landing-page.md:128-130` · badge strip `04-sales/landing-page.md:9`
 
 <!-- NOTES: This is the honest-move slide. The course's page reserves three testimonial slots, labels the format, and posts a note saying the section stays honest until real ones exist. What carries the weight meanwhile is the badge strip: three repos, a coverage number, a dated test count, and a slide count. The research is explicit that for a technical audience, real shipped projects are the social proof. A testimonial you drafted yourself is the one disqualifying move — it is fabrication, and M1's evidence discipline applies to marketing identically. Transition: where your proof comes from. Timing: 3 minutes. -->
 
@@ -144,22 +164,25 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 |---|---|
 | Under $200 | 800–1,200 words |
 | $500+ or cold traffic | 2,000–3,000 words |
-| The course's own page | ~1,900 words of copy / 2,251 total ($399–$1,490) |
+| The course's own page | 2,000+ words of copy, re-measured by the gate ($399–$1,490) |
 
 - "Longer always converts better" is false both directions.
 - Set the word target before you draft.
 - Stakes decide: the more they pay, the more questions.
 
-<!-- NOTES: The rule comes from the research section E. Stakes are the reason: the more a reader pays and the less they know you, the more objections the page must answer. The course's own page targets roughly 1,900 words of copy — 2,251 including authoring notes — for a $399 to $1,490 cold-traffic offer, measured from the file itself. Both failure directions are real — 2,500 words for a $49 product pads and dilutes, while 800 words for a $1,490 cohort leaves the objection teardown unanswered. Pick the band from your M7 price before you write a sentence. Transition: the page is done — now the arc that sends people to it. Timing: 3 minutes. -->
+<!-- NOTES: The rule comes from the research section E. Stakes are the reason: the more a reader pays and the less they know you, the more objections the page must answer. The course's own page runs to more than 2,000 words of copy for a $399 to $1,490 cold-traffic offer; the page states its own count and the gate re-measures it. Both failure directions are real — 2,500 words for a $49 product pads and dilutes, while 800 words for a $1,490 cohort leaves the objection teardown unanswered. Pick the band from your M7 price before you write a sentence. Transition: the page is done — now the arc that sends people to it. Timing: 3 minutes. -->
 
 ---
 
 ## M8.2 — Two phases, seven emails
 
+<!-- _diagram: flow -->
+
+- Warmup: origin, transformation proof, free tool
+- Conversion: cart open, objections, proof, final call
+
 - Warmup earns trust; it does not sell.
 - Conversion spends the trust warmup earned.
-- Warmup: origin, transformation proof, free tool.
-- Conversion: cart open, objections, proof, final call.
 - One idea and one CTA per email.
 - Pointer: `04-sales/launch-plan.md`.
 
@@ -185,12 +208,19 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 
 ## Warmup does not sell
 
+| Week | Phase | What happens |
+|---|---|---|
+| −4 to −1 | Warmup | 3 emails; page live in "notify me" mode |
+| 0 | Cart opens | Email 4; a 10–14 day open-cart window |
+| +1 | Objection handling | Email 5, the FAQ teardown |
+| +2 | Proof | Email 6 — only after beta testimonials exist |
+| Final 72h | Deadline | Email 7; the cart closes |
+
 - "All emails should sell" is the taught-against error.
 - A list asked every send learns to stop opening.
-- Warmup runs weeks −4 to −1, page in notify mode.
-- Cart opens week 0 for 10–14 days.
-- Objections at +1; proof at +2; final call last 72h.
 - The free lead product builds the list first.
+
+Pointer: `04-sales/launch-plan.md:7-13`
 
 <!-- NOTES: This is the most common launch mistake and it is expensive. If every email asks for money, the list learns that opening your email costs something, and by the time the cart actually opens your open rate has collapsed. Warmup emails make no ask beyond attention. The launch plan's free lead product — a thirty-minute teardown — is what builds the list before the arc ever runs, which is why the arc can afford to stay quiet for three weeks. Transition: the deadline, and why it has to be real. Timing: 3 minutes. -->
 
@@ -198,12 +228,18 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 
 ## The final 48 hours
 
+```markdown
+**Email 7 (final 72h) — Final call.**
+Subject: `Closes Friday: the cohort that ships`
+Body: short. … Deadline is real (cart closes; founding price ends).
+```
+
 - 42–55% of enrollments arrive in final 48 hours.
 - Deferred decisions collapse at a real deadline.
 - A resetting countdown trains the list to wait.
 - Next launch's final 48 hours pay the price.
-- The cart actually closes; the price actually ends.
-- Pointer: `04-sales/pricing-and-platforms.md`, no fake countdowns.
+
+Pointers: `04-sales/launch-plan.md:48-50` · `04-sales/pricing-and-platforms.md:64`, no fake countdowns
 
 <!-- NOTES: That 42 to 55 percent figure is why the deadline exists at all — it is a description of how buyers behave, not a tactic. Which makes the deadline load-bearing and its honesty a revenue asset. If your countdown resets, or your last chance recurs every week, you teach your list that your deadlines are decoration, and the next launch's final forty-eight hours underperform. The course's policy is written down: no fake countdowns. For real urgency in a first launch, use the founding discount with a stated end date. Transition: the math you run before the arc. Timing: 3 minutes. -->
 
@@ -211,15 +247,18 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 
 ## Model it before you run it
 
-```
-expected revenue = list × open × click × page conversion × price
-1,200 × 38% × 15% × 16% × $797 ≈ $8,767
-→ ~456 opens · ~68 clicks · ~11 enrollments
+```text
+… Revenue math: list × open × CTOR × page-conversion × price
+(e.g., 1,200 subs × 38% open × 15% CTOR × 16% page × $797
+≈ $8,767). …
 ```
 
+- That is ~456 opens · ~68 clicks · ~11 enrollments.
 - Warm lists convert 2–5% overall; one pass is conservative.
 - Each conversion email is another pass through the funnel.
 - Record actuals after: list, delivery, opens, clicks, conversions.
+
+`course/00-research/02-course-market-research.md:62`
 
 <!-- NOTES: This worked example is in the research file, section E. Multiply the five factors in order and sanity-check the result against the warm-list band of two to five percent overall — the single-chain model is deliberately conservative because each conversion email sends the reader through the funnel again. The important half is the last bullet: after the launch, record actuals and re-derive the model. The launch plan opens a launch evidence log for exactly that reason, and the course practices the evidence discipline it teaches. Transition: the five levers and the honest move for each. Timing: 3 minutes. -->
 
@@ -245,20 +284,21 @@ expected revenue = list × open × click × page conversion × price
 <!-- _class: proof -->
 ## Proof: deliverability is upstream of every number
 
-- SPF, DKIM, and DMARC before the first send.
 - Gmail and Yahoo enforce this for bulk senders.
-- Test-send to a Gmail and a corporate address.
 - Scrub hard bounces; keep the list opt-in only.
 - A spam-folder email has an open rate of zero.
 
 ```markdown
-> Deliverability prerequisites: SPF, DKIM, DMARC configured before the
-> first send; list is opt-in only.
-
-- [ ] SPF/DKIM/DMARC verified (send test to Gmail + a corporate address)
+> … Deliverability prerequisites: SPF, DKIM, DMARC configured
+> before the first send; list is opt-in only.
+…
+- [ ] SPF/DKIM/DMARC verified (send test to Gmail + a corporate
+  address)
 ```
 
-Pointers: `04-sales/launch-plan.md` ops checklist · `00-research/02-course-market-research.md` §E
+`course/04-sales/launch-plan.md:3,56`
+
+`course/00-research/02-course-market-research.md:62`
 
 <!-- NOTES: No math survives the spam folder, so this comes before the sequence is queued, not after the first weak send. The launch plan's operations checklist has the concrete items: verify SPF, DKIM, and DMARC, then send test messages to a Gmail address and a corporate address because the two filter differently. Keep the list opt-in only and scrub hard bounces. The research section E notes that Gmail and Yahoo enforce this for bulk senders, so this is an infrastructure requirement now, not a best practice. Transition: where testimonials come from before anyone has bought. Timing: 3 minutes. -->
 
@@ -268,17 +308,19 @@ Pointers: `04-sales/launch-plan.md` ops checklist · `00-research/02-course-mark
 
 - No buyers yet means no testimonials yet.
 - Trade cohort one's discount for proof.
-- Founding tier $990 against $1,490.
 - Agreement at checkout: testimonial plus feedback.
 - A discount with no reason trains buyers to wait.
 - Cautionary tale: Udemy's $9.99 spiral (§D).
 
 ```markdown
 ### Studio Live (8-week cohort) — **$1,490**
-Everything in Studio · weekly 90-minute workshops (I do / We do / You do) ·
-instructor code review on 3 labs · capstone review + demo day · cohort channel.
+Everything in Studio · weekly 90-minute workshops (I do / We do /
+You do) · instructor code review on 3 labs · capstone review +
+demo day · cohort channel.
 *Founding cohort: $990 in exchange for a testimonial and feedback.*
 ```
+
+`course/04-sales/landing-page.md:189-190`
 
 <!-- NOTES: Email six needs a before/after/result testimonial, and you have no buyers. The research endorses the trade: run cohort one at a discount explicitly exchanged for a testimonial and a feedback session, agreed at checkout. The course's own founding tier is $990 against $1,490, and the trade is stated on the page. That is honest pricing, because the buyer knows what the discount buys. The cautionary tale is the marketplace flash-sale pattern: a discount with no stated reason trains buyers to wait for the next one. Transition: the capstone, and the contract that keeps it small. Timing: 3 minutes. -->
 
@@ -286,12 +328,14 @@ instructor code review on 3 labs · capstone review + demo day · cohort channel
 
 ## M8.3 — The capstone contract
 
-- ONE archetype. ONE shippable scope.
+> ONE archetype, ONE shippable scope, the loop complete. The rubric scores the loop, not the size
+
 - The complete Spec-to-Ship Loop, with evidence.
-- The rubric scores the loop, not the size.
 - A small complete loop beats a sprawling half-loop.
 - No rubric dimension counts lines of code.
-- Pointer: `02-instructor/instructor-guide.md`, capstone row.
+- Touching all three archetypes builds the wrong thing.
+
+Pointer: `02-instructor/instructor-guide.md:48`, capstone scope row.
 
 <!-- NOTES: The instructor guide's unblock for capstone scope explosion is the sentence to memorize: one archetype, one shippable scope, the loop complete. The rubric scores the loop, not the size. That means a deliberately small product taken through study, spec, build, validate, release, and prove will out-score a sprawling build that never reached validation. If you are trying to touch all three archetypes, you are building the wrong thing — the labs already gave you all three. Transition: the loop, mapped onto what you already have. Timing: 3 minutes. -->
 
@@ -333,7 +377,7 @@ Pointers: `00-research/00-synthesis.md` · `03-content/m08-launch-capstone/lab.m
 
 ## The evidence record: three blocks
 
-```markdown
+```markdown template
 ## Capstone evidence — <project> — <date>
 Commands run (with results):
 - <command> → <pass/fail counts>

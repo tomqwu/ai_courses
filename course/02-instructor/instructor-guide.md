@@ -36,7 +36,7 @@ Workshop formula is always **I do / We do / You do** (≈25/35/30 min split). Re
 
 | Where students stall | Symptom | Unblock |
 |---|---|---|
-| M1: "my constitution feels fake" | Empty template values | Have them steal structure, not content: read `SignUpFlow/.specify/memory/constitution.md` (79 lines), then write THEIR three principles. Rules: imperative + verifiable + ≤80 lines |
+| M1: "my constitution feels fake" | Empty template values | Have them steal structure, not content: read `SignUpFlow/.specify/memory/constitution.md` (85 lines), then write THEIR three principles. Rules: imperative + verifiable + ≤80 lines |
 | M2: mock-LLM tests feel pointless | "When do we use the real model?" | Point at ListenToMe: 96% coverage comes from mockable seams; the real model lives in `make e2e`/Lab M3. Unit tests are the 90%, contract tests the 10% that matters |
 | M2: Ollama cloud-only daemon | `ollama list` shows only `:cloud` names | That IS the M3 lab environment. For M2 either pull `qwen3:0.6b` or run roles against a `:cloud` model in CLOUD mode |
 | M3: `verify_local_model` fails everything | They have no local model pulled | Intended! The red-team test passes while live mode rejects — that's fail-closed working. Pull `qwen3:0.6b` to see the accept path |
@@ -74,7 +74,7 @@ Students may use AI agents for everything — the course teaches that — but th
 ## 8. Course upkeep (Definition of Done for instructors)
 
 - Keep repo file pointers exact: before each cohort, re-clone the three case-study repos and spot-check every pointer in the lessons (the repos' own rule: search for stale commands, counts, and check names).
-- Update evidence numbers (coverage badge, test counts, editions) if the repos changed.
+- Update evidence numbers (coverage badge, test counts, editions) if the repos changed. `python3 06-production/check_facts.py --strict` re-derives every pinned number from the clones and names the course files that still state a stale value — run it first, then edit only what it lists.
 - Log each cohort: NPS, completion %, stuck points, revenue vs. model — an evidence record for the course itself.
 
 ## 9. One-page cheat sheet (print for the first workshop)

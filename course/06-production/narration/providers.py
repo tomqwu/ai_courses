@@ -10,10 +10,11 @@ are always shaped from the *display* text in `captions.py`; this module only sup
     charged request on network uncertainty: a second call could bill twice for the same sentence, so
     the operator is told to check provider history instead (the rule ai_qe learned the same way,
     `ai_qe/tools/generate_elevenlabs_narration.py:93-94`).
-  * `say` — the local preview. Synthesizes one sentence at a time with macOS `say`, measures each
-    with ffprobe, and concatenates. Sentence timing is therefore real; word timing inside a sentence
-    is distributed proportionally. No key, no cost, no network — which is what makes the pipeline
-    testable and the site listenable before the release voice exists.
+  * `say` / `espeak` — the local preview. Synthesizes one sentence at a time with macOS `say` or
+    Linux `espeak-ng`, measures each with ffprobe, and concatenates. Sentence timing is therefore
+    real; word timing inside a sentence is distributed proportionally. No key, no cost, no network —
+    which is what makes the pipeline testable, the site listenable before the release voice exists,
+    and the gate runnable on a Linux CI runner.
 """
 from __future__ import annotations
 
@@ -85,38 +86,43 @@ def _ffmpeg(args: list[str]) -> None:
 
 # ---------------------------------------------------------------- local preview
 
-class SayProvider:
-    """macOS `say`: free, offline, sentence-accurate. Preview quality, honestly labelled."""
-    name = "macOS say"
+class LocalSentenceProvider:
+    """A free, offline preview voice that is honest about timing.
 
+    Each sentence is synthesized on its own, measured with ffprobe, and the pieces are concatenated
+    with a fixed gap, so every caption group carries a real measured duration. Subclasses supply the
+    one thing that differs between local engines: how to speak a sentence into a file.
+    """
+    name = "local preview"
+    part_suffix = ".wav"
     bitrate = "64k"   # preview only: mono 64k keeps a full course to ~20 MB locally
 
-    def __init__(self, voice: str = "Samantha", rate: int = 175, gap_seconds: float = 0.28):
-        if not shutil.which("say"):
-            raise ProviderError("macOS `say` not found — use --provider elevenlabs, or run on macOS")
+    def __init__(self, voice: str, rate: int, gap_seconds: float = 0.28):
         self.voice = voice
         self.rate = rate
         self.gap = gap_seconds
 
-    def available_voices(self) -> list[str]:
-        out = subprocess.run(["say", "-v", "?"], capture_output=True, text=True).stdout
-        return [line.split()[0] for line in out.splitlines() if line.strip()]
+    def _speak(self, sentence: str, part: Path) -> None:      # pragma: no cover — per engine
+        raise NotImplementedError
+
+    def receipt(self, sentences: int) -> dict:
+        return {"provider": self.name, "voice": self.voice, "rate": self.rate,
+                "sentences": sentences, "gap_seconds": self.gap}
 
     def synthesize(self, text: str, out_path: Path) -> ProviderResult:
         sentences = split_sentences(text)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory() as tmp:
             tmpdir = Path(tmp)
-            silence = tmpdir / "silence.aiff"
-            _ffmpeg(["-f", "lavfi", "-i", f"anullsrc=r=22050:cl=mono", "-t", f"{self.gap}",
+            silence = tmpdir / f"silence{self.part_suffix}"
+            _ffmpeg(["-f", "lavfi", "-i", "anullsrc=r=22050:cl=mono", "-t", f"{self.gap}",
                      "-c:a", "pcm_s16le", str(silence)])
             pieces: list[Path] = []
             spans: list[tuple[float, float]] = []
             cursor = 0.0
             for index, sentence in enumerate(sentences):
-                part = tmpdir / f"part{index:03d}.aiff"
-                subprocess.run(["say", "-v", self.voice, "-r", str(self.rate), "-o", str(part), sentence],
-                               check=True, capture_output=True)
+                part = tmpdir / f"part{index:03d}{self.part_suffix}"
+                self._speak(sentence, part)
                 duration = probe_duration(part)
                 spans.append((cursor, cursor + duration))
                 cursor += duration
@@ -127,16 +133,73 @@ class SayProvider:
             listing = tmpdir / "concat.txt"
             listing.write_text("".join(f"file '{p.as_posix()}'\n" for p in pieces), encoding="utf-8")
             _ffmpeg(["-f", "concat", "-safe", "0", "-i", str(listing),
-                     "-ac", "1", "-c:a", "libmp3lame", "-b:a", "64k", "-ar", "44100", str(out_path)])
+                     "-ac", "1", "-c:a", "libmp3lame", "-b:a", self.bitrate, "-ar", "44100", str(out_path)])
         return ProviderResult(
             path=out_path,
             duration=probe_duration(out_path),
             method="sentence-measured",
             sentences=spans,
             tokens=None,
-            receipt={"provider": self.name, "voice": self.voice, "rate": self.rate,
-                     "sentences": len(sentences), "gap_seconds": self.gap},
+            receipt=self.receipt(len(sentences)),
         )
+
+
+class SayProvider(LocalSentenceProvider):
+    """macOS `say`: free, offline, sentence-accurate. Preview quality, honestly labelled."""
+    name = "macOS say"
+    part_suffix = ".aiff"
+
+    def __init__(self, voice: str = "Samantha", rate: int = 175, gap_seconds: float = 0.28):
+        if not shutil.which("say"):
+            raise ProviderError("macOS `say` not found — use --provider espeak on Linux, "
+                                "--provider elevenlabs for the release voice, or run on macOS")
+        super().__init__(voice, rate, gap_seconds)
+
+    def available_voices(self) -> list[str]:
+        out = subprocess.run(["say", "-v", "?"], capture_output=True, text=True).stdout
+        return [line.split()[0] for line in out.splitlines() if line.strip()]
+
+    def _speak(self, sentence: str, part: Path) -> None:
+        subprocess.run(["say", "-v", self.voice, "-r", str(self.rate), "-o", str(part), sentence],
+                       check=True, capture_output=True)
+
+
+class EspeakProvider(LocalSentenceProvider):
+    """`espeak-ng`: the same preview on Linux and CI runners, where `say` does not exist.
+
+    Rougher than `say`, and labelled the same way: sentence-measured preview, never the release
+    voice. `apt-get install espeak-ng ffmpeg` is the whole setup.
+    """
+    name = "espeak-ng"
+    part_suffix = ".wav"
+
+    def __init__(self, voice: str = "en-us", rate: int = 165, gap_seconds: float = 0.28):
+        self.binary = shutil.which("espeak-ng") or shutil.which("espeak")
+        if not self.binary:
+            raise ProviderError("espeak-ng not found — `apt-get install espeak-ng ffmpeg`, "
+                                "or use --provider say on macOS")
+        super().__init__(voice, rate, gap_seconds)
+
+    def available_voices(self) -> list[str]:
+        out = subprocess.run([self.binary, "--voices=en"], capture_output=True, text=True).stdout
+        return [line.split()[3] for line in out.splitlines()[1:] if len(line.split()) > 3]
+
+    def _speak(self, sentence: str, part: Path) -> None:
+        # Text goes on stdin so a sentence that starts with "-" is never read as a flag.
+        subprocess.run([self.binary, "-v", self.voice, "-s", str(self.rate), "-w", str(part), "--stdin"],
+                       input=sentence, text=True, check=True, capture_output=True)
+
+
+PREVIEW_PROVIDERS = {"say": SayProvider, "espeak": EspeakProvider}
+
+
+def preview_provider_for_this_machine() -> str:
+    """The preview engine this machine has: `say` on macOS, `espeak` where espeak-ng is installed."""
+    if shutil.which("say"):
+        return "say"
+    if shutil.which("espeak-ng") or shutil.which("espeak"):
+        return "espeak"
+    raise ProviderError("no local preview voice: install espeak-ng (Linux) or run on macOS for `say`")
 
 
 # ---------------------------------------------------------------- elevenlabs

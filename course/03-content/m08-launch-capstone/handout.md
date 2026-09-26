@@ -38,7 +38,7 @@
 
 ## Pointers to open
 
-- `04-sales/landing-page.md` — the worked page; eight sections, three tiers, reserved slots.
+- `04-sales/landing-page.md` — the worked page; eight sections, four prices, reserved slots.
 - `04-sales/launch-plan.md` — the arc, ops checklist, metrics, evidence log.
 - `04-sales/pricing-and-platforms.md` — price ladder, honest checklist, no fake countdowns.
 - `00-research/02-course-market-research.md` §E — anatomy, phases, deadline stat, revenue formula.

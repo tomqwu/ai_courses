@@ -9,7 +9,7 @@
 
 | Criterion | Exemplary | Proficient | Developing | Missing | Weight | Evidence required |
 |---|---|---|---|---|---|---|
-| Baseline green observed | Captures counts *and* coverage table before deleting | Captures `191 passed`, 100% | Runs it, no capture | No baseline run | 5 | Terminal capture of `make lab-m2` before edits |
+| Baseline green observed | Captures counts *and* coverage table before deleting | Captures `208 passed`, 100% | Runs it, no capture | No baseline run | 5 | Terminal capture of `make lab-m2` before edits |
 | Red run per module | Six captures, each labelled with module, command, exit code | Six captures, exit code implied | Fewer than six, or unlabelled | No red run, or red run after the fix | 10 | Six ImportError captures in the evidence log |
 
 ## B. Module implementations (Steps 3–8)
@@ -20,7 +20,7 @@
 | `question_detector` | 32 green; near-miss cases named | 32 green | 20–31 green | <20 green | 10 | `pytest tests/test_question_detector.py -q` |
 | `prompts` | 38 green; notes why determinism matters | 38 green | 25–37 green | <25 green | 10 | `pytest tests/test_prompts.py -q` |
 | `model_router` | 40 green; can explain the `gemini`/`mini` case | 40 green | 28–39 green | <28 green | 12 | `pytest tests/test_model_router.py -q` |
-| `ollama_provider` | 18 green; all three error types distinguished | 18 green | 12–17 green | <12 green | 12 | `pytest tests/test_ollama_provider.py -q` |
+| `ollama_provider` | 21 green; all three error types distinguished | 21 green | 14–20 green | <14 green | 12 | `pytest tests/test_ollama_provider.py -q` |
 | `copilot` | 17 green; cancellation plus grounding both traced | 17 green | 11–16 green | <11 green | 11 | `pytest tests/test_copilot.py -q` |
 
 ## C. Gates and demo (Steps 8–9)
@@ -28,7 +28,7 @@
 | Criterion | Exemplary | Proficient | Developing | Missing | Weight | Evidence required |
 |---|---|---|---|---|---|---|
 | Coverage floor 90 | Green run shows `Required test coverage of 90% reached` | Floor passes | Floor reached by weakening tests | Floor fails or disabled | 5 | `make lab-m2` full output with coverage table |
-| M3 behavior preserved | `make lab-m3` 49 passed, unmodified tests | 49 passed | Passes after editing M3 tests | Fails or tests deleted | 5 | `make lab-m3` output; `git diff` on `tests/test_privacy.py` |
+| Privacy tests preserved | `test_privacy.py`'s 35 tests green inside `make lab-m2`, file unmodified, and the log notes they are Lab M3's parked-later reference | 35 green, file unmodified | Passes after editing `test_privacy.py` | Fails or tests deleted | 5 | `make lab-m2` output; `git diff` on `tests/test_privacy.py` |
 | Demo run | Three labeled role blocks, model names visible, no failure line | Three role blocks with models | Fewer roles, or model name hidden | No demo run | 5 | `make demo` transcript pasted |
 
 ## D. Evidence and community (Step 2 onward)
@@ -42,7 +42,7 @@
 
 The lab fails regardless of score if any of these is true:
 
-1. **Fabricated evidence** — output that does not match a real run (e.g. "191 failed" as the red run,
+1. **Fabricated evidence** — output that does not match a real run (e.g. "208 failed" as the red run,
    or counts that contradict the recorded environment).
 2. **No red run** — any of the six modules goes from the answer key to green with no deletion capture,
    or the red capture is dated after its green run.
@@ -55,7 +55,7 @@ The lab fails regardless of score if any of these is true:
 
 ## Grading notes
 
-- Distinguish a real pass from a plausible fake by re-running `make lab-m2` and `make lab-m3` yourself
+- Distinguish a real pass from a plausible fake by re-running `make lab-m2` yourself
   on the submitted tree; a copied implementation still passes, so the evidence log is what separates
   the two.
 - The six module rows are deliberately near-equal: this lab grades the *loop*, not one clever module.

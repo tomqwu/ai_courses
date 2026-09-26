@@ -138,3 +138,26 @@ Three defects were found by this work and fixed before it shipped, all recorded 
 and never shown, so every narration control existed and none was visible; and a merge step that could
 push a cue past the line limits. The panel bug was caught only because the browser check was extended
 to assert visibility rather than presence.
+
+
+## Milestones 5–9 — from course package to owned platform (proposed 2026-09-17)
+
+The September 2026 platform review ([`../00-research/04-platform-review-2026.md`](../00-research/04-platform-review-2026.md))
+found the package complete and honest, and not yet a product: no way to take money or know a learner,
+no licence, a fact base that drifted within five days of being pinned, three labs that cannot be passed
+as written, and a curriculum nine months behind in three places. It proposes five further milestones,
+each with a Definition of Done a reviewer can run:
+
+| Milestone | Scope | Done when |
+|---|---|---|
+| 5 — Make the course true again, and keep it true | Re-pin §0.2 from `check_facts.py`, line-range pointer checks, the three unpassable labs, quiz hygiene | `check_facts.py --strict` and `verify.py` both green; audit §9 items 1–11 closed |
+| 6 — The 2026 layer | Evals tier, prompt injection, three-tier privacy (on-device / PCC / cloud), spec-kit 1.0, METR/DORA as the governance rationale, worked pricing | Each new segment has a lab step or quiz item that assesses it |
+| 7 — Sell (Stage 0) | `LICENSE`, email capture, lead product published, merchant-of-record checkout with repo access, devcontainer, dated update window | A stranger can pay, clone, and run `make lab-m2` green in Codespaces |
+| 8 — Own the platform (Stage 1) | Docs-site + paywall, progress, interactive quizzes, Open Badges 3.0, purchasing-power parity, extracted playbooks | Entitlements come from payment webhooks; progress survives a reload |
+| 9 — The founding cohort | Cohort #1 at the researched price, evidence log with stated denominators | Completion, refunds and NPS recorded; pricing re-derived from actuals |
+
+The review's first deliverable is already in the tree: `check_facts.py` reports **5 of 14** pinned facts
+drifted against the 2026-09-16 upstream heads (competitor rows 12 → 14, latest ListenToMe release
+v1.3.0 → v1.4.4, `AGENTS.md` 177 → 188 lines, constitution 79 → 85, tests 1,464 recorded vs 1,766 on
+disk). Nothing in the course was silently edited to match — Milestone 5 is where those edits happen,
+with the checker naming each file.

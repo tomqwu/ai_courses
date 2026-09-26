@@ -38,7 +38,7 @@ The first win matters more than it looks: the research dataset behind this cours
 | **Time budget** | ≈3.25 h: 60 min lesson + ≈2 h lab + 15 min quiz |
 | **Assessment** | **Lab M1 (pass/fail):** `constitution.md` ≤80 lines with ≥3 principles and an autonomy config; `AGENTS.md` ≤200 lines with every rule imperative and verifiable; two stories with Given/When/Then; a Constitution Check gate explicitly passed; ≥5 tasks each citing an exact file path, tests first; the failing (red) pytest output recorded before implementation and a green run after; one evidence entry with commands, counts, date, environment, limitations, and head SHA. **Quiz M1:** 8 questions. |
 
-Models to copy while you work: SignUpFlow's 79-line constitution and 177-line `AGENTS.md` (`SignUpFlow/.specify/memory/constitution.md`; `SignUpFlow/AGENTS.md`), and the house-style contrast that makes rules checkable — "Filter every query by `org_id`." not "Be careful with multi-tenancy." (`SignUpFlow/AGENTS.md`, "House style").
+Models to copy while you work: SignUpFlow's 85-line constitution and 188-line `AGENTS.md` (`SignUpFlow/.specify/memory/constitution.md`; `SignUpFlow/AGENTS.md`), and the house-style contrast that makes rules checkable — "Filter every query by `org_id`." not "Be careful with multi-tenancy." (`SignUpFlow/AGENTS.md`, "House style").
 
 ---
 

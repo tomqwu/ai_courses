@@ -63,3 +63,33 @@ Assumptions from research: warm list 800 subscribers (built via the free teardow
 3. Never invent testimonials; ship beta before claiming social proof.
 4. State refund and deadline policies plainly; no fake countdowns.
 5. Price the transformation and the artifacts (review, feedback, community) — not the video hours.
+
+## Decision record — 2026-09-17 (platform review)
+
+The September 2026 review (`../00-research/04-platform-review-2026.md` §5.3, with the market table in
+`../00-research/06-competitive-landscape-2026.md`) placed this ladder against the bands observed that
+month: single tracks at $169–199 for indie products, subscription libraries clustering at $199–399 a
+year, Maven cohorts averaging ~$500 with a $750–950 mid band and a $2,200–5,000 top band held by
+instructors with published research and alumni.
+
+Decisions recorded, not yet acted on where marked:
+
+1. **Founding cohort stays at $990.** It sits at the top of the observed mid band, which is where a
+   first cohort with three public repos and no alumni belongs.
+2. **$1,490 is held, not raised, and it is gated:** it applies from cohort #2 only once twenty named
+   testimonials with artifact links exist. Until then the sales page shows $1,490 as the list price
+   and $990 as the founding price, which is the same trade the ladder always stated.
+3. **A mid tier is proposed, not launched:** $2,000–2,500 with office hours and a course-specific
+   assistant, the shape the $5,000 evals course sells. Revisit after cohort #1's actuals
+   (issue #67).
+4. **A dated update window replaces "lifetime updates"** on every surface: editions through
+   September 2027, with `CHANGELOG.md` linked from the page. Buyers of technical courses screen for
+   "last updated"; a window is a promise that can be checked.
+5. **The proof section leads with the gate**, not the coverage badge: pointers resolved, facts
+   re-derived, lab runs, the narration contract — the numbers the build printed.
+6. **EU minimums** are stated on the page (withdrawal right, consent-to-immediate-access) and the
+   checkout will be handled by a merchant of record (issue #35), which also settles VAT at the
+   customer's location for recorded and live tiers.
+
+These are the review's recommendations recorded as decisions; the price changes in (3) wait for
+evidence, as this file's own "why not more expensive (yet)" section requires.

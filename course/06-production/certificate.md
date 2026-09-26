@@ -57,18 +57,59 @@ each module's `lab-rubrics.md`):
    partial certificate.
 4. **Spot-check pointers.** Take 5 repo file pointers from the submission at random and confirm each
    resolves. This mirrors the drift checks the course teaches in M4 and takes under two minutes.
-5. **Record** the certificate ID, the head SHA, and the verification reference in the issuance log.
+5. **Issue and record.** `python3 issue_certificate.py issue --record award.json` signs the award,
+   writes the credential and its verification page, and appends the row to the issuance log below.
 6. **Invalidate on change.** If the capstone source changes after issuance, the certificate's SHA no longer
    matches and the record is marked stale — the same rule the course teaches for validation evidence
    (M1/M5).
+
+## The credential: what a stranger can check without asking you
+
+A certificate that lives only in a Markdown table is a claim about a claim. `issue_certificate.py`
+signs each award as an **Open Badges 3.0 credential** — a W3C Verifiable Credential signed with
+Ed25519 — so the award verifies without this repository's cooperation and without an account
+anywhere.
+
+```bash
+python3 issue_certificate.py keygen                       # once: the issuer key pair
+python3 issue_certificate.py issue --record award.json    # sign one award
+python3 issue_certificate.py verify certificates/APS-0001.jsonld
+python3 issue_certificate.py revoke APS-0001 --reason "auto-fail found post-issuance"
+python3 issue_certificate.py status                       # the issuance log, from the records
+```
+
+Each issuance writes three files: the credential (`certificates/APS-0001.jsonld`), its detached
+signature (`.jws`), and a verification page under the learner site. The award record it signs is the
+one the issuance procedure above recomputed — the three thresholds, the evidence log reference and
+the capstone head SHA — so the signature covers the evidence, not just the name.
+
+Four properties are worth stating plainly, because they are what make the credential worth more than
+the table:
+
+- **The public key is inside the credential.** The issuer is a `did:key` identifier that carries its
+  own Ed25519 public key, so verification needs no directory, no server and nothing from this site.
+- **Editing either file is caught.** Changing the JSON after issuance fails verification against the
+  signature; changing the signed payload fails the signature itself.
+- **Revocation is public and separate from validity.** `status-list.json` records `valid`, `stale`
+  (the capstone source moved) or `revoked` (an auto-fail found later). A revoked credential still
+  verifies cryptographically and reports as revoked, which is the honest pair of facts.
+- **The private key is never committed.** `certificates/.gitignore` excludes it, and `keygen`
+  refuses to overwrite one without `--force`, since every credential signed with the old key would
+  stop verifying.
+
+`certificates/award.example.json` is the record format. `python3 test_issue_certificate.py` covers
+all of it, including the tampering and revocation paths; the gate runs those tests.
 
 ## Issuance log format
 
 Keep this beside the certificate records so an awarded certificate is auditable:
 
-| Certificate ID | Student | Track | Cohort | Labs | Quiz avg | Capstone | Head SHA | Awarded | Status |
-|---|---|---|---|---|---|---|---|---|---|
-| APS-0001 | _name_ | _self-paced / cohort_ | _— / cohort name_ | 8/8 | 88% | 91 | `abc1234` | 2026-01-15 | valid |
+| Certificate ID | Student | Track | Cohort | Labs | Quiz avg | Capstone | Head SHA | Awarded | Credential | Status |
+|---|---|---|---|---|---|---|---|---|---|---|
+| APS-0001 | _name_ | _self-paced / cohort_ | _— / cohort name_ | 8/8 | 88% | 91 | `abc1234` | 2026-01-15 | `APS-0001.jsonld` | valid |
+
+`python3 issue_certificate.py status` prints this table from the signed records, so the log and the
+credentials cannot disagree.
 
 **Status values:** `valid` · `stale (source changed)` · `revoked (auto-fail found post-issuance)`.
 

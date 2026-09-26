@@ -13,12 +13,19 @@
     "use_speaker_boost": true
   },
   "preview": {
-    "_comment": "Used when --provider say. Free, offline, clearly labelled as a preview in provenance and in the player.",
-    "provider": "say",
-    "label": "macOS say / Samantha (preview)",
-    "voice": "Samantha",
-    "rate": 175,
-    "gap_seconds": 0.28,
+    "_comment": "Used when --provider say / espeak / preview. Free, offline, clearly labelled as a preview in provenance and in the player. `preview` picks whichever engine this machine has.",
+    "say": {
+      "label": "macOS say / Samantha (preview)",
+      "voice": "Samantha",
+      "rate": 175,
+      "gap_seconds": 0.28
+    },
+    "espeak": {
+      "label": "espeak-ng / en-us (preview)",
+      "voice": "en-us",
+      "rate": 165,
+      "gap_seconds": 0.28
+    },
     "bitrate_note": "mono 64k mp3 — a preview, not the release encode"
   }
 }

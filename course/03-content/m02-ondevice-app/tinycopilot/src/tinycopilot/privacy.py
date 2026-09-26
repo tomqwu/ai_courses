@@ -30,6 +30,14 @@ class PrivacyMode(Enum):
 
     Adding a cloud key never switches modes by itself - the user's explicit
     choice does.
+
+    A platform's private cloud (M3.1's middle tier, such as Apple's Private
+    Cloud Compute) is not LOCAL. Supporting it would mean a fourth member with
+    its own label, "platform private cloud", and a guard that asks the
+    platform framework which route it will take; ``verify_local_model`` must
+    keep returning False for such a model, because a daemon's metadata only
+    describes models it runs itself. Until that member exists, those requests
+    belong to CLOUD.
     """
 
     OFF = "off"
@@ -110,9 +118,11 @@ def verify_local_model(base_url: str, name: str, transport: Transport | None = N
     info = _parse_show_body(body)
     if info is None:
         return False, f"invalid JSON from /api/show for {name!r}"
-    remote_host = info.get("remote_host")
-    remote_model = info.get("remote_model")
-    if remote_host or remote_model:
+    # Presence, not truthiness: ModelPrivacy.isVerifiedLocal requires both keys to be absent, so a
+    # JSON null or an empty string - the daemon still reporting a remote side - fails closed too.
+    if "remote_host" in info or "remote_model" in info:
+        remote_host = info.get("remote_host")
+        remote_model = info.get("remote_model")
         return False, (
             f"{name!r} is a cloud alias (remote_host={remote_host!r}, "
             f"remote_model={remote_model!r}); using it would send the transcript "

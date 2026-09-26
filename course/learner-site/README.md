@@ -18,11 +18,36 @@ recordings is still fully readable, and the player says so instead of failing.
 | Path | Source | Committed? |
 |---|---|---|
 | `mNN.html`, `index.html` | `03-content/mNN-*/slides.md` + `06-production/narration/manifest.json` | No — generated |
+| `lesson-mNN.html`, `handout-mNN.html`, `glossary-mNN.html`, `glossary.html` | the module Markdown, rendered by `site_content.py` with every repo pointer linked at the pinned commit | No — generated |
+| `lab-mNN.html` | `lab.md` — the acceptance checklist as persisted checkboxes, commands with copy buttons, an evidence-entry form | No — generated |
+| `quiz-mNN.html` | `quiz.md` — the knowledge check, playable; the parser fails the build on a question with zero or two keyed answers | No — generated |
+| `search.json` | every unit, slide (with its narration), lesson and lab heading, question and glossary term | No — generated |
+| `proof.json` | what the build measured about itself: pointers resolved, facts re-derived, lab runs, narration contract | No — generated |
+| `assets/progress.js`, `quiz.js`, `lab.js`, `search.js` | hand-written | **Yes** |
 | `narration.json` | `06-production/narration/manifest.json` | No — copied at build time |
 | `assets/audio/…` | `generate_narration.py` | No — generated (see the narration README) |
 | `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
 | `assets/fonts/source-sans-3.woff2` | Source Sans 3, SIL OFL 1.1 (licence travels with it) | **Yes** |
-| `build_site.py`, `check_player.py` | hand-written | **Yes** |
+| `build_site.py`, `check_player.py`, `check_features.py` | hand-written | **Yes** |
+
+## The learner's record
+
+Progress lives in the browser behind one small interface (`assets/progress.js`, key `aps.progress.v2`),
+so a server-backed store can replace it later without touching the pages that read it. Reaching a
+unit's last slide marks it done; a lab completes when every checklist item is ticked; a knowledge
+check at 75%, the certificate threshold. Rings on the module and path cards, a "continue where you
+left off" strip on the course home, and export / import / reset as plain JSON — the learner owns it,
+nothing is uploaded. Press `/` anywhere to search.
+
+`check_features.py` drives all of this in a real browser, from empty storage, the way a learner
+uses it. Ticks survive a reload and reach the rings and the "continue" strip. Every knowledge-check
+question plays to its keyed answer, and no model answer shows before an attempt. A keyboard-only
+wrong answer names the key. Lab M1's checklist persists and exports its evidence entry in the
+Module 1 format, and every lab page shows its rubric's auto-fail list exactly once. `/` finds a
+glossary term together with its slide. The reading pages link pointers at a pinned commit, and the
+course home fits a 390px phone. It runs in the gate after `check_player.py`, and it fails when a
+quiz key names no option or a lab loses its auto-fail list; both were tried by breaking a built
+page.
 
 ## Design system
 
@@ -59,7 +84,7 @@ site found why it read flat. Measured across all 233 slides:
 | Distinct hex colours in the stylesheet | 48, ≈20 of them outside the token block | **25 named tokens, zero literals outside the block** |
 | Title / body size ratio | 2.29× | **2.61×** |
 | Slide-chrome text as a share of frame height | 1.47% — dies on a projector | **2.40%** |
-| Slides whose content shape is one bullet list | 143 / 233 = 61% (79% bullet-only) | unchanged — a content problem, not a CSS one |
+| Slides whose content shape is one bullet list | 143 / 233 = 61% (79% bullet-only) | unchanged by CSS — fixed later as content: **57 / 233 = 24%**, every deck under 33% (`06-production/slides/slide_shapes.py`, issue #40) |
 
 The rail is the structural half of the fix: a spine running the full frame height gives the empty half
 of the frame an edge to sit against, and the body block is centred against it. **This composes the
@@ -191,7 +216,7 @@ This course already had every level of that. It just never surfaced one, and the
 | Knowledge check | `Quiz M#` (8 questions each) | 9 · 72 questions |
 | Summary | the recap + discussion prompt | 9 |
 
-A unit is a **lesson segment**, not a slide: 63 units over 233 slides averages 3.7 slides a unit, which
+A unit is a **lesson segment**, not a slide: 70 units over 258 slides averages 3.7 slides a unit, which
 sits inside Microsoft's 3–10 minute unit size, while a single slide averages 34 seconds and would be
 a meaningless thing to mark complete.
 
@@ -209,8 +234,9 @@ structure rather than invented:
   slide. `m08` has no `M8.1` heading anywhere in its source — without this rule, five minutes of
   segment-one content would have been filed as the Introduction.
 
-`check_player.py` asserts the result covers all 233 slides **exactly once**, that every module has an
-intro, three segments, a lab, a quiz and a summary, and that the total is 63.
+`check_player.py` asserts the result covers every slide **exactly once**, that every module has an
+intro, three segments, a lab, a quiz and a summary, and that the total is 70: 63 for M0–M8 and 7 for
+the free M9.
 
 It then cross-checks the model against a number written by hand: `bundle-map.md` states the On-Device
 path is *"17 of 27 teaching segments · 4 of 8 full labs · 5 of 9 quizzes"*. The model derives 17
@@ -321,13 +347,13 @@ The depth audit that followed the diagram pass found the real cause of the "hell
 depth was in the *spoken* layer (86–103 words a slide, real numbers, real files) while the visible
 face was a 36-word prompt — and the slides that teach a real Swift codebase showed **zero lines of
 code**. A slide that says "newest-first fit, budget-bounded window" and cites
-`ConversationStore.swift:56-67` without showing the loop is asking to be trusted.
+`ConversationStore.swift:76-87` without showing the loop is asking to be trusted.
 
 The fix is the **evidence exhibit**: the cited code, verbatim, on the slide — a code fence under the
 claims (fences were always exempt from the bullet budget; the budget is about prose, not proof). The
 pilot is module m02, five slides: the three protocol seams, the `buildContext` signature with its
-4,000-character default, the eleven-line `recentContext` loop whose guard is the "never empty"
-guarantee, the token-prefix matcher, and the three-case `OllamaStreamError` enum. The narration for
+4,000-character default, the short `recentContext` loop whose guard is the "never empty"
+guarantee, the token-prefix matcher, and the `OllamaStreamError` enum. The narration for
 those five slides was rewritten to walk the code, regenerated with the free local `say` preview
 voice, and the manifest re-verified — the release voice (#21) is still uncut, so this is the window
 in which scripts can change. The narration contract pins captions = transcript = script, so all

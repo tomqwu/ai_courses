@@ -7,7 +7,7 @@
 | Component | Weight | Format |
 |---|---|---|
 | Module labs (M0–M7) | 60% | Pass/fail checkpoints, 8 labs, self-verified with evidence; instructor-verified in cohort tier |
-| Module quizzes | 20% | 8 auto-gradable questions each (64 total), answer keys in each quiz file |
+| Module quizzes | 20% | 8 auto-gradable questions each (72 total across the nine modules M0–M8), answer keys in each quiz file |
 | Capstone (M8) | 20% | 5-dimension rubric below, ≥80% to pass, demo required |
 
 Certificate of completion (cohort/self-paced with evidence): all 8 labs passed + quizzes ≥75% average + capstone ≥80%.
