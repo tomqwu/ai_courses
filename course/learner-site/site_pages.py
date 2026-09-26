@@ -71,7 +71,20 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) 
     </footer>
   </article>
 </div>"""
+    # Where each unit's section starts in the lesson — the home page's "Read this segment instead".
+    read_anchors = {}
+    if kind == "lesson":
+        for h in headings:
+            if h["level"] != 2:
+                continue
+            text = html.unescape(re.sub(r"<[^>]+>", "", h["text"])).strip()
+            for rx, fixed in READ_UNIT:
+                m = rx.match(text)
+                if m:
+                    read_anchors.setdefault(fixed or m.group(1), h["id"])
+                    break
     record = {"kind": kind, "deck": deck["id"], "title": title or f"{KIND_TITLES[kind]} — {short}",
+              "read_anchors": read_anchors,
               "href": f"{kind}-{deck['id']}.html",
               "headings": [{"text": h["text"], "id": h["id"]} for h in headings if h["level"] <= 3],
               "text": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", rendered))[:20000]}

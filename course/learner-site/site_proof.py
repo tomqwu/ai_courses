@@ -44,10 +44,14 @@ def pointer_proof() -> dict:
         else:
             checked, problems = result
             ranges = 0
+        try:
+            anchors, anchor_problems = V.check_anchors()
+        except Exception:                               # noqa: BLE001 — older verify without anchors
+            anchors, anchor_problems = 0, []
         return {"checked": checked, "ranges": ranges, "problems": len(problems),
-                "live": clones_present()}
+                "anchors": anchors, "anchor_problems": len(anchor_problems), "live": clones_present()}
     except Exception as error:                          # noqa: BLE001 — proof must not break the build
-        return {"checked": 0, "ranges": 0, "problems": -1, "live": False, "error": str(error)}
+        return {"checked": 0, "ranges": 0, "problems": -1, "anchors": 0, "live": False, "error": str(error)}
 
 
 def facts_proof() -> dict:
@@ -109,8 +113,29 @@ def gather(decks: list[dict], manifest: dict) -> dict:
             "labs": lab_proof(), "narration": narration_proof(decks, manifest)}
 
 
+def proof_card(proof: dict, site_base: str) -> str:
+    """The home page's dark card (#79): three numbers this build measured, and where they are checked.
+
+    Every number is read from `proof`, which the build gathered; a number the build did not see is
+    shown as a dash, never as a remembered value."""
+    p, n = proof["pointers"], proof["narration"]
+    def num(value: int) -> str:
+        return f"{value:,}" if value else "—"
+    cells = (
+        (num(p.get("checked", 0)), "file pointers resolve at the pinned commits"),
+        (num(p.get("anchors", 0)), "cited ranges pinned to the code they quote"),
+        (num(n.get("recorded", 0)), f"of {n.get('slides', 0)} slides recorded, captions matching the approved script"),
+    )
+    items = "".join(f'<div class="proof-num"><span class="proof-value">{v}</span>'
+                    f'<span class="proof-label">{html.escape(label)}</span></div>' for v, label in cells)
+    return (f'<section class="proof-card-dark" aria-labelledby="proof-card-title" data-proof-card>'
+            f'<h2 id="proof-card-title">What this course checks about itself, every build</h2>'
+            f'<div class="proof-nums">{items}</div>'
+            f'<a href="{site_base}/proof.html">How each number is checked</a></section>')
+
+
 def proof_section(proof: dict, site_base: str) -> str:
-    """The landing page's proof block."""
+    """The proof page's body (#79 moved it off the home page, which links to it)."""
     p, f, n = proof["pointers"], proof["facts"], proof["narration"]
     live_note = ("measured at build time against the cloned case-study repositories"
                  if f["live"] else "pinned values, dated; re-measured whenever the site is built beside the clones")

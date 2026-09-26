@@ -220,7 +220,7 @@
     document.querySelectorAll('[data-continue]').forEach(function (el) {
       if (s.last && s.last.href) {
         el.hidden = false;
-        var a = el.querySelector('a');
+        var a = el.querySelector('[data-continue-link]');
         if (a) { a.href = s.last.href; }
         var l = el.querySelector('[data-continue-label]');
         if (l) l.textContent = s.last.label || s.last.href;
