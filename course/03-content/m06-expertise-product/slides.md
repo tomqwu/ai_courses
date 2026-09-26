@@ -47,7 +47,6 @@ title: M6 — The Expertise Product: Evidence, Routing, Editions
 
 - `ai_qe/CONTRIBUTING.md:88-95` — "Research conventions"
 - A number without a stated limit is an advertisement
-- The supported-claim field is the one people skip
 
 ```markdown
 ## Research conventions
@@ -71,23 +70,16 @@ title: M6 — The Expertise Product: Evidence, Routing, Editions
 
 ## Benchmark records, side by side
 
-- `ai_qe/CONTRIBUTING.md` — "Research conventions"
 - `ai_qe/docs/evidence/benchmarks.md` — METR and Peng records
-- METR: 19% longer (CI +2% to +39%), 246 issues
-- Peng: 55.8% faster, 95 freelancers, one synthetic task
 - Both measured — one independent, one vendor-affiliated
 
 ```markdown
-### METR, "Measuring the Impact of Early-2025 AI on Experienced Open-Source
-Developer Productivity", 10 Jul 2025
-
-**Finding:** AI-allowed issues took 19% longer (CI +2% to +39%); developers
-expected 24% faster and afterwards believed 20% faster
+### [METR, …](…), 10 Jul 2025 …
+**Finding:** AI-allowed issues took 19% longer (CI +2% to +39%);
+developers expected 24% faster and afterwards believed 20% faster
 **Supports:** Task efficiency (negative)
-
-### Peng et al., "The Impact of AI on Developer Productivity: Evidence from
-GitHub Copilot", 13 Feb 2023
-
+…
+### [Peng, …](…), 13 Feb 2023
 **Finding:** 55.8% faster (71.2 vs 160.9 minutes; CI 21% to 89%)
 **Supports:** Task efficiency
 ```
@@ -123,15 +115,13 @@ Gartner AI-testing productivity figure; …
 ## Provenance manifests
 
 - `ai_qe/research/document-manifest.json` — 11 retrievals, hashed
-- M02 McKinsey PDF: `"status": "unavailable"`
-- Reason recorded: "The read operation timed out"
 - A logged failure proves the manifest is real
 - `ai_qe/research/visual-provenance.md` — even images have provenance
 
 ```json
 {
   "id": "M02",
-  "url": "https://www.mckinsey.com/…/the-ai-revolution-in-software-development_final.pdf",
+  "url": "https://www.mckinsey.com/…/the-ai-revolution-…_final.pdf",
   "retrieved": "2026-09-05",
   "status": "unavailable",
   "reason": "The read operation timed out"
@@ -226,10 +216,15 @@ Gartner AI-testing productivity figure; …
 
 `ai_qe/_data/briefing_routes.json`
 
-```yaml
-evp:
-  slides: [1, 3, 19, 20, 6, 21, 18, 17, 13, 14, 15, 16, 10, 12]
-  closing: 12
+```json
+"evp": {
+  "title": "Our Banking Client: strategic vision",
+  …
+  "slides": [ 1, 3, 19, 20, 6, 21, 18, 17, 13, 14, 15, 16, 10, 12 ],
+  "closing": 12,
+  "full_order": [ 1, 2, 3, …, 11, 13, …, 21, 12 ],
+  …
+},
 ```
 
 - 14 of 21 slides; `full_order` retains all
@@ -318,14 +313,15 @@ evp:
 `ai_qe/_data/release.yml`
 
 ```yaml
-version: "1.24.1"          # site + player
+version: "1.24.1"
 slide_edition: "1.24.0"
 fintech_edition: "1.24.0"
+# …
 questionnaire_edition: "4"
 research_edition: "1.7.0"
 ```
 
-- A player-only patch advanced `version` alone
+- A player-only patch advanced `version` (site + player) alone
 - `slide_edition` stayed at 1.24.0, deliberately
 - "Public content changes require a new edition"
 
@@ -350,17 +346,14 @@ research_edition: "1.7.0"
 ## `make check` — content needs tests
 
 - `ai_qe/Makefile`: `check: models build site browser`
-- Browser QA: five CI-identical groups
-- Both Chromium and WebKit
-- Viewports: 1280×720, 1920×1080, 375×812
+- `ai_qe/tools/qa-groups.json`: five CI-identical browser groups
+- Chromium and WebKit at 1280×720, 1920×1080, 375×812
 - An overflowing slide fails like a unit test
 - Links are checked; a 200 is not proof
 
-```make
-check: models build site browser
-models:
-	npm test
-	node --test tools/readiness-model.test.cjs tools/narration-review.test.cjs
+```json
+{ "playback": [ … ], "flows": [ … ], "site": [ … ],
+  "models": [ … ], "architecture": [ … ] }
 ```
 
 <!-- NOTES: `ai_qe/Makefile` defines check as models, build, site, browser. Models runs the npm tests, the Python unit tests, narration validation with require-complete, and contract validation. Build runs Jekyll and finalize. Browser runs five CI-identical groups declared in `tools/qa-groups.json` — playback, flows, site, models, architecture — in both Chromium and WebKit at three viewports: twelve eighty by seven twenty, nineteen twenty by ten eighty, and three seventy-five by eight twelve. One more line to keep: the link check does not treat a successful HTTP response as evidence a claim is correct. Timing: 4 minutes. Transition: media needs its own gate. -->
@@ -414,9 +407,9 @@ models:
 `ai_qe/_data/pilot_gates.json`
 
 ```json
-{ "go_saving": 15, "review_saving": 10, "baseline_weeks": 3,
-  "pilot_weeks": 8, "observation_releases": 2,
-  "min_tasks_per_arm": 30, "max_extension_weeks": 4 }
+{ "go_saving": 15, "review_saving": 10, "adoption": 50,
+  "baseline_weeks": 3, "pilot_weeks": 8, "observation_releases": 2,
+  "min_tasks_per_arm": 30, "max_extension_weeks": 4, … }
 ```
 
 - Boundaries are data, not prose

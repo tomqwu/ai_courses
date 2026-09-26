@@ -92,6 +92,7 @@
     "Real impl lives in the app target",
     "public protocol AudioCapturing"
   ],
+  "ListenToMe/Sources/ListenToMeCore/Capture.swift:4-9": "public protocol AudioCapturing",
   "ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:13": "public protocol LLMProvider",
   "LLMProvider.swift:13-22": [
     "public protocol LLMProvider",
@@ -104,7 +105,9 @@
     "func recentContext",
     "Always include the most recent"
   ],
+  "ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:79-85": "if !collected.isEmpty && total + cost > maxChars",
   "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12": "maxChars: Int = 4000",
+  "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12-14": "maxChars: Int = 4000",
   "ContextEngine.swift:12": "maxChars: Int = 4000",
   "ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:3": "Assembles prompt context and decides when to fire a proactive suggestion",
   "ListenToMe/Sources/ListenToMeCore/ModelRouter.swift:4-6": "Holds the registered providers and routes streaming requests to the active one",
@@ -112,7 +115,7 @@
     "func transcriptBudget",
     "100_000"
   ],
-  "ListenToMe/Sources/ListenToMeCore/VAD.swift:25-36": "mutating func process(rms value: Float, at time: TimeInterval)",
+  "ListenToMe/Sources/ListenToMeCore/VAD.swift:26-34": "(time - lastSpeechTime) >= silenceDuration",
   "ListenToMe/SharedPlatform/AppleIntelligenceProvider.swift:17-25": [
     "unavailableReason",
     "deviceNotEligible",
@@ -415,5 +418,14 @@
     "FR-023",
     "FR-036"
   ],
-  "SignUpFlow/specs/014-security-hardening/spec.md:350-359": "## Assumptions"
+  "SignUpFlow/specs/014-security-hardening/spec.md:350-359": "## Assumptions",
+  "ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:9-14": "XCTSkipUnless",
+  "ListenToMe/scripts/check-coverage.sh:11-40": "exit !(pct + 0 >= thr + 0)",
+  "SignUpFlow/.specify/memory/constitution.md:1-3": "A roster and scheduling system",
+  "SignUpFlow/AGENTS.md:138-149": "Follow-ups:",
+  "SignUpFlow/api/route_auth_policy.py:1-171": [
+    "Reviewed authentication policy",
+    "ROUTE_AUTH_POLICY = {"
+  ],
+  "SignUpFlow/specs/014-security-hardening/checklists/requirements.md:38-44": "ALL CHECKS PASSED"
 }

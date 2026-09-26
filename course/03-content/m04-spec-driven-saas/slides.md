@@ -30,13 +30,16 @@ title: M4 — The Spec-Driven SaaS: From Idea to Executable Spec
 
 ## M4.1 — The command chain
 
-```
-specify ── clarify ── CHECKLIST ── plan ──────────────────────── tasks ── implement ⇄ converge
-  WHAT      ≤3 Qs     before plan  research · data-model ·        Phase 2    until Converged
-                                   contracts · Constitution Check
+```text illustrative
+specify    ── WHAT
+clarify    ── ≤3 Qs
+CHECKLIST  ── before plan
+plan (HOW) ── research · data-model · contracts · Constitution Check
+tasks      ── Phase 2
+implement  ⇄  converge, until Converged
 ```
 
-Each command consumes the previous one's output.
+Illustrative diagram: each command consumes the previous one's output.
 SignUpFlow predates 1.0: dotted commands in `.claude/commands/`.
 
 <!-- NOTES: This is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote; nothing is carried in anyone's head. `/speckit.specify` writes WHAT and the requirements checklist; `/speckit.clarify` burns a small question budget; the checklist gates before any planning; plan adds HOW — research decisions, the data model, contracts that pin the seams, and the Constitution Check; tasks turn it into work. Spec-kit 1.0 closes the loop: implement, then converge, which checks the code against the spec and appends unmet work as tasks, until it reports Converged. SignUpFlow predates 1.0, so its dotted command definitions live in `.claude/commands/` and the templates in `.specify/templates/` — both openable in the clone. Notice there is exactly one gate, and it is cheap. Transition: now walk the folder itself, starting with WHAT. -->
@@ -96,19 +99,14 @@ SignUpFlow predates 1.0: dotted commands in `.claude/commands/`.
 ## Proof: `plan.md` — HOW, plus one absence
 
 - **Constitution Check** gate: seven principles, seven verdicts
-- "Constitution Violations: NONE"
-- Complexity Tracking table, filled only if violations
-- Every file annotated `[NEW]` or `[MODIFY]`
 - No `data-model.md` here — security spans entities
 
 ```markdown
 ## Constitution Check
-
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
-**Compliance Status**: ✅ PASS - All principles satisfied with security-specific emphasis
-- …
+*GATE: Must pass before Phase 0 research.
+Re-check after Phase 1 design.*
+…
 **Constitution Violations**: NONE
-
 **Complexity Justification**: N/A (no violations to justify)
 ```
 
@@ -124,11 +122,9 @@ SignUpFlow predates 1.0: dotted commands in `.claude/commands/`.
 - csrf 708 · session 748 · password-reset 801
 - **4,661 lines** total
 - Config table repeats the spec's numbers
-- Key schema, error keys, test sketch, benchmarks
 
 ```markdown
 ### Default Rate Limits
-
 | Endpoint | Window | Limit | Scope | Lockout |
 |----------|--------|-------|-------|---------|
 | `POST /api/auth/login` | 5 min | 5 attempts | Per IP | 15 min |
@@ -144,20 +140,18 @@ SignUpFlow predates 1.0: dotted commands in `.claude/commands/`.
 ## Proof: the gate and the quickstart
 
 - `quickstart.md`: "10-Minute Deployment", timed steps
-- Prerequisites, verification checklist, troubleshooting
 - `checklists/requirements.md`: three pass/fail groups
-- Verdict: "ALL CHECKS PASSED … Quality Score: 100%"
 - Validated 2025-10-22 by the specify step's own check
 
 ```markdown
 ## Validation Results
-
 ✅ **ALL CHECKS PASSED**
-
+…
 **Quality Score**: 100% (all checklist items passed)
 ```
 
-`specs/014-security-hardening/quickstart.md`, `checklists/requirements.md`
+`SignUpFlow/specs/014-security-hardening/quickstart.md`
+`SignUpFlow/specs/014-security-hardening/checklists/requirements.md:38-44`
 
 <!-- NOTES: The quickstart is 643 lines of timed deployment with exact commands like `poetry add pyotp==2.9.0`. The checklist is 50 lines and grades three groups: Content Quality, Requirement Completeness, Feature Readiness. Its first rule is the WHAT/HOW enforcement line — "No implementation details" — and it ends with a 100% quality score. Hold that number. In M4.3 I show you a count in this very file that is wrong, and the 100% did not catch it. A self-graded gate tells you what its author believed; only reading it against the spec tells you what is true. Transition: and then there's the file 014 never got. -->
 
@@ -167,9 +161,7 @@ SignUpFlow predates 1.0: dotted commands in `.claude/commands/`.
 
 - 014 has **no** `tasks.md`
 - Its plan still lists "Phase 2: Run `/speckit.tasks`"
-- Format: `.specify/templates/tasks-template.md`
 - `[P]` parallel, `[US#]` story, exact file paths
-- Real line: T017 creates a method in `api/services/onboarding_service.py`
 
 ```markdown
 - [ ] T017 [P] [US1] Implement create_wizard_state method
@@ -327,13 +319,17 @@ All pass/fail. Cheapest place to stop a bad spec.
 ## The PR body format
 
 ```text
-Summary:       one line per change
-Changed files: path: reason
-Validation:    what you ran (commands and result)
-Follow-ups:    known gaps, deferred work, open questions
+Summary:
+- one-line per change
+Changed files:
+- path: reason
+Validation:
+- what you ran (commands and result)
+Follow-ups:
+- known gaps, deferred work, or open questions
 ```
 
-`AGENTS.md` ("PR and commit format")
+`SignUpFlow/AGENTS.md:138-149` ("PR and commit format")
 
 <!-- NOTES: Four sections, fixed. Summary names the change; Changed files gives path and reason; Validation records the commands you ran and their results; Follow-ups records known gaps, deferred work, and open questions. The rules behind it: run `make test-all` for every PR, there is no CI — all validation runs locally, so record commands, outcomes, limitations, and the pushed head SHA. Merge only after local validation and review are recorded and GitHub reports mergeable. And never "fabricate status checks, bypass protections, or treat missing evidence as success." A Validation section that records a failure is still evidence; "tests pass" with no command is not. -->
 

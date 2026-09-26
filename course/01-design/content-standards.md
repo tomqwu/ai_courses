@@ -92,6 +92,17 @@ bands only the named artifacts — but every repo pointer in them is checked lik
   Notes are where the teaching lives: give the example, the number, the pointer, the "why this
   matters". Write them as spoken prose, not bullet fragments.
 - Use fenced code blocks for commands/code; keep them ≤ 10 lines. Use tables for comparisons.
+- **A fenced exhibit is a copy, or it says what it is.** A copy is taken from a file the slide cites,
+  with a full pointer (`Repo/path:N-M`, or `course/...`). It may be rewrapped and elided with `…`,
+  but it is never reformatted (no JSON shown as YAML) and never annotated inside the fence. Every
+  line must occur in the cited file, inside the cited range. Anything else declares itself after the
+  language: ```` ```bash commands ````, ```` ```text output ````, ```` ```markdown template ````,
+  ```` ```text illustrative ```` — and an illustrative example is labelled so on the slide as well.
+  `verify.py` checks both.
+- **Everything on a slide is visible in its 16:9 frame with the narration panel present.** A
+  recording never scrolls, so the browser check (`check_player.py --strict-fit`) fails a slide whose
+  content needs scrolling. Trim bullets the exhibit already proves, or trim the exhibit to the lines
+  the narration walks, before reaching for another slide.
 - No images required (the deck must render with no external assets). If you reference a diagram,
   build it from text/ASCII or a table.
 

@@ -120,13 +120,17 @@ Turn a completed story into a PR a reviewer can trust: one PR per story in the f
 
 **One PR per story.** The task file is built for it: tasks grouped by story, tests first, and a checkpoint after each story — "Stop at any checkpoint to validate story independently" (`.specify/templates/tasks-template.md`). A PR carrying exactly one story is reviewable in one sitting, demoable, and revertable without collateral damage.
 
-**The PR body format.** `AGENTS.md` ("PR and commit format") fixes four sections:
+**The PR body format.** `SignUpFlow/AGENTS.md:138-149` ("PR and commit format") fixes four sections:
 
 ```text
-Summary:      one line per change
-Changed files: path: reason
-Validation:   what you ran (commands and result)
-Follow-ups:   known gaps, deferred work, or open questions
+Summary:
+- one-line per change
+Changed files:
+- path: reason
+Validation:
+- what you ran (commands and result)
+Follow-ups:
+- known gaps, deferred work, or open questions
 ```
 
 The rules behind it (`AGENTS.md`, "PR rules"): run `make test-all` for every PR; there is no CI — all validation runs locally, so record commands, outcomes, limitations, and the pushed head SHA in the PR; merge only after local validation and review are recorded and GitHub reports mergeable; and never "fabricate status checks, bypass protections, or treat missing evidence as success." A Validation section that says "tests pass" with no command is not evidence; one that records a failure still is — the honest record outranks the flattering one.

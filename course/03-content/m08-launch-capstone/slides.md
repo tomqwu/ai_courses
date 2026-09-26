@@ -71,23 +71,19 @@ title: M8 — Launch: Sales Page, Email Arc, Capstone
 <!-- _class: proof -->
 ## Proof: the course's own page maps row for row
 
-| Section | On `04-sales/landing-page.md` |
+| Section | On `course/04-sales/landing-page.md` |
 |---|---|
 | 1–2 | "Ship AI products a skeptical engineer can audit" + for/isn't lists |
 | 3–4 | "Three things are always missing" + Week/Module outcome table |
 | 5 | Tom Wu: three named repos with checkable numbers |
-| 6–8 | Three reserved testimonial slots, real-objection FAQ, three tiers + a $199 bundle, one CTA |
+| 6–8 | Reserved testimonial slots, objection FAQ, three tiers + $199 bundle, one CTA |
 
 ```markdown
-# Ship AI products a skeptical engineer can audit.
-
 **This isn't for you if you:**
-- Haven't written code before (start with a general programming course first)
-- Want prompt-engineering trivia or "AI side hustle" content with no building
+- Haven't written code before …
+- Want prompt-engineering trivia or "AI side hustle" content …
 - Need an enterprise AI-governance compliance curriculum
 ```
-
-Pointers: `04-sales/landing-page.md` · `00-research/02-course-market-research.md` §E
 
 <!-- NOTES: Open the landing page beside this slide and check each row. The headline is one falsifiable sentence. The for and isn't lists are explicit. The problem section names three missing things, and the curriculum table lists abilities, not topics. The bio names three repos with numbers you can go open. Section six is three reserved slots with an honesty note, and section eight shows three tiers plus a single-track bundle, with the same enroll call to action repeated at top, middle, and bottom. Transition: two of those rows need a second look. Timing: 3 minutes. -->
 
@@ -251,15 +247,18 @@ Pointers: `04-sales/launch-plan.md:48-50` · `04-sales/pricing-and-platforms.md:
 
 ## Model it before you run it
 
-```
-expected revenue = list × open × click × page conversion × price
-1,200 × 38% × 15% × 16% × $797 ≈ $8,767
-→ ~456 opens · ~68 clicks · ~11 enrollments
+```text
+… Revenue math: list × open × CTOR × page-conversion × price
+(e.g., 1,200 subs × 38% open × 15% CTOR × 16% page × $797
+≈ $8,767). …
 ```
 
+- That is ~456 opens · ~68 clicks · ~11 enrollments.
 - Warm lists convert 2–5% overall; one pass is conservative.
 - Each conversion email is another pass through the funnel.
 - Record actuals after: list, delivery, opens, clicks, conversions.
+
+`course/00-research/02-course-market-research.md:62`
 
 <!-- NOTES: This worked example is in the research file, section E. Multiply the five factors in order and sanity-check the result against the warm-list band of two to five percent overall — the single-chain model is deliberately conservative because each conversion email sends the reader through the funnel again. The important half is the last bullet: after the launch, record actuals and re-derive the model. The launch plan opens a launch evidence log for exactly that reason, and the course practices the evidence discipline it teaches. Transition: the five levers and the honest move for each. Timing: 3 minutes. -->
 
@@ -285,20 +284,21 @@ expected revenue = list × open × click × page conversion × price
 <!-- _class: proof -->
 ## Proof: deliverability is upstream of every number
 
-- SPF, DKIM, and DMARC before the first send.
 - Gmail and Yahoo enforce this for bulk senders.
-- Test-send to a Gmail and a corporate address.
 - Scrub hard bounces; keep the list opt-in only.
 - A spam-folder email has an open rate of zero.
 
 ```markdown
-> Deliverability prerequisites: SPF, DKIM, DMARC configured before the
-> first send; list is opt-in only.
-
-- [ ] SPF/DKIM/DMARC verified (send test to Gmail + a corporate address)
+> … Deliverability prerequisites: SPF, DKIM, DMARC configured
+> before the first send; list is opt-in only.
+…
+- [ ] SPF/DKIM/DMARC verified (send test to Gmail + a corporate
+  address)
 ```
 
-Pointers: `04-sales/launch-plan.md` ops checklist · `00-research/02-course-market-research.md` §E
+`course/04-sales/launch-plan.md:3,56`
+
+`course/00-research/02-course-market-research.md:62`
 
 <!-- NOTES: No math survives the spam folder, so this comes before the sequence is queued, not after the first weak send. The launch plan's operations checklist has the concrete items: verify SPF, DKIM, and DMARC, then send test messages to a Gmail address and a corporate address because the two filter differently. Keep the list opt-in only and scrub hard bounces. The research section E notes that Gmail and Yahoo enforce this for bulk senders, so this is an infrastructure requirement now, not a best practice. Transition: where testimonials come from before anyone has bought. Timing: 3 minutes. -->
 
@@ -308,17 +308,19 @@ Pointers: `04-sales/launch-plan.md` ops checklist · `00-research/02-course-mark
 
 - No buyers yet means no testimonials yet.
 - Trade cohort one's discount for proof.
-- Founding tier $990 against $1,490.
 - Agreement at checkout: testimonial plus feedback.
 - A discount with no reason trains buyers to wait.
 - Cautionary tale: Udemy's $9.99 spiral (§D).
 
 ```markdown
 ### Studio Live (8-week cohort) — **$1,490**
-Everything in Studio · weekly 90-minute workshops (I do / We do / You do) ·
-instructor code review on 3 labs · capstone review + demo day · cohort channel.
+Everything in Studio · weekly 90-minute workshops (I do / We do /
+You do) · instructor code review on 3 labs · capstone review +
+demo day · cohort channel.
 *Founding cohort: $990 in exchange for a testimonial and feedback.*
 ```
+
+`course/04-sales/landing-page.md:189-190`
 
 <!-- NOTES: Email six needs a before/after/result testimonial, and you have no buyers. The research endorses the trade: run cohort one at a discount explicitly exchanged for a testimonial and a feedback session, agreed at checkout. The course's own founding tier is $990 against $1,490, and the trade is stated on the page. That is honest pricing, because the buyer knows what the discount buys. The cautionary tale is the marketplace flash-sale pattern: a discount with no stated reason trains buyers to wait for the next one. Transition: the capstone, and the contract that keeps it small. Timing: 3 minutes. -->
 
@@ -375,7 +377,7 @@ Pointers: `00-research/00-synthesis.md` · `03-content/m08-launch-capstone/lab.m
 
 ## The evidence record: three blocks
 
-```markdown
+```markdown template
 ## Capstone evidence — <project> — <date>
 Commands run (with results):
 - <command> → <pass/fail counts>

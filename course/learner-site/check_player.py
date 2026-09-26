@@ -251,7 +251,7 @@ var CASES = __CASES__;
 var results = [], i = 0, f = null;
 function next() {
   if (i >= CASES.length) { document.getElementById("out").textContent = JSON.stringify(results); return; }
-  var c = CASES[i++], deck = c[0], n = c[1];
+  var c = CASES[i++], deck = c[0], n = c[1], audit = c[2];
   try { localStorage.clear(); } catch (e) {}   // the player resumes from localStorage and that
                                                 // beats the deep link — start each case clean
   if (f) document.body.removeChild(f);
@@ -274,9 +274,9 @@ function next() {
         // slide itself: it grows a scrollbar the recording cannot scroll. Measure that instead.
         var content = slide.querySelector(".slide-content");
         out.contentOverflow = content ? Math.max(0, content.scrollHeight - content.clientHeight) : 0;
-        // The deck contrast audit sees slide 1 (a cover, no diagram); these slides carry the
-        // diagrams, so they get audited here, at their real layout.
-        out.contrast = apsAuditContrast(f.contentWindow, f.contentDocument);
+        // The deck contrast audit sees slide 1 (a cover, no diagram); the slides that carry a
+        // diagram or an exhibit get audited here, at their real layout. Every slide is measured.
+        if (audit) { out.contrast = apsAuditContrast(f.contentWindow, f.contentDocument); }
         out.diagrams = [];
         Array.prototype.forEach.call(slide.querySelectorAll(".diagram"), function (dg) {
           var r = dg.getBoundingClientRect();
@@ -512,28 +512,29 @@ def check_pages(browser: str, port: int) -> list[str]:
     return problems
 
 
-# Slides whose content scrolls inside the 16:9 frame. Reported as warnings until the slides are
-# refit (#70); `--strict-fit` counts them as failures, which is where the gate should end up.
+# Slides whose content scrolls inside the 16:9 frame. A recording cannot scroll, so the gate runs
+# with `--strict-fit` and fails them (#70); without it they are listed as warnings, for drafting.
 FIT_WARNINGS: list[str] = []
 
 
 def check_diagram_geometry(browser: str, port: int) -> list[str]:
-    """A declared diagram must fit its slide frame.
+    """A declared diagram must fit its slide frame, and no slide's content may need scrolling.
 
     The frames are 16:9 with overflow hidden, so an oversized diagram is silently clipped —
-    invisible content, not a style bug. This is measured, not assumed: every slide that
-    declares a diagram is opened by deep link and its component measured against the frame
-    box in a real layout.
+    invisible content, not a style bug. This is measured, not assumed: every slide is opened by
+    deep link and its diagram and its content box are measured against the frame in a real
+    layout.
     """
     sys.path.insert(0, str(SITE_ROOT))
     import build_site as B                                                      # noqa: PLC0415
     cases = []
     for deck_id in B.DECK_IDS:
         for slide in B.parse_deck(deck_id)["slides"]:
-            # Diagrams and code exhibits both carry the substance, and the frame clips silently
-            # either way — both get opened and measured.
-            if slide.get("diagram") or "<pre>" in slide.get("html", ""):
-                cases.append([deck_id, slide["number"]])
+            # Every slide is opened and measured: a bullet slide scrolls inside the frame as
+            # silently as an exhibit does (#70). Diagrams and code exhibits carry the substance,
+            # so those also get the contrast audit at their real layout.
+            audit = bool(slide.get("diagram") or "<pre>" in slide.get("html", ""))
+            cases.append([deck_id, slide["number"], audit])
     if not cases:
         return []
     page = SITE_ROOT / DIAGRAM_PROBE_PAGE
@@ -560,7 +561,7 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
         return ["diagram geometry: unreadable probe output"]
     by_case = {(r.get("deck"), r.get("slide")): r for r in results}
     problems: list[str] = []
-    for deck_id, n in cases:
+    for deck_id, n, _audit in cases:
         r = by_case.get((deck_id, n))
         if not r or r.get("error"):
             problems.append(f"{deck_id} slide-{n}: geometry probe failed "

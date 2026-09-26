@@ -50,24 +50,20 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 
 ## Proof: the mode enum and its labels
 
-- `AIProcessingMode`: off / local / apple / cloud
-- Cloud label names the data it ships
-- "Adding a key alone does not switch modes"
-- Pointer: `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`
+- README: "Adding a key alone does not switch modes"
 
 ```swift
 public enum AIProcessingMode: String, CaseIterable, Sendable {
     case off, local, apple, cloud
-    public var label: String {
-        switch self {
-        case .off: return "AI off — transcript only"
-        case .local: return "Local Ollama models only"
-        case .apple: return "Apple Intelligence — on this device"
-        case .cloud: return "Ollama Cloud — sends transcript and context"
-        }
-    }
-}
+    public var label: String { switch self {
+    case .off: return "AI off — transcript only"
+    case .local: return "Local Ollama models only"
+    case .apple: return "Apple Intelligence — on this device"
+    case .cloud: return "Ollama Cloud — sends transcript and context"
+    } } }
 ```
+
+`ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`
 
 <!-- NOTES: Open ModelPrivacy.swift on screen and read the AIProcessingMode enum at the top. Four cases, four honest labels. The one to memorize is cloud: it does not say "enhanced"; it says it sends the transcript and context. The README section "AI processing mode" carries the key rule: adding a key alone does not switch modes. A user cannot drift onto cloud routing as a side effect of configuration. Timing: three minutes. Transition: why the obvious shortcut fails. -->
 
@@ -111,14 +107,9 @@ public enum AIProcessingMode: String, CaseIterable, Sendable {
 
 ## Proof: `isVerifiedLocal` fails closed
 
-- One guard, defaults to `false`
-- Missing metadata, bad JSON, odd field: reject
-- Trusts the daemon's self-description only
-- Pointer: `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17-24`
-
 ```swift
 public static func isVerifiedLocal(_ data: Data) -> Bool {
-    guard let info = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+    guard let info = try? …jsonObject(with: data) as? [String: Any],
           info["remote_host"] == nil, info["remote_model"] == nil,
           let details = info["details"] as? [String: Any],
           let format = details["format"] as? String, !format.isEmpty,
@@ -127,6 +118,8 @@ public static func isVerifiedLocal(_ data: Data) -> Bool {
     return true
 }
 ```
+
+`ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17-24`
 
 <!-- NOTES: Show isVerifiedLocal. One guard clause: parse the JSON, require remote_host and remote_model to be absent, require details.format non-empty, require model_info non-empty, else return false. Because the failure path is the default, missing metadata, malformed JSON, and unexpected fields all reject. Say the trust boundary out loud: this verifies the daemon's self-description, not the daemon. The README states it honestly. Timing: three minutes. Transition: the three defenses around this check. -->
 
@@ -149,21 +142,21 @@ public static func isVerifiedLocal(_ data: Data) -> Bool {
 
 ## Redirects refused
 
-- Request runs with `RejectRedirects`
-- Delegate answers `nil` on any redirect
+- Local-only requests run with `RejectRedirects`
 - Otherwise your meeting text is forwarded silently
-- Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`
 
 ```swift
 private final class RejectRedirects: NSObject, URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask,
-                    willPerformHTTPRedirection response: HTTPURLResponse,
-                    newRequest request: URLRequest,
-                    completionHandler: @escaping @Sendable (URLRequest?) -> Void) {
+        willPerformHTTPRedirection response: HTTPURLResponse,
+        newRequest request: URLRequest,
+        completionHandler: @escaping @Sendable (URLRequest?) -> Void) {
         completionHandler(nil)
     }
 }
 ```
+
+`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`
 
 <!-- NOTES: Redirect following is silent by default in most HTTP stacks. Even a verified-local server could answer /api/chat with a 3xx to anywhere, and the stack would helpfully forward your meeting text. The delegate refuses: on any HTTP redirect it answers nil and the request dies. The comment says why: never follow redirects with meeting text in local-only mode. Without this defense, the metadata check is defeated at the transport layer. Timing: two minutes. Transition: fail-closed defaults. -->
 
@@ -226,21 +219,23 @@ public static func roleDefaults(from models: [String],
 
 ## The 95% coverage floor
 
-- CI enforces a 95% line-coverage floor
-- `scripts/check-coverage.sh 95` in the core job
-- Below threshold: non-zero exit, build fails
 - Buys: no untested core logic without an argument
 - Doesn't buy: correctness, GUI, audio, first run
 
 ```bash
 THRESHOLD="${1:-95}"
+…
 swift test --enable-code-coverage
-# … compute total line coverage via llvm-cov into PCT …
-awk -v pct="$PCT" -v thr="$THRESHOLD" 'BEGIN { exit !(pct + 0 >= thr + 0) }' || {
+…
+PCT=$(xcrun llvm-cov export "$EXE" \
+…
+awk … 'BEGIN { exit !(pct + 0 >= thr + 0) }' || {
   echo "FAIL: coverage ${PCT}% is below the ${THRESHOLD}% floor" >&2
   exit 1
 }
 ```
+
+`ListenToMe/scripts/check-coverage.sh:11-40`
 
 <!-- NOTES: ListenToMe's CI enforces a ninety-five percent line-coverage floor on ListenToMeCore as a hard gate. The script runs the suite with coverage enabled, computes total line coverage, prints a per-file report, and exits non-zero below the threshold. Say what it buys: nobody adds untested logic to the core without testing it or consciously arguing the floor down. Say what it does not buy: correctness of what was never built, a working GUI, audio capture, or a first-run experience a human can survive. Timing: three minutes. Transition: the script in CI. -->
 
@@ -289,21 +284,19 @@ awk -v pct="$PCT" -v thr="$THRESHOLD" 'BEGIN { exit !(pct + 0 >= thr + 0) }' || 
 
 ## Proof: a test that skips, not hides
 
-- `XCTSkipUnless(env["LTM_E2E"] == "1", ...)`
 - `make e2e` sets the gate and picks a model
 - Assertion: non-empty streamed content for a fixed prompt
-- Pointer: `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22`
 
 ```swift
-final class OllamaContractE2ETests: XCTestCase {
-    func testRealOllamaStreamingProducesContent() async throws {
-        let env = ProcessInfo.processInfo.environment
-        try XCTSkipUnless(
-            env["LTM_E2E"] == "1",
-            "e2e only: set LTM_E2E=1 and run a local Ollama (use `make e2e`)"
-        )
-        let model = env["LTM_E2E_MODEL"] ?? "llama3.1"
+func testRealOllamaStreamingProducesContent() async throws {
+    let env = ProcessInfo.processInfo.environment
+    try XCTSkipUnless(
+      env["LTM_E2E"] == "1",
+      "e2e only: set LTM_E2E=1 and run a local Ollama (use `make e2e`)"
+    )
 ```
+
+`ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:9-14`
 
 <!-- NOTES: Open OllamaContractE2ETests.swift. The test calls XCTSkipUnless on the environment variable, so normal swift test and CI never touch the network; make e2e sets the gate and selects the model. The assertion is deliberately minimal but real: stream a completion for a fixed prompt through the same provider code the app uses and require non-empty content. The gating pattern matters as much as the test. Timing: three minutes. Transition: the tier only a human can run. -->
 

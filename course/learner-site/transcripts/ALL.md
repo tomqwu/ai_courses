@@ -344,7 +344,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *46.8s · sentence-measured*
 
-> A seam is a protocol the pure core owns and the platform side implements, and the core declares three of them. The table shows all three; the code shows two. AudioCapturing exposes a status stream, a chunk stream, and start and stop, and the app implements it with AVAudioEngine and ScreenCaptureKit. Transcribing says partials and finals arrive, implemented by SpeechAnalyzer or WhisperKit. LLMProvider is the smallest: an id, a prompt-size limit, and two streaming functions, one for the answer and one that also carries the model's reasoning. Two providers implement it: an Ollama client in the core, and an Apple Intelligence provider on the platform side. The core never names AVFoundation or Ollama; it only names these protocols, and that inversion is what lets the test suite inject mocks. Add a fourth transcription engine tomorrow, and nothing below the Transcribing protocol changes.
+> A seam is a protocol the pure core owns and the platform side implements, and the core declares three of them. The table shows all three; the code shows the first. AudioCapturing exposes a status stream, a chunk stream, and start and stop, and the app implements it with AVAudioEngine and ScreenCaptureKit. Transcribing says partials and finals arrive, implemented by SpeechAnalyzer or WhisperKit. LLMProvider is the smallest: an id, a prompt-size limit, and two streaming functions, one for the answer and one that also carries the model's reasoning. Two providers implement it: an Ollama client in the core, and an Apple Intelligence provider on the platform side. The core never names AVFoundation or Ollama; it only names these protocols, and that inversion is what lets the test suite inject mocks. Add a fourth transcription engine tomorrow, and nothing below the Transcribing protocol changes.
 
 ### Slide 6 — Three engines, one seam
 
@@ -1207,7 +1207,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *36.1s · sentence-measured*
 
-> This is the file where the pattern is recorded: the competition analysis document, holding thirteen competitor rows plus ListenToMe, dated September 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about eight to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.
+> This is the file where the pattern is recorded: the competition analysis document, holding thirteen competitor rows plus ListenToMe, dated September 2026. The header is now on the slide, and the header is the convention: every price fact is stated as of that date, and where a detail could not be confirmed from a primary source it is qualified as approximately or reportedly. The price column carries model, price, and channel — the commercial tiers in that column run about seven to one hundred forty-nine dollars a month. Read rows, never headlines: the table is raw material for your own positioning, not a market summary to quote.
 
 ### Slide 5 — Recurring compute sets the model
 

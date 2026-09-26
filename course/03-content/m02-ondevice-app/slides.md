@@ -75,16 +75,9 @@ public protocol AudioCapturing: Sendable {
     func start() async throws
     func stop()
 }
-public protocol LLMProvider: Sendable {
-    var id: String { get }
-    var maxPromptCharacters: Int? { get }
-    func stream(_ request: LLMRequest) -> AsyncThrowingStream<String, Error>
-    func streamEvents(_ request: LLMRequest)
-        -> AsyncThrowingStream<LLMStreamEvent, Error>
-}
 ```
 
-`ListenToMe/Sources/ListenToMeCore/Capture.swift:4` · `LLMProvider.swift:13-22`
+`ListenToMe/Sources/ListenToMeCore/Capture.swift:4-9` · `LLMProvider.swift:13-22`
 
 <!-- NOTES: A seam is a protocol the pure core owns and the platform side implements. Core never names AVFoundation or Ollama; it only names these three protocols. That inversion is what lets the test suite inject mocks. The pay-off: if we add a fourth transcription engine tomorrow, nothing below the `Transcribing` protocol changes — not the store, not the prompts, not the router. (75 seconds; next we look inside the transcription seam.) -->
 
@@ -113,17 +106,16 @@ public protocol LLMProvider: Sendable {
 - Finals log plus one partial per source.
 - `recentContext(maxChars:)` walks newest-first.
 - Always keeps the newest, even over budget.
-- Default budget: 4,000 characters.
 - Recap and action items get 100,000.
 
 ```swift
 public func buildContext(from store: ConversationStore, notes: String?,
-                         maxChars: Int = 4000, summary: String? = nil,
-                         responseLanguage: String? = nil, references: String? = nil,
-                         personaGuidance: String? = nil) -> PromptContext
+        maxChars: Int = 4000, summary: String? = nil,
+        responseLanguage: String? = nil, references: String? = nil,
+        personaGuidance: String? = nil) -> PromptContext
 ```
 
-`ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12`
+`ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12-14`
 
 <!-- NOTES: `apply(_:)` appends finals and replaces partials. The window function walks utterances newest-first, keeping each while it fits, and always includes the most recent one even if it alone exceeds the budget — the window is never empty (`ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87`). The default is 4,000 characters (`ContextEngine.swift:12`), but `MeetingSession.transcriptBudget(for:)` raises recap and action-item prompts to 100,000 because they must cover the whole conversation (`ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:582-587`). (85 seconds; a quick word on segmentation.) -->
 
@@ -131,26 +123,21 @@ public func buildContext(from store: ConversationStore, notes: String?,
 
 ## When the engine gives no partials
 
+- Core VAD is 37 lines; defaults 0.02, 0.8 s.
+
 ```swift
-public mutating func process(rms value: Float, at time: TimeInterval) -> Bool {
-    if value >= speechThreshold {
-        inSpeech = true
-        lastSpeechTime = time
-        return false
-    }
-    if inSpeech && (time - lastSpeechTime) >= silenceDuration {
-        inSpeech = false
-        return true
-    }
+if value >= speechThreshold {
+    inSpeech = true
+    lastSpeechTime = time
     return false
+}
+if inSpeech && (time - lastSpeechTime) >= silenceDuration {
+    inSpeech = false
+    return true
 }
 ```
 
-- Core VAD is 37 lines; defaults 0.02, 0.8 s.
-- Fires exactly once per utterance boundary.
-- No ML model — a threshold and a timer.
-
-`ListenToMe/Sources/ListenToMeCore/VAD.swift:25-36`
+`ListenToMe/Sources/ListenToMeCore/VAD.swift:26-34`
 
 <!-- NOTES: WhisperKit buffers audio, so something must decide where an utterance ends. `Sources/ListenToMeCore/VAD.swift` computes root-mean-square energy per frame and returns true exactly once, on the frame where trailing silence after speech first exceeds the silence duration. Verified by `Tests/ListenToMeCoreTests/VADTests.swift`. This is the module's recurring move: spend the cheap heuristic where a model would be overkill. (70 seconds; time for the proof slide.) -->
 
@@ -160,26 +147,20 @@ public mutating func process(rms value: Float, at time: TimeInterval) -> Bool {
 
 ## The newest segment always survives
 
-- `ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87`
-- Newest-first fit, budget-bounded window.
 - Guarantee: never an empty context.
-- Default 4,000 chars — `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:12`.
 - Why it pays: 96% core coverage, 95% floor.
 
 ```swift
-public func recentContext(maxChars: Int) -> [TranscriptSegment] {
-    var total = 0
-    var collected: [TranscriptSegment] = []
-    for segment in utterances.reversed() {
-        let cost = TranscriptSegment.promptCharacterCost(segment)
-        // Always include the most recent; otherwise stop before exceeding the budget.
-        if !collected.isEmpty && total + cost > maxChars { break }
-        total += cost
-        collected.append(segment)
-    }
-    return collected.reversed()
+for segment in utterances.reversed() {
+    let cost = TranscriptSegment.promptCharacterCost(segment)
+    // Always include the most recent; otherwise stop before …
+    if !collected.isEmpty && total + cost > maxChars { break }
+    total += cost
+    collected.append(segment)
 }
 ```
+
+`ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:79-85`
 
 <!-- NOTES: This is the first proof slide. Open the file and read the loop aloud rather than trusting these bullets. The point of the proof slide in this course is that every claim has a file pointer you can open, and that the pointer resolves. The 96% coverage badge and the 95% floor in `scripts/check-coverage.sh` are downstream consequences of this kind of layering. (70 seconds; transition to routing.) -->
 
@@ -221,15 +202,14 @@ public func recentContext(maxChars: Int) -> [TranscriptSegment] {
 
 ## Token-prefix, not substring
 
-- Split the model name into tokens.
-- A marker matches only at a token start.
 - `"gemini-2.5-flash"` contains `"mini"`.
 - Token check rejects it; substring accepts it.
 - One wrong check misroutes a whole family.
 
 ```swift
 static func tokens(_ model: String) -> [String] {
-    model.lowercased().split(whereSeparator: { "-:./ ".contains($0) }).map(String.init)
+    model.lowercased().split(whereSeparator: { "-:./ ".contains($0) })
+        .map(String.init)
 }
 static func hasMarker(_ model: String, _ marker: String) -> Bool {
     tokens(model).contains { $0.hasPrefix(marker) }
@@ -345,11 +325,8 @@ return phraseCues.contains { cue in
 
 ## Typed streaming errors
 
-- Ollama streams NDJSON over `/api/chat`.
-- It can return HTTP 200, then `{"error": ...}`.
-- `.server` — in-stream error event.
+- Ollama can send HTTP 200, then `{"error": ...}`.
 - `.incomplete` — lines ended without `done: true`.
-- `.empty` — completed with no visible text.
 - Truncation can never finish as success.
 
 ```swift
@@ -359,12 +336,12 @@ public enum OllamaStreamError: LocalizedError {
     case incomplete
     case empty
     case thinkingOnly
-}
+    …
 ```
 
 `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:216-224`
 
-<!-- NOTES: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:42-50` is the line source that yields raw NDJSON lines; it is injectable so tests feed canned lines. The loop tracks `completed` and `producedContent` at `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104`. Five typed cases live at `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:216-236`, each with a user-facing message: the three in the bullets, plus `.unreachable` for a server that never answered and `.thinkingOnly` for a model that reasoned but never answered. This design is a scar, not a guess: the September 2026 review found the old provider let truncated streams finish as success — gap G06, P0 — while the project showed 215 passing core tests and 97.24% coverage. (85 seconds; proof slide.) -->
+<!-- NOTES: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:42-50` is the line source that yields raw NDJSON lines; it is injectable so tests feed canned lines. The loop tracks `completed` and `producedContent` at `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104`. Five typed cases live at `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:216-236`, each with a user-facing message: `.server`, `.incomplete` and `.empty`, plus `.unreachable` for a server that never answered and `.thinkingOnly` for a model that reasoned but never answered. This design is a scar, not a guess: the September 2026 review found the old provider let truncated streams finish as success — gap G06, P0 — while the project showed 215 passing core tests and 97.24% coverage. (85 seconds; proof slide.) -->
 
 ---
 

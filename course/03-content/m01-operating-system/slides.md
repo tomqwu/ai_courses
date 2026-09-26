@@ -57,24 +57,19 @@ One canonical source, many delivery files.
 <!-- _class: proof -->
 ## Proof: the stack, with real line counts
 
-| File | Lines | Role |
+| SignUpFlow file | Lines | Role |
 |---|---|---|
 | `.specify/memory/constitution.md` | 85 | Principles, single source of truth |
 | `AGENTS.md` | 188 | Universal baseline |
 | `CLAUDE.md` | 154 | Cross-reference plus addenda |
 | `.github/copilot-instructions.md` | 127 | Copilot restatement |
 
-Pointers: `SignUpFlow/.specify/memory/constitution.md`, `SignUpFlow/AGENTS.md`,
 ```markdown
 # SignUpFlow Constitution
-
 > A roster and scheduling system with email/SMS notifications.
-
-## Version
-1.1.0
 ```
 
-`SignUpFlow/CLAUDE.md`, `SignUpFlow/.github/copilot-instructions.md`
+Pointer: `SignUpFlow/.specify/memory/constitution.md:1-3`
 
 <!-- NOTES: Open these four files in your own clone and count. The constitution is 85 lines, AGENTS.md is 188, CLAUDE.md is 154, and the Copilot file is 127 — all under the ~200-line cap the house style sets. The lesson gives this as a table you can verify with wc -l. Why it matters: a rule file an agent cannot hold in context is a rule file it will not follow. Transition: short is necessary, not sufficient — the rules must also be checkable. Timing: 3 minutes. -->
 
@@ -235,9 +230,9 @@ Pointer: `SignUpFlow/AGENTS.md:153-161`
 
 - Story: "As a volunteer, I can block dates."
 - Scenario: given a blocked period, then zero hard violations.
-- Task line: `[ID] [P?] [Story]` plus exact file paths.
+- Task line (illustrative): `[ID] [P?] [Story]` plus exact paths.
 
-```text
+```text illustrative
 - [ ] T031 [P] [US1] Implement POST /api/v1/availability/time-off in
       api/routers/availability.py per contracts/availability-api.md:
       volunteer submits blocked dates; write the failing test in
@@ -337,7 +332,7 @@ Pointer: `ListenToMe/AGENTS.md:21-23`
 
 ## Your evidence-log template
 
-```markdown
+```markdown template
 ## Evidence — <project> — <feature> — <YYYY-MM-DD>
 Commands (with results):
 - <command> → <N passed, M skipped, K failed>

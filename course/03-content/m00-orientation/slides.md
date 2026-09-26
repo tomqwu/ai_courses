@@ -93,25 +93,18 @@ title: M0 — Orientation: Three Products, One Method
 
 ## Production-grade means proof you can open
 
-| Archetype | Proof asset | Pointer |
-|---|---|---|
-| On-device app | 96% core-coverage badge | `ListenToMe/README.md` |
-| Spec-driven SaaS | "1,464 passed, 21 skipped" | `SignUpFlow/docs/playbooks/validation.md` |
-| Expertise product | 14-finding self-audit | `ai_qe/research/reviews/site-audit-2026-09-06.md` |
-
 - Every asset is a file, dated or machine-checkable
 - None of them is a testimonial
 
 ```markdown
 <!-- ListenToMe/README.md -->
-![Coverage](https://img.shields.io/badge/Core_coverage-96%25-brightgreen)
+![Coverage](…/badge/Core_coverage-96%25-brightgreen)
 
 <!-- SignUpFlow/docs/playbooks/validation.md:88 -->
-1,464 passed, 21 skipped. The opt-in example runs above are additional evidence,
+1,464 passed, 21 skipped. …
 
 <!-- ai_qe/research/reviews/site-audit-2026-09-06.md -->
 **AI × QE site review — 6 September 2026**
-
 Reviewed edition: **1.2.1**, commit `fd1133…`
 ```
 
@@ -197,7 +190,7 @@ Pointer: `SignUpFlow/docs/playbooks/validation.md:45, 50-52`
 
 ## First ship-win — clone and run the solver
 
-```bash
+```bash commands
 git clone https://github.com/tomqwu/ListenToMe.git
 git clone https://github.com/tomqwu/SignUpFlow.git
 git clone https://github.com/tomqwu/ai_qe.git
@@ -216,7 +209,7 @@ poetry run python -m api.cli.main solve my-church
 
 ## Local LLM in three commands
 
-```bash
+```bash commands
 ollama pull qwen3:0.6b
 ollama list
 ollama run qwen3:0.6b "Reply with exactly: PONG"
@@ -248,9 +241,7 @@ Pointer: `course/03-content/m02-ondevice-app/tinycopilot/README.md`
 
 ## Lab M0 — Environment Setup & First Ship-Win
 
-- **Goal:** every tool installed and proven with real output
-- **Time:** ~30 minutes, mostly downloads
-- **Before Module 1:** evidence log; TinyCopilot suite (stretch)
+- **Goal:** every tool proven with real output, in ~30 minutes
 
 | Acceptance item | Evidence to paste |
 |---|---|

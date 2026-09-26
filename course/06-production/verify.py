@@ -11,6 +11,7 @@ Checks
   6. no deck is missing Marp front matter or speaker notes (delegates detail to deck_lint.py)
   7. narration: every deck has approved words, and every recording matches them word for word
   8. the learner site, when built, has one page per deck with the right slide count
+  9. every slide exhibit is a copy of a file the slide cites, or declares what else it is
 
 Usage:
   python3 verify.py                # full report, exit 1 on any failure
@@ -365,6 +366,72 @@ def check_decks() -> list[str]:
     return [f"deck_lint: {line.strip()}" for line in out.splitlines() if line.strip().startswith(("✗", "slide", "course"))][:40]
 
 
+# A slide exhibit is either a copy of a file the slide cites, or it says what else it is. The
+# info string carries the declaration (the site and Marp read only its first word): ```bash
+# commands, ```text output, ```markdown template, ```text illustrative. A copy may rewrap lines
+# and elide with "…", but every line must occur in a cited file, inside the cited range when the
+# file is cited only with ranges. Refitting slides to the frame (#70) trims exhibits, and nothing
+# else would notice a trimmed exhibit that no longer matches its source.
+EXHIBIT_FENCE_RE = re.compile(r"^```([^\n]*)\n(.*?)^```", re.S | re.M)
+EXHIBIT_KINDS = {"commands", "output", "template", "illustrative"}
+EXHIBIT_REF_RE = re.compile(r"`((?:ListenToMe|SignUpFlow|ai_qe|course)/[A-Za-z0-9_./-]+"   # `ai_qe/Makefile`
+                            r"|[A-Za-z0-9_][A-Za-z0-9_./-]*\.[A-Za-z]{1,6})(?::([0-9 ,\u2013-]+))?`")
+EXHIBIT_LABEL_RE = re.compile(r"^\s*<!--\s*(\S+?)\s*-->\s*$")
+EXHIBIT_ELIDE_RE = re.compile(r"…|\.\.\.")
+
+
+def _exhibit_norm(s: str) -> str:
+    """Compare text, not typography: blockquote markers, emphasis and wrapping do not count."""
+    s = re.sub(r"(?m)^\s*>\s?", "", s)
+    return " ".join(re.sub(r"[*`]", "", s).split())
+
+
+def check_exhibits() -> list[str]:
+    problems: list[str] = []
+    texts: dict[Path, list[str]] = {}
+    for deck in sorted(CONTENT.glob("*/slides.md")):
+        slides = re.split(r"\n---\n", deck.read_text(encoding="utf-8"))
+        for n, slide in enumerate(slides[1:], start=1):
+            shown = re.sub(r"<!-- NOTES:.*?-->", "", slide, flags=re.S)
+            refs = [(m.group(1), m.group(2)) for m in EXHIBIT_REF_RE.finditer(slide)]
+            refs += [(lab.partition(":")[0], lab.partition(":")[2] or None)
+                     for line in shown.splitlines()
+                     if (lab := (EXHIBIT_LABEL_RE.match(line) or [None, ""])[1])]
+            whole: list[str] = []
+            cited: list[str] = []
+            for path, spec in refs:
+                target = resolve_case_path(path)
+                if target is None or not target.is_file():
+                    continue
+                if target not in texts:
+                    texts[target] = target.read_text(encoding="utf-8", errors="replace").splitlines()
+                lines = texts[target]
+                whole.append(_exhibit_norm("\n".join(lines)))
+                rngs = parse_line_ranges(spec) if spec else None
+                cited.append(_exhibit_norm("\n".join(l for lo, hi in rngs for l in lines[lo - 1:hi]))
+                             if rngs else whole[-1])
+            where = f"{deck.parent.name}/slides.md slide {n}"
+            for info, body in EXHIBIT_FENCE_RE.findall(shown):
+                if EXHIBIT_KINDS & set(info.split()[1:]):
+                    continue
+                if not whole:
+                    problems.append(f"{where}: an exhibit cites no file it copies; cite the source "
+                                    f"or declare it ({', '.join(sorted(EXHIBIT_KINDS))})")
+                    continue
+                for line in body.splitlines():
+                    if EXHIBIT_LABEL_RE.match(line):
+                        continue
+                    for piece in EXHIBIT_ELIDE_RE.split(line):
+                        piece = _exhibit_norm(piece)
+                        if len(piece) <= 3:
+                            continue
+                        if not any(piece in s for s in whole):
+                            problems.append(f"{where}: exhibit line not in the cited file(s): {piece[:90]!r}")
+                        elif not any(piece in s for s in cited):
+                            problems.append(f"{where}: exhibit line is outside the cited range: {piece[:90]!r}")
+    return problems
+
+
 def check_sales_claims() -> list[str]:
     """The sales docs state measured word counts. Counts drift the moment a file is edited,
     so verify the claim against the file instead of trusting the note."""
@@ -495,6 +562,7 @@ def main(argv: list[str]) -> int:
         ("Rubrics", check_rubrics),
         ("Track bundles", check_bundles),
         ("Decks", check_decks),
+        ("Slide exhibits", check_exhibits),
         ("Sales claims", check_sales_claims),
         ("Narration contract", check_narration),
         ("Learner site", check_learner_site),

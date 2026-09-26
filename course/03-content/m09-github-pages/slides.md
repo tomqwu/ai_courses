@@ -60,14 +60,14 @@ The prompt is waiting for you. Type after it, then press Enter.
 
 Windows — PowerShell. `winget` ships inside App Installer.
 
-```powershell
+```powershell commands
 winget install --id Git.Git -e --source winget
 winget install --id GitHub.cli --source winget
 ```
 
 **Then open a new terminal window.** macOS — install Homebrew, run the setup lines it prints, then:
 
-```bash
+```bash commands
 brew install git
 brew install gh
 ```
@@ -78,7 +78,7 @@ brew install gh
 
 ## Tell Git who you are, then sign in
 
-```bash
+```bash commands
 git config --global user.name "Ada Example"
 git config --global user.email "ada@example.com"
 gh auth login
@@ -96,7 +96,7 @@ Paste the one-time code in the browser, and Git can push without a password.
 
 ## Proof: a script, not a feeling
 
-```text
+```text output
 PASS  git is installed: git version 2.43.0
 FAIL  GitHub CLI (gh) is not installed
       fix: winget install --id GitHub.cli --source winget   then open a NEW terminal window
@@ -154,7 +154,7 @@ A name with a space needs quotes: `cd "My Projects"`. Better: no spaces, `my-cat
 
 ## Clone: a copy, with its history
 
-```bash
+```bash commands
 cd ~/code
 pwd
 gh repo clone tomqwu/ai_courses
@@ -185,7 +185,7 @@ Read `git status` before and after. Clean afterwards means it all went.
 
 ## Proof: the loop, run for real
 
-```text
+```text output
 $ git status
 Untracked files:  .nojekyll  app.js  index.html  products.js  styles.css
 $ git commit -m "Add the catalog starter"
@@ -230,7 +230,7 @@ nothing to commit, working tree clean
 
 ## Why the data is a script, not JSON
 
-```js
+```js template
 {
   id: "everyday-mug",
   name: "Everyday Mug",
