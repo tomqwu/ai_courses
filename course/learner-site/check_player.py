@@ -12,14 +12,15 @@ was injected, captions parsed, and the deep link navigated. It uses a browser al
 (no npm install, no Playwright download) so it cannot become an unverifiable dependency.
 
 What it asserts per deck:
-  * the narration panel and all controls were injected by player.js
+  * the player bar carries every control (#75): play, speed, CC, auto-next, present, the timeline
   * exactly one slide is aria-current, and it matches the requested deep link
   * the polite status region announces the right slide number and title
   * the CC control is enabled, which can only happen after the .vtt fetched and parsed
   * a caption cue is rendered with text
   * a slide with no recording degrades to a message rather than a broken player
-  * the panel is actually VISIBLE, not merely present in the DOM — an earlier version created it
-    hidden and never unhid it, so every control existed and none of them could be seen
+  * the bar is actually VISIBLE and on screen, with its height reserved in the frame — an earlier
+    panel was created hidden and never unhidden, so every control existed and none could be seen
+  * the transcript panel lists the slide's narration, and the Sources tab shows its notes
 """
 from __future__ import annotations
 
@@ -331,17 +332,18 @@ function measure() {
     rail: text('.slide:not([hidden]) .slide-rail'),
     railNum: text('.slide:not([hidden]) .slide-number'),
     panelHeight: w.getComputedStyle(d.documentElement).getPropertyValue('--narration-height').trim(),
-    panelBottom: Math.round(d.querySelector('.narration-panel').getBoundingClientRect().bottom),
-    panelTop: Math.round(d.querySelector('.narration-panel').getBoundingClientRect().top),
-    navTop: Math.round(d.querySelector('.deck-navigation').getBoundingClientRect().top),
+    panelBottom: Math.round(d.querySelector('.player-bar').getBoundingClientRect().bottom),
+    panelTop: Math.round(d.querySelector('.player-bar').getBoundingClientRect().top),
+    stageBottom: Math.round(d.querySelector('.slides').getBoundingClientRect().bottom),
     viewportHeight: w.innerHeight,
-    present: !!d.querySelector('[data-present]'),
-    reading: !!d.querySelector('[data-reading]'),
-    notes: !!d.querySelector('[data-notes]'),
-    drawer: !!d.querySelector('.deck-drawer'),
+    present: !!d.querySelector('.player-bar [data-present]'),
+    play: !!d.querySelector('.player-bar [data-play]'),
+    sourcesTab: !!d.querySelector('[role="tab"][data-tab="sources"]'),
+    transcriptRows: d.querySelectorAll('[data-transcript-lines] li').length,
+    upNext: (d.querySelector('[data-up-title]') || {}).textContent || '',
     coverSlide: !!d.querySelector('#slide-1.slide-cover'),
     chapters: Object.keys(chapters).length,
-    optgroups: d.querySelectorAll('optgroup').length,
+    segments: d.querySelectorAll('.player-timeline .tl-seg').length,
     titleIds: d.querySelectorAll('.slide h2[id$="-title"]').length,
     railLinks: d.querySelectorAll('.slide-rail a[href*="transcript-"]').length,
     moduleLinks: d.querySelectorAll('.slide-rail a[href*="module-"]').length,
@@ -436,20 +438,19 @@ function interact() {
   out.presentPressed = d.querySelector('[data-present]').getAttribute('aria-pressed');
   d.querySelector('[data-present]').click();
   out.presentCleared = !body.classList.contains('presentation-mode');
-  // Read all — every slide visible at once.
-  d.querySelector('[data-reading]').click();
-  out.readingMode = body.classList.contains('reading-view');
-  out.slidesVisibleWhileReading = d.querySelectorAll('.slide:not([hidden])').length;
-  out.totalSlides = d.querySelectorAll('.slide').length;
-  d.querySelector('[data-reading]').click();
-  out.backToOneSlide = d.querySelectorAll('.slide:not([hidden])').length;
-  // Sources & notes — the drawer opens with the current slide's notes.
-  d.querySelector('[data-notes]').click();
-  var drawer = d.querySelector('.deck-drawer');
-  out.drawerOpen = !!drawer && drawer.open;
-  out.drawerHasNotes = (d.querySelector('[data-drawer-notes]').textContent || '').trim().length > 40;
-  drawer.close();
-  out.drawerClosed = !drawer.open;
+  // Sources on this slide — the tab shows the current slide's speaker notes, and back again.
+  d.querySelector('[data-tab="sources"]').click();
+  var sources = d.getElementById('panel-sources');
+  out.sourcesOpen = !!sources && !sources.hidden;
+  out.sourcesHaveNotes = (d.querySelector('[data-drawer-notes]').textContent || '').trim().length > 40;
+  d.querySelector('[data-tab="transcript"]').click();
+  out.transcriptBack = !d.getElementById('panel-transcript').hidden && sources.hidden;
+  // The timeline: its last segment opens that unit's first slide.
+  var segs = d.querySelectorAll('.tl-seg');
+  var lastSeg = segs[segs.length - 1];
+  lastSeg.click();
+  out.timelineJump = (d.querySelector('.slide:not([hidden])') || {}).id === 'slide-' + lastSeg.getAttribute('data-first');
+  segs[0].click();
   return JSON.stringify(out);
 }
 document.getElementById('frame').addEventListener('load', function () {
@@ -835,14 +836,18 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
     # Presence is not visibility: a panel pushed below the fold is unusable, and the frame maths
     # silently failing to read --narration-height is exactly how that happens.
     if data["panelTop"] < 0 or data["panelBottom"] > data["viewportHeight"] + 1:
-        problems.append(f"{deck_id}: the narration panel is off-screen "
+        problems.append(f"{deck_id}: the player bar is off-screen "
                         f"({data['panelTop']}..{data['panelBottom']} in a {data['viewportHeight']}px viewport)")
-    if data["panelBottom"] > data["navTop"] + 1:
-        problems.append(f"{deck_id}: the narration panel ({data['panelBottom']}) runs under the "
-                        f"navigation strip ({data['navTop']})")
-    for control in ("present", "reading", "notes", "drawer"):
+    if abs(data["panelTop"] - data["stageBottom"]) > 1:
+        problems.append(f"{deck_id}: the player bar ({data['panelTop']}) is not directly under the stage "
+                        f"({data['stageBottom']})")
+    for control in ("present", "play", "sourcesTab"):
         if not data[control]:
-            problems.append(f"{deck_id}: {control} control is missing from the deck chrome")
+            problems.append(f"{deck_id}: {control} control is missing from the player")
+    if data["transcriptRows"] < 1:
+        problems.append(f"{deck_id}: the transcript panel lists nothing for the current slide")
+    if not data["upNext"].strip():
+        problems.append(f"{deck_id}: the Up next card is empty")
     if not data["coverSlide"]:
         problems.append(f"{deck_id}: slide 1 is not styled as the cover")
     if data["titleIds"] != slide_count:
@@ -853,18 +858,16 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
     if data["railLinks"] != slide_count:
         problems.append(f"{deck_id}: {data['railLinks']} slides link to their transcript, "
                         f"expected {slide_count}")
-    if data["optgroups"] < 2:
-        problems.append(f"{deck_id}: the slide picker is not grouped into chapters")
+    if data["segments"] < 5:
+        problems.append(f"{deck_id}: the timeline has {data['segments']} unit segments, expected at least 5")
     for label, key, want in (
-            ("Present ↗ did not enter presentation mode", "presentMode", True),
-            ("Present ↗ did not report its pressed state", "presentPressed", "true"),
-            ("Present ↗ did not leave presentation mode", "presentCleared", True),
-            ("Read all did not switch to reading view", "readingMode", True),
-            ("Read all did not reveal every slide", "slidesVisibleWhileReading", data["totalSlides"]),
-            ("Read all did not return to one slide at a time", "backToOneSlide", 1),
-            ("Sources & notes did not open the drawer", "drawerOpen", True),
-            ("the notes drawer was empty for a slide that has notes", "drawerHasNotes", True),
-            ("the notes drawer did not close", "drawerClosed", True)):
+            ("Present did not enter presentation mode", "presentMode", True),
+            ("Present did not report its pressed state", "presentPressed", "true"),
+            ("Present did not leave presentation mode", "presentCleared", True),
+            ("the Sources tab did not open", "sourcesOpen", True),
+            ("the Sources tab was empty for a slide that has notes", "sourcesHaveNotes", True),
+            ("the Transcript tab did not come back", "transcriptBack", True),
+            ("a timeline segment did not open its unit's first slide", "timelineJump", True)):
         got = data.get(key)
         if got != want:
             problems.append(f"{deck_id}: {label} (got {got!r}, expected {want!r})")
@@ -880,19 +883,20 @@ def check_deck(browser: str, port: int, deck_id: str, slide_count: int,
         return [f"{deck_id}: page did not render ({len(dom)} bytes of DOM)"]
 
     required = {
-        "narration panel": 'class="narration-panel"',
+        "player bar": 'class="player-bar"',
         "play control": "data-play",
-        "replay control": "data-replay",
-        "seek control": "data-seek",
         "speed control": "data-speed",
         "cc control": "data-cc",
         "auto-next control": "data-auto",
-        "transcript control": "data-transcript",
+        "present control": "data-present",
+        "timeline": 'class="player-timeline"',
+        "transcript panel": "data-transcript-lines",
+        "sources panel": "data-source-list",
         "status region": 'role="status"',
     }
     for label, needle in required.items():
         if needle not in dom:
-            problems.append(f"{deck_id}: {label} was not injected")
+            problems.append(f"{deck_id}: the player has no {label}")
 
     current = re.findall(r'<section class="slide[^"]*" id="(slide-\d+)"[^>]*aria-current="true"', dom)
     if current != ["slide-1"]:
@@ -903,25 +907,23 @@ def check_deck(browser: str, port: int, deck_id: str, slide_count: int,
                         f"(got {(status.group(1).strip() if status else 'nothing')!r})")
 
     if "slide-1" in narrated:
-        # Presence is not visibility: assert the panel is shown and its height was reserved.
-        panel = re.search(r'<section class="narration-panel"[^>]*>', dom)
-        if not panel:
-            problems.append(f"{deck_id}: narration panel is missing entirely")
-        elif " hidden" in panel.group(0):
-            problems.append(f"{deck_id}: narration panel is present but hidden, so no control is visible")
+        # Presence is not visibility: assert the bar's height was reserved in the frame.
         height = re.search(r"--narration-height:\s*([0-9.]+)px", dom)
         if not height or float(height.group(1)) <= 0:
-            problems.append(f"{deck_id}: --narration-height was not reserved, so the panel covers "
+            problems.append(f"{deck_id}: --narration-height was not reserved, so the bar covers "
                             f"the bottom of the slide")
         cc = re.search(r"<button[^>]*data-cc[^>]*>", dom)
         if cc and "disabled" in cc.group(0):
             problems.append(f"{deck_id}: CC stayed disabled, so captions never parsed for slide-1")
-        caption = re.search(r'class="narration-caption"[^>]*>(.*?)</div>', dom, re.S)
+        caption = re.search(r'class="player-caption"[^>]*>(.*?)</p>', dom, re.S)
         if not caption or not caption.group(1).strip():
             problems.append(f"{deck_id}: no caption cue rendered for a narrated slide-1")
-        start = re.search(r"data-narration-start[^>]*>", dom)
-        if start and "disabled" in start.group(0):
+        play = re.search(r"<button[^>]*data-play[^>]*>", dom)
+        if play and "disabled" in play.group(0):
             problems.append(f"{deck_id}: Play was disabled even though slide-1 is narrated")
+        # With captions loaded, the transcript rows are the script's sentences, each seeking.
+        if "line-seek" not in dom:
+            problems.append(f"{deck_id}: the transcript rows did not become seekable once captions loaded")
 
     # Deep link: exercises goTo(), the manifest lookup and a second clip load.
     target = min(5, slide_count)

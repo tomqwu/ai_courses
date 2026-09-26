@@ -438,55 +438,60 @@ Transcripts verified: 10 documents match the approved scripts (22,239 words)
 
 ## Page structure
 
-Each deck page is a 48px header, the 16:9 frame, a fixed navigation strip, and a notes dialog.
+Each deck page is **Watch**, the lesson player (#75): inside the shell, the 16:9 stage with one dark
+control bar directly under it, and below the fold the slide's transcript and sources beside an Up
+next card. The stage and the bar are sized together to fit the viewport (`--chrome-height` above the
+stage, `--narration-height` for the bar, both measured by `player.js`), so the controls are on screen
+whatever the slide.
 
 ```
-deck page
-├── header        brand · module · slide meta · Play narration · Present ↗ · Read all
-│                 Sources & notes · Transcript · voice chip
-├── main.slides   one <section class="slide"> per slide
-│                 ├── .kicker      M0.1, Type 1, Lab M0 (falls back to "M0 · Orientation")
-│                 ├── h2#slide-N-title
-│                 ├── .slide-content
-│                 └── footer        deck tag / slide transcript / 01 / 19
-├── nav           ← → · live status · chapter-grouped slide picker
-└── dialog        speaker notes for the current slide
+deck page (in the shell: outline · top bar)
+├── main#slides.slides   one <section class="slide"> per slide
+│                        ├── .slide-rail / h2#slide-N-title / .slide-content
+│                        └── the notes, the approved narration a sentence per line, and the
+│                            repo pointers it cites — carried in <template>s for the panel
+├── .player-bar          the caption line
+│                        ← · play/pause · → · time · timeline (one segment per unit) · speed · CC · present
+│                        slide status · narration status · auto-next · the voice label (#57)
+└── .player-below        Transcript | Sources on this slide (tabs) · Up next · the keys
 ```
 
 Slide variants: `slide-cover` (slide 1, always), `slide-proof` (from `_class: proof`).
 
-### Modes
+### Modes and keys
 
 | Mode | Control | Behaviour |
 |---|---|---|
-| One slide at a time | default | `goTo()` hides every other slide; the narration panel sits below the frame |
-| Presentation | **Present ↗** or <kbd>P</kbd> | full screen, dark chrome, trimmed header; <kbd>Esc</kbd> leaves it |
-| Reading | **Read all** | every slide as one scrolling document, 1200px measure |
-| Notes | **Sources & notes** or <kbd>N</kbd> | dialog with the current slide's presenter notes |
+| One slide at a time | default, <kbd>←</kbd> <kbd>→</kbd>, <kbd>Home</kbd>/<kbd>End</kbd> | `goTo()` hides every other slide; the timeline's segments jump to a unit |
+| Play | the round button or <kbd>Space</kbd> | narration with captions; <kbd>Space</kbd> moves on when a slide has no recording |
+| Transcript | <kbd>T</kbd> | the slide's narration a sentence per line: the spoken sentence is highlighted, a click seeks to it |
+| Sources | the tab, or <kbd>N</kbd> | every repo file the slide cites, at the pinned commit (Exhibit / On the slide / In the notes), and the speaker notes |
+| Presentation | the present button, <kbd>F</kbd> or <kbd>P</kbd> | full screen; the outline, top bar and panels hidden; <kbd>Esc</kbd> leaves it |
 | Print | <kbd>⌘P</kbd> | one 16:9 slide per page (`@page 13.333in 7.5in`) |
 
-A deck without JavaScript still shows every slide in order, and the reading view has a CSS fallback so
-it works even if the script never runs.
+The Sources chips are resolved the way the gate resolves citations (`verify.EXHIBIT_REF_RE`,
+`verify.resolve_case_path`), and a chip is labelled **Exhibit** only when the slide's fenced block is
+found in that file within its cited range.
+
+A deck without JavaScript still shows every slide in order; the Read mode (the lesson) is the
+long-form version of the deck.
 
 ### Other pages
 
 Every generated deck page is:
 
 ```
-body[data-narration-manifest][data-narration-deck][data-site-base][data-voice]
-  header.deck-header          title, slide/narration counts, Play narration, Captions download
-  p.voice-badge               only when the recordings are a preview voice
+body[data-narration-manifest][data-narration-deck][data-site-base][data-voice][data-units]
   main#slides
     section.slide#slide-N     aria-roledescription="slide", aria-labelledby="slide-N-title"
                                 data-audio / data-captions / data-duration from the manifest
       .slide-content          the rendered slide
-      details.slide-notes     the presenter notes (not read aloud)
-  nav.deck-navigation         prev · slide picker · next · status · message
-  section.narration-panel     injected by player.js before .deck-navigation
-    .narration-caption        the current cue
-    .narration-controls       play · replay · seek · time · speed · CC · auto-next
-    .narration-meta           status · Retry captions · Transcript
-  audio[data-narration-audio]
+      .slide-notes-source     the presenter notes (not read aloud)
+      template.slide-script-source   the approved narration, one <li> per sentence
+      template.slide-sources-source  the repo pointers the slide cites
+  .player-bar                 caption · controls · meta (status, auto-next, voice label)
+    audio[data-narration-audio]
+  .player-below               [role=tablist] Transcript | Sources · .up-next
 ```
 
 Slides after the first are `hidden` so the page does not flash 233 slides before the script runs. A
@@ -591,9 +596,11 @@ This is not ceremony. It has caught four bugs that all rendered wrong while look
 The fourth is why `--chrome-height` is measured by the player rather than assumed.
 
 So every deck is checked for: the frame really is 16:9 and does not overflow, the typeface actually
-loaded, the kicker/title/footer exist on the current slide, **the narration panel is inside the
-viewport and clear of the navigation strip**, every slide has an anchored title and a transcript link,
-the picker is chapter-grouped, and Present / Read all / Sources & notes all change state correctly.
+loaded, the kicker/title exist on the current slide, **the player bar is inside the viewport and
+directly under the stage, with its height reserved**, every slide has an anchored title, the timeline
+has a segment per unit and a segment opens its unit, the transcript panel lists the slide's narration,
+the Sources tab shows its notes, Up next names what follows, and Present changes state. (The measured
+example above is from the earlier player.)
 
 
 ```bash
