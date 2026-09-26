@@ -4,7 +4,7 @@
 > module glossary). Duplicate terms keep the most detailed definition and list every module
 > that uses them. "Where it lives" pointers resolve in the cloned case-study repos.
 
-**137 terms** across 9 modules · **13 shared** by more than one module.
+**158 terms** across 9 modules · **13 shared** by more than one module.
 
 | Module | Terms contributed |
 |---|---|
@@ -17,6 +17,7 @@
 | M6 — expertise product | 16 |
 | M7 — monetize | 18 |
 | M8 — launch capstone | 18 |
+| M9 — github pages | 21 |
 
 ## Shared vocabulary
 
@@ -40,6 +41,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 
 ### `
 
+- **`.nojekyll`** *(M9)* — An empty file that tells GitHub Pages to publish the files as they are, without running Jekyll. Hidden by default because its name starts with a dot. Lives in `catalog-starter/.nojekyll`.
 - **`:cloud` alias** *(M0, M3)* — An Ollama model name ending in `:cloud` that is backed by a hosted service rather than weights on your disk. Its presence means the daemon can reach a cloud model; it says nothing about where your text is processed. — `course/03-content/m02-ondevice-app/tinycopilot/README.md`
 - **`[NEEDS CLARIFICATION]`** *(M4)* — The template's marker for an unresolved decision; the gate requires zero remaining before planning. — `SignUpFlow/.specify/templates/spec-template.md`.
 - **`AudioCapturing` — the capture protocol seam** *(M2)* — Core declares what audio arrives; `App/` supplies `AVAudioEngine` and ScreenCaptureKit. `ListenToMe/Sources/ListenToMeCore/Capture.swift:4`.
@@ -54,6 +56,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **`verify_local_model()`** *(M3)* — The fail-closed `/api/show` check: `remote_host` and `remote_model` absent, `details.format` and `model_info` present and non-empty — `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:93-135`.
 ### A
 
+- **Absolute path** *(M9)* — A folder address that starts from the top of the disk, such as `C:\Users\ada\code` or `/Users/ada/code`. It means the same thing wherever you are. Lives in `lesson.md`, Segment M9.2.
 - **Acceptance criteria** *(M8)* — Concrete, testable conditions a story must satisfy, written Given/When/Then. The capstone's dimension 1 fails when criteria are vague. *Where:* `SignUpFlow/specs/014-security-hardening/spec.md`; `03-content/m08-launch-capstone/lab.md` step 2.
 - **Acceptance gate** *(M5)* — The point where the product must be proven operable, not merely functional: playbook scenarios, disruption drills, and a manifest that admits unproven rows. (`SignUpFlow/docs/playbooks/coverage.json`; `docs/playbooks/church.md`)
 - **Acceptance scenario** *(M4)* — A Given/When/Then statement inside a user story whose Then-clause is an observable, numeric outcome. — `SignUpFlow/specs/014-security-hardening/spec.md` (US1).
@@ -75,6 +78,8 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Cart open** *(M8)* — Email 4 and the moment the offer becomes purchasable; the course opens the cart for 10–14 days. The first email of the conversion phase. *Where:* `04-sales/launch-plan.md`.
 - **Case study** *(M0)* — One of the three public repos used as worked examples throughout the course: ListenToMe, SignUpFlow, AI × QE. — `course/01-design/curriculum.md`
 - **Claim level** *(M6)* — One of four labels that every number must carry: task-level efficiency, QA capacity released, hard-dollar saving, total software-spend impact. Lives in `ai_qe/docs/principles.md`; reproduced in `evidence-dataset.md`.
+- **Clone** *(M9)* — A copy of a repository on your computer, with its full history and a link back to the original, made with `gh repo clone owner/name` or `git clone <address>`. Lands in the folder you are in. Lives in `lab.md`, Step 3.
+- **Commit** *(M9)* — One saved version of a repository, with a message, an author and a short code such as `c02f59f`. Made with `git commit -m "…"` after choosing changes with `git add`. Lives in `lab.md`, Step 6.
 - **Comparator band** *(M7)* — The min–max price range of the rows in your own table that are genuinely comparable to your product. Lives in `lab.md` Step 2 (the worksheet template).
 - **Complexity Tracking** *(M4)* — The plan table that must be filled *only* when the Constitution Check records a violation that needs arguing. — `SignUpFlow/.specify/templates/plan-template.md`.
 - **Constitution** *(M1)* — The shortest and most authoritative governance file: the few principles that must never drift, plus the current validation policy. SignUpFlow's is 85 lines and sits above all agent instruction files. (`SignUpFlow/.specify/memory/constitution.md`)
@@ -99,6 +104,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Deletion test** *(M7)* — Remove one clause from a positioning one-liner; if no row in your table would notice the sentence became false, the clause is decoration and gets cut. Lives in `lesson.md` M7.3.
 - **Deliverability** *(M8)* — Whether email reaches the inbox at all; configured through SPF, DKIM, and DMARC on the sending domain, enforced by Gmail and Yahoo for bulk senders. Upstream of every conversion number. *Where:* `04-sales/launch-plan.md` (header and ops checklist).
 - **Dependency-lock diff** *(M3)* — The CI step that fails a build when the checked-in dependency lock and the generated workspace's resolved lock drift apart — `ListenToMe/.github/workflows/ci.yml:24, 35`.
+- **Deploy from a branch** *(M9)* — The simplest GitHub Pages mode: publish the files in one branch and folder exactly as they are. Set under Settings → Pages. Lives in `lesson.md`, Segment M9.3.
 - **Disruption drill** *(M5)* — A scenario that breaks the happy path on purpose and specifies what rejection must look like, such as CH-04's blocked worship leaders and rejected publication. (`SignUpFlow/docs/playbooks/church.md:73`)
 - **Drift** *(M4)* — A generated artifact disagreeing with the source it was generated from; three verified cases exist in SignUpFlow. — `SignUpFlow/specs/000-user-onboarding/tasks.md` (line 3).
 ### E
@@ -118,12 +124,18 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 ### G
 
 - **Generation token — a per-role counter that invalidates an in-flight stream** *(M2)* — Switch a model, bump the token, and the old stream's deltas stop being written. `ListenToMe/Sources/ListenToMeCore/MeetingSession.swift:119-132,513-578`.
+- **Git** *(M9)* — The tool that records versions of a folder on your computer. Installed with `winget install --id Git.Git -e --source winget` or `brew install git`. Lives in `setup/check-setup.sh` and `setup/check-setup.ps1`.
+- **GitHub** *(M9)* — The website that stores copies of repositories and can publish them. Not the same thing as Git: Git runs on your computer, GitHub on the internet. Lives in `lesson.md`, Segment M9.1.
+- **GitHub CLI (`gh`)** *(M9)* — The command that drives GitHub from the terminal: sign in, create a repository, clone. Installed with `winget install --id GitHub.cli --source winget` or `brew install gh`. Lives in `setup/check-setup.sh`.
+- **GitHub Pages** *(M9)* — GitHub's free hosting for static sites from a repository, at `https://<owner>.github.io/<repository>/`. Not allowed to run an online shop. The course's own AI × QE site uses it (`ai_qe/_config.yml:5`).
 - **Go/no-go gate** *(M6)* — A sponsor-signed decision boundary with a cost ceiling, a stop rule and frozen criteria. Lives in `ai_qe/docs/method/phased-pilot.md`; the exact numbers live in `ai_qe/_data/pilot_gates.json`.
 - **Graceful degradation** *(M3)* — Turning AI off leaves capture, transcription, and saving working; the app degrades, it does not stop — `ListenToMe/README.md`, "AI processing mode".
 - **Guided route** *(M6)* — A curated sequence over stable slide IDs, with a declared `closing` slide, that reorders and omits but never rewrites. Lives in `ai_qe/_data/briefing_routes.json`.
 ### H
 
 - **Health score** *(M0)* — The solver's 0–100 quality metric for a generated roster, printed by `api.cli.main solve` (`SignUpFlow/api/cli/main.py:193`). Its value depends on the revision: at the 2026-09-16 head the sample workspace prints `0.0/100` with two hard violations. — `SignUpFlow/README.md`
+- **Home folder** *(M9)* — The folder a terminal opens in, written `~` on both systems: `C:\Users\ada` on Windows, `/Users/ada` on a Mac. Lives in `lesson.md`, Segment M9.2.
+- **Homebrew** *(M9)* — The package manager for macOS. Installs Apple's Command Line Tools along the way and, on Apple silicon, lives in `/opt/homebrew`. Lives in `lab.md`, Step 1.
 - **Honest-marketing checklist** *(M7)* — Five rules every sales asset must pass: sourced numbers, qualified claims, no invented testimonials, plain refund/deadline policies, price the transformation. Lives in `course/04-sales/pricing-and-platforms.md`.
 ### I
 
@@ -132,6 +144,9 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Independent Test** *(M4)* — The per-story line proving a story is a viable MVP slice on its own. — `SignUpFlow/.specify/templates/spec-template.md`.
 - **Instruction hierarchy** *(M1)* — The five-level precedence order for overlapping rules, with one tie-breaker: follow the more specific and safer one. (`SignUpFlow/AGENTS.md`, "Agent instruction hierarchy")
 - **Invitation-only growth** *(M5)* — Signup atomically creates an organization and its first admin and never joins an existing one; later accounts arrive through administrator-created, single-use invitations. (`SignUpFlow/AGENTS.md:59`; BO-02 in `docs/playbooks/coverage.json`)
+### J
+
+- **Jekyll** *(M9)* — The site builder GitHub Pages runs by default. The course's AI × QE site uses it on purpose (`ai_qe/.github/workflows/pages.yml:77`); the catalog turns it off with `.nojekyll`.
 ### L
 
 - **Launch evidence log** *(M8)* — The record of actual list size, delivery, opens, clicks, conversions by email, and revenue, kept so the next revenue model is derived from observations. *Where:* `04-sales/launch-plan.md` (metrics to record).
@@ -157,16 +172,19 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 ### P
 
 - **P0 bug** *(M5)* — The severity SignUpFlow assigns to a missing `org_id` filter: not a triage negotiation, a query that does not ship. (`SignUpFlow/AGENTS.md:61`)
+- **Package manager** *(M9)* — A tool that installs and updates software with one command: winget on Windows, Homebrew on macOS. Lives in `lesson.md`, Segment M9.1.
 - **Per-seat pricing** *(M7)* — Pricing a SaaS by seat so the unit of price scales with the organization's adoption. Lives in `lesson.md` M7.1, grounded in `SignUpFlow/README.md`'s invitation flow.
 - **Permission role** *(M5)* — What an account may do; exactly one of `admin` or `volunteer`, enforced by a frozenset and by a normalization rule that refuses two roles. (`SignUpFlow/api/roles.py:8,38-53`)
 - **Persona directive — preset guidance appended to every role's system prompt** *(M2)* — Same code path for manual panes and automatic reviews. `ListenToMe/Sources/ListenToMeCore/Prompt.swift:159-173`.
 - **Phase 0 / Phase 1** *(M4)* — Research (decisions with receipts) and design (data-model, contracts, quickstart) phases of a feature. — `SignUpFlow/specs/014-security-hardening/plan.md`.
 - **Positioning one-liner** *(M7)* — A single sentence in the form adjective-wedge × differentiators × audience, derived clause by clause from a comparison table. Lives in `lesson.md` M7.3.
 - **Proactive gate — the four conditions before a proactive answer fires** *(M2)* — Finalized, from `.others`, passes question detection, outside the debounce window. `ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:31-40`.
+- **Prompt** *(M9)* — The line in a terminal waiting for you to type, ending in `>` in PowerShell or `%` in the Mac Terminal. Lives in `lesson.md`, Segment M9.1.
 - **Proof asset** *(M0, M8)* — An artifact you already own that carries a page claim: a tagged repo, a dated evidence line, a coverage number, a spec folder, a provenance table, a demo. *Where:* `03-content/m08-launch-capstone/lesson.md` M8.1 inventory table.
 - **Protocol seam — a protocol the pure core declares and platform glue implements** *(M2)* — The three are `AudioCapturing`, `Transcribing`, `LLMProvider`; they are what let tests run without hardware.
 - **Provenance** *(M0)* — The traced origin of a claim: source, retrieval date, and claim type. Every AI × QE claim carries it, and M6 requires it of student briefings. — `ai_qe/README.md`
 - **Provenance manifest** *(M6)* — Record of every retrieval with URL, retrieval date, status and SHA-256 hash — including failures. Lives in `ai_qe/research/document-manifest.json`; images in `ai_qe/research/visual-provenance.md`; voice in `ai_qe/assets/data/narration-provenance.json`.
+- **Push** *(M9)* — Sending your new commits to GitHub with `git push`. Until you push, a commit exists only on your computer, and Pages cannot publish it. Lives in `lab.md`, Step 6.
 ### Q
 
 - **Qualification** *(M5)* — What a person can do (`usher`, `coach`, `worship_leader`, `sound`); stored in the same `roles` array as permission roles but never interpreted as authority. (`SignUpFlow/api/roles.py:12`; `docs/playbooks/church.md:26`)
@@ -175,6 +193,8 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 
 - **Ralph loop** *(M4)* — The constitution's Context A: an agent picks the highest-priority incomplete spec, completes *all* acceptance criteria, and reports `<promise>DONE</promise>`. — `SignUpFlow/.specify/memory/constitution.md`.
 - **Redirect refusal (`RejectRedirects`)** *(M3)* — A transport that refuses every 3xx instead of following it, so meeting text can never be silently forwarded — the Swift URLSession delegate is `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`; the Python twin builds httpx with `follow_redirects=False` and raises on 3xx in `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
+- **Relative path** *(M9)* — A folder address that starts from where you are, such as `code/my-catalog` or `..`. Lives in `lesson.md`, Segment M9.2.
+- **Repository** *(M9)* — A folder whose history Git records, plus its copy on GitHub. Created from the terminal with `gh repo create`. Lives in `lab.md`, Step 4.
 - **Reputation funnel** *(M7)* — The marketing surface a free or open-source product runs on: code, README, coverage badge, published competitor analysis, support, and a Pro tier. Lives in `course/01-design/curriculum.md`, M7.1.
 - **Research log** *(M6)* — The dated intake queue where a claim enters before it can reach a page: Question / Checked / Outcome / Changed. Lives in `ai_qe/docs/research-log.md`.
 - **Reserved testimonial slot** *(M8)* — A labeled, empty testimonial placeholder with an honesty note, used instead of inventing social proof. The course's page reserves three in before/after/result format. *Where:* `04-sales/landing-page.md` (testimonials).
@@ -185,6 +205,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 
 - **Sales-page anatomy** *(M7)* — The eight-section structure: transformation headline, who it's for/isn't, problem and stakes, per-module outcomes, instructor proof, testimonials, FAQ, transparent pricing with one CTA. Lives in `course/00-research/02-course-market-research.md` §E.
 - **Self-review mapping** *(M1)* — A closing section of an implementation plan that maps every spec bullet to the tasks that satisfy it, so nothing silently drops. (`ListenToMe/docs/superpowers/plans/2026-06-18-listentome-mvp.md`)
+- **Setup check** *(M9)* — The script that tests Git, the GitHub CLI, your identity and your sign-in, and prints the exact fix for any failure. Lives in `setup/check-setup.sh` and `setup/check-setup.ps1`.
 - **Signature qualifier** *(M6)* — The one sentence that labels the whole product: "Planning inputs and proposed outcomes are not observed client results." Lives in `ai_qe/README.md`.
 - **Skeptical-engineer test** *(M7)* — Lab M7 Step 5: the three toughest objections your own table invites, each answered with a named row or a repo pointer. Lives in `lab.md` Step 5.
 - **Spec (the WHAT)** *(M1)* — The technology-agnostic statement of what users need: prioritized, independently testable stories with Given/When/Then acceptance scenarios and success criteria. (`SignUpFlow/specs/014-security-hardening/spec.md`)
@@ -201,6 +222,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **Task line** *(M1)* — An executable entry in `tasks.md` in `[ID] [P?] [Story]` format with an exact file path and tests first. Real example: "T027 [US1] Implement POST /api/sms/send endpoint per contracts/sms-api.md in api/routers/sms.py". (`SignUpFlow/specs/019-sms-notifications/tasks.md`)
 - **Tenant isolation** *(M0, M8)* — Enforcing that every query and route is scoped to one organization, verified with negative-path tests using real JWTs. The Type 2 discipline artifact. *Where:* `SignUpFlow/docs/TESTING.md`; `03-content/m08-launch-capstone/lab.md`.
 - **Tenant-bound credential** *(M5)* — A JWT or session carrying both the person `sub` and the `org_id`, both required, and reloaded against an active membership before the request proceeds. (`SignUpFlow/api/dependencies.py:78-121`; `docs/API_AUTHORIZATION.md:28-33`)
+- **Terminal** *(M9)* — A window where you type commands instead of clicking: Terminal or PowerShell on Windows, Terminal on macOS. Lives in `lesson.md`, Segment M9.1.
 - **Test tier** *(M0, M3, M5)* — One layer of the test pyramid run in its own process. SignUpFlow documents seven tiers; the full local suite once recorded "1,464 passed, 21 skipped". — `SignUpFlow/docs/TESTING.md`; `SignUpFlow/docs/playbooks/validation.md`
 - **Token-prefix matching — capability markers matched at a token start, never as a substring** *(M2)* — Prevents `gemini` from being demoted as `mini`. `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:13-18`.
 - **Transformation headline** *(M8)* — A one-sentence, falsifiable statement of the destination, not the contents. The first of the eight sections. *Where:* `00-research/02-course-market-research.md` §E; `04-sales/landing-page.md`.
@@ -216,6 +238,8 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 ### W
 
 - **Warmup phase** *(M8)* — The first three emails (origin story → transformation proof → free tool), which earn trust and make no sales ask. *Where:* `04-sales/launch-plan.md`.
+- **winget** *(M9)* — The Windows Package Manager, shipped inside Microsoft's App Installer; needs Windows 10 version 1809 or later. Lives in `lab.md`, Step 1.
+- **Working tree clean** *(M9)* — What `git status` says when every change has been committed. After a push, it is the proof that everything went. Lives in `lab.md`, Step 6.
 ### Y
 
 - **YAGNI non-goals** *(M0, M1)* — An explicit list of what the product will not do, written into the design spec so scope cannot grow silently. ListenToMe: no cloud backend, accounts, billing, multi-user, and no covert mode. (`ListenToMe/docs/superpowers/specs/2026-06-18-listentome-design.md`, §2)

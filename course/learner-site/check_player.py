@@ -531,15 +531,22 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
     page.write_text(DIAGRAM_PROBE_TEMPLATE.replace("/*CONTRAST*/", CONTRAST_JS)
                                          .replace("__CASES__", json.dumps(cases)),
                     encoding="utf-8")
+    # The probe opens every case in turn, so its time grows with the course. A fixed budget was
+    # enough at 30-odd cases and ran out at 85, leaving the page reporting "pending": scale it.
+    budget_ms = max(40000, 1500 * len(cases))
     try:
-        dom = dump_dom(browser, f"http://127.0.0.1:{port}/{DIAGRAM_PROBE_PAGE}", budget_ms=40000)
+        dom = dump_dom(browser, f"http://127.0.0.1:{port}/{DIAGRAM_PROBE_PAGE}", budget_ms=budget_ms)
     finally:
         page.unlink(missing_ok=True)
     match = re.search(r'<pre id="out">(.*?)</pre>', dom, re.S)
     if not match:
         return ["diagram geometry: probe did not report"]
+    raw = html_lib.unescape(match.group(1)).strip()
+    if raw == "pending":
+        return [f"diagram geometry: probe still running after {budget_ms} ms of virtual time "
+                f"for {len(cases)} slides — raise the per-slide budget"]
     try:
-        results = json.loads(html_lib.unescape(match.group(1)))
+        results = json.loads(raw)
     except ValueError:
         return ["diagram geometry: unreadable probe output"]
     by_case = {(r.get("deck"), r.get("slide")): r for r in results}
@@ -602,8 +609,10 @@ def check_units() -> list[str]:
                 d for tr in SP.TRACKS if tr["status"] == "built"
                 for d in list(tr["core"]) + list(tr.get("slice") or {})}:
             problems.append(f"{deck_id}: in a built path but has no module page")
-    if total != 63:
-        problems.append(f"unit model yields {total} units, expected 63")
+    # 63 units for M0-M8, plus 7 for the free M9 (intro, three segments, lab, quiz, summary). Kept
+    # as a literal on purpose: a deck edit that moves a unit boundary should fail here, not re-count.
+    if total != 70:
+        problems.append(f"unit model yields {total} units, expected 70")
     # Independent cross-check: the unit model derives 17 segments for the On-Device path from the
     # decks alone, while `bundle-map.md` states "17 of 27 teaching segments" by hand. If a deck
     # edit changes a boundary, the two stop agreeing — which is the whole point of asserting it.

@@ -32,7 +32,7 @@ TRACKS = ROOT / "05-tracks"
 MODULES = [
     "m00-orientation", "m01-operating-system", "m02-ondevice-app", "m03-privacy-ship",
     "m04-spec-driven-saas", "m05-security-tests", "m06-expertise-product",
-    "m07-monetize", "m08-launch-capstone",
+    "m07-monetize", "m08-launch-capstone", "m09-github-pages",
 ]
 ARTIFACTS = {
     "slides.md": None,          # slide-count checked by deck_lint.py

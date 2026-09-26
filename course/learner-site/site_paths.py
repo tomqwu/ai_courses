@@ -11,8 +11,8 @@ and every module follows one fixed unit grammar:
 This course already had every level; it just did not surface one. The mapping is:
 
     Learning path  = a track bundle in course/05-tracks/   (4 of them)
-    Module         = m00-m08                               (9)
-    Unit           = a lesson segment, plus intro/lab/quiz/summary (63 total)
+    Module         = m00-m08, plus the free m09            (10)
+    Unit           = a lesson segment, plus intro/lab/quiz/summary (70 total)
 
 Durations are *measured* from the narration manifest, not estimated, which is the one place this
 deliberately beats the model it copies. Lab times are quoted from the module's own source because a
@@ -58,7 +58,7 @@ def module_units(deck: dict) -> list[dict]:
     * a module that marks fewer segments than it declares (m08 has no ``M8.1`` heading at all)
       still opens segment 1 at the first content slide, which is what the declared count means.
 
-    ``check_player.py`` asserts the result covers all 233 slides exactly once, so a future edit to a
+    ``check_player.py`` asserts the result covers every slide exactly once, so a future edit to a
     deck that breaks a boundary fails the gate rather than silently mis-grouping a unit.
     """
     number = int(NUM.match(deck["id"]).group(1))
@@ -296,6 +296,30 @@ TRACKS = [
         "counts_source": "derived from bundle-map.md rows (no course-wide total is stated there)",
         "status": "built",
         "page": "path-expertise-product.html",
+    },
+    {
+        # Free and standalone: the on-ramp for anyone who cannot yet clone a repository, and a
+        # publishable page for any product in the course. Outside the paid course's certificate.
+        # Case study: ai_qe, which is itself a GitHub Pages site.
+        "slug": "github-pages",
+        "title": "Ship a Website with GitHub Pages",
+        "medium": "Website",
+        "kicker": "Free · Start here if the terminal is new",
+        "promise": "From nothing installed to a public product catalog: Git, the GitHub CLI, "
+                   "folders, cloning and publishing, on Windows and macOS.",
+        "core": ["m09"],
+        "slice": {},
+        "excluded": [
+            ("The paid course, M0–M8 — this path is free and stands alone", "m00", "m08"),
+        ],
+        "price": "Free",
+        "level": "Beginner",
+        "role": "New to the terminal · Small-business owner",
+        "subject": "Git · GitHub CLI · GitHub Pages",
+        "measured": None,
+        "counts_source": "the module itself",
+        "status": "built",
+        "page": "path-github-pages.html",
     },
 ]
 

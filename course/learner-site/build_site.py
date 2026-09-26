@@ -1101,7 +1101,7 @@ def main(argv=None) -> int:
           f"· handouts · glossaries ({sum(len(t) for t in terms_by_deck.values())} terms) · search index {len(json.loads((target / 'search.json').read_text(encoding='utf-8')))} entries")
     if recorded < scripted:
         print(f"  note: {scripted - recorded} slides have no recording yet — "
-              f"run `python3 ../06-production/narration/generate_narration.py generate --provider say`")
+              f"run `python3 ../06-production/narration/generate_narration.py generate --provider preview`")
     return 0
 
 
