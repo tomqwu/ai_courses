@@ -112,10 +112,16 @@ by the executive route — five evidence slides, above the required three.
 editions split as `ai_qe/_data/release.yml` splits them. Exemplar: slide 3 gains the Feb-2026
 follow-up; `slide_edition` advances 1.0 → 1.1 and `version` with it; the questionnaire edition stays
 at 4; audio, subtitle timing and the existing PDF edition remain unchanged. Published editions are
-never overwritten (`ai_qe/CONTRIBUTING.md`).
+never overwritten (`ai_qe/CONTRIBUTING.md`). The v1 manifest then rejects the v2 briefing:
+
+```text
+$ python3 edition_manifest.py check briefing.md manifest-1.0.0.json
+briefing.md no longer matches edition 1.0.0:
+  claim-1: changed (claim)
+```
 
 **Common wrong answers.** (a) Bumping every edition together — signals version theatre.
-(b) Republishing over the old release — editions are immutable.
+(b) Republishing over the old release — editions are immutable; `build` refuses it. (c) No signature.
 
 ## Step 6 — the reconciliation gate
 
@@ -158,17 +164,14 @@ Honest replacement, in one sentence: "One vendor-affiliated study measured a 55.
 single synthetic task; our own pilot will measure net QA effort on our data, and any capacity it
 releases becomes a saving only when Finance names the budget line it is captured against."
 
-The raw claim commits three errors: a task-level number sold as capacity, capacity sold as cash, and a
-fictitious dollar figure. The replacement keeps the strongest number and drops the rest.
+Three errors: task-level sold as capacity, capacity sold as cash, and an invented dollar figure.
 
 ## Common student failures
 
-1. **A vendor self-reported figure headlined as measured.** "Organizations achieve 10–15% gains"
-   labelled *measured*; the fix is the verb, "organizations *report*".
-2. **A task-level number sold as a budget saving.** 55.8% presented as a Finance outcome with no
-   named budget line.
-3. **A citation with a link but no date, sample, method or unit.** A bare URL is not a benchmark
-   record (`ai_qe/CONTRIBUTING.md:93-94`). The fix is the full record, or a not-verified entry.
+1. **A self-reported figure labelled measured.** Fix the verb: "organizations *report*".
+2. **A task-level number sold as a budget saving,** with no named budget line.
+3. **A bare URL as the citation.** A benchmark record needs date, sample, method and unit
+   (`ai_qe/CONTRIBUTING.md:93-94`); write the record, or a not-verified entry.
 4. **Routes that rewrite rather than reorder.** A reworded "executive route" breaks the stable-ID
    invariant and every shared link with it.
 
@@ -182,3 +185,4 @@ fictitious dollar figure. The replacement keeps the strongest number and drops t
 | Executive route is exactly 6, decision ask quoted | Count the YAML list; paste the ask |
 | Technical route keeps ≥3 skipped evidence slides | Diff the two `slides:` lists |
 | No uncited quantitative claim | `python3 selfcheck.py briefing.md` → exit 0; cohort path adds the named reviewer's written confirmation |
+| Both editions signed; v1 rejects v2 | `verify` prints Good signature; `check` exits 1 |

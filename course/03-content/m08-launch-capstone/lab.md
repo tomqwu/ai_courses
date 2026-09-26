@@ -90,6 +90,10 @@ Artifact links:
 - Spec folder: <path>
 - Evidence log: <path>
 - Sales page draft: <path>
+Disclosure (each generated asset → where it says so), or "none generated":
+- <asset> → <where>
+AI-engine citations (launch day, <date>):
+- <engine>: <cited? which address? correct?>
 Limitations / not verified:
 - <honest list>
 ```
@@ -107,6 +111,8 @@ Keep also: the plan post and its peer reply, the demo recording link, both score
 - [ ] Sales page: 8 sections, one CTA, word target set by price, no unsourced claim
 - [ ] 5 emails drafted; one CTA each; the deadline real
 - [ ] Deliverability verified on the sending domain before the arc is queued: `dig +short TXT _dmarc.<domain>` returns a `v=DMARC1;` record with an explicit `p=`, SPF returns exactly one `v=spf1` record ending `-all`/`~all`, DKIM returns a `v=DKIM1` key with a non-empty `p=`; the three answers and both test sends (Gmail + corporate) are in the evidence record
+- [ ] Disclosure: every generated launch asset (voice-over, narration, images) says so on the asset, and the evidence record lists each asset and where its disclosure sits, or states "none generated"
+- [ ] AI-engine citation baseline: the question your page answers, asked in at least two answer engines on launch day, with whether you were cited, the address and whether the citation matches your page — recorded, with a date to repeat it
 - [ ] Demo recorded (≤5:30) or delivered live, ending on the limits
 - [ ] Evidence record complete + self-score ≥80% (nothing below 3) + peer score exchanged
 

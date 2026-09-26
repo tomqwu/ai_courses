@@ -93,3 +93,8 @@ jobs:
         run: |
           make -C course/03-content/m05-security-tests/mini-flow setup
           make -C course/03-content/m05-security-tests/mini-flow lab-m5
+
+      - name: Lab M6 tools — reconciliation self-check and signed edition manifest
+        run: |
+          python course/03-content/m06-expertise-product/selfcheck.py --selftest
+          python course/03-content/m06-expertise-product/edition_manifest.py --selftest
