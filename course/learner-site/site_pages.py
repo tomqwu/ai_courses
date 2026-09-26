@@ -83,10 +83,14 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) 
                 if m:
                     read_anchors.setdefault(fixed or m.group(1), h["id"])
                     break
+    # Each section's own text, so the palette can match and quote a section, not only its heading.
+    section_text = {m.group(1): re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(2))).strip()
+                    for m in re.finditer(r'<h[23] id="([^"]+)"[^>]*>.*?</h[23]>(.*?)(?=<h[23] |\Z)', rendered, re.S)}
     record = {"kind": kind, "deck": deck["id"], "title": title or f"{KIND_TITLES[kind]} — {short}",
               "read_anchors": read_anchors,
               "href": f"{kind}-{deck['id']}.html",
-              "headings": [{"text": h["text"], "id": h["id"]} for h in headings if h["level"] <= 3],
+              "headings": [{"text": h["text"], "id": h["id"], "x": section_text.get(h["id"], "")[:1500]}
+                           for h in headings if h["level"] <= 3],
               "text": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", rendered))[:20000]}
     return SH.document(f"{title or KIND_TITLES[kind]} — AI Product Studio", ledes[kind], body_html,
                        site_base, f"doc-page {kind}-page",
@@ -287,7 +291,8 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
     </footer>
   </div>
 </div>"""
-    step_headings = [{"text": s["title"], "id": s["id"]} for s in steps]
+    step_headings = [{"text": s["title"], "id": s["id"], "step": True,
+                      "x": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", s["html"])).strip()[:1500]} for s in steps]
     other = [{"text": s["title"], "id": SC.slug(s["title"] or "lab")} for s in lab["sections"]
              if s["title"] and not s.get("steps") and s.get("place") != "before"]
     record = {"kind": "lab", "deck": deck["id"], "title": lab["title"], "href": f"lab-{deck['id']}.html",
@@ -426,15 +431,29 @@ def evidence_page(labs: list[dict], site_base: str) -> str:
                        current="evidence", scripts=("evidence.js",))
 
 
-def search_index(records: list[dict], decks: list[dict], units_by_deck: dict) -> str:
-    """One JSON index for the client-side search: units, slides, documents, glossary terms."""
+def search_index(records: list[dict], decks: list[dict], units_by_deck: dict,
+                 times: dict | None = None) -> str:
+    """The palette's index (#80): slides with their narration a sentence at a time, lesson and
+    handout sections with their text, lab steps with their instructions, and glossary terms.
+
+    Keys: k kind · d module · t title · h link · m where it sits · x text to match and quote · for a
+    slide, n its number, s its narration sentences and ts when each is spoken (only when captions
+    are published, so a hit can open the player at the moment it is said).
+    """
+    import build_site as B                                                     # noqa: PLC0415
     out = []
+    times = times or {}
     for deck in decks:
         short = short_label(deck)
         for slide in deck["slides"]:
-            out.append({"k": "slide", "d": deck["id"], "t": f"{slide['kicker']} — {slide['title']}",
-                        "h": f"{deck['id']}.html#{slide['id']}", "m": short,
-                        "x": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", slide["html"]) + " " + slide["script_text"])[:600]})
+            entry = {"k": "slide", "d": deck["id"], "t": f"{slide['kicker']} — {slide['title']}",
+                     "h": f"{deck['id']}.html#{slide['id']}", "m": short, "n": slide["number"],
+                     "x": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", slide["html"])).strip()[:400],
+                     "s": B.sentences(slide["script_text"])}
+            spoken = times.get(deck["id"], {}).get(slide["id"])
+            if spoken and len(spoken) == len(entry["s"]):
+                entry["ts"] = spoken
+            out.append(entry)
         for unit in units_by_deck.get(deck["id"], []):
             out.append({"k": "unit", "d": deck["id"], "t": unit["title"] if unit["kind"] == "segment" else unit["label"],
                         "h": unit["href"], "m": short, "x": f"{unit['kind']} unit, slides {unit['first']}–{unit['last']}"})
@@ -442,8 +461,8 @@ def search_index(records: list[dict], decks: list[dict], units_by_deck: dict) ->
         out.append({"k": r["kind"], "d": r["deck"], "t": r["title"], "h": r["href"], "m": r.get("module", ""),
                     "x": r["text"][:1500]})
         for h in r.get("headings", []):
-            out.append({"k": r["kind"] + "-heading", "d": r["deck"], "t": h["text"], "h": f"{r['href']}#{h['id']}",
-                        "m": r["title"], "x": ""})
+            out.append({"k": r["kind"] + "-heading", "d": r["deck"], "t": re.sub(r"<[^>]+>", "", h["text"]),
+                        "h": f"{r['href']}#{h['id']}", "m": r["title"], "x": h.get("x", "")})
         for t in r.get("terms", []):
             out.append({"k": "term", "d": r["deck"], "t": t["term"], "h": f"{r['href']}#{SC.slug(t['term'])}",
                         "m": r["title"], "x": t["definition"][:400]})

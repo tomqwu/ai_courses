@@ -59,6 +59,7 @@
   let frame = 0;
   let activeCue = -1;
   let rows = [];                   // transcript rows: whole sentences built from the caption cues
+  let startAt = null;              // ?t= from a search hit on a spoken sentence (#80)
 
   const audio = document.createElement('audio');
   audio.preload = 'none';
@@ -303,6 +304,7 @@
   /* ---------------------------------------------------------------- slides */
 
   function goTo(nextIndex, options = {}) {
+    if (!options.keepStart) startAt = null;
     const clamped = Math.max(0, Math.min(slides.length - 1, nextIndex));
     stop();
     cancelAdvance();
@@ -403,7 +405,11 @@
       cueList = parsed;
       ui.cc.disabled = false;
       renderLines();
-      if (!audioFailed) announce('Narration with synchronized captions.');
+      if (startAt !== null) {
+        // Opened from a search hit on a spoken sentence: that sentence is marked, and Play starts there.
+        highlight(rows.findIndex(r => startAt >= r.start && startAt < r.end));
+        announce(`Starts at ${clock(startAt)}, where the match is spoken · Press Play.`);
+      } else if (!audioFailed) announce('Narration with synchronized captions.');
     } catch (error) {
       if (version !== clipVersion) return;
       ui.retry.hidden = false;
@@ -426,6 +432,7 @@
     if (audioFailed) { audioFailed = false; audio.removeAttribute('src'); }
     ensureSource();
     if (audio.ended) audio.currentTime = 0;
+    if (startAt !== null) { audio.currentTime = startAt; startAt = null; }
     const version = clipVersion;
     window.APSNarrationMedia.play(audio).catch(error => {
       if (version !== clipVersion || error.name === 'AbortError') return;
@@ -605,7 +612,9 @@
     // A deep link names a slide on purpose — an outline unit, a search hit, a transcript heading — so
     // it wins over the saved resume point. Resuming is for arriving at the deck with no slide named.
     const hashIndex = slides.findIndex(slide => `#${slide.id}` === location.hash);
-    if (hashIndex >= 0) { goTo(hashIndex, { scroll: false }); return; }
+    const t = parseFloat(new URLSearchParams(location.search).get('t'));
+    if (hashIndex >= 0 && Number.isFinite(t) && t > 0) startAt = t;
+    if (hashIndex >= 0) { goTo(hashIndex, { scroll: false, keepStart: true }); return; }
     try {
       const raw = localStorage.getItem(progressKey);
       if (raw) {
