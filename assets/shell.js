@@ -41,7 +41,10 @@
       var lab = s.labs[deck];
       return lab && Object.keys(lab.checks || {}).length ? 'progress' : 'todo';
     }
-    if (kind === 'quiz') return s.quizzes[deck] ? 'progress' : 'todo';
+    if (kind === 'quiz') {
+      var answers = (s.quizAnswers || {})[deck];
+      return s.quizzes[deck] || (answers && Object.keys(answers).length) ? 'progress' : 'todo';
+    }
     var at = lastSlide(s);
     return at && at.deck === deck && at.n >= first && at.n <= last ? 'progress' : 'todo';
   }

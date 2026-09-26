@@ -64,6 +64,16 @@
       if (total && score / total >= 0.75) s.units[deck + ':quiz'] = s.units[deck + ':quiz'] || Date.now();
       save();
     },
+    // Each answer as it is given (#78), so a check survives a reload; cleared by "Try again".
+    quizAnswers: function (deck) { return (load().quizAnswers || {})[deck] || {}; },
+    setQuizAnswer: function (deck, n, record) {
+      var s = load(); s.quizAnswers = s.quizAnswers || {};
+      var a = s.quizAnswers[deck] || (s.quizAnswers[deck] = {});
+      a[n] = record; save();
+    },
+    clearQuizAnswers: function (deck) {
+      var s = load(); if (s.quizAnswers) delete s.quizAnswers[deck]; save();
+    },
     lab: function (deck) { var s = load(); return s.labs[deck] || { checks: {}, evidence: {} }; },
     setLabCheck: function (deck, id, on, total) {
       var s = load(); var lab = s.labs[deck] || (s.labs[deck] = { checks: {}, evidence: {} });
@@ -112,7 +122,7 @@
       var data = JSON.parse(text);
       if (!data || data.v !== 2 || typeof data.units !== 'object') throw new Error('not an AI Product Studio progress file');
       state = { v: 2, units: data.units || {}, quizzes: data.quizzes || {}, labs: data.labs || {}, last: data.last || null,
-                path: data.path || null };
+                path: data.path || null, quizAnswers: data.quizAnswers || {} };
       save();
     },
     reset: function () { state = empty(); save(); }
