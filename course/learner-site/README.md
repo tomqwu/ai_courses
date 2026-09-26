@@ -20,7 +20,7 @@ recordings is still fully readable, and the player says so instead of failing.
 | `mNN.html`, `index.html` | `03-content/mNN-*/slides.md` + `06-production/narration/manifest.json` | No — generated |
 | `lesson-mNN.html`, `handout-mNN.html`, `glossary-mNN.html`, `glossary.html` | the module Markdown, rendered by `site_content.py` with every repo pointer linked at the pinned commit | No — generated |
 | `lab-mNN.html` | `lab.md` — a workspace (#77): the steps one at a time (read from `## Step N — …` sections, a numbered `## Steps` list, or bold numbered paragraphs, as each lab is written), the acceptance checklist and the rubric's auto-fail list in a panel beside them, commands with copy buttons, an evidence-entry form | No — generated |
-| `quiz-mNN.html` | `quiz.md` — the knowledge check, playable; the parser fails the build on a question with zero or two keyed answers | No — generated |
+| `quiz-mNN.html` | `quiz.md` — the knowledge check (#78): one question at a time, radio cards in a `fieldset`, the correct answer and the learner's labelled in words, the key's explanation with a **Rewatch** link to the segment the question's objective names, answers saved as they are given, and a result that lists the objectives to revisit; the parser fails the build on a question with zero or two keyed answers | No — generated |
 | `evidence.html` | "Your evidence log": every lab's evidence entry from this browser's progress, copied or downloaded as one file | No — generated |
 | `search.json` | every unit, slide (with its narration), lesson and lab heading, question and glossary term | No — generated |
 | `proof.json` | what the build measured about itself: pointers resolved, facts re-derived, lab runs, narration contract | No — generated |

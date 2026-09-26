@@ -198,41 +198,61 @@ def run(page, browser, base: str) -> list[str]:
     quiz_pages = sorted(SITE.glob("quiz-m*.html"))
     need(quiz_pages, "no quiz pages built")
     played = 0
+    # One question at a time (#78): each is answered, then "Next question" opens the next; the last
+    # opens the result. Every question is a fieldset with a legend, and its feedback is a status.
     for qp in quiz_pages:
         page.goto(f"{base}/{qp.name}")
         qs = page.locator(".qq")
         for i in range(qs.count()):
             q, label = qs.nth(i), f"{qp.name} question {i + 1}"
             played += 1
+            need(q.is_visible() and page.locator(".qq:visible").count() == 1,
+                 f"{label}: not shown on its own screen")
             if "is-mc" in (q.get_attribute("class") or ""):
                 key = q.get_attribute("data-answer") or ""
+                need(q.locator("fieldset legend").count() == 1 and q.locator('[role="status"]').count() == 1,
+                     f"{label}: no fieldset/legend, or no status region for the feedback")
                 if q.locator(f'.q-option[data-letter="{key}"]').count() != 1:
                     problems.append(f"{label}: keyed answer {key!r} is not exactly one option")
                     continue
                 q.locator(f'.q-option[data-letter="{key}"]').click()
                 q.locator("[data-check]").click()
-                need(q.locator(".q-explain").is_visible(), f"{label}: no rationale after checking")
+                need(q.locator(".q-explain").is_visible()
+                     and "Correct answer" in q.locator(f'.q-option[data-letter="{key}"] [data-mark]').inner_text(),
+                     f"{label}: no rationale, or the correct answer is not labelled in words")
             else:
                 need(q.locator(".q-explain").is_hidden() and q.locator("[data-reveal]").is_disabled(),
                      f"{label}: model answer reachable before an attempt")
                 q.locator("textarea").fill("An attempt long enough to count as one.")
                 q.locator("[data-reveal]").click()
+            q.locator("[data-next]").click()
         summary = page.locator("[data-summary-text]")
         need(summary.count() and "clears the 75%" in summary.inner_text(),
              f"{qp.name}: all keyed answers did not clear the 75% threshold")
     quizzes = json.loads(page.evaluate("JSON.stringify(window.APSProgress.get().quizzes)"))
     need(len(quizzes) == len(quiz_pages), f"quiz scores reached progress for {len(quizzes)} of {len(quiz_pages)} modules")
-    # Keyboard only, wrong answer: the feedback names the key.
+    # Answers persist: a finished check reopens on its result; "Try again" clears it.
     page.goto(f"{base}/quiz-m03.html")
+    need(page.locator("[data-quiz-summary]").is_visible(), "quiz-m03: a finished check did not reopen on its result")
+    page.locator("[data-quiz-again]").click()
+    page.wait_for_load_state()
+    # Keyboard only, wrong answer: the feedback names the key, and links back to the segment.
     q = page.locator(".qq.is-mc").first
     key = q.get_attribute("data-answer") or "a"
     wrong = next(l for l in "abcd" if l != key and q.locator(f'.q-option[data-letter="{l}"]').count())
-    q.locator(f'.q-option[data-letter="{wrong}"]').focus()
+    q.locator(f'.q-option[data-letter="{wrong}"] input').focus()
     page.keyboard.press("Space")
     q.locator("[data-check]").focus()
     page.keyboard.press("Enter")
-    need(f"keyed answer is {key.upper()}" in q.locator("[data-feedback]").inner_text(),
-         "quiz-m03: a keyboard-only wrong answer got no feedback naming the key")
+    need(f"keyed answer is {key.upper()}" in q.locator("[data-feedback]").inner_text()
+         and "Your answer" in q.locator(f'.q-option[data-letter="{wrong}"] [data-mark]').inner_text(),
+         "quiz-m03: a keyboard-only wrong answer got no feedback naming the key and the learner's answer")
+    need(re.search(r"m03\.html#slide-\d+$", q.locator(".q-rewatch").get_attribute("href") or ""),
+         "quiz-m03: the feedback does not link back to the slide that teaches the question")
+    page.reload()
+    need(page.locator(".qq:visible").get_attribute("data-n") != q.get_attribute("data-n")
+         and "is-wrong" in (page.locator(".qq").first.get_attribute("class") or ""),
+         "quiz-m03: the answer did not survive a reload, or the check did not resume at the next question")
 
     # Labs: the checklist persists and completes; the evidence entry exports; auto-fail is shown.
     page.goto(f"{base}/lab-m01.html")
