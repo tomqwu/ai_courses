@@ -474,6 +474,7 @@ def parse_lab(text: str, deck_id: str) -> dict:
     checklist_ids: list[str] = []
     checklist_count = 0
     evidence_md = ""
+    steps_seen = False
     for sec_title, sec_body in sections:
         is_check = bool(re.search(r"checklist", sec_title, re.I))
         is_evidence = sec_title.lower().startswith("evidence")
@@ -487,10 +488,74 @@ def parse_lab(text: str, deck_id: str) -> dict:
         kind = "checklist" if is_check else ("evidence" if is_evidence else
                                             ("stretch" if sec_title.lower().startswith("stretch") else
                                              ("discussion" if sec_title.lower().startswith("discussion") else "body")))
-        rendered.append({"title": sec_title, "html": html_body, "kind": kind})
+        section = {"title": sec_title, "html": html_body, "kind": kind, "id": slug(sec_title or "lab")}
+        # The workspace (#77) needs the steps one at a time. Labs write them two ways, and both are
+        # read as written: `## Step N — Title (~time)` sections, or one `## Steps` section holding a
+        # numbered list whose items carry their own code blocks.
+        one = STEP_SECTION.match(sec_title)
+        if kind == "body" and one:
+            section["steps"] = [{"title": one.group("title") or sec_title, "time": one.group("time") or "",
+                                 "html": html_body, "id": section["id"]}]
+            steps_seen = True
+        elif kind == "body" and re.fullmatch(r"steps?", sec_title.strip(), re.I):
+            section["steps"] = [{**item, "html": render_document(item["md"], heading_offset=1)[0],
+                                 "id": f"step-{n}"} for n, item in enumerate(list_steps(sec_body), 1)]
+            steps_seen = bool(section["steps"]) or steps_seen
+        elif kind == "body":
+            section["place"] = "reference" if steps_seen else "before"
+        rendered.append(section)
     return {"deck": deck_id, "title": title, "meta": meta, "sections": rendered,
             "checklist_ids": checklist_ids, "checklist_count": checklist_count,
             "evidence_md": evidence_md}
+
+
+STEP_SECTION = re.compile(r"^(?:#+\s*)?Step\s+\w+\s*(?:—|–|-|:)\s*(?P<title>.*?)\s*(?:\((?P<time>[^)]*)\))?\s*$", re.I)
+LIST_ITEM = re.compile(r"^(\d+)\.\s+(.*)$")
+BOLD_ITEM = re.compile(r"^\*\*(\d+)\.\s+(.+?)\*\*\s*(.*)$")
+
+
+def list_steps(text: str) -> list[dict]:
+    """A `## Steps` section, one step per top-level item, with its nested lines dedented.
+
+    Two forms are written: a numbered list (`1. **Create the repo.** …`) and bold numbered
+    paragraphs (`**0. Run the baseline and the leak.** …`). The title is the bold lead or, without
+    one, the item's first sentence; the step's body is the whole item, so no words are dropped.
+    """
+    items: list[list[str]] = []
+    in_fence = False
+    for line in text.splitlines():
+        if FENCE.match(line.strip()):
+            in_fence = not in_fence
+        bold = None if in_fence else BOLD_ITEM.match(line)
+        m = None if in_fence or bold else LIST_ITEM.match(line)
+        if bold:
+            items.append([f"**{bold.group(2)}** {bold.group(3)}".rstrip()])
+        elif m:
+            items.append([m.group(2)])
+        elif items:
+            items[-1].append(line)
+    out = []
+    for lines in items:
+        rest = lines[1:]
+        indent = min((len(l) - len(l.lstrip()) for l in rest if l.strip()), default=0)
+        body = "\n".join([lines[0]] + [l[indent:] for l in rest]).strip()
+        lead = re.match(r"^\*\*(.+?)\*\*\s*", lines[0])
+        if lead:
+            title = lead.group(1).strip().rstrip(".:")
+        else:
+            # The first sentence, not counting full stops inside code spans (`make lab-m2`).
+            plain = re.sub(r"`[^`]*`", lambda m: m.group(0).replace(".", "\x00"), lines[0])
+            first = re.match(r"^(.+?[.!?])(?:\s|$)", plain)
+            title = (first.group(1) if first else plain).rstrip(".")
+            # A long first sentence is cut at its first colon, bracket or dash (outside code): the
+            # list shows the step's name, and its body keeps every word.
+            if len(title) > 60:
+                cut = re.search(r"(?<=.{20})(?::\s|\s\(|\s—\s)", re.sub(r"`[^`]*`", lambda m: "x" * len(m.group(0)), title))
+                if cut:
+                    title = title[:cut.start()]
+            title = title.replace("\x00", ".")
+        out.append({"title": title, "time": "", "md": body})
+    return out
 
 
 # ---------------------------------------------------------------- glossary parser

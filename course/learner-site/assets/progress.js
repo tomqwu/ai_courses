@@ -74,6 +74,11 @@
       else if (total && n < total) delete s.units[deck + ':lab'];
       save();
     },
+    // The workspace's steps (#77): which are done, and which one the learner is on.
+    setLabSteps: function (deck, current, done) {
+      var s = load(); var lab = s.labs[deck] || (s.labs[deck] = { checks: {}, evidence: {} });
+      lab.step = current; lab.steps = done; lab.at = Date.now(); save();
+    },
     setLabEvidence: function (deck, fields) {
       var s = load(); var lab = s.labs[deck] || (s.labs[deck] = { checks: {}, evidence: {} });
       lab.evidence = fields; lab.at = Date.now(); save();
