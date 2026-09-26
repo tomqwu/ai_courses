@@ -31,7 +31,17 @@ title: M8 — Launch: Sales Page, Email Arc, Capstone
 
 ## The page is a sequence, not a pile
 
-- Eight sections, in order, each with one job.
+<!-- _diagram: flow -->
+
+- Destination
+- Qualification
+- Stakes
+- Outcomes
+- Credibility
+- Borrowed trust
+- Objections
+- Price
+
 - Sell the destination first; prove it second.
 - Order carries the conversion, not the volume.
 - Restructured onto it: one creator, 1% to 8%.
@@ -85,11 +95,16 @@ Pointers: `04-sales/landing-page.md` · `00-research/02-course-market-research.m
 
 ## Section 4 is where technical pages fail
 
+| | A topic line | An outcome line |
+|---|---|---|
+| Week 3 | "covers privacy" | "run an LLM locally — you'll ship a hardened local-only mode" |
+| It names | content | a change in the reader |
+| The buyer can | only imagine the outcome | hold you to it; it maps to a lab |
+
 - Abilities, not topics: one per module.
 - "Engineer a fail-closed local-only mode" is checkable.
-- Example: "Week 3: run an LLM locally"
-- A topic list asks the reader to imagine the outcome.
-- Pointer: `04-sales/landing-page.md`, curriculum table.
+- No nameable ability means the module is not finished.
+- Pointer: `04-sales/landing-page.md:83`, curriculum table.
 
 <!-- NOTES: Technical authors default to a syllabus: week three covers privacy. That describes content, not a change in the reader, and the reader cannot evaluate it. The house standard is an outcome line — "Week 3: run an LLM locally; you'll ship a hardened local-only mode." Same content, but now it is a claim the buyer can hold you to, and it maps straight to a lab checkpoint. Write one line per module; if you cannot name the ability, the module is not finished. Transition: section eight is the pricing discipline. Timing: 3 minutes. -->
 
@@ -109,12 +124,21 @@ Pointers: `04-sales/landing-page.md` · `00-research/02-course-market-research.m
 
 ## No testimonials yet? Say so.
 
+```markdown
+> *Beta cohort: testimonials land here. … Until then, this section
+> stays honest: no invented social proof. The three repos above are
+> the pre-beta proof.*
+
+**[Reserved for beta-cohort testimonials —
+3 slots: before/after/result format]**
+```
+
 - The course had no students when the page was written.
 - It invented none; it reserved three slots.
-- Slots labeled before/after/result format.
 - The badge strip carried the section instead.
-- Repos are social proof for technical buyers.
 - A founder-written quote is fabrication.
+
+Pointers: `04-sales/landing-page.md:128-130` · badge strip `04-sales/landing-page.md:9`
 
 <!-- NOTES: This is the honest-move slide. The course's page reserves three testimonial slots, labels the format, and posts a note saying the section stays honest until real ones exist. What carries the weight meanwhile is the badge strip: three repos, a coverage number, a dated test count, and a slide count. The research is explicit that for a technical audience, real shipped projects are the social proof. A testimonial you drafted yourself is the one disqualifying move — it is fabrication, and M1's evidence discipline applies to marketing identically. Transition: where your proof comes from. Timing: 3 minutes. -->
 
@@ -156,10 +180,13 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 
 ## M8.2 — Two phases, seven emails
 
+<!-- _diagram: flow -->
+
+- Warmup: origin, transformation proof, free tool
+- Conversion: cart open, objections, proof, final call
+
 - Warmup earns trust; it does not sell.
 - Conversion spends the trust warmup earned.
-- Warmup: origin, transformation proof, free tool.
-- Conversion: cart open, objections, proof, final call.
 - One idea and one CTA per email.
 - Pointer: `04-sales/launch-plan.md`.
 
@@ -185,12 +212,19 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 
 ## Warmup does not sell
 
+| Week | Phase | What happens |
+|---|---|---|
+| −4 to −1 | Warmup | 3 emails; page live in "notify me" mode |
+| 0 | Cart opens | Email 4; a 10–14 day open-cart window |
+| +1 | Objection handling | Email 5, the FAQ teardown |
+| +2 | Proof | Email 6 — only after beta testimonials exist |
+| Final 72h | Deadline | Email 7; the cart closes |
+
 - "All emails should sell" is the taught-against error.
 - A list asked every send learns to stop opening.
-- Warmup runs weeks −4 to −1, page in notify mode.
-- Cart opens week 0 for 10–14 days.
-- Objections at +1; proof at +2; final call last 72h.
 - The free lead product builds the list first.
+
+Pointer: `04-sales/launch-plan.md:7-13`
 
 <!-- NOTES: This is the most common launch mistake and it is expensive. If every email asks for money, the list learns that opening your email costs something, and by the time the cart actually opens your open rate has collapsed. Warmup emails make no ask beyond attention. The launch plan's free lead product — a thirty-minute teardown — is what builds the list before the arc ever runs, which is why the arc can afford to stay quiet for three weeks. Transition: the deadline, and why it has to be real. Timing: 3 minutes. -->
 
@@ -198,12 +232,18 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 
 ## The final 48 hours
 
+```markdown
+**Email 7 (final 72h) — Final call.**
+Subject: `Closes Friday: the cohort that ships`
+Body: short. … Deadline is real (cart closes; founding price ends).
+```
+
 - 42–55% of enrollments arrive in final 48 hours.
 - Deferred decisions collapse at a real deadline.
 - A resetting countdown trains the list to wait.
 - Next launch's final 48 hours pay the price.
-- The cart actually closes; the price actually ends.
-- Pointer: `04-sales/pricing-and-platforms.md`, no fake countdowns.
+
+Pointers: `04-sales/launch-plan.md:48-50` · `04-sales/pricing-and-platforms.md:64`, no fake countdowns
 
 <!-- NOTES: That 42 to 55 percent figure is why the deadline exists at all — it is a description of how buyers behave, not a tactic. Which makes the deadline load-bearing and its honesty a revenue asset. If your countdown resets, or your last chance recurs every week, you teach your list that your deadlines are decoration, and the next launch's final forty-eight hours underperform. The course's policy is written down: no fake countdowns. For real urgency in a first launch, use the founding discount with a stated end date. Transition: the math you run before the arc. Timing: 3 minutes. -->
 
@@ -286,12 +326,14 @@ instructor code review on 3 labs · capstone review + demo day · cohort channel
 
 ## M8.3 — The capstone contract
 
-- ONE archetype. ONE shippable scope.
+> ONE archetype, ONE shippable scope, the loop complete. The rubric scores the loop, not the size
+
 - The complete Spec-to-Ship Loop, with evidence.
-- The rubric scores the loop, not the size.
 - A small complete loop beats a sprawling half-loop.
 - No rubric dimension counts lines of code.
-- Pointer: `02-instructor/instructor-guide.md`, capstone row.
+- Touching all three archetypes builds the wrong thing.
+
+Pointer: `02-instructor/instructor-guide.md:48`, capstone scope row.
 
 <!-- NOTES: The instructor guide's unblock for capstone scope explosion is the sentence to memorize: one archetype, one shippable scope, the loop complete. The rubric scores the loop, not the size. That means a deliberately small product taken through study, spec, build, validate, release, and prove will out-score a sprawling build that never reached validation. If you are trying to touch all three archetypes, you are building the wrong thing — the labs already gave you all three. Transition: the loop, mapped onto what you already have. Timing: 3 minutes. -->
 

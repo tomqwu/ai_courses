@@ -31,11 +31,18 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 
 ## M3.1 — Privacy is a mode, not a slogan
 
+| Mode in Settings | Where the data goes |
+|---|---|
+| Local only | Downloaded local models; metadata verified every request |
+| Apple Intelligence | Runs entirely on this device |
+| Cloud | Transcript, notes, summary, references to Ollama Cloud |
+| AI off | No AI; capture, transcription, saving still work |
+
 - Privacy is an enum the user picks
-- ListenToMe: Local only, Cloud, AI off
-- Labels state where data goes
 - Adding a key never switches modes
 - Opting in to cloud is deliberate
+
+`ListenToMe/README.md:199-207`
 
 <!-- NOTES: The core idea: privacy is not an adjective in marketing, it is a mode switch in Settings. ListenToMe exposes AIProcessingMode with four cases. Read the cloud label aloud: "Ollama Cloud — sends transcript and context." That label names the data it ships, which is the standard for every mode label you write. Then the boundary rule: pasting an API key stores the key and changes nothing about routing. Timing: two minutes. Transition: the code that enforces it. -->
 
@@ -68,11 +75,18 @@ public enum AIProcessingMode: String, CaseIterable, Sendable {
 
 ## A localhost URL proves nothing
 
-- `http://localhost:11434` is not proof
-- A local daemon can serve cloud aliases
-- Pull a `:cloud` model: listed locally, computed remotely
-- Code comment: "a localhost URL is insufficient"
-- Pointer: `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:16`
+<!-- _diagram: flow -->
+
+- `ollama pull` a `:cloud` model
+- Listed in `ollama list` like any other
+- Answers on `localhost:11434`
+- Computes somewhere else
+
+> "A localhost URL or a model name alone is insufficient."
+
+> "A local endpoint is not proof of local inference." (G01)
+
+`ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:16` · `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md:46`
 
 <!-- NOTES: This is the failure the whole segment guards against. The obvious implementation is to check that the URL is localhost and call it done. ModelPrivacy.swift carries a comment rejecting exactly that shortcut. Here is why: pull a `:cloud`-suffixed model and it installs through your local daemon, appears in `ollama list`, and answers through your localhost URL, while the compute happens elsewhere. The gap review states it plainly: a local endpoint is not proof of local inference. Timing: three minutes. Transition: what the metadata does prove. -->
 
@@ -80,11 +94,16 @@ public enum AIProcessingMode: String, CaseIterable, Sendable {
 
 ## What `/api/show` must show
 
-- Ask the daemon to describe the model
-- Reject if `remote_host` or `remote_model` present
-- Require non-empty `details.format`
-- Require non-empty `model_info`
-- Anything else fails closed
+| Field in the reply | Required | What it proves |
+|---|---|---|
+| `remote_host` | absent | not a cloud alias |
+| `remote_model` | absent | not a cloud alias |
+| `details.format` | non-empty | a downloaded model's shape |
+| `model_info` | non-empty | weights carried locally |
+
+- Ask the daemon, on every request, to describe the model
+- Anything else fails closed — one conditional returning `false`
+- Pointer: `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:18-22`
 
 <!-- NOTES: The fix is to ask the daemon, on every request, to describe the model it is about to run, and accept only the description of a downloaded local one. Four requirements: no remote_host, no remote_model, a non-empty details.format, and a non-empty model_info. The first two catch a cloud alias; the last two prove the shape of a downloaded model carrying weights locally. Everything is one conditional that returns false. Timing: two minutes. Transition: the guard itself. -->
 
@@ -152,11 +171,22 @@ private final class RejectRedirects: NSObject, URLSessionTaskDelegate {
 
 ## Fail closed by default
 
+```swift
+public static func roleDefaults(from models: [String],
+        local: Set<String>? = nil) -> [CopilotRole: String] {
+    let localModels = local.map { verified in
+            models.filter { verified.contains($0) } }
+        ?? models.filter { !looksCloudHosted($0) }
+    let rankedPool = ranked(
+        localModels.isEmpty ? models : localModels)
+```
+
 - `ModelRanking.roleDefaults` filters `:cloud` models
 - Cloud auto-picked only when no local chat model exists
 - AI off keeps capture, transcription, saving
 - Off-device-by-default is out of scope, by principle
-- Pointer: `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:72-77`
+
+`ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:91-95` · `ListenToMe/CLAUDE.md:40-41`
 
 <!-- NOTES: Fail closed shapes defaults too. ModelRanking.roleDefaults filters `:cloud` models out of automatic selection entirely; cloud is auto-picked only when no local chat model exists, which means the user set a key and opted in. Underneath sits the product principle in CLAUDE.md: anything that would send data off-device by default is out of scope. And turning AI off is a real option — capture, transcription, and saving keep working. Timing: two minutes. Transition: the discipline to copy. -->
 
@@ -171,6 +201,9 @@ private final class RejectRedirects: NSObject, URLSessionTaskDelegate {
 | Text can't be silently forwarded | `RejectRedirects` refuses every 3xx |
 | Adding a key never changes privacy | Mode is an explicit user setting |
 | Local by default | `roleDefaults` filters `:cloud` |
+| Participant speech is data, not instructions | Fenced blocks; a closing tag inside is neutralized |
+
+`ListenToMe/Sources/ListenToMeCore/Prompt.swift:69-83`
 
 <!-- NOTES: This table is the discipline to copy. Every privacy promise your product makes must be a row whose second column is code a reviewer can open. If a claim has no second column, you do not have a claim, you have copy. Have students pick one marketing sentence from their own idea and try to fill the table. Most cannot on the first attempt; that is the lesson. Timing: three minutes. Transition: testing, Segment M3.2. -->
 
@@ -178,9 +211,12 @@ private final class RejectRedirects: NSObject, URLSessionTaskDelegate {
 
 ## M3.2 — Testing is tier assignment
 
-- Unit: logic, mocked transport, runs in CI
-- Contract: real model, your machine, outside CI
-- Human smoke: mic, system audio, permissions
+| Tier | Runs where | What only it can observe |
+|---|---|---|
+| Unit | CI, mocked transport | Your logic |
+| Contract | Your machine, real daemon, outside CI | The seam a mock only assumes |
+| Human smoke | A GUI session, manual grants | Mic, system audio, permissions |
+
 - Name the cheapest tier that can observe the risk
 - Pretending CI covers the top tier makes your README lie
 
@@ -233,11 +269,19 @@ awk -v pct="$PCT" -v thr="$THRESHOLD" 'BEGIN { exit !(pct + 0 >= thr + 0) }' || 
 
 ## The contract test CI can't run
 
+<!-- _diagram: steps -->
+
+- `make build` — the app target compiles
+- Ollama answers on `localhost:11434`, or stop
+- Pick an installed chat model — or `LTM_E2E_MODEL`
+- App bundle present at the resolved path
+- `LTM_E2E=1 swift test --filter OllamaContractE2ETests`
+
 - CI cannot reach a daemon or audio hardware
-- So the real-LLM contract test lives outside it
-- `make e2e` builds, resolves the app path, streams for real
 - Tests the seam mocks can only assume
 - Skips with a stated reason, never silently passes
+
+`ListenToMe/Makefile:39-54`
 
 <!-- NOTES: CI cannot reach an Ollama daemon or audio hardware, so the real-LLM contract test lives outside it behind make e2e. It runs a real completion through the actual provider against your local daemon, auto-selecting an installed chat model. Why "contract"? Because it tests the seam that mocks can only assume: that your request format, streaming parse, and error typing work against the real thing. Every unit test used a mock; this one run is the only evidence the mock was honest. Timing: three minutes. Transition: the gating pattern. -->
 
@@ -267,11 +311,17 @@ final class OllamaContractE2ETests: XCTestCase {
 
 ## The tier only a human can run
 
-- Mic capture, system audio, live speech-to-text
+| `make e2e` already covers | Only a human can cover |
+|---|---|
+| The app build | Mic capture |
+| App-bundle path resolution | System-audio capture |
+| A real LLM contract test | Live speech-to-text |
+
 - All need a GUI session and manual permission grants
-- `docs/manual-smoke-test.md` is a numbered script
-- Grant, speak, play audio, confirm the labels
+- A numbered script: grant, speak, play audio, confirm labels
 - Say what it covers; say what it cannot
+
+`ListenToMe/docs/manual-smoke-test.md:3-6`
 
 <!-- NOTES: Above the contract test sits the manual tier. Mic capture, system-audio capture, and live speech-to-text all require a GUI session and manual permission grants, and manual-smoke-test.md opens by stating exactly what make e2e already covers and what this document covers that cannot be automated. It is a numbered, repeatable script. A testing strategy that pretends CI covers this tier just makes your README lie. Timing: two minutes. Transition: the review that said no. -->
 
@@ -279,11 +329,14 @@ final class OllamaContractE2ETests: XCTestCase {
 
 ## The review that said no
 
+> "A signed installer, 215 passing Core tests, and 97.24% Core coverage are useful foundations; they do not establish capture reliability, durable saving, accurate speaker attribution, or a usable first-run experience."
+
 - 34-item gap inventory, G01 through G34
-- 215 passing tests and 97.24% coverage in hand
 - Recommendation: do not promote 1.3.0
 - G01: local endpoints could execute cloud models
 - Tests validate what you built; review validates what you shipped
+
+`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md:5, 46`
 
 <!-- NOTES: On September tenth, 2026, a production review of the 1.3.0 candidate produced a thirty-four-item gap inventory, each item with a priority and an evidence class. With two hundred fifteen passing Core tests and ninety-seven point two four percent coverage in hand, it recommended not promoting the release. G01 is the privacy hole from Segment M3.1, sitting happily inside ninety-seven percent coverage, because the tests tested what was built. Timing: four minutes. Transition: shipping, Segment M3.3. -->
 
@@ -315,11 +368,16 @@ final class OllamaContractE2ETests: XCTestCase {
 
 ## Two bundle ids, on purpose
 
-- Dev app: `com.tomwu.ListenToMe.dev`; release: `com.tomwu.ListenToMe`
+| Build | Bundle id | Signed with |
+|---|---|---|
+| Release dmg | `com.tomwu.ListenToMe` | Developer ID |
+| Debug | `com.tomwu.ListenToMe.dev` | Apple Development |
+
 - macOS TCC keys grants by bundle id plus signing requirement
 - One shared id: installing one silently invalidates the other
 - The toggle stays on while capture returns nothing
-- Pointer: `ListenToMe/docs/RELEASING.md:18-31`
+
+`ListenToMe/docs/RELEASING.md:43-51` · `ListenToMe/README.md:176-179`
 
 <!-- NOTES: Dev builds are a separate app from the release: one bundle id for dev, one for release. The reason is macOS privacy plumbing. TCC, the subsystem holding Microphone and Screen Recording grants, keys permission grants by bundle id plus the binary's code-signing requirement. A Developer ID signature and an Apple Development signature produce requirements that can never satisfy each other. Share one bundle id and installing either silently invalidates the other's grants: a toggle that lies. Timing: three minutes. Transition: competition analysis. -->
 
@@ -327,11 +385,12 @@ final class OllamaContractE2ETests: XCTestCase {
 
 ## Competition analysis as an engineering artifact
 
-- Dated header, uncertainty labeled in-band
-- 14-row by 9-column table, per-cell sources
-- "approximately", "reportedly" where unconfirmed
-- Taxonomy: bot-joiners, cloud capturers, on-device
-- Pointer: `ListenToMe/docs/competition-analysis.md:1-68`
+> Last updated: 2026-09. … where a detail could not be confirmed from a primary source, it is qualified with "approximately" or "reportedly."
+
+- 14-row by 9-column comparison table
+- Every competitor entry ends with a source URL
+- "Local-first" usually means local capture only
+- Pointer: `ListenToMe/docs/competition-analysis.md:3, 14, 20-35`
 
 <!-- NOTES: The other half of shipping is knowing and proving what your product is against what exists. Open competition-analysis.md. It is built like a test suite: a dated header stating that unconfirmed details are qualified with approximately or reportedly, a fourteen-row by nine-column table, and a per-competitor section ending every entry with a source URL. The analysis names the structural tension: nearly every commercial product runs its AI in the cloud even when marketed as local-first. Timing: three minutes. Transition: the one-liner. -->
 
