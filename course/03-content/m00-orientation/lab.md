@@ -1,6 +1,7 @@
 # Lab M0 — Environment Setup & First Ship-Win
 
 > **Goal:** every tool the course needs is installed and proven with one real output — before Module 1, you have already run real software end to end.
+> **Never used a terminal, or cannot clone a repository yet?** Take the free Module 9 first (`course/03-content/m09-github-pages/lab.md`): it installs Git and the GitHub CLI on Windows or macOS, proves the setup with a script, and teaches every command this lab assumes.
 > **Prerequisites:** none. **Time:** ~30 minutes including downloads (`make setup`, the Ollama installer, the model pull); the "Before Module 1" block below adds ~10 minutes.
 > **Pass gate:** the full solver summary block (with its `Health score:` line and the `Solution saved to …` line) plus a non-empty `ollama list`.
 

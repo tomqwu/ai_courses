@@ -200,7 +200,7 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str) -> tuple[str, di
     <div class="evidence-grid">
       <label>Project<input type="text" data-evidence="project" placeholder="my-studio"></label>
       <label>Date<input type="date" data-evidence="date"></label>
-      <label class="wide">Commands, one per line, with results<textarea data-evidence="commands" rows="4" placeholder="python3 -m pytest tests/ -q → 191 passed, 2 skipped"></textarea></label>
+      <label class="wide">Commands, one per line, with results<textarea data-evidence="commands" rows="4" placeholder="python3 -m pytest tests/ -q → 201 passed, 2 skipped"></textarea></label>
       <label>Environment<input type="text" data-evidence="environment" placeholder="macOS 15.6, Python 3.11.9, Ollama 0.30 (qwen3:0.6b local)"></label>
       <label>Revision (git rev-parse HEAD)<input type="text" data-evidence="revision" placeholder="abc1234"></label>
       <label class="wide">Limitations / not verified, one per line<textarea data-evidence="limitations" rows="3" placeholder="Contract test skipped — daemon has only :cloud aliases"></textarea></label>

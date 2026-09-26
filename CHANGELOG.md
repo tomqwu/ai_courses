@@ -11,6 +11,11 @@ SignUpFlow `c550d46`, ai_qe `6388f0a`. `make -C course facts` re-derives every p
 those clones; this edition pins 17 facts and all re-derive.
 
 ### Added
+- **Module 9, free and standalone: ship a product catalog with GitHub Pages.** From a computer
+  with nothing installed to a public catalog page, with every command given for Windows and
+  macOS: setup-check scripts for both systems that name the fix for each failure, folders and
+  cloning from the terminal, and a starter catalog that previews by double-click. It links out
+  to a checkout rather than selling, because GitHub's terms forbid running a shop on Pages.
 - The learner site carries the course text, not only the decks: lesson, handout and glossary
   pages per module with every repo pointer linked at the pinned commit; a merged master glossary;
   interactive knowledge checks (72 questions) with instant feedback and objective references;

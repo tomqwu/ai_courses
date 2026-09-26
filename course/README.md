@@ -38,14 +38,15 @@ course/
 │   └── assessment-and-rubrics.md  ← grading weights, quiz rules, lab standard, capstone rubric
 ├── 02-instructor/
 │   └── instructor-guide.md         ← cohort cadence, workshop scripts (I do/We do/You do), stuck-point table, grading workflow
-├── 03-content/                    ← the course itself (9 modules, 8 artifacts each)
+├── 03-content/                    ← the course itself (9 modules, 8 artifacts each, plus the free M9)
 │   ├── mNN-*/                     ← lesson.md · lab.md · quiz.md · slides.md (Marp + notes) · solutions.md
 │   │                                · video-scripts.md · handout.md · facilitation.md · glossary.md
 │   │                                · lab-rubrics.md · accessibility.md
 │   ├── m00-orientation/           ← + lab
 │   ├── m02-ondevice-app/         ← + tinycopilot/ (runnable, tested lab code)
 │   ├── m06-expertise-product/    ← + evidence-dataset.md (student-facing claims data)
-│   └── m08-launch-capstone/      ← the capstone lab
+│   ├── m08-launch-capstone/      ← the capstone lab
+│   └── m09-github-pages/         ← free and standalone: tools, folders, cloning, a catalog on GitHub Pages
 ├── 04-sales/                       ← the course's own go-to-market
 │   ├── landing-page.md           ← complete sales-page copy (~1,900 words, publish-ready)
 │   ├── pricing-and-platforms.md  ← price ladder ($399 self-paced / $1,490 cohort / $2.5k team) with decision record
@@ -98,7 +99,7 @@ course/
 
 **To sell it:** `04-sales/` is publish-ready: landing-page copy, pricing rationale grounded in 2025–26 platform benchmarks, and a full launch plan with the 7-email arc.
 
-**To run the labs yourself:** the Module 2/3 labs use `03-content/m02-ondevice-app/tinycopilot/` — a complete, tested Python reference implementation that mirrors ListenToMe's architecture (see its README). **Verified status as shipped:** `make lab-m2` → 191 passed, 100% coverage (floor 90 enforced); `make lab-m3` → 49 passed; `make e2e` → 2 passed against a live Ollama daemon; `make demo` → three role outputs. Requirements: Python 3.11+ (TinyCopilot itself also runs on 3.10), pytest, httpx, and Ollama (`ollama pull qwen3:0.6b` for a local model).
+**To run the labs yourself:** the Module 2/3 labs use `03-content/m02-ondevice-app/tinycopilot/` — a complete, tested Python reference implementation that mirrors ListenToMe's architecture (see its README). **Verified status as shipped:** `make lab-m2` → 201 passed, 100% coverage (floor 90 enforced); `make lab-m3` → 49 passed; `make e2e` → 2 passed against a live Ollama daemon; `make demo` → three role outputs. Requirements: Python 3.11+ (TinyCopilot itself also runs on 3.10), pytest, httpx, and Ollama (`ollama pull qwen3:0.6b` for a local model).
 The Module 5 lab uses `03-content/m05-security-tests/mini-flow/` — a deliberately incomplete FastAPI + SQLAlchemy + JWT multi-tenant starter mirroring SignUpFlow's auth shape (see its README for the intentional gaps). **Verified status as shipped:** `make lab-m5` → 51 passed, 23 skipped, 100% coverage (floor 90 enforced); `make pass-gate` → 11 failed, 63 passed on the starter by design, 74 passed once the four lab fixes are in; `make demo` → two `LEAK` lines. Requirements: Python 3.11+, `make setup` (no compiled dependencies, no database server).
 
 

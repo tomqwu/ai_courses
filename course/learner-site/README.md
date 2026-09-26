@@ -74,7 +74,7 @@ site found why it read flat. Measured across all 233 slides:
 | Distinct hex colours in the stylesheet | 48, ≈20 of them outside the token block | **25 named tokens, zero literals outside the block** |
 | Title / body size ratio | 2.29× | **2.61×** |
 | Slide-chrome text as a share of frame height | 1.47% — dies on a projector | **2.40%** |
-| Slides whose content shape is one bullet list | 143 / 233 = 61% (79% bullet-only) | unchanged — a content problem, not a CSS one |
+| Slides whose content shape is one bullet list | 143 / 233 = 61% (79% bullet-only) | unchanged by CSS — fixed later as content: **57 / 233 = 24%**, every deck under 33% (`06-production/slides/slide_shapes.py`, issue #40) |
 
 The rail is the structural half of the fix: a spine running the full frame height gives the empty half
 of the frame an edge to sit against, and the body block is centred against it. **This composes the
@@ -206,7 +206,7 @@ This course already had every level of that. It just never surfaced one, and the
 | Knowledge check | `Quiz M#` (8 questions each) | 9 · 72 questions |
 | Summary | the recap + discussion prompt | 9 |
 
-A unit is a **lesson segment**, not a slide: 63 units over 233 slides averages 3.7 slides a unit, which
+A unit is a **lesson segment**, not a slide: 70 units over 258 slides averages 3.7 slides a unit, which
 sits inside Microsoft's 3–10 minute unit size, while a single slide averages 34 seconds and would be
 a meaningless thing to mark complete.
 
@@ -224,8 +224,9 @@ structure rather than invented:
   slide. `m08` has no `M8.1` heading anywhere in its source — without this rule, five minutes of
   segment-one content would have been filed as the Introduction.
 
-`check_player.py` asserts the result covers all 233 slides **exactly once**, that every module has an
-intro, three segments, a lab, a quiz and a summary, and that the total is 63.
+`check_player.py` asserts the result covers every slide **exactly once**, that every module has an
+intro, three segments, a lab, a quiz and a summary, and that the total is 70: 63 for M0–M8 and 7 for
+the free M9.
 
 It then cross-checks the model against a number written by hand: `bundle-map.md` states the On-Device
 path is *"17 of 27 teaching segments · 4 of 8 full labs · 5 of 9 quizzes"*. The model derives 17

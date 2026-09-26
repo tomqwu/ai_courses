@@ -181,6 +181,8 @@ Yes. There are three single-track bundles at **$199** each — On-Device AI Apps
 | Updates through September 2027 (edition v2026.09; every edition is cut behind a green gate) | ✓ | ✓ | ✓ |
 | Refund: 14 days, or before Module 3 in a cohort — keep the materials | ✓ | ✓ | ✓ |
 
+**Free for everyone, no purchase needed:** Module 9, *Ship a Product Catalog with GitHub Pages* — install Git and the GitHub CLI on Windows or macOS, prove the setup, clone, and publish a real catalog page. It is the on-ramp for anyone new to the terminal, and it is not one of the nine.
+
 ### Studio (self-paced) — **$399**
 All 9 modules · 8 labs with acceptance checklists · 72 quiz questions with keys · community access · capstone rubric · updates through September 2027.
 
@@ -213,5 +215,5 @@ You'll do the same thing, at lab scale, in eight weeks — and leave with the op
 
 - Keep every number on this page synchronized with `course/00-research/*.md` (source: the repos). If a repo updates its evidence line, update the page — the course's credibility standard applies to its own marketing.
 - The "before/after/result" testimonial format and the objection-teardown FAQ entries (falling behind, refunds, "other courses failed me") come from the launch research in `04-sales/launch-plan.md`.
-- **Length check (measured, not estimated):** 2,729 words total, of which ~2,329 is publishable page copy; the remainder is authoring notes and reserved placeholders. **This number is checked automatically** — `06-production/verify.py` fails the package if this line drifts more than 10% from the measured file, because a count you don't re-measure after editing is the exact drift M4 warns about. For a $399–$1,490 cold-traffic offer the research band is 2,000–3,000 words of copy; this page sits at the lower end deliberately, because the free lead product (`lead-product-teardown.md`) carries the top-of-funnel education and this page only has to close. If conversion testing shows hesitation at checkout, extend §4 (curriculum-as-outcomes) and §7 (FAQ) first — those are the two sections that answer price objections.
+- **Length check (measured, not estimated):** 2,783 words total, of which ~2,383 is publishable page copy; the remainder is authoring notes and reserved placeholders. **This number is checked automatically** — `06-production/verify.py` fails the package if this line drifts more than 10% from the measured file, because a count you don't re-measure after editing is the exact drift M4 warns about. For a $399–$1,490 cold-traffic offer the research band is 2,000–3,000 words of copy; this page sits at the lower end deliberately, because the free lead product (`lead-product-teardown.md`) carries the top-of-funnel education and this page only has to close. If conversion testing shows hesitation at checkout, extend §4 (curriculum-as-outcomes) and §7 (FAQ) first — those are the two sections that answer price objections.
 - A/B test candidates: headline variant "Stop studying AI. Start shipping it." vs. current; proof-first layout (badges above hero) for cold technical traffic.
