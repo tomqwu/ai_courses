@@ -132,15 +132,23 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
     short = short_label(deck)
     number = int(deck["id"][1:])
     meta = lab["meta"]
-    facts = [("Time", meta.get("Time", "")), ("Prerequisites", meta.get("Prerequisites", "")),
-             ("Checklist", f"{lab['checklist_count']} items")]
-    aga = "".join(f'<div class="aga-item"><dt>{html.escape(k)}</dt><dd>{SC.inline(v)}</dd></div>'
-                  for k, v in facts if v)
     goal = SC.inline(meta["Goal"]) if meta.get("Goal") else \
         ("The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, "
          "and the evidence entry you export is the format the rubrics grade.")
+    # The workspace (#77): the steps one at a time, the acceptance panel always beside them, and the
+    # evidence entry, templates, stretch goals and discussion below. `sections` collects the panel.
     sections = []
+    steps: list[dict] = []
+    before: list[str] = []
+    after: list[str] = []
     for sec in lab["sections"]:
+        if sec.get("steps"):
+            steps += sec["steps"]
+            continue
+        if sec.get("place") == "before":
+            heading = f"<h3>{SC.inline(sec['title'])}</h3>" if sec["title"] else ""
+            before.append(f'<div class="step-context" id="{sec["id"]}">{heading}{sec["html"]}</div>')
+            continue
         if sec["kind"] == "checklist":
             sections.append(f"""<section class="lab-section lab-checklist" id="{SC.slug(sec['title'])}">
   <h2>{SC.inline(sec['title'])}</h2>
@@ -156,7 +164,7 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
   {auto_fail['html']}
 </section>""")
         elif sec["kind"] == "evidence":
-            sections.append(f"""<section class="lab-section lab-evidence" id="{SC.slug(sec['title'])}">
+            after.append(f"""<section class="lab-section lab-evidence" id="{SC.slug(sec['title'])}">
   <h2>{SC.inline(sec['title'])}</h2>
   {sec['html']}
   <form class="evidence-form" data-evidence-form onsubmit="return false">
@@ -180,20 +188,63 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
         else:
             cls = {"stretch": "lab-stretch", "discussion": "lab-discussion"}.get(sec["kind"], "")
             heading = f"<h2>{SC.inline(sec['title'])}</h2>" if sec["title"] else ""
-            sections.append(f'<section class="lab-section {cls}" id="{SC.slug(sec["title"] or "lab")}">{heading}{sec["html"]}</section>')
+            after.append(f'<section class="lab-section {cls}" id="{SC.slug(sec["title"] or "lab")}">{heading}{sec["html"]}</section>')
+    evidence_id = next((s["id"] for s in lab["sections"] if s["kind"] == "evidence"), "")
+    if evidence_id:
+        sections.append(f'<a class="btn-dark lab-export" href="#{evidence_id}" data-evidence-jump>'
+                        f'Write and export the evidence entry</a>')
+    if before:
+        steps.insert(0, {"title": "Before you start", "time": "", "id": "before-you-start",
+                         "html": "".join(before), "intro": True})
+    counted = [s for s in steps if not s.get("intro")]
+    rows, views = [], []
+    number_of = 0
+    for i, step in enumerate(steps):
+        if not step.get("intro"):
+            number_of += 1
+        dot = "i" if step.get("intro") else str(number_of)
+        time = f'<p class="step-time">{html.escape(step["time"])}</p>' if step["time"] else ""
+        where = ("Before you start" if step.get("intro")
+                 else f"Step {number_of} of {len(counted)}")
+        rows.append(f'<li><a href="#{step["id"]}" data-step-go="{i}"><span class="step-dot" aria-hidden="true">{dot}</span>'
+                    f'<span class="step-name">{SC.inline(step["title"])}</span>'
+                    f'<span class="sr-only" data-step-state>to do</span></a></li>')
+        last = i == len(steps) - 1
+        views.append(f"""<section class="lab-step" id="{step['id']}" data-step="{i}" aria-labelledby="{step['id']}-title">
+  <p class="step-count">{where}</p>
+  <h2 id="{step['id']}-title">{SC.inline(step['title'])}</h2>
+  {time}
+  <div class="step-body">{step['html']}</div>
+  <div class="step-actions">
+    <button type="button" data-step-prev{" disabled" if i == 0 else ""}>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>{"Mark done — then the checklist" if last else "Mark done, next step"}</button>
+  </div>
+</section>""")
+    facts_row = " · ".join(html.escape(x) for x in (
+        meta.get("Time", ""), f"{len(counted)} steps", f"{lab['checklist_count']} checks decide the grade") if x)
     head = SH.page_head(f"Module {number} · Lab · pass/fail", SC.inline(lab["title"]), goal,
-                        f'<dl class="at-a-glance">{aga}</dl>')
+                        f'<p class="lab-facts">{facts_row}</p>'
+                        + (f'<p class="lab-prereq"><strong>Prerequisites:</strong> {SC.inline(meta["Prerequisites"])}</p>'
+                           if meta.get("Prerequisites") else ""))
     body = f"""{head}
-<div class="doc-main">
-  <article class="doc-article lab-article" data-lab="{deck['id']}" data-lab-checks="{lab['checklist_count']}" data-lab-title="{html.escape(lab['title'], quote=True)}">
-{"".join(sections)}
+<div class="lab-root" data-lab="{deck['id']}" data-lab-checks="{lab['checklist_count']}" data-lab-title="{html.escape(lab['title'], quote=True)}">
+  <div class="lab-workspace">
+    <nav class="lab-steps" aria-label="Steps"><ol>{"".join(rows)}</ol></nav>
+    <div class="lab-view doc-article">{"".join(views)}</div>
+    <aside class="lab-panel" aria-label="Acceptance checklist">{"".join(sections)}</aside>
+  </div>
+  <div class="lab-after doc-article">
+{"".join(after)}
     <footer class="doc-footer">
-      <p class="index-footnote">Checklist ticks and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/{html.escape(deck['source'].split('/')[1])}/lab.md</code>.</p>
+      <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/{html.escape(deck['source'].split('/')[1])}/lab.md</code>.</p>
     </footer>
-  </article>
+  </div>
 </div>"""
+    step_headings = [{"text": s["title"], "id": s["id"]} for s in steps]
+    other = [{"text": s["title"], "id": SC.slug(s["title"] or "lab")} for s in lab["sections"]
+             if s["title"] and not s.get("steps") and s.get("place") != "before"]
     record = {"kind": "lab", "deck": deck["id"], "title": lab["title"], "href": f"lab-{deck['id']}.html",
-              "headings": [{"text": s["title"], "id": SC.slug(s["title"] or "lab")} for s in lab["sections"] if s["title"]],
+              "headings": step_headings + other,
               "text": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", "".join(s["html"] for s in lab["sections"])))[:20000]}
     return SH.document(f"{lab['title']} — AI Product Studio", meta.get("Goal", "The module lab."), body,
                        site_base, "doc-page lab-page", crumbs=SH.module_crumbs(site_base, deck, "Lab"),
