@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handout — M6 (The Expertise Product) — AI Product Studio</title>
+<meta name="description" content="The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page handout-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m06.html">The Expertise Product: Evidence, Routing, Editions</a><span>/</span><span aria-current="page">Handout</span></nav>
+    <p class="eyebrow">Module 6 · Handout</p>
+    <h1>Handout — M6 (The Expertise Product)</h1>
+    <p class="site-lede">The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m06.html">Overview</a></li><li><a href="./m06.html">Slides</a></li><li><a href="./lesson-m06.html">Lesson</a></li><li><a href="./lab-m06.html">Lab</a></li><li><a href="./quiz-m06.html">Knowledge check</a></li><li><a href="./handout-m06.html" aria-current="page">Handout</a></li><li><a href="./glossary-m06.html">Glossary</a></li><li><a href="./transcript-m06.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main has-toc">
+  <aside class="doc-aside"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li class="toc-l2"><a href="#decision-table-which-level-am-i-claiming">Decision table — which level am I claiming?</a></li><li class="toc-l2"><a href="#templates-and-commands-worth-keeping">Templates and commands worth keeping</a></li><li class="toc-l2"><a href="#pointers-to-open">Pointers to open</a></li><li class="toc-l2"><a href="#three-gotchas">Three gotchas</a></li><li class="toc-l2"><a href="#youre-done-when">You're done when…</a></li></ol></nav></aside>
+  <article class="doc-article">
+<p><strong>Mental model.</strong> In the expertise archetype the product is not the content, it is the auditability of the content: one research base, every claim carrying a date, sample, method, unit and level, re-cut into audience-specific routes under versioned, tested, immutable releases.</p>
+<h2 id="decision-table-which-level-am-i-claiming">Decision table — which level am I claiming?</h2>
+<div class="table-wrap"><table><thead><tr><th>If the number is…</th><th>It is</th><th>Who must confirm it</th></tr></thead><tbody><tr><td>Net time for one activity, after review and correction</td><td>Task-level efficiency</td><td>A pilot you ran</td></tr><tr><td>Human hours freed across the workflow, after adoption</td><td>Released capacity</td><td>Pilot plus baseline time capture</td></tr><tr><td>Budgeted cost that can be removed or avoided</td><td>Hard-dollar saving</td><td>Finance, against a named budget line</td></tr><tr><td>Broader engineering or delivery cost</td><td>Total-spend impact</td><td>Finance and the CIO office</td></tr><tr><td>A modelled or planning scenario</td><td><strong>Illustrative</strong></td><td>Nobody — label it on the slide</td></tr></tbody></table></div>
+<p>Mixing these is the most common error in AI business cases (<a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/docs/principles.md" rel="noopener"><code>ai_qe/docs/principles.md</code></a>).</p>
+<h2 id="templates-and-commands-worth-keeping">Templates and commands worth keeping</h2>
+<p><strong>Benchmark record fields</strong> (all seven before a number reaches a slide): <code>date · sample · method · unit · self-reported vs measured · sponsor · what claim it supports</code></p>
+<p><strong>Provenance row:</strong> <code>| # | Claim (exact slide wording) | Source URL | Retrieved | Level 1–4 | Epistemic label | What it supports |</code></p>
+<p><strong>Route declaration:</strong></p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-yaml">executive: { slides: [1, 3, 6, 9, 11, 12], closing: 12 }
+technical: { slides: [1, 3, 4, 5, 7, 8, 10, 9, 11, 12], closing: 12 }
+full_order: [1,2,3,4,5,6,7,8,9,10,11,12]</code></pre></div>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">grep -ciE &#x27;not verified&#x27; docs/research-log.md    # your honest list is not empty
+grep -n &#x27;unavailable&#x27; research/document-manifest.json   # failures are logged
+python3 -m json.tool _data/pilot_gates.json      # gates are data, not prose
+make check                                        # models → build → site → browser</code></pre></div>
+<p><strong>Edition decision template:</strong> what changes · what is <strong>deliberately retained</strong> · which edition bumps (<code>version</code> vs <code>slide_edition</code>, as separated in <a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/_data/release.yml" rel="noopener"><code>ai_qe/_data/release.yml</code></a>).</p>
+<h2 id="pointers-to-open">Pointers to open</h2>
+<ul><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/CONTRIBUTING.md" rel="noopener"><code>ai_qe/CONTRIBUTING.md</code></a> — "Research conventions"; release validation.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/docs/evidence/benchmarks.md" rel="noopener"><code>ai_qe/docs/evidence/benchmarks.md</code></a> — METR and Peng records, read end to end.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/docs/research-log.md" rel="noopener"><code>ai_qe/docs/research-log.md</code></a> — the not-verified and open-questions lists.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/research/document-manifest.json" rel="noopener"><code>ai_qe/research/document-manifest.json</code></a> — 11 hashed retrievals, including failure M02.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/docs/principles.md" rel="noopener"><code>ai_qe/docs/principles.md</code></a> — the four levels of saving, quoted exactly.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/_data/briefing_routes.json" rel="noopener"><code>ai_qe/_data/briefing_routes.json</code></a> — routes over stable slide IDs; <code>closing</code>.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/docs/economics/slide-language.md" rel="noopener"><code>ai_qe/docs/economics/slide-language.md</code></a> — the Use and Avoid wording lists.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/docs/method/discovery-questionnaire.md" rel="noopener"><code>ai_qe/docs/method/discovery-questionnaire.md</code></a> — role routing and the failed-form post-mortem.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/docs/method/phased-pilot.md" rel="noopener"><code>ai_qe/docs/method/phased-pilot.md</code></a> and <a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/_data/pilot_gates.json" rel="noopener"><code>ai_qe/_data/pilot_gates.json</code></a> — frozen criteria, gates.</li></ul>
+<h2 id="three-gotchas">Three gotchas</h2>
+<ol><li><strong>A working link is not evidence.</strong> The link check refuses to treat a successful HTTP response as proof a claim is correct (<a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/CONTRIBUTING.md" rel="noopener"><code>ai_qe/CONTRIBUTING.md</code></a>). Date, sample, method and unit or no row.</li><li><strong>Never bump every edition together.</strong> A player-only patch advances <code>version</code> and deliberately retains <code>slide_edition</code>; changelogs say what was retained (<a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/releases.md" rel="noopener"><code>ai_qe/releases.md</code></a>).</li><li><strong>A confidence interval crossing a gate is not a near-miss.</strong> It is insufficient evidence for that boundary, "even if its point estimate appears favorable" (<a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/docs/method/phased-pilot.md" rel="noopener"><code>ai_qe/docs/method/phased-pilot.md</code></a>).</li></ol>
+<h2 id="youre-done-when">You're done when…</h2>
+<ul><li class="check-static">☐ <code>research-log.md</code> has ≥6 dated entries with ≥2 marked not-verified or open.</li><li class="check-static">☐ Every quantitative slide cites a provenance row by number, with no orphan numbers.</li><li class="check-static">☐ Every row carries a source URL, a retrieval date and a claim level.</li><li class="check-static">☐ Each quantitative slide carries its epistemic label on the slide itself.</li><li class="check-static">☐ The executive route is exactly 6 slides and its decision ask is quoted.</li><li class="check-static">☐ The technical route keeps ≥3 evidence slides the executive route skips.</li><li class="check-static">☐ The edition record separates site from content and states what v2 retains.</li><li class="check-static">☐ A named peer confirms in writing that no quantitative claim is uncited.</li></ul>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m06-expertise-product/handout.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handout M7 — Monetize: Pricing, Packaging, Positioning — AI Product Studio</title>
+<meta name="description" content="The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page handout-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m07.html">Monetize: Pricing, Packaging, Positioning</a><span>/</span><span aria-current="page">Handout</span></nav>
+    <p class="eyebrow">Module 7 · Handout</p>
+    <h1>Handout M7 — Monetize: Pricing, Packaging, Positioning</h1>
+    <p class="site-lede">The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m07.html">Overview</a></li><li><a href="./m07.html">Slides</a></li><li><a href="./lesson-m07.html">Lesson</a></li><li><a href="./lab-m07.html">Lab</a></li><li><a href="./quiz-m07.html">Knowledge check</a></li><li><a href="./handout-m07.html" aria-current="page">Handout</a></li><li><a href="./glossary-m07.html">Glossary</a></li><li><a href="./transcript-m07.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main has-toc">
+  <aside class="doc-aside"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li class="toc-l2"><a href="#decision-table-pick-the-model-from-the-cost-structure">Decision table — pick the model from the cost structure</a></li><li class="toc-l2"><a href="#the-five-moves-worth-keeping">The five moves worth keeping</a></li><li class="toc-l2"><a href="#worksheet-template-paste-into-docspricingmd">Worksheet template (paste into docs/pricing.md)</a></li><li class="toc-l2"><a href="#pointers-to-open">Pointers to open</a></li><li class="toc-l2"><a href="#three-gotchas">Three gotchas</a></li><li class="toc-l2"><a href="#youre-done-when">You're done when…</a></li></ol></nav></aside>
+  <article class="doc-article">
+<p><strong>Mental model in one sentence.</strong> Price the way your costs recur, package the transformation the buyer can show, and derive every claim from a row you can point at.</p>
+<h2 id="decision-table-pick-the-model-from-the-cost-structure">Decision table — pick the model from the cost structure</h2>
+<div class="table-wrap"><table><thead><tr><th>Archetype</th><th>Cost structure</th><th>Model</th><th>Who pays / when</th></tr></thead><tbody><tr><td>Type 1 on-device app</td><td>No recurring per-user compute</td><td>Free core + one-time Pro (or $0 + reputation funnel, support, Pro)</td><td>User, at download</td></tr><tr><td>Type 2 SaaS</td><td>Recurring hosting + data + per-seat services</td><td>Per-seat tiers; paid paths flagged off until proven</td><td>Org admin, when a member is invited</td></tr><tr><td>Type 3 expertise</td><td>Recurring time, zero marginal distribution</td><td>Staged funnel: free site → questionnaire → fixed-fee discovery → capped pilot → validation</td><td>Sponsor, per bounded stage</td></tr></tbody></table></div>
+<p>Rule for all three: a price below your cost floor is not a price, it is a subsidy.</p>
+<h2 id="the-five-moves-worth-keeping">The five moves worth keeping</h2>
+<ol><li><strong>Floor first.</strong> Break-even = fixed floor ÷ (price − fee − variable cost). Inference line = calls × tokens ÷ 1,000 × rate — $0 to you on-device or BYOK; name who pays (M7.2).</li><li><strong>Source every price cell.</strong> URL + retrieval date; unconfirmed cells say "approximately" or "reportedly" — the convention in <a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/docs/competition-analysis.md" rel="noopener"><code>ListenToMe/docs/competition-analysis.md</code></a>.</li><li><strong>Fraction-of-live price.</strong> Self-paced = 70–85% of live <em>only</em> with projects + feedback + community; otherwise it "shouldn't be sold at all" (<a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/00-research/02-course-market-research.md" rel="noopener"><code>course/00-research/02-course-market-research.md</code></a> §C).</li><li><strong>Gate what is not proven.</strong> Registered-but-404 routes (<code>BILLING_ENABLED=false</code>, <code>SMS_ENABLED=false</code>); "core scheduling must not require either paid integration" (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a>).</li><li><strong>One-liner = adjective-wedge × differentiators × audience.</strong> Every clause maps to a column; run the deletion test (<a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/docs/competition-analysis.md#L88" rel="noopener"><code>ListenToMe/docs/competition-analysis.md:88</code></a>).</li></ol>
+<h2 id="worksheet-template-paste-into-docspricingmd">Worksheet template (paste into <code>docs/pricing.md</code>)</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">Cost floor: $__/mo — hosting $__, API keys $__, dev time $__ amortized
+Inference: __ calls × __ tokens ÷ 1,000 × $__ = $__/user-mo — paid by &lt;me|BYOK|hardware&gt;
+Comparator band: $__ (low) to $__ (high) — rows: &lt;names&gt;
+Value anchor: replaces &lt;hours|headcount|subscription&gt; worth ~$__
+Chosen model: &lt;one-time|free+Pro|per-seat|usage|outcome|hybrid|BYOK&gt; — because &lt;cost line&gt;
+Tiers: &lt;name&gt; $__ — included: &lt;…&gt;; NOT included: &lt;…&gt; — because &lt;…&gt;
+Launch price: $__ — founding $__, deadline &lt;date&gt;, traded for &lt;testimonial|feedback&gt;
+Rationale ≥150 words, citing specific table rows: &lt;…&gt;</code></pre></div>
+<h2 id="pointers-to-open">Pointers to open</h2>
+<ul><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/docs/competition-analysis.md" rel="noopener"><code>ListenToMe/docs/competition-analysis.md</code></a> — 14-row price table and the one-liner (line 88).</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/docs/RELEASING.md" rel="noopener"><code>ListenToMe/docs/RELEASING.md</code></a> — the direct-channel machinery.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/README.md" rel="noopener"><code>SignUpFlow/README.md</code></a> — "Provider-backed Features"; <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a> — the gating rule.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/index.md" rel="noopener"><code>ai_qe/index.md</code></a>, <a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/discovery.md" rel="noopener"><code>ai_qe/discovery.md</code></a>, <a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/_data/engagement.json" rel="noopener"><code>ai_qe/_data/engagement.json</code></a> — the funnel and staged engagement.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/00-research/02-course-market-research.md" rel="noopener"><code>course/00-research/02-course-market-research.md</code></a> §C–§E — price bands, platforms, page anatomy.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/04-sales/pricing-and-platforms.md" rel="noopener"><code>course/04-sales/pricing-and-platforms.md</code></a> — the worked record: floor, ladder, honest-marketing checklist.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/00-research/03-ai-qe-deep-read.md" rel="noopener"><code>course/00-research/03-ai-qe-deep-read.md</code></a> §1, §3, §4 — measurement pricing and qualified claims.</li></ul>
+<h2 id="three-gotchas">Three gotchas</h2>
+<ol><li><strong>Memory-only pricing.</strong> A price without a URL and a date is fabricated evidence — an automatic fail.</li><li><strong>Subscription without recurring cost.</strong> If your table's cost column says on-device, a monthly price is a charge your buyer can audit.</li><li><strong>Unfalsifiable positioning.</strong> "The best AI tool" cannot be broken by deleting a clause; if no row would notice, the line sells nothing.</li></ol>
+<h2 id="youre-done-when">You're done when…</h2>
+<ul><li class="check-static">☐ ≥5 competitor rows, every price cell with URL + retrieval date, uncertain cells qualified.</li><li class="check-static">☐ Worksheet complete: floor and inference line with tagged inputs, break-even that reproduces, band, anchor, model, tiers, price.</li><li class="check-static">☐ Rationale ≥150 words naming specific competitor rows.</li><li class="check-static">☐ One-liner with a clause → column/capability mapping; deletion test passed.</li><li class="check-static">☐ Packaging page with an explicit "NOT included — because" line per tier.</li><li class="check-static">☐ Three buyer objections from your own table, each answered with a row or pointer.</li><li class="check-static">☐ Honest-marketing checklist run with each of the five passes quoted.</li><li class="check-static">☐ Verdict recorded: "Would a skeptical engineer pay this?" — and which objection almost flipped it.</li></ul>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m07-monetize/handout.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>

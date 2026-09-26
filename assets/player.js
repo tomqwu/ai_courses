@@ -211,7 +211,27 @@
       history.replaceState(null, '', `#${slides[index].id}`);
       localStorage.setItem(progressKey, JSON.stringify({ slide: slides[index].id }));
     } catch (_) { /* private mode: navigation still works */ }
+    recordUnit();
     loadClip();
+  }
+
+  // Unit progress: reaching the last slide of a unit marks it complete in the shared store, and
+  // every slide records "where you left off" for the course home. Labs and knowledge checks are
+  // completed on their own pages, not by reading their slide.
+  let units = [];
+  try { units = JSON.parse(body.dataset.units || '[]'); } catch (_) { units = []; }
+  function recordUnit() {
+    const P = window.APSProgress;
+    if (!P) return;
+    const n = index + 1;
+    const unit = units.find(u => n >= u.first && n <= u.last);
+    const where = `${deckId}.html#${slides[index].id}`;
+    if (unit) {
+      if (n === unit.last && unit.id !== 'lab' && unit.id !== 'quiz') P.setUnit(`${deckId}:${unit.id}`, true);
+      P.setLast(where, `${body.dataset.deckLabel || deckId} — ${unit.label} (slide ${n} of ${slides.length})`);
+    } else {
+      P.setLast(where, `${body.dataset.deckLabel || deckId} — slide ${n} of ${slides.length}`);
+    }
   }
 
   const move = delta => goTo(index + delta);

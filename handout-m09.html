@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handout — M9: Ship a Product Catalog with GitHub Pages — AI Product Studio</title>
+<meta name="description" content="The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page handout-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m09.html">Ship a Product Catalog with GitHub Pages</a><span>/</span><span aria-current="page">Handout</span></nav>
+    <p class="eyebrow">Module 9 · Handout</p>
+    <h1>Handout — M9: Ship a Product Catalog with GitHub Pages</h1>
+    <p class="site-lede">The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m09.html">Overview</a></li><li><a href="./m09.html">Slides</a></li><li><a href="./lesson-m09.html">Lesson</a></li><li><a href="./lab-m09.html">Lab</a></li><li><a href="./quiz-m09.html">Knowledge check</a></li><li><a href="./handout-m09.html" aria-current="page">Handout</a></li><li><a href="./glossary-m09.html">Glossary</a></li><li><a href="./transcript-m09.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main has-toc">
+  <aside class="doc-aside"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li class="toc-l2"><a href="#install-and-prove">Install and prove</a></li><li class="toc-l2"><a href="#find-your-way">Find your way</a></li><li class="toc-l2"><a href="#clone-then-the-loop">Clone, then the loop</a></li><li class="toc-l2"><a href="#publish">Publish</a></li><li class="toc-l2"><a href="#the-limits">The limits</a></li><li class="toc-l2"><a href="#when-it-goes-wrong">When it goes wrong</a></li></ol></nav></aside>
+  <article class="doc-article">
+<p>One page to keep beside the terminal. Windows commands are for PowerShell.</p>
+<h2 id="install-and-prove">Install and prove</h2>
+<div class="table-wrap"><table><thead><tr><th></th><th>Windows</th><th>macOS</th></tr></thead><tbody><tr><td>Package manager</td><td><code>winget --version</code> (else App Installer from the Store)</td><td>Homebrew's install line, then the setup lines it prints</td></tr><tr><td>Git</td><td><code>winget install --id Git.Git -e --source winget</code></td><td><code>brew install git</code></td></tr><tr><td>GitHub CLI</td><td><code>winget install --id GitHub.cli --source winget</code></td><td><code>brew install gh</code></td></tr><tr><td>After installing</td><td><strong>open a new terminal window</strong></td><td>—</td></tr><tr><td>Prove it</td><td><code>powershell -ExecutionPolicy Bypass -File .\check-setup.ps1</code></td><td><code>bash check-setup.sh</code></td></tr></tbody></table></div>
+<p>Once per computer:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">git config --global user.name &quot;Your Name&quot;
+git config --global user.email &quot;you@example.com&quot;
+gh auth login        # GitHub.com → HTTPS → Yes → Login with a web browser</code></pre></div>
+<h2 id="find-your-way">Find your way</h2>
+<div class="table-wrap"><table><thead><tr><th></th><th>Both systems</th></tr></thead><tbody><tr><td>Where am I?</td><td><code>pwd</code></td></tr><tr><td>What is here?</td><td><code>ls</code></td></tr><tr><td>In / up / home</td><td><code>cd code</code> · <code>cd ..</code> · <code>cd ~</code></td></tr><tr><td>Make a folder</td><td><code>mkdir code</code></td></tr><tr><td>Open in the file window</td><td><code>start .</code> (Windows) · <code>open .</code> (macOS)</td></tr></tbody></table></div>
+<p>Keep every project in <code>~/code</code>. No spaces in folder names. Press Tab to finish names.</p>
+<h2 id="clone-then-the-loop">Clone, then the loop</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd ~/code
+gh repo clone owner/name          # or: git clone https://github.com/owner/name.git
+git status                        # what changed?
+git add .                         # choose every change
+git commit -m &quot;Say what changed&quot;  # save one version
+git push                          # send it to GitHub</code></pre></div>
+<p>A clone lands in the folder you are in. After <code>push</code>, <code>git status</code> should say <strong>working tree clean</strong>.</p>
+<h2 id="publish">Publish</h2>
+<p>Repository → <strong>Settings</strong> → <strong>Pages</strong> → Source <strong>Deploy from a branch</strong> → <code>main</code>, <code>/ (root)</code> → <strong>Save</strong>. Address: <code>https://&lt;username&gt;.github.io/&lt;repository&gt;/</code>. Up to 10 minutes after each push.</p>
+<h2 id="the-limits">The limits</h2>
+<p>1 GB published site · 100 GB a month bandwidth (soft) · 10 builds an hour (soft) · 10 minutes per deployment. Free for public repositories.</p>
+<p><strong>Pages shows products; it does not sell them.</strong> GitHub's terms forbid running an online shop on Pages. Link each product's <code>buyUrl</code> to a checkout that runs elsewhere, or leave it out and the button reads "Ask about this".</p>
+<h2 id="when-it-goes-wrong">When it goes wrong</h2>
+<div class="table-wrap"><table><thead><tr><th>You see</th><th>Do this</th></tr></thead><tbody><tr><td>a command "is not recognized" right after installing</td><td>open a new terminal window</td></tr><tr><td><code>brew: command not found</code></td><td>run the setup lines Homebrew printed</td></tr><tr><td>"products.js did not load"</td><td>find the missing comma; the browser console names the line</td></tr><tr><td>"ahead of 'origin/main' by 1 commit"</td><td><code>git push</code></td></tr><tr><td>404 at your address</td><td>wait for the Actions run; check the folder is <code>/ (root)</code></td></tr></tbody></table></div>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m09-github-pages/handout.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>

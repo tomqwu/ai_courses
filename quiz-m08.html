@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz M8 — Launch: Sales Page, Email Arc, Capstone — AI Product Studio</title>
+<meta name="description" content="The module knowledge check, interactive.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page quiz-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m08.html">Launch: Sales Page, Email Arc, Capstone</a><span>/</span><span aria-current="page">Knowledge check</span></nav>
+    <p class="eyebrow">Module 8 · Knowledge check · 6 multiple choice + 2 short answer</p>
+    <h1>Quiz M8 — Launch: Sales Page, Email Arc, Capstone</h1>
+    <p class="site-lede">Each question maps to one lesson objective, and the distractors are the misconceptions the lesson argues against. Multiple choice is checked instantly; short answers reveal the model answer only after you have written yours. Best score is kept; 75% is the certificate threshold.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m08.html">Overview</a></li><li><a href="./m08.html">Slides</a></li><li><a href="./lesson-m08.html">Lesson</a></li><li><a href="./lab-m08.html">Lab</a></li><li><a href="./quiz-m08.html" aria-current="page">Knowledge check</a></li><li><a href="./handout-m08.html">Handout</a></li><li><a href="./glossary-m08.html">Glossary</a></li><li><a href="./transcript-m08.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main">
+  <article class="doc-article quiz-article" data-quiz="m08">
+    <p class="quiz-score" data-quiz-score role="status" aria-live="polite"></p>
+<section class="qq is-mc" data-n="1" data-answer="b" aria-labelledby="q1-stem">
+  <p class="q-number">Question 1 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M8.2</span></p>
+  <div class="q-stem" id="q1-stem"><p>Your sending platform's dashboard shows a green "domain authenticated" badge, so you are about to queue the arc. First you run <code>dig +short TXT _dmarc.yourdomain.com</code> and it returns nothing at all. What does the empty answer mean, and what do you do?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q1-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">Nothing — <code>_dmarc</code> is read only by your sending platform, so its dashboard is the authoritative check</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">No DMARC record is published, so receivers have no policy to apply to mail that fails SPF or DKIM alignment; publish one <code>v=DMARC1;</code> record with an explicit policy (<code>p=none</code> to start) and an <code>rua=mailto:</code> address, re-query until it answers, then send the test messages</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">The query failed because DMARC records are not public; read the value in the registrar's control panel instead</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">It does not matter while SPF resolves — <code>v=spf1 … -all</code> covers the same ground, and DMARC is optional</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Deliverability is configured before the first send because Gmail and Yahoo enforce SPF/DKIM/DMARC for bulk senders, and the check is a DNS query on your own domain, not a dashboard badge (<code>04-sales/launch-plan.md</code>, operations checklist; Lab M8 "Deliverability gate"). An empty <code>_dmarc</code> answer means no published policy. A trusts the dashboard the question just contradicted; C is false — DMARC records are public TXT records, which is how receivers read them; D is the common "SPF is enough" error: SPF alone tells receivers nothing about what to do when alignment fails, and leaves you no <code>rua=</code> reports. (M8.2)</p></div>
+</section><section class="qq is-mc" data-n="2" data-answer="a" aria-labelledby="q2-stem">
+  <p class="q-number">Question 2 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M8.1</span></p>
+  <div class="q-stem" id="q2-stem"><p>Your product is a $149 self-paced course. What page length does the research guidance indicate?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q2-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">800–1,200 words — under $200, the page answers fewer questions</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">2,000–3,000 words — longer pages always convert better</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">3,000+ words — length signals quality at any price</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">Under 500 words — the video does the selling</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>800–1,200 words under $200; 2,000–3,000 is the $500+/cold-traffic band — length follows price, not "longer is always better." (M8.1)</p></div>
+</section><section class="qq is-mc" data-n="3" data-answer="b" aria-labelledby="q3-stem">
+  <p class="q-number">Question 3 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M8.1</span></p>
+  <div class="q-stem" id="q3-stem"><p>Launch day is near and you have zero testimonials. What do you do?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q3-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">Draft two plausible ones yourself — you know what users would say</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">Post the proof you have (repo badges, evidence lines, a demo), reserve slots for real testimonials, and never invent quotes</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">Run with no social proof ever — testimonials cannot be added later</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">Turn what two friends said about the idea in DMs into named testimonials — they did say it</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Never invent social proof; real shipped projects are the social proof for technical buyers; reserve slots and earn testimonials via the beta trade. D is still invented proof — a private reaction to an idea is not a student's result. (M8.1)</p></div>
+</section><section class="qq is-mc" data-n="4" data-answer="c" aria-labelledby="q4-stem">
+  <p class="q-number">Question 4 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M8.2</span></p>
+  <div class="q-stem" id="q4-stem"><p>Which describes the launch arc correctly?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q4-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">All 7–10 emails should sell — every send asks for the purchase</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">Warmup sells softly; conversion sells hard; the split is roughly half and half</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">Warmup (origin story → transformation proof → free tool) does not sell; then conversion (cart open → objection teardown → testimonial → final call)</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">Send one strong sales email, repeated daily until the deadline</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Warmup earns trust without selling; conversion spends it; asking in every email trains the list to stop opening. (M8.2)</p></div>
+</section><section class="qq is-mc" data-n="5" data-answer="a" aria-labelledby="q5-stem">
+  <p class="q-number">Question 5 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M8.2</span></p>
+  <div class="q-stem" id="q5-stem"><p>Why does the arc end in a deadline, and what makes the deadline honest?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q5-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">42–55% of enrollments arrive in the final 48 hours, so a kept deadline is load-bearing — the cart really closes; a fake countdown trains the list to ignore your next deadline</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">Deadlines are dark patterns; ethical launches keep the cart open indefinitely</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">The stat means you should queue most emails inside the final 48 hours</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">Extend the deadline if sales are slow — kindness converts</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Deferred decisions collapse at a real deadline; only a deadline you keep stays load-bearing across launches. (M8.2)</p></div>
+</section><section class="qq is-short" data-n="6" aria-labelledby="q6-stem">
+  <p class="q-number">Question 6 <span class="q-kind">short answer</span> <span class="q-objective">Objective M8.2</span></p>
+  <div class="q-stem" id="q6-stem"><p>Your list is 800, expected open rate 35%, click rate 12%, page conversion 10%, price $299. Compute expected revenue, carrying decimals through the chain and rounding only the final dollar figure. Name two honest levers to improve it, and one "improvement" you must refuse.</p></div>
+  <label class="q-write">Your answer<textarea rows="5" placeholder="Write it first — the model answer unlocks after 20 characters."></textarea></label>
+  <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>Reveal the model answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Model answer</p><p>800 × 0.35 = 280 opens; × 0.12 = 33.6 clicks; × 0.10 = 3.36 enrollments; × $299 = $1,004.64 ≈ <strong>$1,005</strong> (the stem fixes the convention: decimals carried, one final rounding). Honest levers, any two: grow the list with the free tool; improve subject lines/sender reputation; one CTA per email; strengthen the sales page; revisit price per M7. Refuse: purchased lists, fake urgency, invented testimonials. — M8.2</p></div>
+</section><section class="qq is-mc" data-n="7" data-answer="a" aria-labelledby="q7-stem">
+  <p class="q-number">Question 7 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M8.3</span></p>
+  <div class="q-stem" id="q7-stem"><p>Why does the capstone contract require ONE archetype and ONE shippable scope?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q7-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">The rubric scores the completeness of the loop and the honesty of the evidence — one archetype fully looped is what the five dimensions can verify; code size is not a dimension</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">The capstone is graded on code size, so a small scope reviews faster</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">All three archetypes must be attempted to pass; one is just what you demo</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">Instructors can only review one archetype per student</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>The five dimensions (spec, build, evidence, discipline, launch-readiness) score loop completeness and honesty; no dimension counts lines of code. (M8.3)</p></div>
+</section><section class="qq is-short" data-n="8" aria-labelledby="q8-stem">
+  <p class="q-number">Question 8 <span class="q-kind">short answer</span> <span class="q-objective">Objective M8.3</span></p>
+  <div class="q-stem" id="q8-stem"><p>A capstone submission's evidence record reads, in full: "Tests: all green. Repo: github.com/me/rosterbot. Sales page: done." Rewrite it into the required capstone evidence record — every required block, with placeholders for values you do not have — and state what would turn a record like this from <em>incomplete</em> into an <em>automatic fail</em>.</p></div>
+  <label class="q-write">Your answer<textarea rows="5" placeholder="Write it first — the model answer unlocks after 20 characters."></textarea></label>
+  <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>Reveal the model answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Model answer</p><p><code>## Capstone evidence — rosterbot — &lt;date&gt;</code> / Commands run: <code>&lt;command&gt;</code> → <code>&lt;N passed, M failed or skipped&gt;</code>, one line per command, dated / Artifact links: repo at tag <code>&lt;vX.Y&gt;</code>, spec folder <code>&lt;path&gt;</code>, evidence log <code>&lt;path&gt;</code>, sales page draft <code>&lt;path&gt;</code> / Limitations, not verified: <code>&lt;honest list, failures included&gt;</code> / plus the statement of what the agent did versus what the student verified. Incomplete is recoverable — re-run and fill the blocks. It becomes an automatic fail only when a line is fabricated: "all green" for a run never made, or a count the command did not print. — M8.3</p></div>
+</section>
+    <section class="quiz-summary" data-quiz-summary hidden>
+      <h2>Result</h2>
+      <p data-summary-text></p>
+      <div class="evidence-actions"><button type="button" data-quiz-again>Try again</button>
+        <a class="btn-primary" href="./module-m08.html">Back to the module →</a></div>
+    </section>
+    <footer class="doc-footer">
+      <p class="index-footnote">Scores are stored in this browser only. Source: <code>course/03-content/m08-launch-capstone/quiz.md</code> — the answer key with rationale and objective references is the same file.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script><script src="./assets/quiz.js" defer></script>
+</body>
+</html>

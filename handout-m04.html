@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M4 Handout — The Spec-Driven SaaS (one page) — AI Product Studio</title>
+<meta name="description" content="The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page handout-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m04.html">The Spec-Driven SaaS: From Idea to Executable Spec</a><span>/</span><span aria-current="page">Handout</span></nav>
+    <p class="eyebrow">Module 4 · Handout</p>
+    <h1>M4 Handout — The Spec-Driven SaaS (one page)</h1>
+    <p class="site-lede">The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m04.html">Overview</a></li><li><a href="./m04.html">Slides</a></li><li><a href="./lesson-m04.html">Lesson</a></li><li><a href="./lab-m04.html">Lab</a></li><li><a href="./quiz-m04.html">Knowledge check</a></li><li><a href="./handout-m04.html" aria-current="page">Handout</a></li><li><a href="./glossary-m04.html">Glossary</a></li><li><a href="./transcript-m04.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main has-toc">
+  <aside class="doc-aside"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li class="toc-l2"><a href="#the-pipeline">The pipeline</a></li><li class="toc-l2"><a href="#keep-these-commands-and-formats">Keep these commands and formats</a></li><li class="toc-l2"><a href="#files-worth-opening">Files worth opening</a></li><li class="toc-l2"><a href="#three-gotchas">Three gotchas</a></li><li class="toc-l2"><a href="#youre-done-when">You're done when…</a></li></ol></nav></aside>
+  <article class="doc-article">
+<p><strong>Mental model:</strong> a spec folder is an instruction set for an agent that has no memory of you — so every artifact must survive a stranger, and the checklist gate is the last cheap place to catch what won't.</p>
+<h2 id="the-pipeline">The pipeline</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code>specify ─ clarify ─ CHECKLIST ─ plan (research · data-model · contracts) ─ tasks ─ implement ⇄ converge
+  WHAT     ≤3 Qs     before plan  HOW + Constitution Check                   Phase 2   until Converged</code></pre></div>
+<p>Spec-kit 1.0 names each step <code>/speckit-&lt;step&gt;</code>; SignUpFlow's pre-1.0 folder spells them <code>/speckit.&lt;step&gt;</code> and has no converge.</p>
+<div class="table-wrap"><table><thead><tr><th>Artifact</th><th>Owns</th><th>Refuses to hold</th></tr></thead><tbody><tr><td><code>spec.md</code></td><td>WHAT: stories, Given/When/Then, FRs, success criteria</td><td>languages, frameworks, schema SQL</td></tr><tr><td><code>research.md</code></td><td>Decisions with options, rationale, rejected alternatives</td><td>silent preferences</td></tr><tr><td><code>data-model.md</code></td><td>Entities and fields</td><td>— (absent when infrastructure spans entities)</td></tr><tr><td><code>plan.md</code></td><td>HOW: stack, versions, storage, targets + Constitution Check</td><td>user-facing behavior</td></tr><tr><td><code>contracts/</code></td><td>Seams: shapes, error keys, key schemas, test sketch</td><td>vibes at the boundary</td></tr><tr><td><code>checklists/requirements.md</code></td><td>The gate: Content Quality, Completeness, Readiness</td><td>— (generated, so verify it)</td></tr><tr><td><code>tasks.md</code></td><td>Work by story, tests first, <strong>exact file paths</strong></td><td>"update the backend"</td></tr></tbody></table></div>
+<h2 id="keep-these-commands-and-formats">Keep these commands and formats</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">ls specs/                                   # 17 folders in SignUpFlow
+grep -rn &quot;NEEDS CLARIFICATION&quot; specs/       # must return zero
+grep -o &quot;FR-[0-9]\{3\}&quot; spec.md | sort -u | wc -l   # recount against the checklist
+grep -o &quot;app/[a-z_/]*\.py&quot; tasks.md | sort -u | xargs ls  # every cited path must exist
+ls alembic/versions/                        # where migrations actually live</code></pre></div>
+<p>PR body (fixed four sections): <code>Summary:</code> one line per change · <code>Changed files:</code> path: reason · <code>Validation:</code> commands and results · <code>Follow-ups:</code> known gaps and open questions.</p>
+<p>Task line: <code>- [ ] T017 [P] [US1] Implement create_wizard_state method in api/services/onboarding_service.py</code></p>
+<h2 id="files-worth-opening">Files worth opening</h2>
+<ul><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/specs/014-security-hardening/spec.md" rel="noopener"><code>SignUpFlow/specs/014-security-hardening/spec.md</code></a> — 8 stories, 44 FRs, 7 edge cases, 12 criteria.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/specs/014-security-hardening/plan.md" rel="noopener"><code>SignUpFlow/specs/014-security-hardening/plan.md</code></a> — Constitution Check, seven verdicts, zero violations.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/specs/014-security-hardening/contracts/rate-limiting.md" rel="noopener"><code>SignUpFlow/specs/014-security-hardening/contracts/rate-limiting.md</code></a> — the 5/5/15 refrain as a config table.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/specs/014-security-hardening/checklists/requirements.md" rel="noopener"><code>SignUpFlow/specs/014-security-hardening/checklists/requirements.md</code></a> — the gate, and the "5xP1" drift.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/specs/000-user-onboarding/tasks.md" rel="noopener"><code>SignUpFlow/specs/000-user-onboarding/tasks.md</code></a> — real task format; line 3's stale path; migrations drift.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/.specify/templates/" rel="noopener"><code>SignUpFlow/.specify/templates/</code></a> (<code>spec-template.md</code>, <code>plan-template.md</code>, <code>tasks-template.md</code>) — the set each feature draws from.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/.specify/memory/constitution.md" rel="noopener"><code>SignUpFlow/.specify/memory/constitution.md</code></a> — Context A, the Ralph loop's own rules.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/ai-pr-review.md" rel="noopener"><code>SignUpFlow/docs/ai-pr-review.md</code></a> — local review checklist and the two hard lines.</li></ul>
+<h2 id="three-gotchas">Three gotchas</h2>
+<ol><li><strong>Technology leaks into <code>spec.md</code>.</strong> The gate's first rule forbids it. Schema belongs to data-model, contracts, and migrations — entities are described "without implementation."</li><li><strong>"Then the system is secure" is not a scenario.</strong> A scenario is done when a test author makes zero decisions; numbers (5/5/15) recur as FR, contract row, and assertion.</li><li><strong>Generated artifacts drift.</strong> A stale <code>/specs/020-user-onboarding/</code> path, a checklist printing "5xP1" over six P1 stories, migrations sent to a nonexistent <code>migrations/</code> directory. Grep paths, recount counts.</li></ol>
+<h2 id="youre-done-when">You're done when…</h2>
+<ul><li class="check-static">☐ <code>spec.md</code> has ≥3 independently testable stories, numeric Then-clauses, ≥8 FRs, no implementation detail.</li><li class="check-static">☐ Zero <code>[NEEDS CLARIFICATION]</code> markers remain; unknowns recorded in Assumptions.</li><li class="check-static">☐ <code>research.md</code> has ≥3 decisions, each with a rejected alternative and a reason.</li><li class="check-static">☐ <code>plan.md</code> carries a Constitution Check verdict per principle; violations argued.</li><li class="check-static">☐ One contract has shapes, error keys, and a test sketch.</li><li class="check-static">☐ Every <code>tasks.md</code> task names an existing file path; tests-first phases; checkpoint per story.</li><li class="check-static">☐ Your checklist passed after you grepped its paths and recounted its counts.</li><li class="check-static">☐ A stranger implemented story 1 with no questions the folder should have answered.</li></ul>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m04-spec-driven-saas/handout.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>

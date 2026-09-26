@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M2 Handout — The On-Device AI App: Architecture — AI Product Studio</title>
+<meta name="description" content="The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page handout-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m02.html">The On-Device AI App: Architecture</a><span>/</span><span aria-current="page">Handout</span></nav>
+    <p class="eyebrow">Module 2 · Handout</p>
+    <h1>M2 Handout — The On-Device AI App: Architecture</h1>
+    <p class="site-lede">The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m02.html">Overview</a></li><li><a href="./m02.html">Slides</a></li><li><a href="./lesson-m02.html">Lesson</a></li><li><a href="./lab-m02.html">Lab</a></li><li><a href="./quiz-m02.html">Knowledge check</a></li><li><a href="./handout-m02.html" aria-current="page">Handout</a></li><li><a href="./glossary-m02.html">Glossary</a></li><li><a href="./transcript-m02.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main has-toc">
+  <aside class="doc-aside"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li class="toc-l2"><a href="#the-pipeline-and-where-each-stage-lives">The pipeline, and where each stage lives</a></li><li class="toc-l2"><a href="#decision-table-worth-memorizing">Decision table worth memorizing</a></li><li class="toc-l2"><a href="#commands-to-keep">Commands to keep</a></li><li class="toc-l2"><a href="#files-to-open">Files to open</a></li><li class="toc-l2"><a href="#three-gotchas">Three gotchas</a></li><li class="toc-l2"><a href="#youre-done-when">You're done when…</a></li></ol></nav></aside>
+  <article class="doc-article">
+<p><strong>The mental model in one sentence:</strong> put every decision in a pure core behind a protocol seam, leave only hardware glue in the platform layer, then prove the decisions with tests that need no microphone, no screen capture, and no model.</p>
+<h2 id="the-pipeline-and-where-each-stage-lives">The pipeline, and where each stage lives</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code>mic (.you) · system audio (.others)
+      │ PCM chunks
+      ▼
+capture ─▶ transcribe ─▶ store/context ─▶ prompt ─▶ route ─▶ streamed deltas
+ App/       Transcribing   ConversationStore  PromptBuilder  MeetingSession
+            seam           (Core, pure)       (Core, pure)   (Core, pure)</code></pre></div>
+<div class="table-wrap"><table><thead><tr><th>Stage</th><th>ListenToMe file</th><th>TinyCopilot module</th></tr></thead><tbody><tr><td>Capture (glue)</td><td><code>App/DualChannelCapture.swift</code></td><td>(canned transcript)</td></tr><tr><td>Transcription seam</td><td><code>Sources/ListenToMeCore/Transcriber.swift</code></td><td><code>conversation_store.py</code> feed</td></tr><tr><td>Store + window</td><td><code>Sources/ListenToMeCore/ConversationStore.swift</code></td><td><code>conversation_store.py</code></td></tr><tr><td>Proactive gate</td><td><code>Sources/ListenToMeCore/QuestionDetector.swift</code></td><td><code>question_detector.py</code></td></tr><tr><td>Prompts (pure)</td><td><code>Sources/ListenToMeCore/Prompt.swift</code></td><td><code>prompts.py</code></td></tr><tr><td>Ranking / routing</td><td><code>Sources/ListenToMeCore/ModelRanking.swift</code></td><td><code>model_router.py</code></td></tr><tr><td>Streaming errors</td><td><code>Sources/ListenToMeCore/OllamaProvider.swift</code></td><td><code>ollama_provider.py</code></td></tr><tr><td>Orchestration</td><td><code>Sources/ListenToMeCore/MeetingSession.swift</code></td><td><code>copilot.py</code></td></tr></tbody></table></div>
+<h2 id="decision-table-worth-memorizing">Decision table worth memorizing</h2>
+<div class="table-wrap"><table><thead><tr><th>Decision</th><th>Rule</th><th>If you get it wrong</th></tr></thead><tbody><tr><td>Context window</td><td>newest-first fit; always ≥1 segment</td><td>empty or ancient context</td></tr><tr><td>Question cue</td><td>token-prefix / word-boundary, never substring</td><td><code>gemini</code> misread as <code>mini</code></td></tr><tr><td>Model default</td><td>local-first; <code>:cloud</code> only if no local</td><td>transcript silently leaves the Mac</td></tr><tr><td>Model switch</td><td>bump generation; guard every write</td><td>stale answer under new model's name</td></tr><tr><td>Listener grounding</td><td>only <em>completed</em> summaries</td><td>half-answer treated as fact</td></tr><tr><td>Stream end</td><td>require <code>done</code> <strong>and</strong> visible text</td><td>truncation finishes as success</td></tr><tr><td>Platform model</td><td>one more <code>LLMProvider</code>; check availability, measure each role</td><td>a model that failed its role ships anyway</td></tr></tbody></table></div>
+<h2 id="commands-to-keep">Commands to keep</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd course/03-content/m02-ondevice-app/tinycopilot
+make lab-m2     # unit suite + coverage floor 90  → 208 passed, 100%
+make lab-m3     # M3 privacy suite must stay green → 56 passed
+make e2e        # real-LLM contract test (needs LAB_E2E=1)
+make demo       # scripted meeting, three role outputs
+pytest tests/test_model_router.py -q   # 40 passed
+pytest tests/ -m &quot;not e2e&quot; --collect-only -q | tail -1</code></pre></div>
+<h2 id="files-to-open">Files to open</h2>
+<ul><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/Sources/ListenToMeCore/ConversationStore.swift#L76-L87" rel="noopener"><code>ListenToMe/Sources/ListenToMeCore/ConversationStore.swift:76-87</code></a> — the never-empty window.</li><li><code>ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:13-18, 80-95</code> — token-prefix, local-first.</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/Sources/ListenToMeCore/Prompt.swift#L129-L152" rel="noopener"><code>ListenToMe/Sources/ListenToMeCore/Prompt.swift:129-152</code></a> — three base prompts.</li><li><code>ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:79-104, 216-236</code> — typed errors.</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/Sources/ListenToMeCore/ContextEngine.swift#L41-L50" rel="noopener"><code>ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:41-50</code></a> — the proactive gate.</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/docs/reviews/2026-09-10/design-and-gap-review.md" rel="noopener"><code>ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md</code></a> — gap G06, the scar.</li><li><code>tinycopilot/tests/test_ollama_provider.py</code> — the failing-stream spec.</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/SharedPlatform/AppleIntelligenceProvider.swift#L17-L25" rel="noopener"><code>ListenToMe/SharedPlatform/AppleIntelligenceProvider.swift:17-25</code></a> — a platform model behind the same seam.</li><li><a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m02-ondevice-app/appendix-models-2026-09.md" rel="noopener"><code>course/03-content/m02-ondevice-app/appendix-models-2026-09.md</code></a> — the dated model matrix; the lab default stays <code>qwen3:0.6b</code>.</li></ul>
+<h2 id="three-gotchas">Three gotchas</h2>
+<ol><li><strong>Deleting a module gives an ImportError, not failed tests.</strong> <code>__init__.py</code> re-exports everything, so <code>make lab-m2</code> exits 4 with an empty test run. That is the red run; the per-test spec is the test file.</li><li><strong><code>gemini</code> contains <code>mini</code>.</strong> Any substring marker check misroutes a whole model family. Match at token starts.</li><li><strong>The lab's prose says Listener gets a distinct fast model; the tests do not.</strong> Implement to the tests — Listener and Quick both receive the fastest model.</li></ol>
+<h2 id="youre-done-when">You're done when…</h2>
+<ul><li class="check-static">☐ <code>make lab-m2</code> exits 0 with 208 passed and the 90 coverage floor reached.</li><li class="check-static">☐ Six red runs (ImportError, exit 4) are in your evidence log, each before its green run.</li><li class="check-static">☐ <code>make lab-m3</code> still prints 56 passed.</li><li class="check-static">☐ <code>make demo</code> prints Listener, Quick, and Deep outputs with model names visible.</li><li class="check-static">☐ Your log explains each module's red→green cycle in one or two sentences.</li><li class="check-static">☐ Router tests prove local-first defaults; provider tests prove typed errors on truncated streams.</li></ul>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m02-ondevice-app/handout.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>

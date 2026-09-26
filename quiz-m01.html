@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz M1 — The AI Product Operating System — AI Product Studio</title>
+<meta name="description" content="The module knowledge check, interactive.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page quiz-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m01.html">The AI Product Operating System</a><span>/</span><span aria-current="page">Knowledge check</span></nav>
+    <p class="eyebrow">Module 1 · Knowledge check · 6 multiple choice + 2 short answer</p>
+    <h1>Quiz M1 — The AI Product Operating System</h1>
+    <p class="site-lede">Each question maps to one lesson objective, and the distractors are the misconceptions the lesson argues against. Multiple choice is checked instantly; short answers reveal the model answer only after you have written yours. Best score is kept; 75% is the certificate threshold.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m01.html">Overview</a></li><li><a href="./m01.html">Slides</a></li><li><a href="./lesson-m01.html">Lesson</a></li><li><a href="./lab-m01.html">Lab</a></li><li><a href="./quiz-m01.html" aria-current="page">Knowledge check</a></li><li><a href="./handout-m01.html">Handout</a></li><li><a href="./glossary-m01.html">Glossary</a></li><li><a href="./transcript-m01.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main">
+  <article class="doc-article quiz-article" data-quiz="m01">
+    <p class="quiz-score" data-quiz-score role="status" aria-live="polite"></p>
+<section class="qq is-mc" data-n="1" data-answer="b" aria-labelledby="q1-stem">
+  <p class="q-number">Question 1 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M1.1</span></p>
+  <div class="q-stem" id="q1-stem"><p>Which rule is written in SignUpFlow's house style for agent instructions?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q1-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">"Be careful with multi-tenancy."</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">"Filter every query by org_id."</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">"Multi-tenancy is important, keep it in mind."</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">"Developers should value tenant isolation."</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>"Filter every query by org_id" is imperative and checkable; "be careful" is a vibe (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a>, "House style"). (objective: M1.1 — write verifiable rules)</p></div>
+</section><section class="qq is-mc" data-n="2" data-answer="b" aria-labelledby="q2-stem">
+  <p class="q-number">Question 2 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M1.1</span></p>
+  <div class="q-stem" id="q2-stem"><p>An agent hits a conflict between a general rule in <code>docs/ai-agent-coding-strategy.md</code> (level 4) and a more specific, safer path-scoped rule under <code>.github/instructions/</code> (level 3). Per SignUpFlow's instruction hierarchy, it must:</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q2-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">Follow <code>AGENTS.md</code> regardless, since it is the universal baseline</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">Follow the more specific and safer one — the path-scoped rule</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">Follow the most recently updated file</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">Stop and ask the user, since any conflict blocks work</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>The hierarchy's single tie-breaker is "follow the more specific and safer one"; AGENTS.md is the baseline, not an override of more specific rules (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a>). (objective: M1.1 — apply precedence)</p></div>
+</section><section class="qq is-mc" data-n="3" data-answer="d" aria-labelledby="q3-stem">
+  <p class="q-number">Question 3 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M1.1</span></p>
+  <div class="q-stem" id="q3-stem"><p>Before referencing a file path, function name, or schema field in its output, an agent working in SignUpFlow must:</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q3-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">Recall it from memory and flag uncertainty in a comment</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">Trust its training data, since the repo is public</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">Present 2-3 candidate paths and let the user pick one</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">Grep the repo / read the canonical source, and not recall from memory</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>AGENTS.md forbids inventing identifiers — grep the repo and read facts from the canonical source; the 2-3-options rule covers ambiguous requests, not fact recall (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a>, "Anti-hallucination"). (objective: M1.1 — apply anti-hallucination rules)</p></div>
+</section><section class="qq is-mc" data-n="4" data-answer="c" aria-labelledby="q4-stem">
+  <p class="q-number">Question 4 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M1.2</span></p>
+  <div class="q-stem" id="q4-stem"><p>Which pairing of spec-kit artifact to job is correct?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q4-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">spec.md = the HOW with library choices; research.md = the WHAT users need</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">tasks.md = prose guidance for agents; contracts/ = the deployment guide</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">spec.md = the WHAT, technology-agnostic; research.md = numbered decisions with rejected alternatives; tasks.md = checkbox tasks citing exact file paths</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">quickstart.md = the quality gate before planning; checklists/requirements.md = the timed deployment guide</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>spec.md is the technology-agnostic WHAT, research.md holds numbered decisions with rejected alternatives, tasks.md holds checkbox tasks with exact paths; the other options swap the jobs (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/SPEC_KIT_SETUP.md" rel="noopener"><code>SignUpFlow/docs/SPEC_KIT_SETUP.md</code></a>). (objective: M1.2 — state each artifact's job)</p></div>
+</section><section class="qq is-mc" data-n="5" data-answer="a" aria-labelledby="q5-stem">
+  <p class="q-number">Question 5 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M1.3</span></p>
+  <div class="q-stem" id="q5-stem"><p>A teammate says: "The AI assistant obviously makes me faster — I can feel it." What does METR's 2025 randomized study (evidence dataset row 1) let you say back?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q5-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">"In that study, experienced maintainers were measured 19% slower on their own repositories while believing they were 20% faster — so a felt speed-up is not evidence. It does not show AI slows everyone: it is one task-level study of 16 people, and the 2026 follow-up's intervals cross zero"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">"You're right: the study measured experienced developers 19% faster with AI"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">"The study proves AI assistants cut engineering budgets, so the feeling is right in dollars"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">"The study proves AI makes every developer slower, so stop using it"</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Row 1 is task-level evidence from an independent randomized trial: measured 19% slower (CI +2% to +39%) against a believed 20% faster, so the feeling is exactly what the record must not substitute for. Row 2 is why (d) overclaims: the 2026 follow-up's point estimates are −18% and −4% with both intervals crossing zero, which is inconclusive, not "slower". (c) jumps levels: a task-level result says nothing about released capacity or budget, the mixing error M6 names. (b) misreads the sign. That gap between felt and measured speed is the reason M1 exists: written rules, specs a stranger can execute, and evidence records instead of impressions (<a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m06-expertise-product/evidence-dataset.md" rel="noopener"><code>course/03-content/m06-expertise-product/evidence-dataset.md</code></a>, rows 1–2). (objective: M1.3 — why evidence replaces a feeling)</p></div>
+</section><section class="qq is-mc" data-n="6" data-answer="c" aria-labelledby="q6-stem">
+  <p class="q-number">Question 6 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M1.3</span></p>
+  <div class="q-stem" id="q6-stem"><p>Which line belongs in an honest validation record, and why?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q6-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">"All green — ship it."</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">"<code>make test-all</code> green; the 21 skipped tests were left out of the record to keep it clean."</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">"Full API mypy: 835 errors in 40 files; not a pass." — because records include known debt and failures</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">"No local record needed — adding more CI is always better."</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Records include known debt and failures, and never fabricate; (b) hides the skips the real record counts ("1,464 passed, 21 skipped"); "more CI is always better" is the misconception the no-CI policy argues against — hosted checks don't record what you validated (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/playbooks/validation.md" rel="noopener"><code>SignUpFlow/docs/playbooks/validation.md</code></a>). (objective: M1.3 — record honest evidence)</p></div>
+</section><section class="qq is-short" data-n="7" aria-labelledby="q7-stem">
+  <p class="q-number">Question 7 <span class="q-kind">short answer</span> <span class="q-objective">Objective M1.2</span></p>
+  <div class="q-stem" id="q7-stem"><p>For the story "As a volunteer, I can block dates so the solver skips me," write one Given/When/Then acceptance scenario and one tasks.md-format task line citing an exact file path.</p></div>
+  <label class="q-write">Your answer<textarea rows="5" placeholder="Write it first — the model answer unlocks after 20 characters."></textarea></label>
+  <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>Reveal the model answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Model answer</p><p>Scenario: "Given Sarah has a blocked-date period covering 2026-04-23, When an admin runs the solver for that week, Then Sarah gets no assignment and the solution reports zero hard violations." Task: "- [ ] T031 [P] [US1] Implement POST /api/v1/availability/time-off in api/routers/availability.py: write the failing test in tests/api/test_availability.py first." (objective: M1.2 — turn a story into a checkable scenario and an executable task)</p></div>
+</section><section class="qq is-short" data-n="8" aria-labelledby="q8-stem">
+  <p class="q-number">Question 8 <span class="q-kind">short answer</span> <span class="q-objective">Objective M1.3</span></p>
+  <div class="q-stem" id="q8-stem"><p>Your test run: 12 passed, then 1 failed on a timing flake; after a fix, 13 passed. Write the evidence entry in the prescribed format — commands, counts, date, environment, limitations, head SHA — without hiding the failure.</p></div>
+  <label class="q-write">Your answer<textarea rows="5" placeholder="Write it first — the model answer unlocks after 20 characters."></textarea></label>
+  <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>Reveal the model answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Model answer</p><p>"## Evidence — todo — 2026-09-14 / Commands: <code>python3 -m pytest tests/ -q</code> → 12 passed, 1 failed (timing flake); after fix → 13 passed / Environment: macOS 15, Python 3.11.9 / Revision: &lt;head SHA&gt; / Limitations: flake not root-caused; CLI tested by hand only." The failure stays in the record — "this initial failure is not omitted from the evidence" (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/playbooks/validation.md" rel="noopener"><code>SignUpFlow/docs/playbooks/validation.md</code></a>). (objective: M1.3 — write an evidence record with failures included)</p></div>
+</section>
+    <section class="quiz-summary" data-quiz-summary hidden>
+      <h2>Result</h2>
+      <p data-summary-text></p>
+      <div class="evidence-actions"><button type="button" data-quiz-again>Try again</button>
+        <a class="btn-primary" href="./module-m01.html">Back to the module →</a></div>
+    </section>
+    <footer class="doc-footer">
+      <p class="index-footnote">Scores are stored in this browser only. Source: <code>course/03-content/m01-operating-system/quiz.md</code> — the answer key with rationale and objective references is the same file.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script><script src="./assets/quiz.js" defer></script>
+</body>
+</html>

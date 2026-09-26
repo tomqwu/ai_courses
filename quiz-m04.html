@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiz M4 — Spec-Driven SaaS — AI Product Studio</title>
+<meta name="description" content="The module knowledge check, interactive.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page quiz-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m04.html">The Spec-Driven SaaS: From Idea to Executable Spec</a><span>/</span><span aria-current="page">Knowledge check</span></nav>
+    <p class="eyebrow">Module 4 · Knowledge check · 6 multiple choice + 2 short answer</p>
+    <h1>Quiz M4 — Spec-Driven SaaS</h1>
+    <p class="site-lede">Each question maps to one lesson objective, and the distractors are the misconceptions the lesson argues against. Multiple choice is checked instantly; short answers reveal the model answer only after you have written yours. Best score is kept; 75% is the certificate threshold.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m04.html">Overview</a></li><li><a href="./m04.html">Slides</a></li><li><a href="./lesson-m04.html">Lesson</a></li><li><a href="./lab-m04.html">Lab</a></li><li><a href="./quiz-m04.html" aria-current="page">Knowledge check</a></li><li><a href="./handout-m04.html">Handout</a></li><li><a href="./glossary-m04.html">Glossary</a></li><li><a href="./transcript-m04.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main">
+  <article class="doc-article quiz-article" data-quiz="m04">
+    <p class="quiz-score" data-quiz-score role="status" aria-live="polite"></p>
+<section class="qq is-mc" data-n="1" data-answer="b" aria-labelledby="q1-stem">
+  <p class="q-number">Question 1 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M4.1</span></p>
+  <div class="q-stem" id="q1-stem"><p>In the spec-kit pipeline, what does <code>plan.md</code> own that <code>spec.md</code> must not?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q1-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">User stories and acceptance scenarios</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">HOW: languages, versions, storage, and performance targets</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">The requirements checklist gate</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">The repository's constitution</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>WHAT/HOW separation: <code>spec.md</code> owns user-visible behavior technology-agnostically; <code>plan.md</code> owns HOW. The gate's first rule enforces it ("No implementation details", <code>specs/014-security-hardening/checklists/requirements.md</code>). (M4.1)</p></div>
+</section><section class="qq is-mc" data-n="2" data-answer="c" aria-labelledby="q2-stem">
+  <p class="q-number">Question 2 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M4.2</span></p>
+  <div class="q-stem" id="q2-stem"><p>What is "the stranger test" for a spec folder?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q2-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">A security review by someone outside the team</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">The spec must be written by someone who didn't build the product</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">A fresh agent session with zero conversation memory can implement from the artifacts alone</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">A peer must approve the spec before planning starts</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>SignUpFlow runs implementation as a Ralph loop — an agent with no chat history that cannot ask questions. Every artifact rule exists because "a stranger can't ask follow-ups". (M4.2)</p></div>
+</section><section class="qq is-mc" data-n="3" data-answer="d" aria-labelledby="q3-stem">
+  <p class="q-number">Question 3 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M4.2</span></p>
+  <div class="q-stem" id="q3-stem"><p>Which acceptance scenario passes the gate's "testable and unambiguous" rule?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q3-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">"Then the system is secure against abuse"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">"Then users have a good experience"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">"Then authentication failures are handled appropriately"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">"Then the account is blocked for 15 minutes after 5 failures within 5 minutes"</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Numbers that reappear as an FR, a contract config row, and a test assertion. The other three fail the gate rule outright. (M4.2)</p></div>
+</section><section class="qq is-mc" data-n="4" data-answer="b" aria-labelledby="q4-stem">
+  <p class="q-number">Question 4 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M4.2</span></p>
+  <div class="q-stem" id="q4-stem"><p>What does the requirements checklist gate require before planning begins?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q4-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">A signed-off budget and a project manager</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">No <code>[NEEDS CLARIFICATION]</code> markers remain; every FR has acceptance criteria; success criteria are measurable and technology-agnostic</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">All tasks implemented and tests passing</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">The constitution check filed in the PR</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Requirement Completeness group: no NEEDS CLARIFICATION remains, testable and unambiguous, measurable and technology-agnostic success criteria, scenarios and edge cases defined. (M4.2)</p></div>
+</section><section class="qq is-mc" data-n="5" data-answer="d" aria-labelledby="q5-stem">
+  <p class="q-number">Question 5 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M4.2</span></p>
+  <div class="q-stem" id="q5-stem"><p>Why does every task in <code>tasks.md</code> cite an exact file path?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q5-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">To make the task list longer and more impressive</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">Because the path is the task's assignee</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">So the task tracker can close the task automatically when that file changes</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">A fresh agent session doesn't know the project layout, and inventing paths is how hallucinated endpoints happen</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Ties to the anti-hallucination rule: "Do not invent file paths… Grep the repo before referencing" (<code>AGENTS.md</code>). A named path makes the agent's first action a grep that confirms, not a guess; (c) invents tooling the repo does not have, and (a)/(b) are decoration. (M4.2)</p></div>
+</section><section class="qq is-mc" data-n="6" data-answer="c" aria-labelledby="q6-stem">
+  <p class="q-number">Question 6 <span class="q-kind">multiple choice</span> <span class="q-objective">Objective M4.3</span></p>
+  <div class="q-stem" id="q6-stem"><p>Which PR Validation section follows the course's evidence discipline?</p></div>
+  <div class="q-options" role="radiogroup" aria-labelledby="q6-stem"><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="a"><span class="q-letter">A</span><span class="q-text">"Tests pass ✅"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="b"><span class="q-letter">B</span><span class="q-text">"All good, ready to merge"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="c"><span class="q-letter">C</span><span class="q-text">"<code>make test-all</code>: 1,410 passed, 2 failed (see notes); browser suite skipped — no display server; head SHA abc123"</span></button><button type="button" class="q-option" role="radio" aria-checked="false" data-letter="d"><span class="q-letter">D</span><span class="q-text">"Validated by the build system"</span></button></div>
+  <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>Commands and result, skips and limitations recorded. "A Validation section that says 'tests pass' with no command is not evidence; one that records a failure still is." (M4.3)</p></div>
+</section><section class="qq is-short" data-n="7" aria-labelledby="q7-stem">
+  <p class="q-number">Question 7 <span class="q-kind">short answer</span> <span class="q-objective">Objective M4.3</span></p>
+  <div class="q-stem" id="q7-stem"><p>A PR body's Validation section reads: "Reviewed the diff myself — all good. No reviewer assigned yet, merging so we don't block the sprint." Rewrite it so it satisfies both of the course's hard lines on review and approval, and state which line each original sentence broke.</p></div>
+  <label class="q-write">Your answer<textarea rows="5" placeholder="Write it first — the model answer unlocks after 20 characters."></textarea></label>
+  <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>Reveal the model answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Model answer</p><p>Sentence 1 breaks "Do not claim independent review when the builder performed the review itself" (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/ai-pr-review.md#L20-L21" rel="noopener"><code>SignUpFlow/docs/ai-pr-review.md:20-21</code></a>) — a self-review presented as review; sentence 2 breaks "Missing review is not approval" (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md#L94" rel="noopener"><code>SignUpFlow/AGENTS.md:94</code></a>) — an absent reviewer is not a pass. Rewrite, e.g.: "Validation: <code>make test-all</code> → &lt;counts&gt;, head &lt;SHA&gt;. Self-review by author (not independent): findings F1–F2 resolved in &lt;commits&gt;. Independent local review requested from &lt;name&gt;; <strong>not merged</strong> until that review is recorded here." (M4.3)</p></div>
+</section><section class="qq is-short" data-n="8" aria-labelledby="q8-stem">
+  <p class="q-number">Question 8 <span class="q-kind">short answer</span> <span class="q-objective">Objective M4.3</span></p>
+  <div class="q-stem" id="q8-stem"><p>Spec 014's self-graded checklist reported "5xP1" while the spec has six P1 stories, and its plan assigned migrations to a <code>migrations/</code> directory that doesn't exist. State the two countermeasure habits (from <code>AGENTS.md</code>) you should run on every generated artifact, and what each would have caught here.</p></div>
+  <label class="q-write">Your answer<textarea rows="5" placeholder="Write it first — the model answer unlocks after 20 characters."></textarea></label>
+  <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>Reveal the model answer</button>
+    <span class="q-feedback" data-feedback role="status" aria-live="polite"></span></div>
+  <div class="q-explain" hidden><p class="q-explain-title">Model answer</p><p>Habits: (1) grep every path before referencing it — catches the nonexistent <code>migrations/versions/add_onboarding_tables.py</code> (migrations live in <code>alembic/versions/</code>); (2) recount counts against their source and never let a self-reported score substitute for opening the file — catches the "5xP1" vs six-P1 drift. Sources: <code>AGENTS.md</code> operating loop step 6 ("Search for stale commands, counts, check names…") and the anti-hallucination rule. (M4.3)</p></div>
+</section>
+    <section class="quiz-summary" data-quiz-summary hidden>
+      <h2>Result</h2>
+      <p data-summary-text></p>
+      <div class="evidence-actions"><button type="button" data-quiz-again>Try again</button>
+        <a class="btn-primary" href="./module-m04.html">Back to the module →</a></div>
+    </section>
+    <footer class="doc-footer">
+      <p class="index-footnote">Scores are stored in this browser only. Source: <code>course/03-content/m04-spec-driven-saas/quiz.md</code> — the answer key with rationale and objective references is the same file.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script><script src="./assets/quiz.js" defer></script>
+</body>
+</html>

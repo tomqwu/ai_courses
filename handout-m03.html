@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handout M3 — Privacy, Testing, Shipping — AI Product Studio</title>
+<meta name="description" content="The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page handout-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m03.html">The On-Device AI App: Privacy, Testing, Shipping</a><span>/</span><span aria-current="page">Handout</span></nav>
+    <p class="eyebrow">Module 3 · Handout</p>
+    <h1>Handout M3 — Privacy, Testing, Shipping</h1>
+    <p class="site-lede">The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m03.html">Overview</a></li><li><a href="./m03.html">Slides</a></li><li><a href="./lesson-m03.html">Lesson</a></li><li><a href="./lab-m03.html">Lab</a></li><li><a href="./quiz-m03.html">Knowledge check</a></li><li><a href="./handout-m03.html" aria-current="page">Handout</a></li><li><a href="./glossary-m03.html">Glossary</a></li><li><a href="./transcript-m03.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main has-toc">
+  <aside class="doc-aside"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li class="toc-l2"><a href="#decision-table-which-tier-can-see-this-risk">Decision table: which tier can see this risk?</a></li><li class="toc-l2"><a href="#the-five-rules-worth-keeping">The five rules worth keeping</a></li><li class="toc-l2"><a href="#commands-to-keep">Commands to keep</a></li><li class="toc-l2"><a href="#files-to-open">Files to open</a></li><li class="toc-l2"><a href="#three-gotchas">Three gotchas</a></li><li class="toc-l2"><a href="#youre-done-when">You're done when…</a></li></ol></nav></aside>
+  <article class="doc-article">
+<p><strong>Mental model:</strong> Privacy is an engineered mode, not an adjective — verify the model's metadata on every request, fail closed on anything missing, and let the release end only at a downloaded, checksum-verified artifact.</p>
+<h2 id="decision-table-which-tier-can-see-this-risk">Decision table: which tier can see this risk?</h2>
+<div class="table-wrap"><table><thead><tr><th>Risk</th><th>Tier</th><th>Why this tier and not another</th></tr></thead><tbody><tr><td>Logic: parsing, error typing, prompt builders</td><td>Unit, mocked transport, in CI</td><td>Fast, deterministic, no daemon</td></tr><tr><td>The wire contract: request shape, stream parse</td><td>Real-LLM contract, outside CI</td><td>A mock can only assume the seam; this proves it</td></tr><tr><td>Privacy routing: is this model actually local?</td><td>Unit red-team test + per-request <code>/api/show</code></td><td>Cloud aliases appear on a local daemon</td></tr><tr><td>Mic, system audio, permission grants</td><td>Human smoke test</td><td>Needs a GUI session and manual grants</td></tr><tr><td>Untested core logic creeping in</td><td>Coverage floor in CI</td><td>Fails only when lines go unexecuted</td></tr></tbody></table></div>
+<h2 id="the-five-rules-worth-keeping">The five rules worth keeping</h2>
+<ol><li><strong>Mode is explicit; keys never switch it.</strong> Adding a cloud key stores the key; routing changes only when the user picks cloud.</li><li><strong>Labels name the data.</strong> "Ollama Cloud — sends transcript and context", not "enhanced".</li><li><strong>Verify per request, fail closed.</strong> <code>remote_host</code>/<code>remote_model</code> absent, <code>details.format</code> and <code>model_info</code> non-empty — else reject.</li><li><strong>Refuse redirects.</strong> A 3xx kills the request; text must never be silently forwarded.</li><li><strong>Done = merged; published = downloaded again and checksum-matched</strong>, tag on the exact commit. Claim only the rung you reached: candidate, verified, published.</li></ol>
+<h2 id="commands-to-keep">Commands to keep</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">make lab-m3                    # privacy + streaming hardening suite → 56 passed
+make lab-m2                    # unit suite + coverage floor ≥90 → 208 passed, 100%
+make e2e                       # real-LLM contract test (needs LAB_E2E=1, live daemon)
+pytest tests/test_contract_real_llm.py -q    # 2 skipped — with a stated reason
+LAB_E2E=1 pytest tests/test_contract_real_llm.py -q   # 2 passed
+python -m pytest tests -m &quot;not e2e&quot; --cov=src/tinycopilot --cov-fail-under=90 -q</code></pre></div>
+<h2 id="files-to-open">Files to open</h2>
+<ul><li><code>ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13, 15-24</code> — modes, truthful labels, the fail-closed <code>isVerifiedLocal</code> guard.</li><li><code>ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157, 208-214</code> — host check, per-request verification, <code>RejectRedirects</code>.</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/Sources/ListenToMeCore/ModelRanking.swift#L80-L95" rel="noopener"><code>ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95</code></a> — local-first auto-selection.</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/scripts/check-coverage.sh" rel="noopener"><code>ListenToMe/scripts/check-coverage.sh</code></a> + <a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/.github/workflows/ci.yml#L36-L42" rel="noopener"><code>ListenToMe/.github/workflows/ci.yml:36-42</code></a> — the floor.</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/Makefile#L39-L53" rel="noopener"><code>ListenToMe/Makefile:39-53</code></a> + <a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift#L4-L22" rel="noopener"><code>ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22</code></a> — the gated contract test.</li><li><a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/docs/manual-smoke-test.md#L1-L7" rel="noopener"><code>ListenToMe/docs/manual-smoke-test.md:1-7</code></a> — what only a human can verify.</li><li><code>ListenToMe/docs/RELEASING.md:33-39, 41-52</code> — the published rung, and bundle-id separation.</li><li><code>ListenToMe/AGENTS.md:13-18, 55-82</code> — done means merged; the candidate/verified/published ladder.</li><li><code>ListenToMe/docs/competition-analysis.md:1-14, 70-80</code> — sourced table and the one-liner.</li></ul>
+<h2 id="three-gotchas">Three gotchas</h2>
+<ol><li><strong>A localhost URL proves nothing.</strong> A <code>:cloud</code> alias installs, lists, and answers through your local daemon — with remote compute.</li><li><strong>Fail-open hides in missing keys.</strong> If a missing <code>details</code> dict skips the check instead of rejecting, you have built the anti-pattern.</li><li><strong>Your daemon decides Step 1's flavor.</strong> With only <code>:cloud</code> aliases, local-only mode correctly rejects everything. Document it; do not weaken the checks. Step 0 is <code>make m3-start</code>: the shipped answer is parked and <code>make lab-m3</code> goes red — record that first.</li></ol>
+<h2 id="youre-done-when">You're done when…</h2>
+<ul><li class="check-static">☐ A mocked <code>/api/show</code> with <code>remote_host</code> is rejected in local-only mode, with the red run recorded first.</li><li class="check-static">☐ Missing <code>format</code>/<code>model_info</code> fails closed; a non-loopback host raises; a 3xx is refused.</li><li class="check-static">☐ <code>LAB_E2E</code> contract test passes with output recorded — on whatever chat model the router picks, <code>:cloud</code> aliases included; it is a contract test, not a privacy test.</li><li class="check-static">☐ Coverage floor: both the failure run and the success run recorded.</li><li class="check-static">☐ <code>docs/competition.md</code> has ≥5 rows, ≥6 columns, per-cell sources or <code>unverified</code>.</li><li class="check-static">☐ The one-liner's every clause names the column that proves it.</li></ul>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m03-privacy-ship/handout.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>

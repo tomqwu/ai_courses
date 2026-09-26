@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab M1 — Build Your Operating System, Then Run One Loop — AI Product Studio</title>
+<meta name="description" content="ship a starter repo with your own constitution, one `AGENTS.md` with a `CLAUDE.md` that imports it, spec templates, and one hook that checks your evidence log — and prove it works by running one full spec → plan → TDD loop on a `todo` CLI feature">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page lab-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m01.html">The AI Product Operating System</a><span>/</span><span aria-current="page">Lab</span></nav>
+    <p class="eyebrow">Module 1 · Lab · pass/fail</p>
+    <h1>Lab M1 — Build Your Operating System, Then Run One Loop</h1>
+    <p class="site-lede">ship a starter repo with your own constitution, one <code>AGENTS.md</code> with a <code>CLAUDE.md</code> that imports it, spec templates, and one hook that checks your evidence log — and prove it works by running one full spec → plan → TDD loop on a <code>todo</code> CLI feature</p>
+    <dl class="at-a-glance"><div class="aga-item"><dt>Time</dt><dd>~2 hours</dd></div><div class="aga-item"><dt>Prerequisites</dt><dd>Module 0 lab complete; Module 1 lesson read</dd></div><div class="aga-item"><dt>Checklist</dt><dd>12 items</dd></div></dl>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m01.html">Overview</a></li><li><a href="./m01.html">Slides</a></li><li><a href="./lesson-m01.html">Lesson</a></li><li><a href="./lab-m01.html" aria-current="page">Lab</a></li><li><a href="./quiz-m01.html">Knowledge check</a></li><li><a href="./handout-m01.html">Handout</a></li><li><a href="./glossary-m01.html">Glossary</a></li><li><a href="./transcript-m01.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main">
+  <article class="doc-article lab-article" data-lab="m01" data-lab-checks="12" data-lab-title="Lab M1 — Build Your Operating System, Then Run One Loop">
+<section class="lab-section " id="steps"><h2>Steps</h2><ol><li><strong>Create the repo.</strong> The first commit gives <code>git rev-parse HEAD</code> a revision to print, which the evidence entry in step 8 needs.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">mkdir my-studio &amp;&amp; cd my-studio &amp;&amp; git init
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install pytest
+mkdir -p specs/001-todo-command docs tests scripts .claude
+touch docs/research-log.md docs/evidence-log.md
+printf &#x27;.venv/\n__pycache__/\n&#x27; &gt; .gitignore
+git add -A &amp;&amp; git commit -m &quot;Scaffold starter repo&quot;</code></pre></div></li><li><strong>Write <code>constitution.md</code> (≤80 lines).</strong> SignUpFlow's own has grown to 85 lines since this lab was written (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/.specify/memory/constitution.md" rel="noopener"><code>SignUpFlow/.specify/memory/constitution.md</code></a>); the cap is for <em>your first one</em> — brevity is the skill. Copy, then personalize the three bracketed parts: (Model: <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/.specify/memory/constitution.md" rel="noopener"><code>SignUpFlow/.specify/memory/constitution.md</code></a> — 85 lines.)<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># &lt;Project&gt; Constitution
+## Principles
+1. Test-Driven Implementation: write the failing test first; the change is not
+   done until `python3 -m pytest tests/ -q` passes.
+2. Simplicity &amp; YAGNI: build exactly what&#x27;s needed, nothing more.
+3. Safety &amp; Reliability: [&lt;your rule — e.g., never commit API keys; read them
+   from environment variables&gt;].
+## Autonomy Configuration
+- YOLO Mode: DISABLED
+- Git Autonomy: ENABLED (commit when a task completes and tests pass)
+- When unsure whether an action is reversible, stop and ask.</code></pre></div></li><li><strong>Write <code>AGENTS.md</code> (≤200 lines), then a <code>CLAUDE.md</code> that imports it.</strong> Every rule imperative and verifiable; include a validation checklist: Then <code>CLAUDE.md</code>: the import on the first line, and below it only what is specific to Claude Code. Everything shared stays in <code>AGENTS.md</code>, so nothing is written twice. The import loads <code>AGENTS.md</code> in full, so keep <code>wc -l AGENTS.md CLAUDE.md</code> at ≤200 lines in total. The first addendum names the hook you wire in step 8. In Claude Code, run <code>/context</code> to confirm the file loaded. Another agent reads <code>AGENTS.md</code> directly and ignores <code>CLAUDE.md</code> and the hook; in that case, run the step 8 check yourself.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># AGENTS.md
+## House style
+- Use imperative voice. Each rule must be verifiable.
+- Keep this file under ~200 lines.
+## Anti-hallucination
+- Do not invent file paths, function names, or commands. Grep the repo first.
+- When the request is ambiguous, present 2-3 differentiated options.
+## Project rules
+- [&lt;e.g., Run pytest before declaring any change done.&gt;]
+## Validation checklist (before declaring done)
+- [ ] `python3 -m pytest tests/ -q` passes.
+- [ ] No secrets in the diff: `git diff | grep -iE &#x27;api[_-]?key|secret|token&#x27;`
+      returns nothing meaningful.
+- [ ] Docs touched by the change are updated; stale docs are a failure.</code></pre></div><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">@AGENTS.md
+
+## Claude Code addenda
+- A Stop hook runs `scripts/check-evidence-log.sh` after each turn. When it
+  blocks, fix the entry it names; never edit the script or hook to pass.
+- Record the red run in `docs/evidence-log.md` before the green run.</code></pre></div></li><li><strong>Write <code>specs/001-todo-command/spec.md</code></strong> — the WHAT, technology-agnostic, two independently testable stories:<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># Spec: todo command
+## US1 (P1): Add and list todos
+As a user, I can add a todo and list all todos, so I can track work.
+- Given an empty store, When I add &quot;write spec&quot;, Then listing shows one item
+  with id 1, title &quot;write spec&quot;, done=false.
+## US2 (P1): Mark done
+As a user, I can mark a todo done, so completed work stops nagging me.
+- Given todo 1 exists, When I mark 1 done, Then listing shows done=true.</code></pre></div></li><li><strong>Write <code>specs/001-todo-command/plan.md</code></strong> with the gate:<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># Plan: todo command
+## Constitution Check — GATE: must pass before implementation. Re-check after.
+- [x] TDD respected (tests written first). [x] YAGNI (no storage file, no dates).
+## Tasks</code></pre></div></li><li><strong>Write <code>specs/001-todo-command/tasks.md</code></strong> — exact paths, tests first:<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">## Format: [ID] [P?] [Story] — include exact file paths
+- [ ] T001 [P] [US1] Create tests/test_todo.py: failing tests for add + list
+- [ ] T002 [US1] Create todo.py: TodoStore.add(title) -&gt; int, TodoStore.list()
+- [ ] T003 [P] [US2] Add failing test for done to tests/test_todo.py
+- [ ] T004 [US2] Extend todo.py: TodoStore.done(todo_id)
+- [ ] T005 Add CLI dispatch in todo.py: add/list/done via sys.argv</code></pre></div></li><li><strong>Run the loop with TDD.</strong> Execute T001: write the failing tests first — Run <code>python3 -m pytest tests/ -q</code> — with no <code>todo.py</code> yet, pytest stops at collection: <code>ERROR tests/test_todo.py</code>, <code>ModuleNotFoundError: No module named 'todo'</code>, <code>1 error</code>, exit code 2. That collection error <em>is</em> the red — record it verbatim (it is not "2 failed"; the two tests never ran). Then execute T002/T004: implement <code>todo.py</code> (a list of dicts; <code>add</code> appends and returns the id; <code>done</code> sets the flag). Run pytest again — record the pass (green). Finish T005, then run your full validation checklist.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-python"># tests/test_todo.py
+from todo import TodoStore
+
+def test_add_then_list():
+    s = TodoStore()
+    assert s.add(&quot;write spec&quot;) == 1
+    assert s.list() == [{&quot;id&quot;: 1, &quot;title&quot;: &quot;write spec&quot;, &quot;done&quot;: False}]
+
+def test_done_marks_item():
+    s = TodoStore()
+    i = s.add(&quot;ship&quot;)
+    s.done(i)
+    assert s.list()[0][&quot;done&quot;] is True</code></pre></div></li><li><strong>Record evidence</strong> in <code>docs/evidence-log.md</code>, in the prescribed format, <strong>then wire the hook that checks it</strong>: The rule "every entry has all six fields" is one a script can decide, so the table in M1.1 says it should be a hook. Save the check as <code>scripts/check-evidence-log.sh</code>: Bind it to Claude Code's <code>Stop</code> event, which fires each time Claude finishes a turn, in <code>.claude/settings.json</code>: Test the check before you trust it: red, then green. Delete the limitation line from your entry and run <code>bash scripts/check-evidence-log.sh; echo "exit=$?"</code>. Expect <code>Evidence log: the latest entry in docs/evidence-log.md needs:</code>, then <code>- at least one limitation</code>, then <code>exit=2</code>. Put the line back and expect <code>Evidence log: latest entry complete.</code> and <code>exit=0</code>. Record both runs. In a Claude Code session, exit 2 on <code>Stop</code> keeps Claude working, with the script's stderr as its instructions. After eight blocks in a row, Claude Code lets the turn end (code.claude.com/docs/en/hooks, read 2026-09-26). The hook checks form: a dated heading, a <code>command → result</code> line, an environment, a SHA that exists in this repo, a limitation, and no <code>&lt;placeholders&gt;</code>. It cannot check that any of it is true.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">## Evidence — my-studio — todo command — &lt;YYYY-MM-DD&gt;
+Commands (with results):
+- python3 -m pytest tests/ -q (before implementation) → 1 error: ModuleNotFoundError: No module named &#x27;todo&#x27; (exit 2)
+- python3 -m pytest tests/ -q (after implementation) → &lt;N&gt; passed
+Environment: &lt;OS, Python version&gt;
+Revision: &lt;output of `git rev-parse HEAD`&gt;
+Limitations / not verified:
+- In-memory store only; CLI arg handling tested by hand, not automated.</code></pre></div><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">#!/usr/bin/env bash
+# Checks the latest entry in docs/evidence-log.md. Exit 0: no entry yet, or all
+# six fields are filled. Exit 2: something is missing (Claude Code reads stderr).
+cd &quot;$(dirname &quot;$0&quot;)/..&quot; || exit 2
+log=docs/evidence-log.md
+[ -f &quot;$log&quot; ] || { echo &quot;Evidence log: no $log yet.&quot;; exit 0; }
+entry=$(awk &#x27;/^## Evidence/ {f=1; b=&quot;&quot;} f {b = b $0 &quot;\n&quot;} END {printf &quot;%s&quot;, b}&#x27; &quot;$log&quot;)
+[ -n &quot;$entry&quot; ] || { echo &quot;Evidence log: no entry yet.&quot;; exit 0; }
+miss=&quot;&quot;
+has() { printf &#x27;%s\n&#x27; &quot;$entry&quot; | awk &quot;$1&quot; || miss=&quot;$miss- $2&quot;$&#x27;\n&#x27;; }
+has &#x27;/^## Evidence.*[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/ {ok=1} END {exit !ok}&#x27; &quot;a YYYY-MM-DD date in the heading&quot;
+has &#x27;/^Commands/ {c=1; next} /^Environment:/ {c=0} c &amp;&amp; /^- .*(→|-&gt;) *[^ &lt;]/ {ok=1} END {exit !ok}&#x27; &quot;a &#x27;&lt;command&gt; → &lt;result&gt;&#x27; line&quot;
+has &#x27;/^Environment: *[^ &lt;]/ {ok=1} END {exit !ok}&#x27; &quot;an Environment value&quot;
+has &#x27;/^Limitations/ {l=1; next} l &amp;&amp; /^- *[^ &lt;]/ {ok=1} END {exit !ok}&#x27; &quot;at least one limitation&quot;
+sha=$(printf &#x27;%s\n&#x27; &quot;$entry&quot; | sed -n &#x27;s/^Revision: *`\{0,1\}\([0-9a-f]\{7,40\}\).*/\1/p&#x27; | head -n 1)
+git cat-file -e &quot;${sha:-none}^{commit}&quot; 2&gt;/dev/null || miss=&quot;$miss- a Revision SHA that exists in this repo&quot;$&#x27;\n&#x27;
+if printf &#x27;%s\n&#x27; &quot;$entry&quot; | grep -q &#x27;&lt;[^&gt;]*&gt;&#x27;; then miss=&quot;$miss- no &lt;placeholders&gt; left&quot;$&#x27;\n&#x27;; fi
+if [ -n &quot;$miss&quot; ]; then
+  printf &#x27;Evidence log: the latest entry in %s needs:\n%s&#x27; &quot;$log&quot; &quot;$miss&quot; &gt;&amp;2
+  exit 2
+fi
+echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-json">{
+  &quot;hooks&quot;: {
+    &quot;Stop&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;bash \&quot;${CLAUDE_PROJECT_DIR}\&quot;/scripts/check-evidence-log.sh&quot;
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre></div></li><li><strong>Commit</strong> with the body format from <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a>: Summary / Changed files / Validation / Follow-ups.</li></ol></section><section class="lab-section lab-checklist" id="acceptance-checklist">
+  <h2>Acceptance checklist</h2>
+  <p class="check-progress"><strong data-check-count>0 of 12 checked</strong>
+    <span class="progress-bar" aria-hidden="true"><span data-check-fill></span></span></p>
+  <ul><li class="check-item"><label><input type="checkbox" data-check="m01-lab-1"><span><code>constitution.md</code> exists, ≤80 lines, ≥3 principles, autonomy config present</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-2"><span><code>AGENTS.md</code> exists, ≤200 lines, every rule imperative + verifiable, validation checklist included</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-3"><span><code>CLAUDE.md</code> opens with <code>@AGENTS.md</code> and holds only Claude addenda; <code>AGENTS.md</code> + <code>CLAUDE.md</code> ≤200 lines in total</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-4"><span><code>.claude/settings.json</code> binds <code>scripts/check-evidence-log.sh</code> to <code>Stop</code>; the check's red run (exit 2) and green run (exit 0) are recorded</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-5"><span><code>specs/001-todo-command/spec.md</code> has 2 stories, each with ≥1 Given/When/Then</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-6"><span><code>plan.md</code> contains a Constitution Check gate, explicitly passed</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-7"><span><code>tasks.md</code> has ≥5 <code>[ID] [Story]</code> tasks, each citing an exact file path, tests first</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-8"><span>Red run recorded: the collection error before implementation, output saved</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-9"><span>Green run: <code>python3 -m pytest tests/ -q</code> exits 0</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-10"><span>Evidence entry has commands, counts, date, environment, limitations, head SHA</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-11"><span><code>docs/research-log.md</code> has ≥1 dated observation</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m01-lab-12"><span>One commit body follows Summary / Changed files / Validation / Follow-ups</span></label></li></ul>
+  <p class="lab-done" data-lab-done hidden><strong>Every item is checked.</strong> This lab now shows as complete on your module and path progress. Record the evidence entry below — the checklist is your claim; the entry is your proof.</p>
+</section><section class="lab-section lab-autofail" id="auto-fail" aria-labelledby="auto-fail-title">
+  <h2 id="auto-fail-title">Auto-fail conditions</h2>
+  <p class="section-note">From this lab's rubric (<code>lab-rubrics.md</code>). Any one of these fails the lab whatever the checklist shows, so read them before you submit.</p>
+  <p>Regardless of other rows, the lab fails if any of these is true:</p>
+<ol><li><strong>Fabricated evidence</strong> — a test count, output line, command, or head SHA that the recorded run does not produce.</li><li><strong>A green run with no red run recorded</strong> — the TDD loop is the deliverable; the red output is its proof.</li><li><strong>Tests weakened to pass</strong> — assertions loosened, tests deleted, skipped, or rewritten after failing to fit the implementation, or the evidence-log check edited to pass.</li><li><strong>No head SHA in the evidence record</strong> — evidence that cannot be pinned to a revision is a claim, not a record.</li><li><strong>Placeholder brackets left in submitted files</strong> — <code>[&lt;your rule&gt;]</code> still visible in <code>constitution.md</code> or <code>AGENTS.md</code>.</li><li><strong>A failure visible in the raw output but absent from the evidence entry</strong> — selective recording is fabrication by omission.</li></ol>
+<p>Consistency note: this rubric grades Lab M1 only. The course-level split remains labs 60% / quizzes 20% / capstone 20%, and the academic-honesty rule is the one real rule — using an agent is allowed and taught; stating what the agent did and what you verified is required.</p>
+</section><section class="lab-section lab-evidence" id="evidence-to-record">
+  <h2>Evidence to record</h2>
+  <p>Keep in <code>docs/evidence-log.md</code>: the red pytest output, the green pytest output, <code>git rev-parse HEAD</code>, your evidence entry in the Step 8 format, and both runs of <code>scripts/check-evidence-log.sh</code> (exit 2, then exit 0). This file is your proof asset for every later module — the course's version of SignUpFlow's <code>docs/playbooks/validation.md</code>.</p>
+  <form class="evidence-form" data-evidence-form onsubmit="return false">
+    <h3>Write the evidence entry</h3>
+    <p class="section-note">The Module 1 format: commands with results, environment, revision, limitations. Saved in this browser as you type; copy or download it into your evidence log.</p>
+    <div class="evidence-grid">
+      <label>Project<input type="text" data-evidence="project" placeholder="my-studio"></label>
+      <label>Date<input type="date" data-evidence="date"></label>
+      <label class="wide">Commands, one per line, with results<textarea data-evidence="commands" rows="4" placeholder="python3 -m pytest tests/ -q → 201 passed, 2 skipped"></textarea></label>
+      <label>Environment<input type="text" data-evidence="environment" placeholder="macOS 15.6, Python 3.11.9, Ollama 0.30 (qwen3:0.6b local)"></label>
+      <label>Revision (git rev-parse HEAD)<input type="text" data-evidence="revision" placeholder="abc1234"></label>
+      <label class="wide">Limitations / not verified, one per line<textarea data-evidence="limitations" rows="3" placeholder="Contract test skipped — daemon has only :cloud aliases"></textarea></label>
+    </div>
+    <label class="wide">Evidence entry (Markdown)<textarea data-evidence-out rows="10" readonly></textarea></label>
+    <div class="evidence-actions">
+      <button type="button" class="btn-primary" data-evidence-copy>Copy evidence entry</button>
+      <button type="button" data-evidence-download>Download .md</button>
+    </div>
+  </form>
+</section><section class="lab-section lab-stretch" id="stretch-goals"><h2>Stretch goals</h2><ul><li>Add a negative-path test: marking a missing id raises a defined error (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a> requires negative-path assertions for every feature).</li><li>Graduate one real observation: add it dated to <code>docs/research-log.md</code>, test it on this change, then promote it into <code>AGENTS.md</code> — the full pipeline from <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/ai-agent-coding-strategy.md" rel="noopener"><code>SignUpFlow/docs/ai-agent-coding-strategy.md</code></a>.</li><li>Run a second mini-loop (<code>specs/002-todo-remove/</code>) without rereading this lab.</li></ul></section><section class="lab-section lab-discussion" id="discussion-prompt"><h2>Discussion prompt</h2><p>Post your before → after rule rewrite (one vague rule you made verifiable) and a link to your repo. Then review one classmate's <code>AGENTS.md</code>: could you check every rule was followed without asking them anything? Name any word you couldn't verify.</p></section>
+    <footer class="doc-footer">
+      <p class="index-footnote">Checklist ticks and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m01-operating-system/lab.md</code>.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script><script src="./assets/lab.js" defer></script>
+</body>
+</html>

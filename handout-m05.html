@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handout M5 — Multi-Tenant Security &amp; the Acceptance Gate — AI Product Studio</title>
+<meta name="description" content="The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page handout-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m05.html">Multi-Tenant Security &amp; the Acceptance Gate</a><span>/</span><span aria-current="page">Handout</span></nav>
+    <p class="eyebrow">Module 5 · Handout</p>
+    <h1>Handout M5 — Multi-Tenant Security &amp; the Acceptance Gate</h1>
+    <p class="site-lede">The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m05.html">Overview</a></li><li><a href="./m05.html">Slides</a></li><li><a href="./lesson-m05.html">Lesson</a></li><li><a href="./lab-m05.html">Lab</a></li><li><a href="./quiz-m05.html">Knowledge check</a></li><li><a href="./handout-m05.html" aria-current="page">Handout</a></li><li><a href="./glossary-m05.html">Glossary</a></li><li><a href="./transcript-m05.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main has-toc">
+  <aside class="doc-aside"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li class="toc-l2"><a href="#the-rule-mechanism-check-ladder">The rule → mechanism → check ladder</a></li><li class="toc-l2"><a href="#decision-table">Decision table</a></li><li class="toc-l2"><a href="#keep-these-commands-and-templates">Keep these commands and templates</a></li><li class="toc-l2"><a href="#pointers-to-open">Pointers to open</a></li><li class="toc-l2"><a href="#three-gotchas">Three gotchas</a></li><li class="toc-l2"><a href="#youre-done-when">You're done when…</a></li></ol></nav></aside>
+  <article class="doc-article">
+<p><strong>Mental model in one sentence:</strong> tenant isolation is a P0 rule enforced by mechanisms a test can check, and acceptance is a tier pyramid plus a manifest whose statuses admit what is not proven.</p>
+<h2 id="the-rule-mechanism-check-ladder">The rule → mechanism → check ladder</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-text">RULE        every query filters by org_id          SignUpFlow/AGENTS.md:57,61
+MECHANISM   verify_org_member · tenant-bound reload · admin gate
+                                                   api/dependencies.py:46,78,138
+CONTRACT    401 invalid · 403 foreign org · 404 guessed id
+                                                   docs/API_AUTHORIZATION.md:21-24
+CHECK       route policy vs. live routes; negative-path tests
+                                                   tests/unit/test_api_route_auth_policy.py
+EVIDENCE    command + counts + date + head SHA + limitations
+                                                   docs/playbooks/validation.md</code></pre></div>
+<h2 id="decision-table">Decision table</h2>
+<div class="table-wrap"><table><thead><tr><th>Situation</th><th>Answer</th><th>Why</th></tr></thead><tbody><tr><td>Foreign id requested</td><td><code>404</code></td><td>Looked up inside the actor's tenant; foreign and absent look identical</td></tr><tr><td>Actor names a foreign org</td><td><code>403</code></td><td>Valid credential, wrong tenant — a policy denial</td></tr><tr><td>Invalid bearer token</td><td><code>401</code></td><td>The credential itself failed</td></tr><tr><td>Missing bearer token</td><td><code>403</code> (mini-flow)</td><td>Pinned and tested; SignUpFlow: doc 403, test 401</td></tr><tr><td>Person leads a ministry</td><td><code>volunteer</code> + qualification</td><td>Qualifications never confer authority</td></tr><tr><td>Route added, not classified</td><td>Test fails</td><td>Set equality against the live route table</td></tr><tr><td>Scenario not yet proven</td><td>Status <code>blocked</code> + <code>manual</code> tier</td><td>Deleting the row fails collection instead</td></tr></tbody></table></div>
+<h2 id="keep-these-commands-and-templates">Keep these commands and templates</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">make lab-m5      # baseline: 51 passed, 23 skipped — record first
+make demo        # two LEAK lines before step 1; zero after
+make step1 … step4        # red on the starter, then green
+make step3       # miswire create_event → red; restore → green
+make lab-m5      # delete MF-03 → Error 4; restore → green
+make pass-gate   # 74 passed</code></pre></div>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">## Evidence — Lab M5 — &lt;YYYY-MM-DD&gt;
+Commands (with results):
+- &lt;command&gt; → &lt;N passed, M skipped, K failed&gt;
+Induced failures recorded: &lt;miswired route&gt; · &lt;removed scenario id&gt;
+Environment: &lt;OS, Python version&gt;   Revision: &lt;git rev-parse HEAD&gt;
+Limitations / not verified:
+- &lt;at least one honest line&gt;</code></pre></div>
+<h2 id="pointers-to-open">Pointers to open</h2>
+<ul><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md#L57-L61" rel="noopener"><code>SignUpFlow/AGENTS.md:57-61</code></a> — the P0 tenancy rule and "never read user state from the body".</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/api/dependencies.py#L46-L121" rel="noopener"><code>SignUpFlow/api/dependencies.py:46-121</code></a> — the three enforcers, verbatim.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/api/roles.py#L38-L53" rel="noopener"><code>SignUpFlow/api/roles.py:38-53</code></a> — <code>normalize_roles</code> refusals.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/api/route_auth_policy.py#L8-L171" rel="noopener"><code>SignUpFlow/api/route_auth_policy.py:8-171</code></a> — five classes, the executable matrix.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/tests/unit/test_api_route_auth_policy.py" rel="noopener"><code>SignUpFlow/tests/unit/test_api_route_auth_policy.py</code></a> — missing, stale, miswired.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/API_AUTHORIZATION.md#L101-L118" rel="noopener"><code>SignUpFlow/docs/API_AUTHORIZATION.md:101-118</code></a> — the six-step change protocol.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/TESTING.md#L38-L50" rel="noopener"><code>SignUpFlow/docs/TESTING.md:38-50</code></a> — seven tiers, separate processes.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/playbooks/coverage.json" rel="noopener"><code>SignUpFlow/docs/playbooks/coverage.json</code></a> + <code>tests/playbooks/coverage.py:19,43-46</code> — the manifest.</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/tests/playbooks/examples/food-bank.json" rel="noopener"><code>SignUpFlow/tests/playbooks/examples/food-bank.json</code></a> — the minimal fixture shape.</li></ul>
+<h2 id="three-gotchas">Three gotchas</h2>
+<ol><li><strong>Filtering in Python is not isolation.</strong> <code>[e for e in all_rows if e.org_id == ...]</code> has already read the other tenant's rows into your process. The predicate belongs in the query.</li><li><strong>A drift test you have never seen fail is a hope.</strong> Record the induced red before the green — for the miswire <em>and</em> the removed scenario id.</li><li><strong>A self-reported "all tests pass" is not evidence.</strong> No command, counts, date, revision, and limitations means no evidence.</li></ol>
+<h2 id="youre-done-when">You're done when…</h2>
+<ul><li class="check-static">☐ Every event query carries the tenant predicate; <code>make demo</code> shows zero leaks.</li><li class="check-static">☐ Seven negative-path cases pass: 200 own rows, 403 foreign org, 404 guessed id, 404 PATCH, 401 invalid token, 403 missing token, 401 mismatched tenant claim.</li><li class="check-static">☐ The forbidden write is denied <strong>and</strong> the row is byte-identical after the attempt.</li><li class="check-static">☐ <code>["volunteer","usher"]</code> receives <code>403</code> from the invite endpoint.</li><li class="check-static">☐ Route policy classifies every mounted route; the drift test caught a deliberate miswire.</li><li class="check-static">☐ Playbook fixture + manifest validate; removing a required id fails the validator.</li><li class="check-static">☐ At least one manifest status is not <code>automated</code>, with a reason.</li><li class="check-static">☐ Evidence entry has commands, counts, date, environment, head SHA, and a limitation.</li></ul>
+<p><strong>Remember:</strong> the filter in the query is the control; a warning log is only observability.</p>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m05-security-tests/handout.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>

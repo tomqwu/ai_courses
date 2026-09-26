@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M0 Handout — Orientation (one page, print me) — AI Product Studio</title>
+<meta name="description" content="The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page handout-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m00.html">Orientation: Three Products, One Method</a><span>/</span><span aria-current="page">Handout</span></nav>
+    <p class="eyebrow">Module 0 · Handout</p>
+    <h1>M0 Handout — Orientation (one page, print me)</h1>
+    <p class="site-lede">The one-page cheat sheet: the mental model, the commands worth keeping, the files to open, the gotchas, and the done-when checklist.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m00.html">Overview</a></li><li><a href="./m00.html">Slides</a></li><li><a href="./lesson-m00.html">Lesson</a></li><li><a href="./lab-m00.html">Lab</a></li><li><a href="./quiz-m00.html">Knowledge check</a></li><li><a href="./handout-m00.html" aria-current="page">Handout</a></li><li><a href="./glossary-m00.html">Glossary</a></li><li><a href="./transcript-m00.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main has-toc">
+  <aside class="doc-aside"><nav class="toc" aria-label="On this page"><p class="toc-title">On this page</p><ol><li class="toc-l2"><a href="#pick-your-archetype">Pick your archetype</a></li><li class="toc-l2"><a href="#the-loop-with-one-real-artifact-per-stage">The loop, with one real artifact per stage</a></li><li class="toc-l2"><a href="#commands-worth-keeping">Commands worth keeping</a></li><li class="toc-l2"><a href="#files-to-open">Files to open</a></li><li class="toc-l2"><a href="#three-gotchas">Three gotchas</a></li><li class="toc-l2"><a href="#youre-done-when">You're done when…</a></li></ol></nav></aside>
+  <article class="doc-article">
+<p><strong>Mental model in one sentence:</strong> three archetypes — on-device app, spec-driven SaaS, expertise product — are all built with one loop, <strong>Study → Spec → Build → Validate → Release → Prove</strong>, and "done" always means a file someone can open.</p>
+<h2 id="pick-your-archetype">Pick your archetype</h2>
+<div class="table-wrap"><table><thead><tr><th>If you want to build…</th><th>Archetype</th><th>Study this repo</th><th>Its proof asset</th></tr></thead><tbody><tr><td>A private, fast app that runs on the user's machine</td><td>1 — on-device AI app</td><td>ListenToMe</td><td>96% core-coverage badge (<a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/README.md" rel="noopener"><code>ListenToMe/README.md</code></a>)</td></tr><tr><td>A multi-user web product with features agents can implement</td><td>2 — spec-driven SaaS</td><td>SignUpFlow</td><td>"1,464 passed, 21 skipped" (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/playbooks/validation.md" rel="noopener"><code>SignUpFlow/docs/playbooks/validation.md</code></a>)</td></tr><tr><td>A research-backed briefing, course, or report</td><td>3 — expertise product</td><td>AI × QE</td><td>14-finding self-audit (<a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/research/reviews/site-audit-2026-09-06.md" rel="noopener"><code>ai_qe/research/reviews/site-audit-2026-09-06.md</code></a>)</td></tr></tbody></table></div>
+<h2 id="the-loop-with-one-real-artifact-per-stage">The loop, with one real artifact per stage</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code>STUDY    14-row competitor table     ListenToMe/docs/competition-analysis.md
+SPEC     Given/When/Then stories     SignUpFlow/specs/014-security-hardening/spec.md
+BUILD    checkbox tasks, tests first SignUpFlow/specs/019-sms-notifications/tasks.md
+VALIDATE 7 test tiers, dated counts  SignUpFlow/docs/TESTING.md
+RELEASE  signed + notarized DMGs     ListenToMe/AGENTS.md
+PROVE    &quot;do not promote 1.3.0&quot;      ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md</code></pre></div>
+<h2 id="commands-worth-keeping">Commands worth keeping</h2>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">git clone https://github.com/tomqwu/ListenToMe.git   # + SignUpFlow, ai_qe
+python3 --version                                    # want 3.11–3.13
+ollama pull qwen3:0.6b &amp;&amp; ollama list                # :cloud suffix = not local
+ollama run qwen3:0.6b &quot;Reply with exactly: PONG&quot;
+cd SignUpFlow &amp;&amp; make setup                          # Poetry env + migrations + seed
+poetry run python -m api.cli.main init my-church
+poetry run python -m api.cli.main solve my-church     # capture the whole block
+cd ../course/03-content/m02-ondevice-app/tinycopilot &amp;&amp; make lab-m2   # before Module 1</code></pre></div>
+<p>Solver output at the 2026-09-16 head: <code>People: 5</code>, <code>Events: 2</code>, <code>Health score: 0.0/100</code>, <code>Violations: 2 hard, 0 soft</code>, <code>Fairness: stdev=0.50</code>, <code>Solution saved to my-church/output/solution.json</code> (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/api/cli/main.py#L193" rel="noopener"><code>SignUpFlow/api/cli/main.py:193</code></a> prints the score line; the value moves with the revision — record what your run printed). <code>Solved in …ms</code> and <code>Range:</code> vary by machine and day.</p>
+<p>Before Module 1: <code>make lab-m2</code> → <strong>208 passed</strong>, coverage <strong>100%</strong> (90% floor). <code>make lab-m3</code> → <strong>56 passed</strong>. <code>make e2e</code> → <strong>2 passed</strong> with a live daemon; 2 contract tests skip without <code>LAB_E2E=1</code>.</p>
+<h2 id="files-to-open">Files to open</h2>
+<ul><li><a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m00-orientation/lesson.md" rel="noopener"><code>course/03-content/m00-orientation/lesson.md</code></a> — the module script</li><li><a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m00-orientation/lab.md" rel="noopener"><code>course/03-content/m00-orientation/lab.md</code></a> — steps and acceptance checklist</li><li><a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m00-orientation/quiz.md" rel="noopener"><code>course/03-content/m00-orientation/quiz.md</code></a> — 8 questions</li><li><a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m02-ondevice-app/tinycopilot/README.md" rel="noopener"><code>course/03-content/m02-ondevice-app/tinycopilot/README.md</code></a> — the M2 lab reference</li><li><a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/README.md" rel="noopener"><code>SignUpFlow/README.md</code></a> — solver "CLI Examples"; <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/api/cli/main.py" rel="noopener"><code>SignUpFlow/api/cli/main.py</code></a> prints the summary block</li><li><a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/README.md" rel="noopener"><code>ai_qe/README.md</code></a> — publication records</li></ul>
+<h2 id="three-gotchas">Three gotchas</h2>
+<ol><li><strong>A <code>:cloud</code> name is not a local model.</strong> <code>ollama list</code> entries ending in <code>:cloud</code> are cloud-backed aliases; a localhost URL proves nothing about where text is processed. Both environments are valid for M0 — say which one you have.</li><li><strong><code>pip install</code> on system Python can refuse to run</strong> (PEP 668, "externally-managed-environment"). Create a virtual environment first, then install <code>pytest pytest-cov httpx</code>.</li><li><strong>Python 3.10 or 3.14 stops <code>make setup</code>.</strong> SignUpFlow's build gate accepts 3.11 through 3.13 and prints the band on failure.</li></ol>
+<h2 id="youre-done-when">You're done when…</h2>
+<ul><li class="check-static">☐ <code>ls -d ListenToMe SignUpFlow ai_qe</code> prints all three</li><li class="check-static">☐ <code>python3 --version</code> shows 3.11–3.13</li><li class="check-static">☐ <code>ollama list</code> shows ≥1 model, and you can label it local or <code>:cloud</code></li><li class="check-static">☐ Solver ran; the full block with the <code>Health score:</code> and <code>Solution saved to …</code> lines is pasted</li><li class="check-static">☐ Evidence-log entry written with the date</li><li class="check-static">☐ First-win post up: solver output + <code>ollama list</code> + your archetype sentence</li><li class="check-static">☐ Before Module 1: <code>make lab-m2</code> shows <code>208 passed</code> (or the exact missing dependency is named)</li></ul>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m00-orientation/handout.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary — M9: Ship a Product Catalog with GitHub Pages — AI Product Studio</title>
+<meta name="description" content="Every term the module leans on, with where it lives — a file you can open, not a definition you have to trust.">
+<link rel="preload" href="./assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="./assets/player.css">
+</head>
+<body class="index doc-page glossary-page">
+<header class="site-header site-header--doc">
+  <div class="wrap">
+    <a class="site-brand" href="./index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg>AI Product Studio<span class="brand-destination">Course</span></a>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="./index.html">Course home</a><span>/</span><a href="./module-m09.html">Ship a Product Catalog with GitHub Pages</a><span>/</span><span aria-current="page">Glossary</span></nav>
+    <p class="eyebrow">Module 9 · Glossary</p>
+    <h1>Glossary — M9: Ship a Product Catalog with GitHub Pages</h1>
+    <p class="site-lede">Every term the module leans on, with where it lives — a file you can open, not a definition you have to trust.</p>
+    <nav class="module-tabs" aria-label="This module"><ul><li><a href="./module-m09.html">Overview</a></li><li><a href="./m09.html">Slides</a></li><li><a href="./lesson-m09.html">Lesson</a></li><li><a href="./lab-m09.html">Lab</a></li><li><a href="./quiz-m09.html">Knowledge check</a></li><li><a href="./handout-m09.html">Handout</a></li><li><a href="./glossary-m09.html" aria-current="page">Glossary</a></li><li><a href="./transcript-m09.html">Transcript</a></li></ul></nav>
+  </div>
+</header>
+<main class="site-main doc-main">
+  
+  <article class="doc-article">
+<p>Alphabetical. Each term: definition, then where it lives (repo pointer or course file).</p>
+<p><strong>Absolute path.</strong> A folder address that starts from the top of the disk, such as <code>C:\Users\ada\code</code> or <code>/Users/ada/code</code>. It means the same thing wherever you are. Lives in <code>lesson.md</code>, Segment M9.2.</p>
+<p><strong>Clone.</strong> A copy of a repository on your computer, with its full history and a link back to the original, made with <code>gh repo clone owner/name</code> or <code>git clone &lt;address&gt;</code>. Lands in the folder you are in. Lives in <code>lab.md</code>, Step 3.</p>
+<p><strong>Commit.</strong> One saved version of a repository, with a message, an author and a short code such as <code>c02f59f</code>. Made with <code>git commit -m "…"</code> after choosing changes with <code>git add</code>. Lives in <code>lab.md</code>, Step 6.</p>
+<p><strong>Deploy from a branch.</strong> The simplest GitHub Pages mode: publish the files in one branch and folder exactly as they are. Set under Settings → Pages. Lives in <code>lesson.md</code>, Segment M9.3.</p>
+<p><strong>Git.</strong> The tool that records versions of a folder on your computer. Installed with <code>winget install --id Git.Git -e --source winget</code> or <code>brew install git</code>. Lives in <code>setup/check-setup.sh</code> and <code>setup/check-setup.ps1</code>.</p>
+<p><strong>GitHub.</strong> The website that stores copies of repositories and can publish them. Not the same thing as Git: Git runs on your computer, GitHub on the internet. Lives in <code>lesson.md</code>, Segment M9.1.</p>
+<p><strong>GitHub CLI (<code>gh</code>).</strong> The command that drives GitHub from the terminal: sign in, create a repository, clone. Installed with <code>winget install --id GitHub.cli --source winget</code> or <code>brew install gh</code>. Lives in <code>setup/check-setup.sh</code>.</p>
+<p><strong>GitHub Pages.</strong> GitHub's free hosting for static sites from a repository, at <code>https://&lt;owner&gt;.github.io/&lt;repository&gt;/</code>. Not allowed to run an online shop. The course's own AI × QE site uses it (<a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/_config.yml#L5" rel="noopener"><code>ai_qe/_config.yml:5</code></a>).</p>
+<p><strong>Home folder.</strong> The folder a terminal opens in, written <code>~</code> on both systems: <code>C:\Users\ada</code> on Windows, <code>/Users/ada</code> on a Mac. Lives in <code>lesson.md</code>, Segment M9.2.</p>
+<p><strong>Homebrew.</strong> The package manager for macOS. Installs Apple's Command Line Tools along the way and, on Apple silicon, lives in <code>/opt/homebrew</code>. Lives in <code>lab.md</code>, Step 1.</p>
+<p><strong>Jekyll.</strong> The site builder GitHub Pages runs by default. The course's AI × QE site uses it on purpose (<a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/.github/workflows/pages.yml#L77" rel="noopener"><code>ai_qe/.github/workflows/pages.yml:77</code></a>); the catalog turns it off with <code>.nojekyll</code>.</p>
+<p><strong><code>.nojekyll</code>.</strong> An empty file that tells GitHub Pages to publish the files as they are, without running Jekyll. Hidden by default because its name starts with a dot. Lives in <code>catalog-starter/.nojekyll</code>.</p>
+<p><strong>Package manager.</strong> A tool that installs and updates software with one command: winget on Windows, Homebrew on macOS. Lives in <code>lesson.md</code>, Segment M9.1.</p>
+<p><strong>Prompt.</strong> The line in a terminal waiting for you to type, ending in <code>&gt;</code> in PowerShell or <code>%</code> in the Mac Terminal. Lives in <code>lesson.md</code>, Segment M9.1.</p>
+<p><strong>Push.</strong> Sending your new commits to GitHub with <code>git push</code>. Until you push, a commit exists only on your computer, and Pages cannot publish it. Lives in <code>lab.md</code>, Step 6.</p>
+<p><strong>Relative path.</strong> A folder address that starts from where you are, such as <code>code/my-catalog</code> or <code>..</code>. Lives in <code>lesson.md</code>, Segment M9.2.</p>
+<p><strong>Repository.</strong> A folder whose history Git records, plus its copy on GitHub. Created from the terminal with <code>gh repo create</code>. Lives in <code>lab.md</code>, Step 4.</p>
+<p><strong>Setup check.</strong> The script that tests Git, the GitHub CLI, your identity and your sign-in, and prints the exact fix for any failure. Lives in <code>setup/check-setup.sh</code> and <code>setup/check-setup.ps1</code>.</p>
+<p><strong>Terminal.</strong> A window where you type commands instead of clicking: Terminal or PowerShell on Windows, Terminal on macOS. Lives in <code>lesson.md</code>, Segment M9.1.</p>
+<p><strong>winget.</strong> The Windows Package Manager, shipped inside Microsoft's App Installer; needs Windows 10 version 1809 or later. Lives in <code>lab.md</code>, Step 1.</p>
+<p><strong>Working tree clean.</strong> What <code>git status</code> says when every change has been committed. After a push, it is the proof that everything went. Lives in <code>lab.md</code>, Step 6.</p>
+    <footer class="doc-footer">
+      <p class="index-footnote">Source: <code>course/03-content/m09-github-pages/glossary.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
+    </footer>
+  </article>
+</main>
+<script src="./assets/progress.js" defer></script>
+</body>
+</html>
