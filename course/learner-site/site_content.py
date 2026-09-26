@@ -512,7 +512,7 @@ def parse_glossary(text: str) -> list[dict]:
         if m:
             groups = m.groups()
             definition = " ".join(g.strip() for g in groups[1:] if g).strip()
-            cur = {"term": groups[0].strip().strip("`"), "definition": definition}
+            cur = {"term": groups[0].strip().replace("`", ""), "definition": definition}
             terms.append(cur)
         elif cur and line.strip() and not line.strip().startswith("#"):
             cur["definition"] += " " + line.strip()

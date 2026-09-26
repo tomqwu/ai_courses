@@ -49,7 +49,17 @@
 
   function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-  function score(item, terms) {
+  // Words a query can carry without meaning: "Validate vs. Prove" should find the slides that say
+  // validate and prove, not only the ones that also print "vs.".
+  var STOP = ['vs', 'of', 'the', 'an', 'and', 'or', 'to', 'in', 'on', 'for', 'is'];
+
+  function tokens(query) {
+    return query.toLowerCase().split(/[\s()"\u201c\u201d\u2018\u2019`]+/)
+      .map(function (w) { return w.replace(/^[^\w:]+|[^\w]+$/g, ''); })
+      .filter(function (w) { return w.length >= 2 && STOP.indexOf(w) < 0; });
+  }
+
+  function score(item, terms, full) {
     var t = item.t.toLowerCase(), x = (item.x || '').toLowerCase(), m = (item.m || '').toLowerCase();
     var s = 0;
     for (var i = 0; i < terms.length; i++) {
@@ -62,6 +72,10 @@
       else if (x.indexOf(q) >= 0) s += 3;
       else return 0;
     }
+    // The whole query naming an item outright beats its words scattered across others: a search
+    // for "contract test" should open on the glossary entry, not on the slides that mention it.
+    if (full && t === full) s += 60;
+    else if (full && terms.length > 1 && t.indexOf(full) === 0) s += 15;
     if (item.k === 'term') s += 6;
     if (item.k === 'unit' || item.k === 'lesson' || item.k === 'lab' || item.k === 'quiz') s += 3;
     return s;
@@ -78,13 +92,14 @@
   }
 
   function render(query) {
-    var terms = query.toLowerCase().split(/\s+/).filter(function (w) { return w.length >= 2; });
+    var terms = tokens(query);
+    var full = query.toLowerCase().replace(/[`\s]+/g, ' ').trim();
     if (!terms.length) { results.innerHTML = ''; hint.hidden = false; return; }
     hint.hidden = true;
     load().then(function (data) {
       var hits = [];
       for (var i = 0; i < data.length; i++) {
-        var s = score(data[i], terms);
+        var s = score(data[i], terms, full);
         if (s > 0) hits.push({ s: s, it: data[i] });
       }
       hits.sort(function (a, b) { return b.s - a.s; });

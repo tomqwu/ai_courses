@@ -137,6 +137,12 @@ def run(page, browser, base: str) -> list[str]:
     kinds = [k.upper() for k in page.eval_on_selector_all(".search-results a", "as => as.map(a => a.innerText)")]
     need(any(k.startswith(("TERM", "GLOSSARY")) for k in kinds) and any(k.startswith("SLIDE") for k in kinds),
          f"search: 'fail-closed' did not return a term and a slide ({kinds[:3]})")
+    # A multi-word term opens on its own entry, not on the slides that mention its words.
+    page.fill("#aps-search-input", "contract test")
+    page.wait_for_timeout(400)
+    first = page.eval_on_selector_all(".search-results a", "as => as.slice(0, 1).map(a => a.getAttribute('href'))")
+    need(first and first[0].endswith("glossary-m03.html#contract-test"),
+         f"search: 'contract test' does not open on its glossary entry (first hit {first})")
     page.keyboard.press("Escape")
 
     # Reading pages: a table of contents, and pointers linked at a pinned commit.
