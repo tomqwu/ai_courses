@@ -16,16 +16,33 @@
 <div class="app-main">
 <header class="app-bar"><button type="button" class="app-bar-menu" data-outline-toggle aria-controls="app-outline" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Outline</span></button><nav class="app-crumbs" aria-label="Breadcrumb"><a href="./index.html">Course</a><span class="crumb-sep" aria-hidden="true">/</span><a href="./module-m01.html">M1 · The AI Product Operating System</a><span class="crumb-sep" aria-hidden="true">/</span><span aria-current="page">Lab</span></nav><nav class="mode-switch" aria-label="Module mode"><a href="./m01.html">Watch</a><a href="./lesson-m01.html">Read</a><a href="./lab-m01.html" aria-current="page">Lab</a><a href="./quiz-m01.html">Check</a></nav><button type="button" class="app-bar-search" data-search-open aria-label="Search the course" title="Search the course (⌘K or /)"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button></header>
 <main id="content" class="app-content" tabindex="-1">
-<header class="page-head"><p class="page-kicker">Module 1 · Lab · pass/fail</p><h1>Lab M1 — Build Your Operating System, Then Run One Loop</h1><p class="page-lede">ship a starter repo with your own constitution, one <code>AGENTS.md</code> with a <code>CLAUDE.md</code> that imports it, spec templates, and one hook that checks your evidence log — and prove it works by running one full spec → plan → TDD loop on a <code>todo</code> CLI feature</p><dl class="at-a-glance"><div class="aga-item"><dt>Time</dt><dd>~2 hours</dd></div><div class="aga-item"><dt>Prerequisites</dt><dd>Module 0 lab complete; Module 1 lesson read</dd></div><div class="aga-item"><dt>Checklist</dt><dd>12 items</dd></div></dl></header>
-<div class="doc-main">
-  <article class="doc-article lab-article" data-lab="m01" data-lab-checks="12" data-lab-title="Lab M1 — Build Your Operating System, Then Run One Loop">
-<section class="lab-section " id="steps"><h2>Steps</h2><ol><li><strong>Create the repo.</strong> The first commit gives <code>git rev-parse HEAD</code> a revision to print, which the evidence entry in step 8 needs.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">mkdir my-studio &amp;&amp; cd my-studio &amp;&amp; git init
+<header class="page-head"><p class="page-kicker">Module 1 · Lab · pass/fail</p><h1>Lab M1 — Build Your Operating System, Then Run One Loop</h1><p class="page-lede">ship a starter repo with your own constitution, one <code>AGENTS.md</code> with a <code>CLAUDE.md</code> that imports it, spec templates, and one hook that checks your evidence log — and prove it works by running one full spec → plan → TDD loop on a <code>todo</code> CLI feature</p><p class="lab-facts">~2 hours · 9 steps · 12 checks decide the grade</p><p class="lab-prereq"><strong>Prerequisites:</strong> Module 0 lab complete; Module 1 lesson read</p></header>
+<div class="lab-root" data-lab="m01" data-lab-checks="12" data-lab-title="Lab M1 — Build Your Operating System, Then Run One Loop">
+  <div class="lab-workspace">
+    <nav class="lab-steps" aria-label="Steps"><ol><li><a href="#step-1" data-step-go="0"><span class="step-dot" aria-hidden="true">1</span><span class="step-name">Create the repo</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-2" data-step-go="1"><span class="step-dot" aria-hidden="true">2</span><span class="step-name">Write <code>constitution.md</code> (≤80 lines)</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-3" data-step-go="2"><span class="step-dot" aria-hidden="true">3</span><span class="step-name">Write <code>AGENTS.md</code> (≤200 lines), then a <code>CLAUDE.md</code> that imports it</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-4" data-step-go="3"><span class="step-dot" aria-hidden="true">4</span><span class="step-name">Write <code>specs/001-todo-command/spec.md</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-5" data-step-go="4"><span class="step-dot" aria-hidden="true">5</span><span class="step-name">Write <code>specs/001-todo-command/plan.md</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-6" data-step-go="5"><span class="step-dot" aria-hidden="true">6</span><span class="step-name">Write <code>specs/001-todo-command/tasks.md</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-7" data-step-go="6"><span class="step-dot" aria-hidden="true">7</span><span class="step-name">Run the loop with TDD</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-8" data-step-go="7"><span class="step-dot" aria-hidden="true">8</span><span class="step-name">Record evidence</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-9" data-step-go="8"><span class="step-dot" aria-hidden="true">9</span><span class="step-name">Commit</span><span class="sr-only" data-step-state>to do</span></a></li></ol></nav>
+    <div class="lab-view doc-article"><section class="lab-step" id="step-1" data-step="0" aria-labelledby="step-1-title">
+  <p class="step-count">Step 1 of 9</p>
+  <h2 id="step-1-title">Create the repo</h2>
+  
+  <div class="step-body"><p><strong>Create the repo.</strong></p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">mkdir my-studio &amp;&amp; cd my-studio &amp;&amp; git init
 python3 -m venv .venv &amp;&amp; source .venv/bin/activate
 pip install pytest
 mkdir -p specs/001-todo-command docs tests scripts .claude
 touch docs/research-log.md docs/evidence-log.md
 printf &#x27;.venv/\n__pycache__/\n&#x27; &gt; .gitignore
-git add -A &amp;&amp; git commit -m &quot;Scaffold starter repo&quot;</code></pre></div></li><li><strong>Write <code>constitution.md</code> (≤80 lines).</strong> SignUpFlow's own has grown to 85 lines since this lab was written (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/.specify/memory/constitution.md" rel="noopener"><code>SignUpFlow/.specify/memory/constitution.md</code></a>); the cap is for <em>your first one</em> — brevity is the skill. Copy, then personalize the three bracketed parts: (Model: <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/.specify/memory/constitution.md" rel="noopener"><code>SignUpFlow/.specify/memory/constitution.md</code></a> — 85 lines.)<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># &lt;Project&gt; Constitution
+git add -A &amp;&amp; git commit -m &quot;Scaffold starter repo&quot;</code></pre></div>
+<p>The first commit gives <code>git rev-parse HEAD</code> a revision to print, which the evidence entry in step 8 needs.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev disabled>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-2" data-step="1" aria-labelledby="step-2-title">
+  <p class="step-count">Step 2 of 9</p>
+  <h2 id="step-2-title">Write <code>constitution.md</code> (≤80 lines)</h2>
+  
+  <div class="step-body"><p><strong>Write <code>constitution.md</code> (≤80 lines).</strong> SignUpFlow's own has grown to 85 lines since this lab was written (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/.specify/memory/constitution.md" rel="noopener"><code>SignUpFlow/.specify/memory/constitution.md</code></a>); the cap is for <em>your first one</em> — brevity is the skill. Copy, then personalize the three bracketed parts:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># &lt;Project&gt; Constitution
 ## Principles
 1. Test-Driven Implementation: write the failing test first; the change is not
    done until `python3 -m pytest tests/ -q` passes.
@@ -35,7 +52,18 @@ git add -A &amp;&amp; git commit -m &quot;Scaffold starter repo&quot;</code></pr
 ## Autonomy Configuration
 - YOLO Mode: DISABLED
 - Git Autonomy: ENABLED (commit when a task completes and tests pass)
-- When unsure whether an action is reversible, stop and ask.</code></pre></div></li><li><strong>Write <code>AGENTS.md</code> (≤200 lines), then a <code>CLAUDE.md</code> that imports it.</strong> Every rule imperative and verifiable; include a validation checklist: Then <code>CLAUDE.md</code>: the import on the first line, and below it only what is specific to Claude Code. Everything shared stays in <code>AGENTS.md</code>, so nothing is written twice. The import loads <code>AGENTS.md</code> in full, so keep <code>wc -l AGENTS.md CLAUDE.md</code> at ≤200 lines in total. The first addendum names the hook you wire in step 8. In Claude Code, run <code>/context</code> to confirm the file loaded. Another agent reads <code>AGENTS.md</code> directly and ignores <code>CLAUDE.md</code> and the hook; in that case, run the step 8 check yourself.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># AGENTS.md
+- When unsure whether an action is reversible, stop and ask.</code></pre></div>
+<p>(Model: <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/.specify/memory/constitution.md" rel="noopener"><code>SignUpFlow/.specify/memory/constitution.md</code></a> — 85 lines.)</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-3" data-step="2" aria-labelledby="step-3-title">
+  <p class="step-count">Step 3 of 9</p>
+  <h2 id="step-3-title">Write <code>AGENTS.md</code> (≤200 lines), then a <code>CLAUDE.md</code> that imports it</h2>
+  
+  <div class="step-body"><p><strong>Write <code>AGENTS.md</code> (≤200 lines), then a <code>CLAUDE.md</code> that imports it.</strong> Every rule imperative and verifiable; include a validation checklist:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># AGENTS.md
 ## House style
 - Use imperative voice. Each rule must be verifiable.
 - Keep this file under ~200 lines.
@@ -48,27 +76,70 @@ git add -A &amp;&amp; git commit -m &quot;Scaffold starter repo&quot;</code></pr
 - [ ] `python3 -m pytest tests/ -q` passes.
 - [ ] No secrets in the diff: `git diff | grep -iE &#x27;api[_-]?key|secret|token&#x27;`
       returns nothing meaningful.
-- [ ] Docs touched by the change are updated; stale docs are a failure.</code></pre></div><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">@AGENTS.md
+- [ ] Docs touched by the change are updated; stale docs are a failure.</code></pre></div>
+<p>Then <code>CLAUDE.md</code>: the import on the first line, and below it only what is specific to Claude Code. Everything shared stays in <code>AGENTS.md</code>, so nothing is written twice. The import loads <code>AGENTS.md</code> in full, so keep <code>wc -l AGENTS.md CLAUDE.md</code> at ≤200 lines in total.</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">@AGENTS.md
 
 ## Claude Code addenda
 - A Stop hook runs `scripts/check-evidence-log.sh` after each turn. When it
   blocks, fix the entry it names; never edit the script or hook to pass.
-- Record the red run in `docs/evidence-log.md` before the green run.</code></pre></div></li><li><strong>Write <code>specs/001-todo-command/spec.md</code></strong> — the WHAT, technology-agnostic, two independently testable stories:<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># Spec: todo command
+- Record the red run in `docs/evidence-log.md` before the green run.</code></pre></div>
+<p>The first addendum names the hook you wire in step 8. In Claude Code, run <code>/context</code> to confirm the file loaded. Another agent reads <code>AGENTS.md</code> directly and ignores <code>CLAUDE.md</code> and the hook; in that case, run the step 8 check yourself.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-4" data-step="3" aria-labelledby="step-4-title">
+  <p class="step-count">Step 4 of 9</p>
+  <h2 id="step-4-title">Write <code>specs/001-todo-command/spec.md</code></h2>
+  
+  <div class="step-body"><p><strong>Write <code>specs/001-todo-command/spec.md</code></strong> — the WHAT, technology-agnostic, two independently testable stories:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># Spec: todo command
 ## US1 (P1): Add and list todos
 As a user, I can add a todo and list all todos, so I can track work.
 - Given an empty store, When I add &quot;write spec&quot;, Then listing shows one item
   with id 1, title &quot;write spec&quot;, done=false.
 ## US2 (P1): Mark done
 As a user, I can mark a todo done, so completed work stops nagging me.
-- Given todo 1 exists, When I mark 1 done, Then listing shows done=true.</code></pre></div></li><li><strong>Write <code>specs/001-todo-command/plan.md</code></strong> with the gate:<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># Plan: todo command
+- Given todo 1 exists, When I mark 1 done, Then listing shows done=true.</code></pre></div></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-5" data-step="4" aria-labelledby="step-5-title">
+  <p class="step-count">Step 5 of 9</p>
+  <h2 id="step-5-title">Write <code>specs/001-todo-command/plan.md</code></h2>
+  
+  <div class="step-body"><p><strong>Write <code>specs/001-todo-command/plan.md</code></strong> with the gate:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown"># Plan: todo command
 ## Constitution Check — GATE: must pass before implementation. Re-check after.
 - [x] TDD respected (tests written first). [x] YAGNI (no storage file, no dates).
-## Tasks</code></pre></div></li><li><strong>Write <code>specs/001-todo-command/tasks.md</code></strong> — exact paths, tests first:<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">## Format: [ID] [P?] [Story] — include exact file paths
+## Tasks</code></pre></div></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-6" data-step="5" aria-labelledby="step-6-title">
+  <p class="step-count">Step 6 of 9</p>
+  <h2 id="step-6-title">Write <code>specs/001-todo-command/tasks.md</code></h2>
+  
+  <div class="step-body"><p><strong>Write <code>specs/001-todo-command/tasks.md</code></strong> — exact paths, tests first:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">## Format: [ID] [P?] [Story] — include exact file paths
 - [ ] T001 [P] [US1] Create tests/test_todo.py: failing tests for add + list
 - [ ] T002 [US1] Create todo.py: TodoStore.add(title) -&gt; int, TodoStore.list()
 - [ ] T003 [P] [US2] Add failing test for done to tests/test_todo.py
 - [ ] T004 [US2] Extend todo.py: TodoStore.done(todo_id)
-- [ ] T005 Add CLI dispatch in todo.py: add/list/done via sys.argv</code></pre></div></li><li><strong>Run the loop with TDD.</strong> Execute T001: write the failing tests first — Run <code>python3 -m pytest tests/ -q</code> — with no <code>todo.py</code> yet, pytest stops at collection: <code>ERROR tests/test_todo.py</code>, <code>ModuleNotFoundError: No module named 'todo'</code>, <code>1 error</code>, exit code 2. That collection error <em>is</em> the red — record it verbatim (it is not "2 failed"; the two tests never ran). Then execute T002/T004: implement <code>todo.py</code> (a list of dicts; <code>add</code> appends and returns the id; <code>done</code> sets the flag). Run pytest again — record the pass (green). Finish T005, then run your full validation checklist.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-python"># tests/test_todo.py
+- [ ] T005 Add CLI dispatch in todo.py: add/list/done via sys.argv</code></pre></div></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-7" data-step="6" aria-labelledby="step-7-title">
+  <p class="step-count">Step 7 of 9</p>
+  <h2 id="step-7-title">Run the loop with TDD</h2>
+  
+  <div class="step-body"><p><strong>Run the loop with TDD.</strong> Execute T001: write the failing tests first —</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-python"># tests/test_todo.py
 from todo import TodoStore
 
 def test_add_then_list():
@@ -80,14 +151,27 @@ def test_done_marks_item():
     s = TodoStore()
     i = s.add(&quot;ship&quot;)
     s.done(i)
-    assert s.list()[0][&quot;done&quot;] is True</code></pre></div></li><li><strong>Record evidence</strong> in <code>docs/evidence-log.md</code>, in the prescribed format, <strong>then wire the hook that checks it</strong>: The rule "every entry has all six fields" is one a script can decide, so the table in M1.1 says it should be a hook. Save the check as <code>scripts/check-evidence-log.sh</code>: Bind it to Claude Code's <code>Stop</code> event, which fires each time Claude finishes a turn, in <code>.claude/settings.json</code>: Test the check before you trust it: red, then green. Delete the limitation line from your entry and run <code>bash scripts/check-evidence-log.sh; echo "exit=$?"</code>. Expect <code>Evidence log: the latest entry in docs/evidence-log.md needs:</code>, then <code>- at least one limitation</code>, then <code>exit=2</code>. Put the line back and expect <code>Evidence log: latest entry complete.</code> and <code>exit=0</code>. Record both runs. In a Claude Code session, exit 2 on <code>Stop</code> keeps Claude working, with the script's stderr as its instructions. After eight blocks in a row, Claude Code lets the turn end (code.claude.com/docs/en/hooks, read 2026-09-26). The hook checks form: a dated heading, a <code>command → result</code> line, an environment, a SHA that exists in this repo, a limitation, and no <code>&lt;placeholders&gt;</code>. It cannot check that any of it is true.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">## Evidence — my-studio — todo command — &lt;YYYY-MM-DD&gt;
+    assert s.list()[0][&quot;done&quot;] is True</code></pre></div>
+<p>Run <code>python3 -m pytest tests/ -q</code> — with no <code>todo.py</code> yet, pytest stops at collection: <code>ERROR tests/test_todo.py</code>, <code>ModuleNotFoundError: No module named 'todo'</code>, <code>1 error</code>, exit code 2. That collection error <em>is</em> the red — record it verbatim (it is not "2 failed"; the two tests never ran). Then execute T002/T004: implement <code>todo.py</code> (a list of dicts; <code>add</code> appends and returns the id; <code>done</code> sets the flag). Run pytest again — record the pass (green). Finish T005, then run your full validation checklist.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-8" data-step="7" aria-labelledby="step-8-title">
+  <p class="step-count">Step 8 of 9</p>
+  <h2 id="step-8-title">Record evidence</h2>
+  
+  <div class="step-body"><p><strong>Record evidence</strong> in <code>docs/evidence-log.md</code>, in the prescribed format, <strong>then wire the hook that checks it</strong>:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-markdown">## Evidence — my-studio — todo command — &lt;YYYY-MM-DD&gt;
 Commands (with results):
 - python3 -m pytest tests/ -q (before implementation) → 1 error: ModuleNotFoundError: No module named &#x27;todo&#x27; (exit 2)
 - python3 -m pytest tests/ -q (after implementation) → &lt;N&gt; passed
 Environment: &lt;OS, Python version&gt;
 Revision: &lt;output of `git rev-parse HEAD`&gt;
 Limitations / not verified:
-- In-memory store only; CLI arg handling tested by hand, not automated.</code></pre></div><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">#!/usr/bin/env bash
+- In-memory store only; CLI arg handling tested by hand, not automated.</code></pre></div>
+<p>The rule "every entry has all six fields" is one a script can decide, so the table in M1.1 says it should be a hook. Save the check as <code>scripts/check-evidence-log.sh</code>:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">#!/usr/bin/env bash
 # Checks the latest entry in docs/evidence-log.md. Exit 0: no entry yet, or all
 # six fields are filled. Exit 2: something is missing (Claude Code reads stderr).
 cd &quot;$(dirname &quot;$0&quot;)/..&quot; || exit 2
@@ -108,7 +192,9 @@ if [ -n &quot;$miss&quot; ]; then
   printf &#x27;Evidence log: the latest entry in %s needs:\n%s&#x27; &quot;$log&quot; &quot;$miss&quot; &gt;&amp;2
   exit 2
 fi
-echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-json">{
+echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div>
+<p>Bind it to Claude Code's <code>Stop</code> event, which fires each time Claude finishes a turn, in <code>.claude/settings.json</code>:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-json">{
   &quot;hooks&quot;: {
     &quot;Stop&quot;: [
       {
@@ -121,7 +207,23 @@ echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div><div cla
       }
     ]
   }
-}</code></pre></div></li><li><strong>Commit</strong> with the body format from <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a>: Summary / Changed files / Validation / Follow-ups.</li></ol></section><section class="lab-section lab-checklist" id="acceptance-checklist">
+}</code></pre></div>
+<p>Test the check before you trust it: red, then green. Delete the limitation line from your entry and run <code>bash scripts/check-evidence-log.sh; echo "exit=$?"</code>. Expect <code>Evidence log: the latest entry in docs/evidence-log.md needs:</code>, then <code>- at least one limitation</code>, then <code>exit=2</code>. Put the line back and expect <code>Evidence log: latest entry complete.</code> and <code>exit=0</code>. Record both runs. In a Claude Code session, exit 2 on <code>Stop</code> keeps Claude working, with the script's stderr as its instructions. After eight blocks in a row, Claude Code lets the turn end (code.claude.com/docs/en/hooks, read 2026-09-26). The hook checks form: a dated heading, a <code>command → result</code> line, an environment, a SHA that exists in this repo, a limitation, and no <code>&lt;placeholders&gt;</code>. It cannot check that any of it is true.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-9" data-step="8" aria-labelledby="step-9-title">
+  <p class="step-count">Step 9 of 9</p>
+  <h2 id="step-9-title">Commit</h2>
+  
+  <div class="step-body"><p><strong>Commit</strong> with the body format from <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a>: Summary / Changed files / Validation / Follow-ups.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done — then the checklist</button>
+  </div>
+</section></div>
+    <aside class="lab-panel" aria-label="Acceptance checklist"><section class="lab-section lab-checklist" id="acceptance-checklist">
   <h2>Acceptance checklist</h2>
   <p class="check-progress"><strong data-check-count>0 of 12 checked</strong>
     <span class="progress-bar" aria-hidden="true"><span data-check-fill></span></span></p>
@@ -133,7 +235,10 @@ echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div><div cla
   <p>Regardless of other rows, the lab fails if any of these is true:</p>
 <ol><li><strong>Fabricated evidence</strong> — a test count, output line, command, or head SHA that the recorded run does not produce.</li><li><strong>A green run with no red run recorded</strong> — the TDD loop is the deliverable; the red output is its proof.</li><li><strong>Tests weakened to pass</strong> — assertions loosened, tests deleted, skipped, or rewritten after failing to fit the implementation, or the evidence-log check edited to pass.</li><li><strong>No head SHA in the evidence record</strong> — evidence that cannot be pinned to a revision is a claim, not a record.</li><li><strong>Placeholder brackets left in submitted files</strong> — <code>[&lt;your rule&gt;]</code> still visible in <code>constitution.md</code> or <code>AGENTS.md</code>.</li><li><strong>A failure visible in the raw output but absent from the evidence entry</strong> — selective recording is fabrication by omission.</li></ol>
 <p>Consistency note: this rubric grades Lab M1 only. The course-level split remains labs 60% / quizzes 20% / capstone 20%, and the academic-honesty rule is the one real rule — using an agent is allowed and taught; stating what the agent did and what you verified is required.</p>
-</section><section class="lab-section lab-evidence" id="evidence-to-record">
+</section><a class="btn-dark lab-export" href="#evidence-to-record" data-evidence-jump>Write and export the evidence entry</a></aside>
+  </div>
+  <div class="lab-after doc-article">
+<section class="lab-section lab-evidence" id="evidence-to-record">
   <h2>Evidence to record</h2>
   <p>Keep in <code>docs/evidence-log.md</code>: the red pytest output, the green pytest output, <code>git rev-parse HEAD</code>, your evidence entry in the Step 8 format, and both runs of <code>scripts/check-evidence-log.sh</code> (exit 2, then exit 0). This file is your proof asset for every later module — the course's version of SignUpFlow's <code>docs/playbooks/validation.md</code>.</p>
   <form class="evidence-form" data-evidence-form onsubmit="return false">
@@ -155,9 +260,9 @@ echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div><div cla
   </form>
 </section><section class="lab-section lab-stretch" id="stretch-goals"><h2>Stretch goals</h2><ul><li>Add a negative-path test: marking a missing id raises a defined error (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a> requires negative-path assertions for every feature).</li><li>Graduate one real observation: add it dated to <code>docs/research-log.md</code>, test it on this change, then promote it into <code>AGENTS.md</code> — the full pipeline from <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/ai-agent-coding-strategy.md" rel="noopener"><code>SignUpFlow/docs/ai-agent-coding-strategy.md</code></a>.</li><li>Run a second mini-loop (<code>specs/002-todo-remove/</code>) without rereading this lab.</li></ul></section><section class="lab-section lab-discussion" id="discussion-prompt"><h2>Discussion prompt</h2><p>Post your before → after rule rewrite (one vague rule you made verifiable) and a link to your repo. Then review one classmate's <code>AGENTS.md</code>: could you check every rule was followed without asking them anything? Name any word you couldn't verify.</p></section>
     <footer class="doc-footer">
-      <p class="index-footnote">Checklist ticks and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m01-operating-system/lab.md</code>.</p>
+      <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m01-operating-system/lab.md</code>.</p>
     </footer>
-  </article>
+  </div>
 </div>
 </main>
 </div>

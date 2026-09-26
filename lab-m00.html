@@ -16,16 +16,67 @@
 <div class="app-main">
 <header class="app-bar"><button type="button" class="app-bar-menu" data-outline-toggle aria-controls="app-outline" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Outline</span></button><nav class="app-crumbs" aria-label="Breadcrumb"><a href="./index.html">Course</a><span class="crumb-sep" aria-hidden="true">/</span><a href="./module-m00.html">M0 · Orientation: Three Products, One Method</a><span class="crumb-sep" aria-hidden="true">/</span><span aria-current="page">Lab</span></nav><nav class="mode-switch" aria-label="Module mode"><a href="./m00.html">Watch</a><a href="./lesson-m00.html">Read</a><a href="./lab-m00.html" aria-current="page">Lab</a><a href="./quiz-m00.html">Check</a></nav><button type="button" class="app-bar-search" data-search-open aria-label="Search the course" title="Search the course (⌘K or /)"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button></header>
 <main id="content" class="app-content" tabindex="-1">
-<header class="page-head"><p class="page-kicker">Module 0 · Lab · pass/fail</p><h1>Lab M0 — Environment Setup &amp; First Ship-Win</h1><p class="page-lede">every tool the course needs is installed and proven with one real output — before Module 1, you have already run real software end to end. Never used a terminal, or cannot clone a repository yet? Take the free Module 9 first (<a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m09-github-pages/lab.md" rel="noopener"><code>course/03-content/m09-github-pages/lab.md</code></a>): it installs Git and the GitHub CLI on Windows or macOS, proves the setup with a script, and teaches every command this lab assumes</p><dl class="at-a-glance"><div class="aga-item"><dt>Time</dt><dd>~30 minutes including downloads (<code>make setup</code>, the Ollama installer, the model pull); the "Before Module 1" block below adds ~10 minutes</dd></div><div class="aga-item"><dt>Prerequisites</dt><dd>none</dd></div><div class="aga-item"><dt>Checklist</dt><dd>6 items</dd></div></dl></header>
-<div class="doc-main">
-  <article class="doc-article lab-article" data-lab="m00" data-lab-checks="6" data-lab-title="Lab M0 — Environment Setup &amp; First Ship-Win">
-<section class="lab-section " id="steps"><h2>Steps</h2><ol><li><strong>Clone the three case studies</strong> (this workspace may already have them — skip to step 2 if so):<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">git clone https://github.com/tomqwu/ListenToMe.git
+<header class="page-head"><p class="page-kicker">Module 0 · Lab · pass/fail</p><h1>Lab M0 — Environment Setup &amp; First Ship-Win</h1><p class="page-lede">every tool the course needs is installed and proven with one real output — before Module 1, you have already run real software end to end. Never used a terminal, or cannot clone a repository yet? Take the free Module 9 first (<a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m09-github-pages/lab.md" rel="noopener"><code>course/03-content/m09-github-pages/lab.md</code></a>): it installs Git and the GitHub CLI on Windows or macOS, proves the setup with a script, and teaches every command this lab assumes</p><p class="lab-facts">~30 minutes including downloads (`make setup`, the Ollama installer, the model pull); the &quot;Before Module 1&quot; block below adds ~10 minutes · 5 steps · 6 checks decide the grade</p><p class="lab-prereq"><strong>Prerequisites:</strong> none</p></header>
+<div class="lab-root" data-lab="m00" data-lab-checks="6" data-lab-title="Lab M0 — Environment Setup &amp; First Ship-Win">
+  <div class="lab-workspace">
+    <nav class="lab-steps" aria-label="Steps"><ol><li><a href="#step-1" data-step-go="0"><span class="step-dot" aria-hidden="true">1</span><span class="step-name">Clone the three case studies</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-2" data-step-go="1"><span class="step-dot" aria-hidden="true">2</span><span class="step-name">Verify your Python</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-3" data-step-go="2"><span class="step-dot" aria-hidden="true">3</span><span class="step-name">Install Ollama</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-4" data-step-go="3"><span class="step-dot" aria-hidden="true">4</span><span class="step-name">Run the SignUpFlow solver</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-5" data-step-go="4"><span class="step-dot" aria-hidden="true">5</span><span class="step-name">Post your first win</span><span class="sr-only" data-step-state>to do</span></a></li></ol></nav>
+    <div class="lab-view doc-article"><section class="lab-step" id="step-1" data-step="0" aria-labelledby="step-1-title">
+  <p class="step-count">Step 1 of 5</p>
+  <h2 id="step-1-title">Clone the three case studies</h2>
+  
+  <div class="step-body"><p><strong>Clone the three case studies</strong> (this workspace may already have them — skip to step 2 if so):</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">git clone https://github.com/tomqwu/ListenToMe.git
 git clone https://github.com/tomqwu/SignUpFlow.git
-git clone https://github.com/tomqwu/ai_qe.git</code></pre></div></li><li><strong>Verify your Python</strong>: <code>python3 --version</code> → 3.11 or newer (SignUpFlow's own floor; TinyCopilot itself also runs on 3.10).</li><li><strong>Install Ollama</strong> from &lt;https://ollama.com/download&gt; (macOS, Linux, Windows). Then pull a genuinely local model:<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">ollama pull qwen3:0.6b
+git clone https://github.com/tomqwu/ai_qe.git</code></pre></div></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev disabled>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-2" data-step="1" aria-labelledby="step-2-title">
+  <p class="step-count">Step 2 of 5</p>
+  <h2 id="step-2-title">Verify your Python</h2>
+  
+  <div class="step-body"><p><strong>Verify your Python</strong>: <code>python3 --version</code> → 3.11 or newer (SignUpFlow's own floor; TinyCopilot itself also runs on 3.10).</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-3" data-step="2" aria-labelledby="step-3-title">
+  <p class="step-count">Step 3 of 5</p>
+  <h2 id="step-3-title">Install Ollama</h2>
+  
+  <div class="step-body"><p><strong>Install Ollama</strong> from &lt;https://ollama.com/download&gt; (macOS, Linux, Windows). Then pull a genuinely local model:</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">ollama pull qwen3:0.6b
 ollama list          # note which names end in :cloud (cloud-backed aliases) and which don&#x27;t
-ollama run qwen3:0.6b &quot;Reply with exactly: PONG&quot;</code></pre></div></li><li><strong>Run the SignUpFlow solver</strong> (a real production scheduler, in under 5 commands): Capture the whole block: people, events, the <strong>health score</strong> line, violations, fairness stdev, assignments, and the <code>Solution saved to …</code> line. The score is whatever the sample workspace produces at the revision you cloned (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/api/cli/main.py#L193" rel="noopener"><code>SignUpFlow/api/cli/main.py:193</code></a>) — at the 2026-09-16 head it is <code>0.0/100</code> with two hard violations. Do not "fix" the number; record it.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd SignUpFlow &amp;&amp; make setup          # Poetry env + migrations (see README if you hit issues)
+ollama run qwen3:0.6b &quot;Reply with exactly: PONG&quot;</code></pre></div></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-4" data-step="3" aria-labelledby="step-4-title">
+  <p class="step-count">Step 4 of 5</p>
+  <h2 id="step-4-title">Run the SignUpFlow solver</h2>
+  
+  <div class="step-body"><p><strong>Run the SignUpFlow solver</strong> (a real production scheduler, in under 5 commands):</p>
+<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd SignUpFlow &amp;&amp; make setup          # Poetry env + migrations (see README if you hit issues)
 poetry run python -m api.cli.main init my-church
-poetry run python -m api.cli.main solve my-church</code></pre></div></li><li><strong>Post your first win</strong> in the community: your solver block + your <code>ollama list</code> (each entry labeled local or <code>:cloud</code>) + one sentence on which archetype (1: on-device app, 2: SaaS, 3: expertise product) you want to build by week 8.</li></ol></section><section class="lab-section lab-checklist" id="acceptance-checklist">
+poetry run python -m api.cli.main solve my-church</code></pre></div>
+<p>Capture the whole block: people, events, the <strong>health score</strong> line, violations, fairness stdev, assignments, and the <code>Solution saved to …</code> line. The score is whatever the sample workspace produces at the revision you cloned (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/api/cli/main.py#L193" rel="noopener"><code>SignUpFlow/api/cli/main.py:193</code></a>) — at the 2026-09-16 head it is <code>0.0/100</code> with two hard violations. Do not "fix" the number; record it.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-5" data-step="4" aria-labelledby="step-5-title">
+  <p class="step-count">Step 5 of 5</p>
+  <h2 id="step-5-title">Post your first win</h2>
+  
+  <div class="step-body"><p><strong>Post your first win</strong> in the community: your solver block + your <code>ollama list</code> (each entry labeled local or <code>:cloud</code>) + one sentence on which archetype (1: on-device app, 2: SaaS, 3: expertise product) you want to build by week 8.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done — then the checklist</button>
+  </div>
+</section></div>
+    <aside class="lab-panel" aria-label="Acceptance checklist"><section class="lab-section lab-checklist" id="acceptance-checklist">
   <h2>Acceptance checklist</h2>
   <p class="check-progress"><strong data-check-count>0 of 6 checked</strong>
     <span class="progress-bar" aria-hidden="true"><span data-check-fill></span></span></p>
@@ -37,12 +88,15 @@ poetry run python -m api.cli.main solve my-church</code></pre></div></li><li><st
   <p class="section-note">From this lab's rubric (<code>lab-rubrics.md</code>). Any one of these fails the lab whatever the checklist shows, so read them before you submit.</p>
   <ol><li><strong>Fabricated output</strong> — a hand-edited health score, an invented pytest summary, or a pasted block that no command produced (<a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/01-design/assessment-and-rubrics.md" rel="noopener"><code>course/01-design/assessment-and-rubrics.md</code></a>: fabrication is the only automatic fail).</li><li><strong>Green claimed without a summary</strong> — asserting "tests pass" (for the TinyCopilot stretch) with no pytest summary line anywhere in the evidence.</li><li><strong>Health score without a run record</strong> — the score appears but no workspace summary and no <code>Solution saved to …</code> line, so nothing shows the solver actually wrote a file.</li><li><strong>Local claimed for a <code>:cloud</code> alias</strong> — labeling a cloud-backed alias as local, or asserting no data leaves the machine while only aliases are present.</li><li><strong>Real tenant data used</strong> — running <code>init</code>/<code>solve</code> against a real organization's people or events instead of the sample workspace.</li></ol>
 <p>A missing community post is <em>Developing</em> on its row, not an auto-fail: chase it (it is the completion lever, <a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/02-instructor/instructor-guide.md" rel="noopener"><code>course/02-instructor/instructor-guide.md</code></a> §1), but grade the evidence.</p>
-</section><section class="lab-section " id="before-module-1"><h2>Before Module 1</h2><ul><li><strong>Start your course evidence log</strong> (you'll keep it all course): paste the solver block and <code>ollama list</code>, each with the date and one line on what remains unverified.</li><li><strong>Stretch — run the TinyCopilot lab tests</strong> (the Module 2 lab's reference implementation, and Module 2's own pass gate): Expected: <code>208 passed</code>, coverage <code>100%</code>. If a dependency is missing, log the exact package and error line — an honest partial is fine here; Lab M2 is where this suite is graded. Add the pytest summary line to your evidence log when you have it.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd ../course/03-content/m02-ondevice-app/tinycopilot
+</section></aside>
+  </div>
+  <div class="lab-after doc-article">
+<section class="lab-section " id="before-module-1"><h2>Before Module 1</h2><ul><li><strong>Start your course evidence log</strong> (you'll keep it all course): paste the solver block and <code>ollama list</code>, each with the date and one line on what remains unverified.</li><li><strong>Stretch — run the TinyCopilot lab tests</strong> (the Module 2 lab's reference implementation, and Module 2's own pass gate): Expected: <code>208 passed</code>, coverage <code>100%</code>. If a dependency is missing, log the exact package and error line — an honest partial is fine here; Lab M2 is where this suite is graded. Add the pytest summary line to your evidence log when you have it.<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd ../course/03-content/m02-ondevice-app/tinycopilot
 python3 -m pytest tests -q    # or: make lab-m2</code></pre></div></li></ul></section><section class="lab-section lab-stretch" id="stretch-goals"><h2>Stretch goals</h2><ul><li>Mac user? Open <a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/README.md" rel="noopener"><code>ListenToMe/README.md</code></a> and follow <code>make run</code> to launch the real app (requires macOS 26 + Xcode).</li><li>Run one AI × QE check: <code>cd ai_qe &amp;&amp; cat _data/release.yml</code> — find the independently versioned fields (<code>version</code>, <code>slide_edition</code>, <code>fintech_edition</code>, <code>questionnaire_edition</code>, <code>research_edition</code>). Four editions move on their own schedules; that's "content as code," coming in Module 6.</li></ul></section><section class="lab-section lab-discussion" id="discussion-prompt"><h2>Discussion prompt</h2><p>Introduce yourself with: your stack, the archetype you're most excited to build, and one thing you've shipped before (a repo link counts double).</p></section>
     <footer class="doc-footer">
-      <p class="index-footnote">Checklist ticks and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m00-orientation/lab.md</code>.</p>
+      <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m00-orientation/lab.md</code>.</p>
     </footer>
-  </article>
+  </div>
 </div>
 </main>
 </div>

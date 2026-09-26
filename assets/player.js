@@ -322,7 +322,9 @@
       (heading || slides[index]).focus?.({ preventScroll: true });
     }
     try {
-      history.replaceState(null, '', `#${slides[index].id}`);
+      // Arriving writes no hash: set during load, it becomes the fragment the browser scrolls to and
+      // starts keyboard focus from. Every move after that keeps the URL on the slide.
+      if (options.scroll !== false || location.hash) history.replaceState(null, '', `#${slides[index].id}`);
       localStorage.setItem(progressKey, JSON.stringify({ slide: slides[index].id }));
     } catch (_) { /* private mode: navigation still works */ }
     recordUnit();

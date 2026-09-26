@@ -16,22 +16,63 @@
 <div class="app-main">
 <header class="app-bar"><button type="button" class="app-bar-menu" data-outline-toggle aria-controls="app-outline" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Outline</span></button><nav class="app-crumbs" aria-label="Breadcrumb"><a href="./index.html">Course</a><span class="crumb-sep" aria-hidden="true">/</span><a href="./module-m09.html">M9 · Ship a Product Catalog with GitHub Pages</a><span class="crumb-sep" aria-hidden="true">/</span><span aria-current="page">Lab</span></nav><nav class="mode-switch" aria-label="Module mode"><a href="./m09.html">Watch</a><a href="./lesson-m09.html">Read</a><a href="./lab-m09.html" aria-current="page">Lab</a><a href="./quiz-m09.html">Check</a></nav><button type="button" class="app-bar-search" data-search-open aria-label="Search the course" title="Search the course (⌘K or /)"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button></header>
 <main id="content" class="app-content" tabindex="-1">
-<header class="page-head"><p class="page-kicker">Module 9 · Lab · pass/fail</p><h1>Lab M9 — Publish your product catalog</h1><p class="page-lede">The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, and the evidence entry you export is the format the rubrics grade.</p><dl class="at-a-glance"><div class="aga-item"><dt>Time</dt><dd>60–90 minutes, most of it installs</dd></div><div class="aga-item"><dt>Prerequisites</dt><dd>none — a Windows 10 (1809 or later), Windows 11 or macOS computer, and a free GitHub account</dd></div><div class="aga-item"><dt>Checklist</dt><dd>8 items</dd></div></dl></header>
-<div class="doc-main">
-  <article class="doc-article lab-article" data-lab="m09" data-lab-checks="8" data-lab-title="Lab M9 — Publish your product catalog">
-<section class="lab-section " id="lab"><p><strong>Goal.</strong> Go from a computer with nothing installed to a public product catalog at <code>https://&lt;your-username&gt;.github.io/my-catalog/</code>, built from files you cloned, changed and pushed from the terminal.</p>
+<header class="page-head"><p class="page-kicker">Module 9 · Lab · pass/fail</p><h1>Lab M9 — Publish your product catalog</h1><p class="page-lede">The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, and the evidence entry you export is the format the rubrics grade.</p><p class="lab-facts">60–90 minutes, most of it installs · 9 steps · 8 checks decide the grade</p><p class="lab-prereq"><strong>Prerequisites:</strong> none — a Windows 10 (1809 or later), Windows 11 or macOS computer, and a free GitHub account</p></header>
+<div class="lab-root" data-lab="m09" data-lab-checks="8" data-lab-title="Lab M9 — Publish your product catalog">
+  <div class="lab-workspace">
+    <nav class="lab-steps" aria-label="Steps"><ol><li><a href="#before-you-start" data-step-go="0"><span class="step-dot" aria-hidden="true">i</span><span class="step-name">Before you start</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-0-make-a-github-account-5-min" data-step-go="1"><span class="step-dot" aria-hidden="true">1</span><span class="step-name">Make a GitHub account</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-1-install-the-tools-and-prove-them-30-min-mostly-waiting" data-step-go="2"><span class="step-dot" aria-hidden="true">2</span><span class="step-name">Install the tools and prove them</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-2-find-your-way-around-5-min" data-step-go="3"><span class="step-dot" aria-hidden="true">3</span><span class="step-name">Find your way around</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-3-clone-the-course-and-find-the-starter-5-min" data-step-go="4"><span class="step-dot" aria-hidden="true">4</span><span class="step-name">Clone the course, and find the starter</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-4-create-your-own-repository-5-min" data-step-go="5"><span class="step-dot" aria-hidden="true">5</span><span class="step-name">Create your own repository</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-5-make-it-yours-and-preview-it-15-min" data-step-go="6"><span class="step-dot" aria-hidden="true">6</span><span class="step-name">Make it yours and preview it</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-6-commit-and-push-5-min" data-step-go="7"><span class="step-dot" aria-hidden="true">7</span><span class="step-name">Commit and push</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-7-publish-with-github-pages-10-min-including-the-wait" data-step-go="8"><span class="step-dot" aria-hidden="true">8</span><span class="step-name">Publish with GitHub Pages</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-8-change-it-and-watch-it-republish-10-min" data-step-go="9"><span class="step-dot" aria-hidden="true">9</span><span class="step-name">Change it and watch it republish</span><span class="sr-only" data-step-state>to do</span></a></li></ol></nav>
+    <div class="lab-view doc-article"><section class="lab-step" id="before-you-start" data-step="0" aria-labelledby="before-you-start-title">
+  <p class="step-count">Before you start</p>
+  <h2 id="before-you-start-title">Before you start</h2>
+  
+  <div class="step-body"><div class="step-context" id="lab"><p><strong>Goal.</strong> Go from a computer with nothing installed to a public product catalog at <code>https://&lt;your-username&gt;.github.io/my-catalog/</code>, built from files you cloned, changed and pushed from the terminal.</p>
 <p><strong>Where to work.</strong> A folder called <code>code</code> in your home folder. Keep a file called <code>evidence.md</code> open beside you and paste into it as you go: every step below says what to paste.</p>
-<p><strong>How to read the commands.</strong> Where Windows and macOS differ, both are given. Type everything after the prompt and press Enter. Windows commands are for <strong>PowerShell</strong> — the default in Windows Terminal. If a command is the same on both, it is shown once.</p></section><section class="lab-section " id="step-0-make-a-github-account-5-min"><h2>Step 0 — Make a GitHub account (~5 min)</h2><p>If you do not have one, sign up at <code>github.com</code> with an email you can open. Choose your username carefully: it becomes part of your catalog's address. Paste your username into <code>evidence.md</code>.</p></section><section class="lab-section " id="step-1-install-the-tools-and-prove-them-30-min-mostly-waiting"><h2>Step 1 — Install the tools and prove them (~30 min, mostly waiting)</h2><p>Open a terminal (Windows: press the Windows key, type <code>terminal</code>, Enter; macOS: Cmd+Space, type <code>terminal</code>, Enter).</p>
+<p><strong>How to read the commands.</strong> Where Windows and macOS differ, both are given. Type everything after the prompt and press Enter. Windows commands are for <strong>PowerShell</strong> — the default in Windows Terminal. If a command is the same on both, it is shown once.</p></div></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev disabled>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-0-make-a-github-account-5-min" data-step="1" aria-labelledby="step-0-make-a-github-account-5-min-title">
+  <p class="step-count">Step 1 of 9</p>
+  <h2 id="step-0-make-a-github-account-5-min-title">Make a GitHub account</h2>
+  <p class="step-time">~5 min</p>
+  <div class="step-body"><p>If you do not have one, sign up at <code>github.com</code> with an email you can open. Choose your username carefully: it becomes part of your catalog's address. Paste your username into <code>evidence.md</code>.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-1-install-the-tools-and-prove-them-30-min-mostly-waiting" data-step="2" aria-labelledby="step-1-install-the-tools-and-prove-them-30-min-mostly-waiting-title">
+  <p class="step-count">Step 2 of 9</p>
+  <h2 id="step-1-install-the-tools-and-prove-them-30-min-mostly-waiting-title">Install the tools and prove them</h2>
+  <p class="step-time">~30 min, mostly waiting</p>
+  <div class="step-body"><p>Open a terminal (Windows: press the Windows key, type <code>terminal</code>, Enter; macOS: Cmd+Space, type <code>terminal</code>, Enter).</p>
 <ol><li><strong>Package manager.</strong><ul><li>Windows: run <code>winget --version</code>. If it is not recognised, install <strong>App Installer</strong> from the Microsoft Store, then open a new terminal window.</li><li>macOS: install Homebrew, then run the shell setup lines it prints at the end:<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;</code></pre></div></li></ul></li><li><strong>Git and the GitHub CLI.</strong> | Windows | macOS | |---|---| | <code>winget install --id Git.Git -e --source winget</code> | <code>brew install git</code> | | <code>winget install --id GitHub.cli --source winget</code> | <code>brew install gh</code> | | <strong>Close the terminal and open a new window.</strong> | |</li></ol>
 <ol><li><strong>Your name and email</strong> (the email on your GitHub account, or its private noreply address):<div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">git config --global user.name &quot;Your Name&quot;
 git config --global user.email &quot;you@example.com&quot;</code></pre></div></li><li><strong>Sign in:</strong> <code>gh auth login</code> → <strong>GitHub.com</strong> → <strong>HTTPS</strong> → <strong>Yes</strong> (authenticate Git) → <strong>Login with a web browser</strong> → paste the one-time code in the browser.</li><li><strong>Prove it.</strong> The setup check ships with the course. Until you have cloned the course (Step 3), download just the script for your system from GitHub — open it in the browser, choose <strong>Raw</strong>, save it into your home folder — then run it from there: | Windows | macOS | |---|---| | <code>powershell -ExecutionPolicy Bypass -File .\check-setup.ps1</code> | <code>bash check-setup.sh</code> | The scripts are <a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m09-github-pages/setup/check-setup.ps1" rel="noopener"><code>course/03-content/m09-github-pages/setup/check-setup.ps1</code></a> and <a class="pointer" href="https://github.com/tomqwu/ai_courses/blob/main/course/03-content/m09-github-pages/setup/check-setup.sh" rel="noopener"><code>course/03-content/m09-github-pages/setup/check-setup.sh</code></a> in <code>github.com/tomqwu/ai_courses</code>. Fix the first FAIL it names, open a new terminal, and run it again until it prints <strong>4 of 4 checks passed</strong>.</li></ol>
-<p><strong>Paste:</strong> the final check output, and every FAIL you hit on the way with the command that fixed it.</p></section><section class="lab-section " id="step-2-find-your-way-around-5-min"><h2>Step 2 — Find your way around (~5 min)</h2><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd ~
+<p><strong>Paste:</strong> the final check output, and every FAIL you hit on the way with the command that fixed it.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-2-find-your-way-around-5-min" data-step="3" aria-labelledby="step-2-find-your-way-around-5-min-title">
+  <p class="step-count">Step 3 of 9</p>
+  <h2 id="step-2-find-your-way-around-5-min-title">Find your way around</h2>
+  <p class="step-time">~5 min</p>
+  <div class="step-body"><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd ~
 mkdir code
 cd code
 pwd
 ls</code></pre></div>
 <p><code>pwd</code> should print your home folder followed by <code>code</code> — <code>/Users/&lt;you&gt;/code</code> on a Mac, <code>C:\Users\&lt;you&gt;\code</code> on Windows. <code>ls</code> prints nothing yet: the folder is empty. If <code>mkdir</code> says the folder already exists, that is fine; carry on.</p>
-<p><strong>Paste:</strong> the output of <code>pwd</code>.</p></section><section class="lab-section " id="step-3-clone-the-course-and-find-the-starter-5-min"><h2>Step 3 — Clone the course, and find the starter (~5 min)</h2><p>Still in <code>code</code>:</p>
+<p><strong>Paste:</strong> the output of <code>pwd</code>.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-3-clone-the-course-and-find-the-starter-5-min" data-step="4" aria-labelledby="step-3-clone-the-course-and-find-the-starter-5-min-title">
+  <p class="step-count">Step 4 of 9</p>
+  <h2 id="step-3-clone-the-course-and-find-the-starter-5-min-title">Clone the course, and find the starter</h2>
+  <p class="step-time">~5 min</p>
+  <div class="step-body"><p>Still in <code>code</code>:</p>
 <div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">gh repo clone tomqwu/ai_courses
 cd ai_courses/course/03-content/m09-github-pages/catalog-starter
 ls</code></pre></div>
@@ -40,7 +81,16 @@ ls</code></pre></div>
 <div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">cd ../../../../..     # up five levels: one for each folder you went into
 cd ~/code             # straight there from anywhere, using the home shortcut</code></pre></div>
 <p>Run <code>pwd</code> afterwards to prove where you landed.</p>
-<p><strong>Paste:</strong> the <code>ls</code> output from the starter folder.</p></section><section class="lab-section " id="step-4-create-your-own-repository-5-min"><h2>Step 4 — Create your own repository (~5 min)</h2><p>From <code>code</code>:</p>
+<p><strong>Paste:</strong> the <code>ls</code> output from the starter folder.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-4-create-your-own-repository-5-min" data-step="5" aria-labelledby="step-4-create-your-own-repository-5-min-title">
+  <p class="step-count">Step 5 of 9</p>
+  <h2 id="step-4-create-your-own-repository-5-min-title">Create your own repository</h2>
+  <p class="step-time">~5 min</p>
+  <div class="step-body"><p>From <code>code</code>:</p>
 <div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">gh repo create my-catalog --public --add-readme --clone --description &quot;My product catalog&quot;
 cd my-catalog
 git status</code></pre></div>
@@ -48,17 +98,59 @@ git status</code></pre></div>
 <p>Copy the starter in — including the hidden <code>.nojekyll</code> — from inside <code>my-catalog</code>:</p>
 <div class="table-wrap"><table><thead><tr><th>Windows</th><th>macOS</th></tr></thead><tbody><tr><td><code>Copy-Item -Recurse -Force ..\ai_courses\course\03-content\m09-github-pages\catalog-starter\* .</code></td><td><code>cp -R ../ai_courses/course/03-content/m09-github-pages/catalog-starter/. .</code></td></tr></tbody></table></div>
 <p>Both forms copy the hidden <code>.nojekyll</code> too: <code>-Force</code> does it in PowerShell, and the trailing <code>/.</code> does it on a Mac. Run <code>git status</code> again. It should show <code>README.md</code> as <strong>modified</strong> — the starter's README replaced the one GitHub made — and <code>.nojekyll</code>, <code>app.js</code>, <code>index.html</code>, <code>products.js</code>, <code>styles.css</code> as <strong>untracked</strong>. If <code>.nojekyll</code> is missing from that list, the copy left out <code>-Force</code> or the <code>/.</code>; run it again as written.</p>
-<p><strong>Paste:</strong> this <code>git status</code> output.</p></section><section class="lab-section " id="step-5-make-it-yours-and-preview-it-15-min"><h2>Step 5 — Make it yours and preview it (~15 min)</h2><ol><li>Open <code>products.js</code> in any text editor (Notepad or TextEdit is fine; if you use TextEdit, choose <strong>Format → Make Plain Text</strong> first).</li><li>Change <code>store.name</code>, <code>store.tagline</code> and <code>store.contact</code> (your email as <code>mailto:you@example.com</code>).</li><li>Replace the sample products with <strong>at least three of your own</strong>. Keep the commas between blocks.</li><li>In <code>index.html</code>, change the <code>description</code> line near the top to one sentence about your products.</li><li>Preview: | Windows | macOS | |---|---| | <code>start index.html</code> | <code>open index.html</code> | Your products appear with a category button for each category you used. If the page says <strong>products.js did not load</strong>, a comma or quote is missing: the browser's developer console (F12 on Windows, Cmd+Option+I on a Mac) names the line.</li></ol>
-<p><strong>Paste:</strong> a screenshot of the preview, and one line saying where each product's button points — a <code>buyUrl</code> to a checkout you run elsewhere, or "Ask about this" for now.</p></section><section class="lab-section " id="step-6-commit-and-push-5-min"><h2>Step 6 — Commit and push (~5 min)</h2><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">git status
+<p><strong>Paste:</strong> this <code>git status</code> output.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-5-make-it-yours-and-preview-it-15-min" data-step="6" aria-labelledby="step-5-make-it-yours-and-preview-it-15-min-title">
+  <p class="step-count">Step 6 of 9</p>
+  <h2 id="step-5-make-it-yours-and-preview-it-15-min-title">Make it yours and preview it</h2>
+  <p class="step-time">~15 min</p>
+  <div class="step-body"><ol><li>Open <code>products.js</code> in any text editor (Notepad or TextEdit is fine; if you use TextEdit, choose <strong>Format → Make Plain Text</strong> first).</li><li>Change <code>store.name</code>, <code>store.tagline</code> and <code>store.contact</code> (your email as <code>mailto:you@example.com</code>).</li><li>Replace the sample products with <strong>at least three of your own</strong>. Keep the commas between blocks.</li><li>In <code>index.html</code>, change the <code>description</code> line near the top to one sentence about your products.</li><li>Preview: | Windows | macOS | |---|---| | <code>start index.html</code> | <code>open index.html</code> | Your products appear with a category button for each category you used. If the page says <strong>products.js did not load</strong>, a comma or quote is missing: the browser's developer console (F12 on Windows, Cmd+Option+I on a Mac) names the line.</li></ol>
+<p><strong>Paste:</strong> a screenshot of the preview, and one line saying where each product's button points — a <code>buyUrl</code> to a checkout you run elsewhere, or "Ask about this" for now.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-6-commit-and-push-5-min" data-step="7" aria-labelledby="step-6-commit-and-push-5-min-title">
+  <p class="step-count">Step 7 of 9</p>
+  <h2 id="step-6-commit-and-push-5-min-title">Commit and push</h2>
+  <p class="step-time">~5 min</p>
+  <div class="step-body"><div class="codeblock"><button type="button" class="copy-code" data-copy aria-label="Copy code">Copy</button><pre><code class="lang-bash">git status
 git add .
 git commit -m &quot;Add my catalog&quot;
 git push
 git log --oneline -2
 git status</code></pre></div>
 <p><code>git commit</code> prints a line starting <code>[main</code> with a short code and the number of files changed. <code>git push</code> ends with a line like <code>699905a..c02f59f  main -&gt; main</code>. The last <code>git status</code> says <strong>nothing to commit, working tree clean</strong> — the proof that everything went.</p>
-<p><strong>Paste:</strong> the output of <code>git log --oneline -2</code> and the last <code>git status</code>.</p></section><section class="lab-section " id="step-7-publish-with-github-pages-10-min-including-the-wait"><h2>Step 7 — Publish with GitHub Pages (~10 min, including the wait)</h2><ol><li>Open your repository on GitHub: <code>gh repo view --web</code> opens it in your browser.</li><li><strong>Settings</strong> → <strong>Pages</strong> (left column).</li><li>Under <strong>Build and deployment</strong>, <strong>Source</strong>: <strong>Deploy from a branch</strong>. Branch: <code>main</code>. Folder: <code>/ (root)</code>. <strong>Save</strong>.</li><li>Wait. It can take up to 10 minutes. The <strong>Actions</strong> tab shows a run called <strong>pages build and deployment</strong>; when it is green, the Pages settings show <strong>Visit site</strong> with your address.</li><li>Open <code>https://&lt;your-username&gt;.github.io/my-catalog/</code> on your computer <strong>and</strong> on your phone.</li></ol>
-<p><strong>Paste:</strong> the address, and a screenshot of the published page on your phone.</p></section><section class="lab-section " id="step-8-change-it-and-watch-it-republish-10-min"><h2>Step 8 — Change it and watch it republish (~10 min)</h2><p>Change one product's price in <code>products.js</code>. Preview it, then run the Step 6 loop with a message that says what changed, for example <code>git commit -m "Lower the mug price to 30"</code>. Watch the <strong>Actions</strong> tab run again, then reload the published page.</p>
-<p><strong>Paste:</strong> the new <code>git log --oneline -1</code> and the time between your push and the new price appearing.</p></section><section class="lab-section lab-checklist" id="acceptance-checklist-binary-pass-every-box-checked">
+<p><strong>Paste:</strong> the output of <code>git log --oneline -2</code> and the last <code>git status</code>.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-7-publish-with-github-pages-10-min-including-the-wait" data-step="8" aria-labelledby="step-7-publish-with-github-pages-10-min-including-the-wait-title">
+  <p class="step-count">Step 8 of 9</p>
+  <h2 id="step-7-publish-with-github-pages-10-min-including-the-wait-title">Publish with GitHub Pages</h2>
+  <p class="step-time">~10 min, including the wait</p>
+  <div class="step-body"><ol><li>Open your repository on GitHub: <code>gh repo view --web</code> opens it in your browser.</li><li><strong>Settings</strong> → <strong>Pages</strong> (left column).</li><li>Under <strong>Build and deployment</strong>, <strong>Source</strong>: <strong>Deploy from a branch</strong>. Branch: <code>main</code>. Folder: <code>/ (root)</code>. <strong>Save</strong>.</li><li>Wait. It can take up to 10 minutes. The <strong>Actions</strong> tab shows a run called <strong>pages build and deployment</strong>; when it is green, the Pages settings show <strong>Visit site</strong> with your address.</li><li>Open <code>https://&lt;your-username&gt;.github.io/my-catalog/</code> on your computer <strong>and</strong> on your phone.</li></ol>
+<p><strong>Paste:</strong> the address, and a screenshot of the published page on your phone.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
+  </div>
+</section><section class="lab-step" id="step-8-change-it-and-watch-it-republish-10-min" data-step="9" aria-labelledby="step-8-change-it-and-watch-it-republish-10-min-title">
+  <p class="step-count">Step 9 of 9</p>
+  <h2 id="step-8-change-it-and-watch-it-republish-10-min-title">Change it and watch it republish</h2>
+  <p class="step-time">~10 min</p>
+  <div class="step-body"><p>Change one product's price in <code>products.js</code>. Preview it, then run the Step 6 loop with a message that says what changed, for example <code>git commit -m "Lower the mug price to 30"</code>. Watch the <strong>Actions</strong> tab run again, then reload the published page.</p>
+<p><strong>Paste:</strong> the new <code>git log --oneline -1</code> and the time between your push and the new price appearing.</p></div>
+  <div class="step-actions">
+    <button type="button" data-step-prev>Previous step</button>
+    <button type="button" class="btn-primary" data-step-next>Mark done — then the checklist</button>
+  </div>
+</section></div>
+    <aside class="lab-panel" aria-label="Acceptance checklist"><section class="lab-section lab-checklist" id="acceptance-checklist-binary-pass-every-box-checked">
   <h2>Acceptance checklist (binary — pass = every box checked)</h2>
   <p class="check-progress"><strong data-check-count>0 of 8 checked</strong>
     <span class="progress-bar" aria-hidden="true"><span data-check-fill></span></span></p>
@@ -69,7 +161,10 @@ git status</code></pre></div>
   <p class="section-note">From this lab's rubric (<code>lab-rubrics.md</code>). Any one of these fails the lab whatever the checklist shows, so read them before you submit.</p>
   <p>Any one of these fails the lab regardless of score:</p>
 <ol><li><strong>Fabricated output</strong> — setup check, <code>git status</code> or <code>git log</code> output that was retyped, edited, or does not match the repository on GitHub.</li><li><strong>Someone else's catalog</strong> — a published address that is not the learner's own repository.</li><li><strong>Payments on the page</strong> — a cart, a card form or any payment collection on the GitHub Pages site. GitHub's own terms forbid using Pages to run an online business or e-commerce site (<code>github.com/github/docs</code>, <code>content/pages/getting-started-with-github-pages/github-pages-limits.md</code>).</li><li><strong>Secrets committed</strong> — a password, token or private key anywhere in the repository or its history.</li></ol>
-</section><section class="lab-section lab-evidence" id="evidence-to-record">
+</section><a class="btn-dark lab-export" href="#evidence-to-record" data-evidence-jump>Write and export the evidence entry</a></aside>
+  </div>
+  <div class="lab-after doc-article">
+<section class="lab-section lab-evidence" id="evidence-to-record">
   <h2>Evidence to record</h2>
   <p><code>evidence.md</code> holds, in order: your GitHub username; the setup check output and every failure you fixed; <code>pwd</code>; the starter <code>ls</code>; <code>git status</code> before the first commit; the preview screenshot and button destinations; <code>git log --oneline -2</code>; the published address and the phone screenshot; the Step 8 commit and how long it took to appear. Commit <code>evidence.md</code> into <code>my-catalog</code> as well — it is the first entry in the habit the rest of this course is built on: a claim is only as good as the record behind it.</p>
   <form class="evidence-form" data-evidence-form onsubmit="return false">
@@ -91,9 +186,9 @@ git status</code></pre></div>
   </form>
 </section><section class="lab-section lab-stretch" id="stretch-optional-30-min"><h2>Stretch (optional, ~30 min)</h2><ul><li>Add real photos: an <code>images</code> folder, <code>image: "images/your-file.jpg"</code> per product, each under about 500 KB.</li><li>Give one product a <code>buyUrl</code> that goes to a payment link from a payment provider or a marketplace listing, and test it from your phone.</li><li>Read AI × QE's publishing workflow (<a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/.github/workflows/pages.yml" rel="noopener"><code>ai_qe/.github/workflows/pages.yml</code></a>) and list, in plain words, three checks it runs before it deploys that your branch-published catalog does not.</li></ul></section><section class="lab-section lab-discussion" id="discussion-prompt"><h2>Discussion prompt</h2><p>Post your catalog's address and the one setup step that took longest, with the line that fixed it. Reply to one classmate with the first thing you tried to tap on their catalog that did not do what you expected.</p></section>
     <footer class="doc-footer">
-      <p class="index-footnote">Checklist ticks and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m09-github-pages/lab.md</code>.</p>
+      <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m09-github-pages/lab.md</code>.</p>
     </footer>
-  </article>
+  </div>
 </div>
 </main>
 </div>
