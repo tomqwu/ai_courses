@@ -66,51 +66,9 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* Slide-only faces (#72). The decks were refit to Source Sans 3's metrics (#70); Plex is 8.6% and
-   Bricolage 12.5% wider (measured in Chromium over the same sample), so inside the 16:9 frame the new
-   faces are width-matched with size-adjust (92% and 88%, the measured ratios rounded down) and
-   every verified slide still fits. The app UI uses the
-   faces at their true size. The slide templates of #76 replace this with their own type scale. */
-
-@font-face {
-  font-family: "IBM Plex Sans Slide";
-  src: url("fonts/ibm-plex-sans-latin.woff2") format("woff2");
-  font-weight: 100 700;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 92%;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "IBM Plex Sans Slide";
-  src: url("fonts/ibm-plex-sans-latin-ext.woff2") format("woff2");
-  font-weight: 100 700;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 92%;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: "Bricolage Grotesque Slide";
-  src: url("fonts/bricolage-grotesque-latin.woff2") format("woff2");
-  font-weight: 200 800;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 88%;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-@font-face {
-  font-family: "Bricolage Grotesque Slide";
-  src: url("fonts/bricolage-grotesque-latin-ext.woff2") format("woff2");
-  font-weight: 200 800;
-  font-style: normal;
-  font-display: swap;
-  size-adjust: 88%;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
+/* The slides use the faces at their true size (#76). #72 width-matched them to Source Sans 3 with
+   size-adjust while the decks were still fitted to it; the slide templates' own scale (title 48,
+   body 22, code 17 at 1280) replaced that fit, and every slide is re-measured by the gate. */
 
 :root {
   color-scheme: light;
@@ -144,6 +102,10 @@
   --dark-line: #3a3f4a;
   --dark-ink: #e8e6e1;
   --dark-ink-soft: #c9c5bc;
+  --code-bg: #121419;            /* the exhibit panel (#76) */
+  --code-head: #1b1e25;          /* its file · lines · commit header */
+  --code-hl: #1e2a4a;            /* a highlighted line */
+  --code-num: #9aa0aa;           /* line numbers: 5.4:1 even on a highlighted line */
   --focus: #2446c8;
   --white: #ffffff;
 
@@ -151,8 +113,8 @@
   --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --font-display: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-slide: "IBM Plex Sans Slide", var(--font-body);
-  --font-slide-display: "Bricolage Grotesque Slide", var(--font-display);
+  --font-slide: var(--font-body);
+  --font-slide-display: var(--font-display);
 
   /* Document pages (index, transcripts) run on a tighter ratio than the slides: UI text does not
      support 1.25 steps. Seven sizes replace the twenty that had accumulated here. */
@@ -428,7 +390,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
  */
 
 .player { width: var(--frame-width); margin: 0 auto; padding: 24px 0 48px; }
-.deck-page .slide { border-radius: 14px 14px 0 0; border-bottom: 0; box-shadow: none; }
+.deck-page .slide { border-radius: 14px 14px 0 0; border-bottom: 0; box-shadow: none; scroll-margin-top: calc(var(--bar-h) + 24px); }
 .player-bar {
   display: flex; flex-direction: column; gap: 6px;
   padding: 10px 14px;
@@ -564,16 +526,17 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   margin: 0;
   container-type: inline-size;
 
-  /* ── type: one scale, ratio 1.25, with one deliberate display jump ──
-     --t-chrome is 2.4% of the frame height, above the 2% floor that survives a projector. */
-  --t-chrome: 1.35cqw;
-  --t-small: 1.69cqw;
-  --t-body: 2.11cqw;
-  --t-lead: 2.64cqw;
-  --t-h3: 3.30cqw;
-  --t-metric: 4.12cqw;
-  --t-title: 5.50cqw;             /* title / body = 2.61, above the 2.5 hierarchy floor */
-  --t-display: 6.90cqw;
+  /* ── type (#76): title 48, body 22, code 17 at a 1280px frame; one scale, sizes in cqw so they
+     scale with the frame. title / body = 2.18, above the 2.0 hierarchy floor the owner set on #71.
+     --t-chrome is 15px at 1280 — 2.1% of the frame height, above the 2% floor for a projector. */
+  --t-chrome: 1.17cqw;
+  --t-small: 1.33cqw;
+  --t-body: 1.72cqw;
+  --t-lead: 2.03cqw;
+  --t-h3: 2.50cqw;
+  --t-title: 3.75cqw;
+  --t-metric: 4.40cqw;
+  --t-display: 6.25cqw;
 
   /* ── space: one 8pt grid, expressed proportionally so it scales with the frame ── */
   --u: 0.65cqw;                   /* 8px at a 1228px frame */
@@ -584,14 +547,14 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   --s5: 3.25cqw;
   --s6: 3.91cqw;
   --s8: 5.21cqw;
-
-  --rail: 22%;
 }
 
+/* Four templates (#76), all light, none with a rail: a meta line at the top, then the body — a
+   section opener, a concept or flow slide (title over content), or a proof (claim beside exhibit). */
 .slide {
-  display: grid;
-  grid-template-columns: var(--rail) minmax(0, 1fr);
-  column-gap: var(--s6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
   aspect-ratio: 16 / 9;
   padding: var(--s5) var(--s6);
   background: var(--surface);
@@ -618,8 +581,6 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   --c-code-ink: var(--ink);
   --c-quote-ink: var(--ink-soft);
   --c-quote-rule: var(--accent);
-  --c-pre-bg: var(--ink-strong);
-  --c-pre-ink: var(--dark-ink);
   color: var(--c-ink);
 }
 /* ── declared diagrams ─────────────────────────────────────────────────────────────────────────
@@ -637,8 +598,9 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .diagram-flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.45em 1.1em;
   padding: 0; margin: 0.6em 0; list-style: none; }
 .diagram-flow .d-node { position: relative; display: flex; flex-direction: column;
-  justify-content: center; background: var(--c-surface); border: 1px solid var(--c-rule);
-  border-radius: 0.45em; padding: 0.45em 0.85em; }
+  justify-content: center; background: var(--surface); border: 2px solid var(--c-ink-strong);
+  border-radius: 0.6em; padding: 0.45em 0.85em; }
+.diagram-flow .d-node.is-seam { background: var(--accent-soft); border-color: var(--accent); }
 .diagram-flow .d-node::after { content: "\2192"; position: absolute; left: 100%;
   margin-left: 0.4em; top: 50%; transform: translateY(-50%); color: var(--c-accent); font-weight: 700; }
 .diagram-flow .d-node:last-child::after { content: none; }
@@ -675,8 +637,8 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .diagram-stack .d-row { position: relative; color: var(--c-ink); line-height: 1.45; }
 .diagram-stack .d-row::before { content: ""; position: absolute; left: -1.1em; top: 0.75em;
   width: 0.6em; height: 2px; background: var(--c-rule); }
-.diagram-stack .d-seam { font-size: 0.8em; color: var(--c-ink-soft);
-  border-top: 1px dashed var(--c-rule); padding-top: 0.3em; }
+.diagram-stack .d-seam { font-size: 0.8em; color: var(--accent-deep);
+  border-top: 1px dashed var(--accent); padding-top: 0.3em; }
 .diagram-stack .d-chain { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35em; }
 .diagram-stack .d-chip { display: inline-block; background: var(--c-surface);
   border: 1px solid var(--c-rule); border-radius: 0.45em; padding: 0.4em 0.75em; }
@@ -685,67 +647,27 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 
 .deck-ready .slide { margin-bottom: 0; }
 
-/* The spine: full frame height, so the empty half of the frame is framed rather than left over. */
-.slide-rail {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  padding-right: var(--s4);
-  border-right: 1px solid var(--c-rule);
-  justify-content: space-between;
+/* The meta line: the section, an Evidence chip on a proof slide, and the slide number. */
+.slide-meta {
+  display: flex; align-items: center; gap: var(--s2);
+  font-size: var(--t-chrome); line-height: 1.3; color: var(--c-ink-soft);
 }
-.slide-rail .rail-head { display: flex; flex-direction: column; }
-.slide-rail .kicker {
-  margin: 0 0 var(--s1);
-  font-size: var(--t-chrome);
-  font-weight: 700;
-  color: var(--c-accent);
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  line-height: 1.2;
+.slide-meta .kicker { flex: 1; min-width: 0; }
+.slide-number { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.evidence-chip, .source-chip {
+  flex: none; padding: .3em .6em; border-radius: .4em; background: var(--proof-bg); color: var(--proof-ink);
+  font-weight: 650; letter-spacing: .08em; text-transform: uppercase;
 }
-.slide-rail .rail-brand {
-  margin: 0 0 var(--s1);
-  font-size: var(--t-chrome);
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--c-ink-soft);
-  line-height: 1.2;
+.opener-number {
+  margin: 0; font-family: var(--font-slide-display); font-size: var(--t-display); font-weight: 700;
+  line-height: .95; letter-spacing: -.03em; color: var(--c-accent);
 }
-.slide-rail .rail-module {
-  margin: 0;
-  font-size: var(--t-small);
-  line-height: 1.3;
-  color: var(--c-ink-soft);
-  text-wrap: pretty;
-}
-.slide-rail .rail-foot {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s1);
-  padding-top: var(--s2);
-  font-size: var(--t-chrome);
-  color: var(--c-ink-soft);
-}
-.slide-rail .slide-number {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: .1em;
-  color: var(--c-ink-strong);
-  font-weight: 650;
-}
-.slide-rail .rail-link {
-  color: var(--c-accent);
-  text-decoration: none;
-  border-bottom: 1px solid var(--c-rule);
-  padding-bottom: 2px;
-  align-self: flex-start;
-}
-.slide-rail .rail-link:hover { border-bottom-color: var(--c-accent); }
 
 .slide-body {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;         /* the composition fix: the block is optically placed */
+  justify-content: center;         /* the block is placed in the space under the meta line */
   min-height: 0;
   gap: var(--s3);
 }
@@ -753,10 +675,10 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   margin: 0;
   font-size: var(--t-title);
   font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -.035em;
+  line-height: 1.06;
+  letter-spacing: -.02em;
   color: var(--c-ink-strong);
-  max-width: 26ch;
+  max-width: 30ch;
   text-wrap: balance;
 }
 .slide-body h3 {
@@ -802,17 +724,39 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   padding: .06em .32em;
   overflow-wrap: anywhere;
 }
-.slide-content pre {
-  margin: 0;
-  padding: var(--s3) var(--s4);
-  background: var(--c-pre-bg);
-  color: var(--c-pre-ink);
-  border-radius: 5px;
-  overflow: auto;
-  font-size: var(--t-small);
-  line-height: 1.5;
+/* The exhibit (#76): a dark code panel with a file · lines · commit header, line numbers taken from
+   the cited file, highlighted lines, and long lines wrapped with a hanging indent, never clipped. */
+.exhibit {
+  display: flex; flex-direction: column; min-height: 0; margin: 0;
+  border-radius: .75em; overflow: hidden; background: var(--code-bg);
 }
-.slide-content pre code { background: none; border: 0; padding: 0; color: inherit; }
+.exhibit-head {
+  display: flex; align-items: center; gap: .7em; padding: .6em 1.1em; background: var(--code-head);
+  font-family: var(--font-mono); font-size: var(--t-chrome); color: var(--dark-ink-soft);
+}
+.exhibit-icon { width: 1.1em; height: 1.1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+.exhibit-file { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.exhibit-lines { flex: none; }
+.exhibit pre {
+  margin: 0; padding: .9em 0; overflow: hidden;
+  font-family: var(--font-mono); font-size: var(--t-small); line-height: 1.5;
+  color: var(--dark-ink); white-space: pre-wrap;
+}
+.exhibit pre code { display: block; background: none; border: 0; padding: 0; color: inherit; font-size: 1em; }
+.exhibit .line { display: block; position: relative; padding: 0 1.2em 0 calc(1.2em + 2ch); text-indent: -2ch; }
+.exhibit.is-numbered .line { padding-left: calc(1.2em + 6ch); }
+.exhibit.is-numbered .line::before {
+  content: attr(data-n); position: absolute; left: 1.2em; width: 3.5ch;
+  text-align: right; text-indent: 0; color: var(--code-num);
+}
+.exhibit .line.is-hl { background: var(--code-hl); box-shadow: inset 3px 0 0 var(--accent-bright); }
+
+/* A slide that ends on a line of bare citations shows it as its source line. */
+.slide-content .slide-source {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .4em .8em; margin-top: var(--s3); max-width: none;
+  font-size: var(--t-chrome); color: var(--c-ink-soft);
+}
+.slide-content .slide-source code { font-size: 1em; background: none; border: 0; padding: 0; color: var(--c-ink-soft); }
 .slide a { color: var(--c-accent); text-decoration-color: var(--c-rule); }
 .slide-content blockquote {
   margin: 0;
@@ -821,35 +765,18 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   color: var(--c-quote-ink);
 }
 
-/* Dark slide kinds — proof slides and the cover — redefine the component colours in one place. */
-.slide-proof, .slide-cover {
-  --c-ink: var(--dark-ink);
-  --c-ink-soft: var(--dark-ink-soft);
-  --c-ink-strong: var(--surface);
-  --c-accent: var(--accent-bright);
-  --c-rule: var(--dark-line);
-  --c-rule-soft: var(--dark-line);
-  --c-surface: var(--dark-mid);
-  --c-surface-ink: var(--surface);
-  --c-code-bg: var(--dark-mid);
-  --c-code-rule: var(--dark-line);
-  --c-code-ink: var(--dark-ink);
-  --c-quote-ink: var(--dark-ink);
-  --c-quote-rule: var(--accent-bright);
-  --c-pre-bg: var(--dark-deep);
-  --c-pre-ink: var(--dark-ink);
-}
+/* Proof: the claim and its bullets on the left (~5/12), the exhibit on the right (~7/12). The slide
+   stays light; the Evidence chip in the meta line and the exhibit panel carry the change of kind. */
+.proof-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s6); align-items: center; }
+.proof-claim { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
+.proof-exhibit { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; min-height: 0; }
 
-/* Proof slides: the decks' evidence slides get a deliberate change of rhythm. */
-.slide-proof { background: var(--ink-strong); border-color: var(--ink-strong); }
-
-/* Cover: slide 1 keeps the same grammar — rail plus one centred body block — at display size. */
-.slide-cover { background: var(--ink-strong); border-color: var(--ink-strong); }
+/* Cover: the module's title at display size, light like every other slide. */
 .slide-cover h2 {
-  font-size: var(--t-display);
+  font-size: var(--t-metric);
   line-height: 1.02;
-  letter-spacing: -.045em;
-  max-width: 20ch;
+  letter-spacing: -.03em;
+  max-width: 22ch;
 }
 .slide-cover .cover-meta { max-width: 46ch; font-size: var(--t-small); color: var(--c-ink-soft); }
 .slide-cover .cover-meta strong {
@@ -1197,36 +1124,15 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
     --u: .5rem;
     --s1: .5rem; --s2: .75rem; --s3: 1rem; --s4: 1.25rem;
     --s5: 1.25rem; --s6: 1.5rem; --s8: 2rem;
-    --rail: 1fr;
   }
-  /* The spine becomes a horizontal meta bar when there is no room beside the content. */
+  /* On a phone the slide grows to its content instead of holding 16:9. */
   .slide {
-    grid-template-columns: 1fr;
-    row-gap: var(--s3);
     aspect-ratio: auto;
     min-height: 0;
     padding: var(--s4) var(--s3) var(--s3);
     overflow: visible;
   }
-  .slide-rail {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-    padding: 0 0 var(--s2);
-    gap: var(--s1);
-  }
-  .slide-rail .rail-head {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--s1) var(--s3);
-  }
-  .slide-rail .rail-brand, .slide-rail .rail-module, .slide-rail .kicker { margin: 0; }
-  .slide-rail .rail-foot {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--s1) var(--s3);
-  }
+  .proof-split { grid-template-columns: minmax(0, 1fr); }
   .slide-body { justify-content: flex-start; }
   .slide-body h2, .slide-cover h2 { max-width: none; }
   .slide-content p, .slide-content li { max-width: none; }
@@ -1473,7 +1379,6 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
   display: inline-block; padding: var(--s1) var(--s3); background: var(--c-accent); color: var(--surface);
   border-radius: 4px; text-decoration: none; font-size: var(--t-small); font-weight: 650;
 }
-.slide-proof .slide-cta a, .slide-cover .slide-cta a { color: var(--ink-strong); }
 
 @media (max-width: 900px) {
   .doc-main.has-toc { grid-template-columns: minmax(0, 1fr); }

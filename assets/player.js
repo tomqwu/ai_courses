@@ -594,6 +594,9 @@
   function start() {
     body.classList.add('deck-ready');
     fitFrame();
+    // A deep link makes the browser scroll to the slide's anchor, which tucks the top of the stage
+    // under the sticky top bar. The stage and its bar are sized to fit from the top of the page.
+    window.scrollTo(0, 0);
     // A deep link names a slide on purpose — an outline unit, a search hit, a transcript heading — so
     // it wins over the saved resume point. Resuming is for arriving at the deck with no slide named.
     const hashIndex = slides.findIndex(slide => `#${slide.id}` === location.hash);
