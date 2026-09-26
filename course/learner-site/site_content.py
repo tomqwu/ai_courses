@@ -392,6 +392,9 @@ def parse_quiz(text: str, deck_id: str) -> dict:
             continue
         seg = SEGMENT.search(k["rationale"]) or (SEGMENT.search(q.get("head", "")) if q.get("head") else None)
         q["objective"] = q.get("segment") or (f"M{seg.group(1)}.{seg.group(2)}" if seg else "")
+        # The objective in the key's own words ("M2.1 pipeline"), shown beside the question (#78).
+        said = re.search(r"Objective:\s*(.+?)\s*(?:—|\(|;|\)|$)", k["rationale"])
+        q["objective_text"] = said.group(1).strip().rstrip(".") if said else q["objective"]
         q["rationale_html"] = inline(k["rationale"])
         if q["type"] == "mc":
             letters = [o["letter"] for o in q["options"]]

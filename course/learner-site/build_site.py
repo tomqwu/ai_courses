@@ -1229,7 +1229,7 @@ def main(argv=None) -> int:
             quiz = SC.parse_quiz(SC.read(folder / "quiz.md"), deck["id"])
         except SC.QuizError as error:
             raise SystemExit(f"knowledge check: {error}")
-        html_out, record = SPG.quiz_page(deck, quiz, args.site_base, BRAND_MARK)
+        html_out, record = SPG.quiz_page(deck, quiz, args.site_base, BRAND_MARK, units_by_deck[deck["id"]])
         (target / f"quiz-{deck['id']}.html").write_text(html_out, encoding="utf-8")
         record["module"] = SPG.short_label(deck)
         records.append(record)
