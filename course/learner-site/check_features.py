@@ -50,8 +50,21 @@ def run(page, browser, base: str) -> list[str]:
     def units():
         return json.loads(page.evaluate("JSON.stringify(window.APSProgress.get().units)"))
 
-    # Progress: a first visit offers no "continue"; ticks survive a reload; the deck marks units;
-    # the cards and the landing page reflect it; the learner can export it.
+    def events():
+        return json.loads(page.evaluate("JSON.stringify(window.APSProgress.events())"))
+
+    # Progress is recorded, never self-ticked (#84): no page offers a checkbox that marks a unit, and
+    # a new visitor sees Start above the fold on a module page, on a desktop and on a phone.
+    for built in sorted(p for p in SITE.glob("*.html") if not p.name.startswith("_")):
+        need('data-progress="' not in built.read_text(encoding="utf-8"),
+             f"{built.name}: offers a checkbox that marks a unit done")
+    for w, h in ((1440, 900), (390, 844)):
+        fresh = browser.new_context(viewport={"width": w, "height": h}).new_page()
+        fresh.goto(f"{base}/module-m03.html")
+        box = fresh.locator("[data-start-link]").bounding_box()
+        need(box and box["y"] + box["height"] <= h and fresh.locator("[data-start-link]").inner_text().strip() == "Start module",
+             f"module-m03 at {w}x{h}: Start module is not above the fold for a new visitor")
+        fresh.close()
     page.goto(f"{base}/index.html")
     need(page.locator("[data-continue]").is_hidden(), "index: a first visit shows 'continue'")
     # A module's landing point (#74): a first visit is offered the start, at the top of the page.
@@ -60,22 +73,50 @@ def run(page, browser, base: str) -> list[str]:
     need(start.inner_text().strip() == "Start module" and (start.get_attribute("href") or "").endswith("m02.html#slide-1")
          and start.bounding_box()["y"] < 900,
          "module-m02: a first visit is not offered 'Start module' above the fold")
-    page.goto(f"{base}/module-m01.html")
-    page.check('[data-progress="m01:intro"]')
-    page.reload()
-    need(page.is_checked('[data-progress="m01:intro"]'), "module page: a ticked unit did not survive a reload")
+    # Paging through a deck records where the learner is, and completes nothing.
     page.goto(f"{base}/m02.html")
-    for _ in range(40):
-        if any(k.startswith("m02:") for k in units()):
-            break
+    page.locator("#slides").focus()
+    for _ in range(4):
         page.keyboard.press("ArrowRight")
-        page.wait_for_timeout(100)
-    need(any(k.startswith("m02:") for k in units()), "deck: paging through M2 marked no unit done")
+        page.wait_for_timeout(60)
+    need(not any(k.startswith("m02:") for k in units()), "deck: paging M2 completed a unit without watching it")
+    # Watching: the narration ending on a unit's last slide records the unit as watched. The audio
+    # itself is not played here (a module is minutes long); its `ended` event is what the player
+    # records, so that is what is fired, on each lesson unit's last slide.
+    page.goto(f"{base}/module-m02.html")
+    watch = [(a.get_attribute("data-unit"), a.get_attribute("data-last"))
+             for a in page.locator(".unit-link[data-unit]").all()
+             if a.get_attribute("data-unit").split(":")[1] not in ("lab", "quiz")]
+    for unit, last in watch:
+        page.goto(f"{base}/m02.html#slide-{last}")
+        page.wait_for_timeout(250)
+        page.evaluate("document.querySelector('audio[data-narration-audio]').dispatchEvent(new Event('ended'))")
+    watched = {e["unit"] for e in events() if e["kind"] == "watched"}
+    need(watched == {u for u, _ in watch}, f"deck: watching M2 end to end recorded {sorted(watched)}")
+    page.goto(f"{base}/module-m02.html")
+    page.reload()
+    for unit, _ in watch:
+        row = page.locator(f'.unit-link[data-unit="{unit}"]')
+        need("is-done" in (row.get_attribute("class") or ""), f"module-m02: {unit} was watched but its row is not done")
+        need("is-done" in (page.locator(f'#app-outline [data-unit="{unit}"]').get_attribute("class") or ""),
+             f"outline: {unit} was watched but the outline does not show it done")
     page.goto(f"{base}/index.html")
     need(page.locator("[data-continue]").is_visible(), "index: a returning visit shows no 'continue'")
+    card = page.locator('[data-card-module="m02"] [data-ring-units]').get_attribute("aria-label") or ""
+    need(card.startswith(f"{len(watch)} of"), f"index: the M2 card does not show its watched units ({card!r})")
     rings = page.eval_on_selector_all("[data-ring-units]", "els => els.map(e => e.getAttribute('aria-label'))")
     need(any(r and not r.startswith("0 of") for r in rings), f"index: no progress ring reflects progress ({rings[:3]})")
-    need('"m01:intro"' in page.evaluate("window.APSProgress.exportJSON()"), "progress export lacks a ticked unit")
+    need('"kind": "watched"' in page.evaluate("window.APSProgress.exportJSON()"), "progress export lacks the watched events")
+    # Reading: a lesson read to the end records its units as read.
+    page.goto(f"{base}/lesson-m03.html")
+    height = page.evaluate("document.documentElement.scrollHeight")
+    for y in range(0, height + 900, 500):
+        page.evaluate(f"window.scrollTo(0, {y})")
+        page.wait_for_timeout(40)
+    page.wait_for_timeout(300)
+    read = {e["unit"] for e in events() if e["kind"] == "read"}
+    need({"m03:intro", "m03:M3.1", "m03:M3.2", "m03:M3.3", "m03:summary"} <= read,
+         f"lesson-m03: reading to the end recorded {sorted(read)}")
 
     # The shell (#73): one frame on every page, and no page opens on the old hero band.
     for built in sorted(p for p in SITE.glob("*.html") if not p.name.startswith("_")):
@@ -263,12 +304,21 @@ def run(page, browser, base: str) -> list[str]:
     kept = sum(1 for i in range(boxes.count()) if page.locator("[data-check]").nth(i).is_checked())
     need(kept == boxes.count() > 0 and page.locator("[data-lab-done]").is_visible(),
          f"lab-m01: {kept} of {boxes.count()} checks survived a reload, or the lab did not complete")
+    need("m01:lab" not in units(), "lab-m01: the checklist alone completed the lab — the evidence entry is not exported yet")
     page.fill('[data-evidence="project"]', "my-studio")
     page.fill('[data-evidence="commands"]', "python3 -m pytest tests/ -q → 2 passed")
     out = page.input_value("[data-evidence-out]")
     need(out.startswith("## Evidence — my-studio —") and "Commands (with results):\n- python3 -m pytest" in out
          and "Environment:" in out and "Revision:" in out and "Limitations / not verified:" in out,
          f"lab-m01: evidence export is not in the Module 1 format: {out[:120]!r}")
+    # The exported, filled-in entry is what completes the lab (#84).
+    page.fill('[data-evidence="environment"]', "macOS 15.6, Python 3.11.9")
+    page.fill('[data-evidence="revision"]', "abc1234")
+    with page.expect_download():
+        page.click("[data-evidence-download]")
+    need("m01:lab" in units() and page.locator("[data-lab-complete]").is_visible()
+         and any(e["unit"] == "m01:lab" and e["kind"] == "completed" for e in events()),
+         "lab-m01: exporting the filled-in evidence entry did not complete the lab")
     for lp in sorted(SITE.glob("lab-m*.html")):
         page.goto(f"{base}/{lp.name}")
         section = page.locator("#auto-fail")

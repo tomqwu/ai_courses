@@ -86,6 +86,47 @@
     if (count) count.textContent = complete + ' of ' + track.modules.length + ' modules complete';
   }
 
+  // A module card's one action (#84): Resume where the learner stopped in that module, Continue once
+  // anything is recorded, otherwise Start.
+  function renderCards(s) {
+    document.querySelectorAll('[data-card-module]').forEach(function (card) {
+      var deck = card.getAttribute('data-card-module');
+      var action = card.querySelector('[data-card-action]');
+      if (!action) return;
+      if (!action.hasAttribute('data-href')) action.setAttribute('data-href', action.getAttribute('href'));
+      var at = lastSlide(s);
+      var any = Object.keys(s.units).some(function (k) { return k.indexOf(deck + ':') === 0; });
+      if (at && at.deck === deck) { action.textContent = 'Resume'; action.setAttribute('href', base() + '/' + s.last.href); }
+      else { action.textContent = any ? 'Continue' : 'Start'; action.setAttribute('href', action.getAttribute('data-href')); }
+      card.classList.toggle('is-started', any || !!(at && at.deck === deck));
+    });
+  }
+
+  // The module page's recorded count, and its next unit after the start button (#84).
+  function renderModuleProgress(s) {
+    document.querySelectorAll('[data-module-progress]').forEach(function (box) {
+      var ids = (box.getAttribute('data-module-units') || '').split(',').filter(Boolean);
+      var done = ids.filter(function (id) { return !!s.units[id]; }).length;
+      var count = box.querySelector('[data-progress-count]');
+      if (count) count.textContent = done + ' of ' + ids.length;
+      var bar = box.querySelector('[role="progressbar"]');
+      if (bar) bar.setAttribute('aria-valuenow', String(done));
+      var fill = box.querySelector('[data-progress-fill]');
+      if (fill) fill.style.width = (ids.length ? done / ids.length * 100 : 0) + '%';
+    });
+    document.querySelectorAll('[data-module-next]').forEach(function (line) {
+      var rows = Array.prototype.slice.call(document.querySelectorAll('.unit-link[data-unit]'));
+      var next = rows.filter(function (a) { return !s.units[a.getAttribute('data-unit')]; })[0];
+      var any = rows.some(function (a) { return !!s.units[a.getAttribute('data-unit')]; });
+      line.hidden = !(next && any);
+      if (next) {
+        var link = line.querySelector('[data-module-next-link]');
+        link.setAttribute('href', next.getAttribute('href'));
+        link.textContent = next.querySelector('.unit-title').textContent + ' · ' + next.querySelector('.unit-kind').textContent;
+      }
+    });
+  }
+
   // The module page's start point (#74): "Resume · slide N" once the learner has stopped inside the
   // deck past its cover; otherwise the build's "Start module".
   function renderStart(s) {
@@ -122,10 +163,13 @@
       var link = row.querySelector(':scope > a');
       if (link) mark(link, moduleStatus(s, row.getAttribute('data-module'), ids));
     });
-    nav.querySelectorAll('[data-unit]').forEach(function (a) {
+    // Every unit on the page — the outline's and the module page's rows alike (#84).
+    document.querySelectorAll('[data-unit]').forEach(function (a) {
       mark(a, unitStatus(s, a.getAttribute('data-unit'),
         parseInt(a.getAttribute('data-first'), 10), parseInt(a.getAttribute('data-last'), 10)));
     });
+    renderModuleProgress(s);
+    renderCards(s);
     renderPath(s);
     renderStart(s);
   }
@@ -140,6 +184,19 @@
     });
   }
   document.addEventListener('aps:slide', function (e) { follow(e.detail.n); });
+
+  // Reading (#84): a lesson section's end coming into view records its unit as read.
+  var marks = document.querySelectorAll('[data-read-unit]');
+  if (marks.length && P && P.record && window.IntersectionObserver) {
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        P.record(entry.target.getAttribute('data-read-unit'), 'read');
+        seen.unobserve(entry.target);
+      });
+    });
+    marks.forEach(function (m) { seen.observe(m); });
+  }
 
   // A path page sets the learner's path; the outline shows that path from then on.
   var path = document.body.getAttribute('data-path');

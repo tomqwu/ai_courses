@@ -436,16 +436,14 @@ def path_cards_html(tracks: list[dict], units_by_deck: dict[str, list[dict]],
             href, target = f"{site_base}/index.html", "Browse the modules"
         modules = len(track["core"]) + len(track.get("slice") or {})
         unit_ids = ",".join(f"{u['deck']}:{u['id']}" for u in units)
-        ring = (f'<span class="ring" data-ring-units="{unit_ids}" role="img" aria-label="progress">'
-                f'<span class="ring-core" data-ring-label>0%</span></span>')
         cards.append(f"""<article class="path-card">
-  <a class="path-cover" href="{href}">
-    {ring}
-    <span class="path-kicker">{html.escape(track['kicker'])}</span>
-    <h3>{html.escape(track['title'])}</h3>
-    <span class="path-medium">{html.escape(track['medium'])}</span>
-    <span class="path-meta">{modules} module{"" if modules == 1 else "s"} · {len(units)} units · {fmt_minutes(minutes)} of narration</span>
-  </a>
+  <div class="path-head">
+    <p class="path-kicker">{html.escape(track['kicker'])}</p>
+    <h3><a href="{href}">{html.escape(track['title'])}</a></h3>
+    <p class="path-meta">{modules} module{"" if modules == 1 else "s"} · {len(units)} units · {fmt_minutes(minutes)} of narration</p>
+    <p class="card-progress"><span class="card-bar" data-ring-units="{unit_ids}" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+      <span class="card-count" data-ring-text></span></p>
+  </div>
   <div class="path-body">
     <p class="path-promise">{html.escape(track['promise'])}</p>
     {_at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
@@ -714,16 +712,18 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
             extra = f'<a class="unit-open" href="{site_base}/quiz-{deck["id"]}.html">Take it →</a>'
         elif unit["kind"] == "segment":
             extra = f'<a class="unit-open" href="{site_base}/lesson-{deck["id"]}.html">Read →</a>'
-        rows.append(f"""<li class="unit" data-unit="{deck['id']}:{html.escape(unit['id'])}">
-  <label class="unit-check">
-    <input type="checkbox" data-progress="{deck['id']}:{html.escape(unit['id'])}">
+        # A unit row is a link with its recorded status (#84) — never a checkbox. shell.js colours it
+        # from the progress store, which only records what the learner did.
+        uid = f"{deck['id']}:{html.escape(unit['id'])}"
+        rows.append(f"""<li class="unit">
+  <a class="unit-link" href="{site_base}/{SH.unit_href(deck['id'], unit)}" data-unit="{uid}" data-first="{unit['first']}" data-last="{unit['last']}">
+    {SH.STATUS_ICON}
     <span class="unit-kind">{html.escape(KIND_LABEL[unit['kind']])}</span>
-    <span class="unit-index">{index}</span>
-    <span class="unit-title">{html.escape(unit['title'])}</span>
+    <span class="unit-title">{html.escape(SH.unit_name(unit))}</span>
     <span class="unit-time">{html.escape(time_text)}</span>
-  </label>
-  {extra}
-  <a class="unit-open" href="{site_base}/{unit['href']}">Slides →</a>
+    {SH.STATUS_TEXT}
+  </a>
+  {extra if unit["kind"] == "segment" else ""}
 </li>""")
 
     if len(tracks_for) == 1 and tracks_for[0]["track"].get("page"):
@@ -749,6 +749,7 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/></svg>
       <span data-start-label>Start module</span></a>
     <p class="module-start-note" data-start-note>{html.escape(f"Begins with the {KIND_LABEL[first_unit['kind']].lower()}, then {len(units) - 1} more units." if first_unit else "")}</p>
+    <p class="module-next" data-module-next hidden>Next: <a href="#" data-module-next-link></a></p>
   </section>"""
     body = f"""{head}
 {start}
@@ -763,16 +764,17 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
 {paths_section}
   <div class="section-heading">
     <h2>Units in this module</h2>
-    <span class="section-note">Work them in order. Each unit opens the deck at its first slide.</span>
+    <span class="section-note">Work them in order. Each unit opens where it is taught — its first slide, the lab or the knowledge check.</span>
   </div>
-  <div class="progress-wrap">
-    <p class="progress-line"><strong id="progress-count">0 of {len(units)}</strong> complete
-      <span class="progress-bar" role="progressbar" aria-labelledby="progress-count"
-            aria-valuemin="0" aria-valuemax="{len(units)}" aria-valuenow="0"><span id="progress-fill"></span></span></p>
-    <p class="progress-note">Progress is stored in this browser only — there are no accounts on this
-      site, so nothing is uploaded and nothing follows you to another device. Slides mark a unit done
-      when you reach its last slide; a lab when every checklist item is ticked; the knowledge check at
-      75%. <a href="{site_base}/index.html">Export or import</a> your progress from the course home.</p>
+  <div class="progress-wrap" data-module-progress="{deck['id']}" data-module-units="{",".join(f"{deck['id']}:{u['id']}" for u in units)}">
+    <p class="progress-line"><strong data-progress-count>0 of {len(units)}</strong> units recorded
+      <span class="progress-bar" role="progressbar" aria-label="Units recorded" aria-valuemin="0"
+            aria-valuemax="{len(units)}" aria-valuenow="0"><span data-progress-fill></span></span></p>
+    <p class="progress-note">Progress is recorded from what you do, never ticked by hand: a lesson unit
+      when its narration plays through its last slide or you read its section to the end in Read; the
+      lab when its checklist is complete and its evidence entry is exported; the knowledge check at
+      75%. It is stored in this browser only — <a href="{site_base}/index.html">export or import</a> it
+      from the course home.</p>
   </div>
   <ol class="unit-list">
 {chr(10).join(rows)}

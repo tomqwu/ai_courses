@@ -914,56 +914,29 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     </div>
   </section>"""
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
+    import site_paths as SP                                                      # noqa: PLC0415
     cards = []
     grand_total = 0.0
     for deck in decks:
         entries = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
-        total = sum(float(e.get("duration", 0) or 0) for e in entries.values())
-        grand_total += total
-        preview = any(prov_by_audio.get(e.get("audio"), {}).get("basis") == "sentence-measured-preview"
-                      for e in entries.values())
-        if text_only:
-            chip = '<span class="voice-chip is-text">text-first</span>'
-        elif not entries:
-            chip = '<span class="voice-chip is-text">not yet recorded</span>'
-        elif preview:
-            chip = '<span class="voice-chip is-preview">preview voice</span>'
-        else:
-            chip = '<span class="voice-chip is-release">release voice</span>'
+        grand_total += sum(float(e.get("duration", 0) or 0) for e in entries.values())
         short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
-        # A small waveform motif: one bar per chapter, so the cover is not a flat block.
-        waves = "".join(
-            f'<span style="height:{h}px"></span>' for h in (6, 11, 16, 9, 14, 7, 12))
-        outline = "".join(
-            f'<li><a href="{site_base}/{deck["id"]}.html#{s["id"]}">'
-            f'{s["number"]}. {html.escape(s["title"][:64])}</a></li>'
-            for s in deck["slides"][:8])
-        # Modules are shared between paths — M0 and M1 open all three — so the card says how many
-        # paths a module belongs to rather than implying it has one home.
+        # A plain light card (#84): it must never read as a slide or a video. Title, what the module
+        # builds, its size, the learner's recorded progress, and one action — Start, or Resume.
         shared_n = (module_paths or {}).get(deck["id"], 0)
-        shared_chip = (f'<span class="voice-chip is-shared">shared · {shared_n} paths</span>'
-                       if shared_n > 1 else "")
+        shared = f" · shared by {shared_n} paths" if shared_n > 1 else ""
         module_href = f"{site_base}/module-{deck['id']}.html"
-        unit_ids = ",".join(f"{deck['id']}:{u['id']}" for u in (units_by_deck or {}).get(deck["id"], []))
-        ring = (f'<span class="ring" data-ring-units="{unit_ids}" role="img" aria-label="progress">'
-                f'<span class="ring-core" data-ring-label>0%</span></span>')
-        cards.append(f"""<article class="room-card">
-  <a class="room-cover" href="{module_href}">
-    {ring}
-    <span class="room-audience">Module {int(deck['id'][1:])} · {len(deck['slides'])} slides</span>
-    <h3>{html.escape(short)}</h3>
-    <span class="room-number">{f"{len(deck['slides'])} slides" if text_only else f"{int(total // 60)}m {int(total % 60)}s of narration"}</span>
-    <span class="room-waves" aria-hidden="true">{waves}</span>
-  </a>
-  <div class="room-body">
-    <p class="room-meta">{"slides · transcript · print-ready" if text_only else f"{len(entries)} narrated · captions · transcript"} {chip} {shared_chip} <span class="voice-chip is-release" data-quiz-badge="{deck['id']}" hidden></span></p>
-    <p class="room-links"><a href="{site_base}/lesson-{deck['id']}.html">Lesson</a> · <a href="{site_base}/lab-{deck['id']}.html">Lab</a> · <a href="{site_base}/quiz-{deck['id']}.html">Knowledge check</a> · <a href="{site_base}/handout-{deck['id']}.html">Handout</a></p>
-    <details><summary>See the slides</summary><ul>{outline}</ul></details>
-    <div class="room-actions">
-      <a class="btn-primary" href="{site_base}/{deck['id']}.html">Present this deck →</a>
-      <a href="{site_base}/transcript-{deck['id']}.html">Read the transcript</a>
-    </div>
-  </div>
+        units = (units_by_deck or {}).get(deck["id"], [])
+        unit_ids = ",".join(f"{deck['id']}:{u['id']}" for u in units)
+        promise = SP.cover_facts(deck)["promise"]
+        cards.append(f"""<article class="module-card" data-card-module="{deck['id']}">
+  <p class="card-kicker">Module {int(deck['id'][1:])}{shared} <span class="voice-chip is-release" data-quiz-badge="{deck['id']}" hidden></span></p>
+  <h3><a href="{module_href}">{html.escape(short)}</a></h3>
+  <p class="card-promise">{html.escape(promise)}</p>
+  <p class="card-meta">{len(deck['slides'])} slides · {len(units)} units · lab · knowledge check</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="{unit_ids}" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="{module_href}" data-card-action>Start</a>
 </article>""")
 
     all_recorded = sum(len((manifest.get("decks", {}).get(d, {}) or {}).get("slides", {})) for d in DECK_IDS)

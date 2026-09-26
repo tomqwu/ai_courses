@@ -40,7 +40,10 @@
     var bar = root.querySelector('[data-check-fill]');
     if (bar) bar.style.width = (boxes.length ? n / boxes.length * 100 : 0) + '%';
     var done = root.querySelector('[data-lab-done]');
-    if (done) done.hidden = !(boxes.length && n === boxes.length);
+    var complete = root.querySelector('[data-lab-complete]');
+    var finished = P && P.unitDone(deck + ':lab');
+    if (done) done.hidden = !(boxes.length && n === boxes.length) || finished;
+    if (complete) complete.hidden = !finished;
   }
 
   root.addEventListener('change', function (e) {
@@ -75,14 +78,23 @@
       return v;
     }
     fields.forEach(function (f) { f.addEventListener('input', function () { var v = build(); if (P) P.setLabEvidence(deck, v); }); });
+    // Exporting a filled-in entry is what completes the lab (#84), together with the checklist.
+    var status = form.querySelector('[data-evidence-status]');
+    function exported() {
+      var ok = P && P.setLabExported ? P.setLabExported(deck, total) : false;
+      if (status) status.textContent = ok ? 'Exported.' : 'Fill in the project, commands, environment and revision first — only a filled-in entry counts.';
+      count();
+    }
     var copy = form.querySelector('[data-evidence-copy]');
     if (copy) copy.addEventListener('click', function () {
       build();
+      exported();
       navigator.clipboard.writeText(out.value).then(function () { copy.textContent = 'Copied to clipboard'; setTimeout(function () { copy.textContent = 'Copy evidence entry'; }, 1500); });
     });
     var dl = form.querySelector('[data-evidence-download]');
     if (dl) dl.addEventListener('click', function () {
       build();
+      exported();
       var blob = new Blob([out.value + '\n'], { type: 'text/markdown' });
       var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = 'evidence-' + deck + '.md'; a.click();
