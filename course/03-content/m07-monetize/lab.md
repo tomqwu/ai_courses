@@ -11,13 +11,20 @@
 Take the comparison table you built in Lab M3 (or build it now if your product changed) and extend it with pricing columns. Requirements:
 
 - **≥5 competitor rows** — competitors you actually visited, not ones you remember.
-- Columns must include: **Price**, **Pricing model** (one-time / per-seat subscription / free + Pro / usage-based), and **What the price buys** (limits, seats, privacy boundaries, support).
+- Columns must include: **Price**, **Pricing model** (one-time / free + Pro / per-seat / usage / per-outcome / hybrid / BYOK discount — the M7.1 taxonomy), and **What the price buys** (limits, seats, privacy boundaries, support).
 - Every price cell carries a **source URL and a retrieval date**. No memory-only pricing.
 - Cells you could not confirm from a primary source are qualified "reportedly" or "approximately" — ListenToMe's convention: "where a detail could not be confirmed from a primary source, it is qualified with 'approximately' or 'reportedly'" (`ListenToMe/docs/competition-analysis.md`, header, dated 2026-09). Copy MacWhisper's row style: "Pro ~€59 (~$69) one-time; App Store $6.99/mo–$99.99 lifetime" — model, price, and channel in one cell.
 
 ## Step 2 — The pricing decision worksheet
 
-Fill the inline template below. Three inputs make the decision defensible: your **cost floor** (hosting, API keys, amortized dev time — dev at $0 like SignUpFlow's "SQLite (dev) / PostgreSQL (prod)" ladder, production as the first line item, `SignUpFlow/README.md`); your **comparator band** (the min–max of your table's comparable rows); and your **value anchor** (what the product replaces: hours, headcount, or a tool subscription). Then choose model, tiers, launch price — and write a rationale of **≥150 words citing specific table rows**. The worked example to imitate is the course's own record at `course/04-sales/pricing-and-platforms.md`: floor ($80–130/mo → break-even ~2 sales/month), Maven's live-hours bands, and a "why not cheaper / why not more expensive" defended in both directions.
+Fill the inline template below. Four inputs make the decision defensible:
+
+- **Cost floor** — every fixed monthly line in dollars (hosting, database, email, developer membership, build time amortized), each tagged with a source pointer or the word *assumption*. Dev counts as $0 only where it truly is, like SignUpFlow's "SQLite (dev) / PostgreSQL (prod)" ladder (`SignUpFlow/README.md`).
+- **Inference-cost line** — calls per user (or organisation) per month × tokens per call ÷ 1,000 × rate per 1,000 tokens = dollars per user-month, and who pays it in each tier: you, the customer's own key, the user's hardware, or a platform quota. No current model-API rate is sourced in this course: retrieve yours with a URL and retrieval date, or name it as an assumption. A product that calls no model writes "$0 — no model calls".
+- **Comparator band** — the min–max of your table's comparable rows.
+- **Value anchor** — what the product replaces: hours, headcount, or a tool subscription.
+
+Then compute **contribution** (price − payment fee − variable cost at the tier's cap) and **break-even** (fixed floor ÷ contribution, rounded up); choose the model from the M7.1 taxonomy, tiers, and launch price; and write a rationale of **≥150 words citing specific table rows**. The worked examples to imitate are the two floors in M7.2 — TinyCopilot as a product ($8.00 inference line, 6 Pro sales a month) and a SignUpFlow-shaped SaaS ($0.30 per organisation, 3 Starter organisations to cover cash) — and the course's own record at `course/04-sales/pricing-and-platforms.md`: floor ($80–130/mo → break-even ~2 sales/month) and a "why not cheaper / why not more expensive" defended in both directions.
 
 ## Step 3 — Positioning one-liner
 
@@ -36,13 +43,22 @@ Write the **three toughest objections a buyer would raise from your own table** 
 ```markdown
 # Pricing worksheet — <product name>
 
-Cost floor: $____/mo — hosting $____, API keys $____, dev time $____ amortized over ____
+Inputs (each: value — source pointer, or "assumption"):
+  - paying units: <users | organisations> ____ ; usage per unit per month: ____
+  - model calls per unit per month ____ ; tokens per call ____ ; rate $____ per 1,000 tokens
+Fixed floor: $____/mo = hosting $____ + database $____ + email $____ + other $____
+  + build ____ h × $____ ÷ ____ months
+Inference-cost line: ____ calls × ____ tokens ÷ 1,000 × $____ = $____ per unit-month
+  who pays, per tier: <me | customer's key (BYOK) | user's hardware | platform quota>
+Payment fee: ____% + $____ per sale — <source>
+Contribution: $____ price − $____ fee − $____ variable at cap = $____
+Break-even: $____ floor ÷ $____ contribution = ____ → ____ sales (or organisations) a month
 Comparator band: $____ (low) to $____ (high) across comparable rows: <list row names>
 Value anchor: replaces <hours | headcount | a tool subscription> worth ~$____
-Chosen model: <one-time | subscription per seat | free + Pro | usage-based> — because <one line>
+Chosen model: <one-time | free + Pro | per-seat | usage | per-outcome | hybrid | BYOK discount> — because <the cost line it matches>
 Tiers:
-  - <name> $____ — included: <…>; NOT included: <…>
-  - <name> $____ — included: <…>; NOT included: <…>
+  - <name> $____ — included: <…>; NOT included: <…>; AI allowance/cap: <…>
+  - <name> $____ — included: <…>; NOT included: <…>; AI allowance/cap: <…>
 Launch price: $____ — founding/early-bird: $____, deadline <date>, the discount is traded for: <testimonial | feedback | …>
 Rationale (≥150 words, cite specific table rows): <…>
 ```
@@ -50,7 +66,7 @@ Rationale (≥150 words, cite specific table rows): <…>
 ## Acceptance checklist (binary — pass = every box checked)
 
 1. ☐ ≥5 competitor rows; every price cell has a source URL + retrieval date; uncertain cells marked "reportedly/approximately."
-2. ☐ Worksheet complete: cost floor, comparator band, value anchor, chosen model, tiers, launch price — each filled, numeric where applicable.
+2. ☐ Worksheet complete, and the floor is arithmetic, not a figure: every fixed line and the inference-cost line (calls × tokens ÷ 1,000 × rate, or "$0 — no model calls") show their inputs, each tagged with a source pointer or "assumption"; who pays inference is named per tier; break-even = floor ÷ contribution is stated and reproduces from those inputs; no paid tier is priced below its own variable cost at its cap.
 3. ☐ Rationale ≥150 words and cites specific table rows by competitor name.
 4. ☐ One-liner's every clause traceable — the clause → column/capability mapping is written out.
 5. ☐ Packaging page has an explicit "not included" section per tier, each with a reason.
