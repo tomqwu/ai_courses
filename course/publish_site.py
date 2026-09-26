@@ -16,6 +16,9 @@ nothing 404s. The decks, the full ai_qe design, every transcript and the print s
 
 The gate (`course/check.sh`) runs first and the publish is refused unless it is green: a deploy is the
 last place to discover the site is broken.
+
+Normally nobody runs this by hand: the `deploy` job in `.github/workflows/gate.yml` runs it with
+`--skip-verify` on every push to `main`, after the gate jobs for that same commit have passed.
 """
 
 from __future__ import annotations

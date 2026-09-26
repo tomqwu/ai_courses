@@ -98,3 +98,45 @@ jobs:
         run: |
           python course/03-content/m06-expertise-product/selfcheck.py --selftest
           python course/03-content/m06-expertise-product/edition_manifest.py --selftest
+
+  # Every green merge to main deploys the learner site, so the live site is always main (#71). Pages
+  # serves the gh-pages branch, which only ever holds build output; publish_site.py builds the
+  # text-first site from this commit and force-pushes it there as one new commit. The gate already
+  # ran in `package` and `labs` for this exact commit, so it is not run a second time here. The
+  # clones are needed so the site's proof section reports live measurements, not pinned fallbacks.
+  deploy:
+    name: deploy the learner site (main only)
+    needs: [package, labs]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Case-study repositories at their pinned commits
+        run: |
+          set -e
+          clone() { git clone --quiet "https://github.com/tomqwu/$1.git" && git -C "$1" checkout --quiet "$2"; }
+          clone ListenToMe a9bde8e
+          clone SignUpFlow c550d46
+          clone ai_qe 6388f0a
+
+      - name: Build and push the site to gh-pages
+        env:
+          GIT_AUTHOR_NAME: github-actions[bot]
+          GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+          GIT_COMMITTER_NAME: github-actions[bot]
+          GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+        run: python3 course/publish_site.py --skip-verify
+
+      - name: Where it went
+        run: echo "https://tomqwu.github.io/ai_courses/ (published from ${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"

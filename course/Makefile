@@ -8,7 +8,7 @@
 #   make check              run check.sh: tests, scripts, media, site build, browser, verify
 #   make facts              re-derive the pinned case-study numbers from the clones and report drift
 #   make test               caption-engine and TTS-provider unit tests
-#   make publish            publish the built site to the gh-pages branch (text-first)
+#   make publish            publish the built site to gh-pages by hand (CI does this on every merge to main)
 #   make publish-audio      publish it with the recordings, so narration plays live
 #
 # The learner site is generated: the deck Markdown and narration/scripts/*.json are the source of

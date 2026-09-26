@@ -66,11 +66,14 @@ rm -rf course/learner-site/assets/audio/aps-1.0.0
 make -C course transcripts && python3 course/learner-site/build_site.py --check
 ```
 
-## Workflow: commit, push, merge when CI passes
+## Workflow: every change ends merged to `main`
 
-This is the standing process for every change in this repository. The owner has authorised it.
+This is the standing process for **every** change in this repository — content, code, CI, docs and
+these instructions alike. The owner has authorised it. A change is not done until it is on `main`:
+committed, pushed, merged. Nothing is left uncommitted, unpushed or sitting in an open PR at the end of
+a piece of work.
 
-1. Work on a branch, never directly on `main`.
+1. Work on a branch, never directly on `main`. After a merge, restart the branch from the new `main`.
 2. Run the checks above. Fix everything they report.
 3. Commit with a message that says what changed and why. Push the branch.
 4. Open a pull request, or update the one already open for the branch. Reference the issues it
@@ -82,4 +85,8 @@ This is the standing process for every change in this repository. The owner has 
 7. If CI is red, fix the cause and push again. Never merge on red, never force-push `main`, and
    never bypass a required check.
 8. After merging, close the issues the PR finished, each with the evidence (commands and output).
-   Publish the site when learner-facing content changed (see the skill, step "Publish").
+9. **The site deploys itself.** The push to `main` re-runs the gate, and its `deploy` job builds the
+   learner site from that commit and publishes it to <https://tomqwu.github.io/ai_courses/> (Pages
+   serves the `gh-pages` branch, which only ever holds build output — never edit it by hand). Check
+   the `deploy` job went green on `main`; if it failed, fixing it is part of the same change. Publish
+   by hand (`make -C course publish-audio`) only to ship the recordings.
