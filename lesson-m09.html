@@ -28,7 +28,7 @@
 <p>Every command in this module is given for <strong>Windows</strong> and <strong>macOS</strong>, side by side. Linux users can follow the macOS column; the commands are the same once Git and the GitHub CLI are installed.</p>
 <p><strong>By the end of this module you can:</strong></p>
 <ul><li>Install Git and the GitHub CLI on Windows or macOS, sign in, and prove the setup with a script rather than a guess.</li><li>Move around your computer's folders from the terminal: know where you are, list what is there, go in and back out, and make a folder.</li><li>Clone a repository to your computer, change it, and send the change back with <code>status → add → commit → push</code>.</li><li>Publish a static site with GitHub Pages from a branch, and find its public address.</li><li>State what GitHub Pages is for and what it is not — including why a catalog must link out to a checkout rather than be a shop.</li></ul>
-<h2 id="segment-m91-your-tools-installed-and-proven-15-min">Segment M9.1 — Your tools, installed and proven (~15 min)</h2>
+<span class="read-end" data-read-unit="m09:intro" aria-hidden="true"></span><h2 id="segment-m91-your-tools-installed-and-proven-15-min">Segment M9.1 — Your tools, installed and proven (~15 min)</h2>
 <h3 id="objective">Objective</h3>
 <p>Install Git and the GitHub CLI, tell Git who you are, sign in to GitHub from the terminal, and run a check that proves all four instead of assuming them.</p>
 <h3 id="lesson">Lesson</h3>
@@ -53,7 +53,7 @@ git config --global user.email &quot;ada@example.com&quot;</code></pre></div>
 <p>A finished setup prints four PASS lines and <strong>4 of 4 checks passed</strong>. Anything less prints a FAIL with the exact command that fixes it — on a Mac with no Homebrew, it prints the Homebrew line first. Fix the first FAIL, open a new terminal, and run it again. The Windows flag <code>-ExecutionPolicy Bypass</code> lets this one script run without changing your computer's settings for any other script.</p>
 <h3 id="action-step">Action step</h3>
 <p>Run the check until it says 4 of 4, and paste the whole output into a new file called <code>evidence.md</code> — you will add to it for the rest of the module. If a step failed along the way, paste the failure too, with what fixed it. That record is worth more than a clean one.</p>
-<h2 id="segment-m92-find-your-way-around-then-clone-15-min">Segment M9.2 — Find your way around, then clone (~15 min)</h2>
+<span class="read-end" data-read-unit="m09:M9.1" aria-hidden="true"></span><h2 id="segment-m92-find-your-way-around-then-clone-15-min">Segment M9.2 — Find your way around, then clone (~15 min)</h2>
 <h3 id="objective-2">Objective</h3>
 <p>Know where you are in the folder tree, move in and out of folders, make one, and clone a repository into it — then send a change back with the four-command loop.</p>
 <h3 id="lesson-2">Lesson</h3>
@@ -97,7 +97,7 @@ $ git push
 <p>Read <code>git status</code> before and after, every time. Before, it tells you what you are about to commit. After, <strong>nothing to commit, working tree clean</strong> tells you it all went.</p>
 <h3 id="action-step-2">Action step</h3>
 <p>From your <code>code</code> folder, clone this course's repository with either command, <code>cd</code> into it, and run <code>ls</code>. Then go back up with <code>cd ..</code> and run <code>pwd</code> to prove where you are. Add both outputs to <code>evidence.md</code>.</p>
-<h2 id="segment-m93-build-the-catalog-and-publish-it-15-min">Segment M9.3 — Build the catalog and publish it (~15 min)</h2>
+<span class="read-end" data-read-unit="m09:M9.2" aria-hidden="true"></span><h2 id="segment-m93-build-the-catalog-and-publish-it-15-min">Segment M9.3 — Build the catalog and publish it (~15 min)</h2>
 <h3 id="objective-3">Objective</h3>
 <p>Turn the starter into your own catalog, preview it on your computer, publish it with GitHub Pages, and state what the host allows and what it does not.</p>
 <h3 id="lesson-3">Lesson</h3>
@@ -120,9 +120,9 @@ $ git push
 <p>The rule that shapes this whole design is the last one on that page: GitHub Pages "is not intended for or allowed to be used as a free web-hosting service to run your online business, e-commerce site, or any other website that is primarily directed at either facilitating commercial transactions or providing commercial software as a service". A catalog that describes your products is fine. A shop is not. That is why the starter has no cart and no checkout: each product can link out with <code>buyUrl</code> to a checkout that runs somewhere built for payments, and the catalog stays what Pages allows it to be. Build it that way from the start and there is nothing to undo later.</p>
 <h3 id="action-step-3">Action step</h3>
 <p>Replace the six sample products with at least three of your own — real ones, or the product you are building in this course. Preview with a double-click, then write one line in <code>evidence.md</code> naming where your "Buy" button will point, or why it says "Ask about this" for now.</p>
-<h2 id="recap">Recap</h2>
+<span class="read-end" data-read-unit="m09:M9.3" aria-hidden="true"></span><h2 id="recap">Recap</h2>
 <ul><li><strong>Tools, proven.</strong> Git records versions; GitHub stores and publishes them; <code>gh</code> drives GitHub from the terminal. Install with winget on Windows and Homebrew on macOS, open a new window after installing on Windows, set your name and email, <code>gh auth login</code>, and run the setup check until it says 4 of 4.</li><li><strong>Folders.</strong> <code>pwd</code>, <code>ls</code>, <code>cd</code>, <code>cd ..</code>, <code>mkdir</code> work the same on both systems in PowerShell and Terminal. Keep projects in <code>~/code</code>. Check <code>pwd</code> before you clone.</li><li><strong>The loop.</strong> <code>git status → git add . → git commit -m "…" → git push</code>, reading <code>status</code> before and after.</li><li><strong>Publish.</strong> Settings → Pages → Deploy from a branch → <code>main</code>, <code>/ (root)</code> → Save. The address is <code>https://&lt;username&gt;.github.io/&lt;repository&gt;/</code>, up to 10 minutes after each push.</li><li><strong>The boundary.</strong> Pages shows products; it does not sell them. Link out to a checkout.</li></ul>
-<h2 id="discussion-prompt">Discussion prompt</h2>
+<span class="read-end" data-read-unit="m09:summary" aria-hidden="true"></span><h2 id="discussion-prompt">Discussion prompt</h2>
 <p>Post your catalog's address and one thing that went wrong during setup, with the line that fixed it. Then open a classmate's catalog on your phone and tell them the first thing you tried to tap that did not do what you expected.</p>
 <h2 id="sources">Sources</h2>
 <p>Read on 2026-09-26 from the maintainers' own repositories. The rendered documentation sites were not reachable from the environment this module was written in, so each source is the file those sites are built from.</p>

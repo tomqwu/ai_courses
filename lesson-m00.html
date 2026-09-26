@@ -29,7 +29,7 @@
 <p>Two expectations before we start. First, <strong>every factual claim in this course carries a file pointer</strong> like (<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a>) — if you can't open a file and verify a claim, the claim is wrong, and you should say so. Second, the <strong>core labs are Python 3.11+ and Ollama</strong>, both free, running on macOS, Linux, and Windows; the Swift stretch track (Modules 2–3) uses ListenToMe itself as the reference implementation and requires a Mac. No prior LLM experience is assumed.</p>
 <p><strong>By the end of this module you can:</strong></p>
 <ul><li>Describe the three AI product archetypes and name each case-study repo and its proof asset.</li><li>Explain the six stages of the Spec-to-Ship Loop and point to one real artifact per stage.</li><li>Run the SignUpFlow solver on a sample workspace and capture its health score.</li><li>Pull and run a local LLM with Ollama on your own machine.</li><li>Post a goal + environment note to the community — your first-win post.</li></ul>
-<h2 id="segment-m01-why-three-types-and-why-these-8-min">Segment M0.1 — Why three types, and why these (~8 min)</h2>
+<span class="read-end" data-read-unit="m00:intro" aria-hidden="true"></span><h2 id="segment-m01-why-three-types-and-why-these-8-min">Segment M0.1 — Why three types, and why these (~8 min)</h2>
 <h3 id="objective">Objective</h3>
 <p>Describe the three AI product archetypes, name each case-study repo, and state what "production-grade" means in this course: not a demo, but a shipped artifact with proof you can open.</p>
 <h3 id="lesson">Lesson</h3>
@@ -41,7 +41,7 @@
 <p>Why these three <em>together</em>? They share one method. The course research synthesis distills it into ten transferable principles — "record evidence, not vibes"; "write specs agents can execute"; "monetize honesty" (<code>00-research/00-synthesis.md</code>) — and Modules 1–8 teach that method through the three archetypes in sequence.</p>
 <h3 id="action-step">Action step</h3>
 <p>Skim all three READMEs — <a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/README.md" rel="noopener"><code>ListenToMe/README.md</code></a>, <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/README.md" rel="noopener"><code>SignUpFlow/README.md</code></a>, <a class="pointer" href="https://github.com/tomqwu/ai_qe/blob/6388f0a/README.md" rel="noopener"><code>ai_qe/README.md</code></a> — and find one proof asset in each (a badge, a dated evidence line, a publication record). Then write a two-sentence "which archetype is mine" note: which of the three you most want to build by week 8, and one thing you've shipped before. Keep it; you'll post it in M0.3.</p>
-<h2 id="segment-m02-the-method-the-spec-to-ship-loop-10-min">Segment M0.2 — The method: the Spec-to-Ship Loop (~10 min)</h2>
+<span class="read-end" data-read-unit="m00:M0.1" aria-hidden="true"></span><h2 id="segment-m02-the-method-the-spec-to-ship-loop-10-min">Segment M0.2 — The method: the Spec-to-Ship Loop (~10 min)</h2>
 <h3 id="objective-2">Objective</h3>
 <p>Name the six loop stages in order and point to one real artifact from the case-study repos for each stage.</p>
 <h3 id="lesson-2">Lesson</h3>
@@ -56,7 +56,7 @@
 <p>Stage 6 is the rarest and it is the spine of this course: the honest record of what was verified, what wasn't, and what failed. Tests validate what you built; evidence discipline validates what you shipped.</p>
 <h3 id="action-step-2">Action step</h3>
 <p>Copy the loop diagram above into your notes, then start your <strong>loop journal</strong> — a single file you'll keep all course. For every future action step, record one line per stage you touched. First entry: for M0.3 below, you'll be doing a miniature STUDY (read the README), BUILD (run the solver), and PROVE (post output).</p>
-<h2 id="segment-m03-set-up-and-get-your-first-win-12-min-of-lesson-30-min-at-the-keyboar">Segment M0.3 — Set up and get your first win (~12 min of lesson; ~30 min at the keyboard)</h2>
+<span class="read-end" data-read-unit="m00:M0.2" aria-hidden="true"></span><h2 id="segment-m03-set-up-and-get-your-first-win-12-min-of-lesson-30-min-at-the-keyboar">Segment M0.3 — Set up and get your first win (~12 min of lesson; ~30 min at the keyboard)</h2>
 <h3 id="objective-3">Objective</h3>
 <p>Clone all three repos, run the SignUpFlow solver locally and capture its health score, and run your first local LLM completion with Ollama.</p>
 <h3 id="lesson-3">Lesson</h3>
@@ -79,9 +79,9 @@ ollama run qwen3:0.6b &quot;Reply with exactly: PONG&quot;</code></pre></div>
 <p>Why the rush to a working solver in Module 0? Because the hardest part of any builder course is the gap between watching and running. Within about thirty minutes — most of it download time — you will have executed real production software and a real local model. That is the first win, and it is what beats the "Module 2 chasm" where most courses lose people.</p>
 <h3 id="action-step-3">Action step</h3>
 <p>Post your first win to the community: (1) your solver output including the health score line, (2) your <code>ollama list</code> output, and (3) your two-sentence "which archetype is mine" note from M0.1. Then complete <strong>Lab M0</strong> (<code>m00-orientation/lab.md</code>) — its checklist turns this segment into your first pass/fail checkpoint; the pass gate is the solver block plus a non-empty <code>ollama list</code>. Its "Before Module 1" block (run the TinyCopilot suite, start your evidence log) is where Module 2 begins.</p>
-<h2 id="recap">Recap</h2>
+<span class="read-end" data-read-unit="m00:M0.3" aria-hidden="true"></span><h2 id="recap">Recap</h2>
 <ul><li>Three archetypes, three real repos: <strong>ListenToMe</strong> (on-device AI app; 96% core-coverage badge, notarized DMGs, 14-row competitor table), <strong>SignUpFlow</strong> (spec-driven SaaS; 1,464 passed / 21 skipped dated evidence, 17 spec folders, 7 test tiers), <strong>AI × QE</strong> (expertise product; 116 slides / 4 decks / 10 current PDF editions as of 2026-09-10, provenance files, a published 14-finding self-audit).</li><li>One method behind all three: the <strong>Spec-to-Ship Loop</strong> — Study, Spec, Build, Validate, Release, Prove — with a real, openable artifact at every stage.</li><li>Production-grade means proof you can open: a badge, a dated evidence line, a provenance file — not a testimonial.</li><li>Your environment: Python 3.11+ and Ollama everywhere; a Mac only for the Swift stretch track.</li><li>You have already run one case study end to end and one local LLM — keep both outputs in your evidence log, and run the TinyCopilot suite before Module 1.</li></ul>
-<h2 id="discussion-prompt">Discussion prompt</h2>
+<span class="read-end" data-read-unit="m00:summary" aria-hidden="true"></span><h2 id="discussion-prompt">Discussion prompt</h2>
 <p>Post your first-win reply (solver health score + <code>ollama list</code> + your archetype note), then answer in one more sentence: <strong>which proof asset from M0.1 surprised you most, and would it survive a skeptical customer opening the file?</strong> Reply to one other student's post with the archetype you think fits <em>their</em> goal — disagreeing is welcome if you point at the reason.</p>
     <footer class="doc-footer">
       <p class="index-footnote">Source: <code>course/03-content/m00-orientation/lesson.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>

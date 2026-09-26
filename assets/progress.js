@@ -1,12 +1,23 @@
 /* Learner progress — one store, every page.
  *
  * Progress lives in this browser (localStorage) behind a small interface, so a server-backed
- * store can replace it later without touching the pages that read it. The shape:
+ * store (#42) can replace it later without touching the pages that read it.
  *
- *   { v: 2,
- *     units:   { "m03:M3.1": <ms>, "m03:lab": <ms>, ... },   // unit id → completed at
+ * Progress is recorded from what the learner does, never ticked by hand (#84). The history is a
+ * list of events, and a unit is done once it has one:
+ *
+ *   watched    the narration played through the unit's last slide
+ *   read       the learner read to the end of the unit's section in Read (the lesson)
+ *   passed     the knowledge check scored at least 75%
+ *   completed  the lab's checklist is complete and its evidence entry filled in and exported
+ *   migrated   carried over from an earlier store, where units were ticked
+ *
+ *   { v: 3,
+ *     events:  [ { unit: "m03:M3.1", kind: "watched", at: <ms> }, ... ],
+ *     units:   { "m03:M3.1": <ms>, ... },                     // derived: unit → first completion
  *     quizzes: { "m03": { score: 7, total: 8, at: <ms> } },   // best score per module
- *     labs:    { "m03": { checks: { "m03-lab-1": true }, evidence: {...}, at: <ms> } },
+ *     quizAnswers: { "m03": { "1": { answered, correct, chosen } } },
+ *     labs:    { "m03": { checks: {...}, evidence: {...}, exportedAt: <ms>, steps: {...} } },
  *     last:    { href: "m03.html#slide-5", label: "...", at: <ms> },
  *     path:    "on-device-app" }                              // the path the outline shows
  *
@@ -15,11 +26,36 @@
  */
 (function () {
   'use strict';
-  var KEY = 'aps.progress.v2';
-  var LEGACY = 'aps.progress.v1';
+  var KEY = 'aps.progress.v3';
+  var OLDER = ['aps.progress.v2', 'aps.progress.v1'];
+  var REQUIRED = ['project', 'commands', 'environment', 'revision'];   // a filled-in evidence entry
   var state = null;
 
-  function empty() { return { v: 2, units: {}, quizzes: {}, labs: {}, last: null }; }
+  function empty() {
+    return { v: 3, events: [], units: {}, quizzes: {}, quizAnswers: {}, labs: {}, last: null, path: null };
+  }
+
+  function derive(s) {
+    s.units = {};
+    (s.events || []).forEach(function (e) { if (!s.units[e.unit]) s.units[e.unit] = e.at; });
+    return s;
+  }
+
+  // Earlier stores held ticked units ({ "m00:intro": <ms> } in v2, { "m00:intro": 1 } in v1). They
+  // come over as history, marked as migrated rather than dressed up as watching or reading.
+  function upgrade(old) {
+    var s = empty();
+    if (!old || typeof old !== 'object') return s;
+    var units = old.v === 2 ? (old.units || {}) : old;
+    Object.keys(units).forEach(function (k) {
+      if (units[k] && k.indexOf(':') > 0) s.events.push({ unit: k, kind: 'migrated', at: typeof units[k] === 'number' && units[k] > 1 ? units[k] : Date.now() });
+    });
+    if (old.v === 2) {
+      s.quizzes = old.quizzes || {}; s.quizAnswers = old.quizAnswers || {}; s.labs = old.labs || {};
+      s.last = old.last || null; s.path = old.path || null;
+    }
+    return derive(s);
+  }
 
   function load() {
     if (state) return state;
@@ -27,42 +63,60 @@
       var raw = localStorage.getItem(KEY);
       state = raw ? JSON.parse(raw) : null;
     } catch (e) { state = null; }
-    if (!state || state.v !== 2) {
+    if (!state || state.v !== 3) {
       state = empty();
-      // v1 stored unit checkboxes only: { "m00:intro": 1 }
-      try {
-        var old = JSON.parse(localStorage.getItem(LEGACY) || 'null');
-        if (old && typeof old === 'object') {
-          Object.keys(old).forEach(function (k) { if (old[k]) state.units[k] = Date.now(); });
-        }
-      } catch (e) { /* no legacy data */ }
+      for (var i = 0; i < OLDER.length; i++) {
+        try {
+          var old = JSON.parse(localStorage.getItem(OLDER[i]) || 'null');
+          if (old) { state = upgrade(old); break; }
+        } catch (e) { /* nothing stored under that key */ }
+      }
       save();
     }
-    return state;
+    return derive(state);
   }
 
   function save() {
+    derive(state);
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* private mode */ }
     document.dispatchEvent(new CustomEvent('aps:progress', { detail: state }));
   }
 
+  function record(unit, kind) {
+    var s = load();
+    var seen = s.events.some(function (e) { return e.unit === unit && e.kind === kind; });
+    if (!seen) { s.events.push({ unit: unit, kind: kind, at: Date.now() }); save(); }
+  }
+
+  function filled(evidence) {
+    return REQUIRED.every(function (k) { return ((evidence || {})[k] || '').trim(); });
+  }
+
+  // A lab is complete when its checklist is complete and its evidence entry has been filled in and
+  // exported: the checklist is the learner's claim, the exported entry is the proof.
+  function settleLab(deck, total) {
+    var lab = load().labs[deck];
+    if (!lab || !total) return;
+    if (Object.keys(lab.checks || {}).length >= total && lab.exportedAt && filled(lab.evidence)) {
+      record(deck + ':lab', 'completed');
+    }
+  }
+
   var api = {
     get: function () { return load(); },
+    events: function () { return load().events.slice(); },
+    record: record,
     unitDone: function (id) { return !!load().units[id]; },
-    setUnit: function (id, done) {
-      var s = load();
-      if (done) s.units[id] = s.units[id] || Date.now(); else delete s.units[id];
-      save();
-    },
     moduleUnits: function (deck) {
       var s = load(); return Object.keys(s.units).filter(function (k) { return k.indexOf(deck + ':') === 0; });
     },
+    evidenceFilled: filled,
     quiz: function (deck) { return load().quizzes[deck] || null; },
     setQuiz: function (deck, score, total) {
       var s = load(); var prev = s.quizzes[deck];
       if (!prev || score >= prev.score) s.quizzes[deck] = { score: score, total: total, at: Date.now() };
-      if (total && score / total >= 0.75) s.units[deck + ':quiz'] = s.units[deck + ':quiz'] || Date.now();
       save();
+      if (total && score / total >= 0.75) record(deck + ':quiz', 'passed');
     },
     // Each answer as it is given (#78), so a check survives a reload; cleared by "Try again".
     quizAnswers: function (deck) { return (load().quizAnswers || {})[deck] || {}; },
@@ -79,10 +133,8 @@
       var s = load(); var lab = s.labs[deck] || (s.labs[deck] = { checks: {}, evidence: {} });
       if (on) lab.checks[id] = true; else delete lab.checks[id];
       lab.at = Date.now();
-      var n = Object.keys(lab.checks).length;
-      if (total && n >= total) s.units[deck + ':lab'] = s.units[deck + ':lab'] || Date.now();
-      else if (total && n < total) delete s.units[deck + ':lab'];
       save();
+      settleLab(deck, total);
     },
     // The workspace's steps (#77): which are done, and which one the learner is on.
     setLabSteps: function (deck, current, done) {
@@ -92,6 +144,14 @@
     setLabEvidence: function (deck, fields) {
       var s = load(); var lab = s.labs[deck] || (s.labs[deck] = { checks: {}, evidence: {} });
       lab.evidence = fields; lab.at = Date.now(); save();
+    },
+    // The evidence entry was copied or downloaded. Only a filled-in entry counts as exported.
+    setLabExported: function (deck, total) {
+      var s = load(); var lab = s.labs[deck] || (s.labs[deck] = { checks: {}, evidence: {} });
+      if (!filled(lab.evidence)) return false;
+      lab.exportedAt = Date.now(); save();
+      settleLab(deck, total);
+      return true;
     },
     setLast: function (href, label) {
       var s = load(); s.last = { href: href, label: label, at: Date.now() }; save();
@@ -120,9 +180,14 @@
     exportJSON: function () { return JSON.stringify(load(), null, 2); },
     importJSON: function (text) {
       var data = JSON.parse(text);
-      if (!data || data.v !== 2 || typeof data.units !== 'object') throw new Error('not an AI Product Studio progress file');
-      state = { v: 2, units: data.units || {}, quizzes: data.quizzes || {}, labs: data.labs || {}, last: data.last || null,
-                path: data.path || null, quizAnswers: data.quizAnswers || {} };
+      if (data && data.v === 3 && Array.isArray(data.events)) {
+        state = { v: 3, events: data.events, units: {}, quizzes: data.quizzes || {}, labs: data.labs || {},
+                  last: data.last || null, path: data.path || null, quizAnswers: data.quizAnswers || {} };
+      } else if (data && data.v === 2 && typeof data.units === 'object') {
+        state = upgrade(data);
+      } else {
+        throw new Error('not an AI Product Studio progress file');
+      }
       save();
     },
     reset: function () { state = empty(); save(); }
@@ -168,24 +233,7 @@
   function render() {
     document.querySelectorAll('[data-ring-units]').forEach(ring);
     continueLink();
-    // unit checkboxes (module pages)
     var s = load();
-    document.querySelectorAll('[data-progress]').forEach(function (box) {
-      var on = !!s.units[box.getAttribute('data-progress')];
-      box.checked = on;
-      var row = box.closest('.unit');
-      if (row) row.classList.toggle('is-done', on);
-    });
-    var boxes = document.querySelectorAll('[data-progress]');
-    if (boxes.length) {
-      var n = 0; boxes.forEach(function (b) { if (b.checked) n++; });
-      var count = document.getElementById('progress-count');
-      var bar = document.querySelector('.progress-bar');
-      var fill = document.getElementById('progress-fill');
-      if (count) count.textContent = n + ' of ' + boxes.length;
-      if (bar) bar.setAttribute('aria-valuenow', String(n));
-      if (fill) fill.style.width = (boxes.length ? (n / boxes.length * 100) : 0) + '%';
-    }
     // quiz / lab badges on cards
     document.querySelectorAll('[data-quiz-badge]').forEach(function (el) {
       var q = s.quizzes[el.getAttribute('data-quiz-badge')];
@@ -194,12 +242,7 @@
     });
   }
 
-  document.addEventListener('change', function (e) {
-    var box = e.target;
-    if (box && box.matches && box.matches('[data-progress]')) {
-      api.setUnit(box.getAttribute('data-progress'), box.checked);
-    }
-  });
+
   document.addEventListener('click', function (e) {
     var t = e.target.closest ? e.target.closest('[data-progress-export],[data-progress-import],[data-progress-reset]') : null;
     if (!t) return;

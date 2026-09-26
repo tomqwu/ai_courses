@@ -22,6 +22,7 @@
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/></svg>
       <span data-start-label>Start module</span></a>
     <p class="module-start-note" data-start-note>Begins with the introduction, then 6 more units.</p>
+    <p class="module-next" data-module-next hidden>Next: <a href="#" data-module-next-link></a></p>
   </section>
   <section class="path-section">
     <h2>Learning objectives</h2>
@@ -53,94 +54,88 @@
   </section>
   <div class="section-heading">
     <h2>Units in this module</h2>
-    <span class="section-note">Work them in order. Each unit opens the deck at its first slide.</span>
+    <span class="section-note">Work them in order. Each unit opens where it is taught — its first slide, the lab or the knowledge check.</span>
   </div>
-  <div class="progress-wrap">
-    <p class="progress-line"><strong id="progress-count">0 of 7</strong> complete
-      <span class="progress-bar" role="progressbar" aria-labelledby="progress-count"
-            aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><span id="progress-fill"></span></span></p>
-    <p class="progress-note">Progress is stored in this browser only — there are no accounts on this
-      site, so nothing is uploaded and nothing follows you to another device. Slides mark a unit done
-      when you reach its last slide; a lab when every checklist item is ticked; the knowledge check at
-      75%. <a href="./index.html">Export or import</a> your progress from the course home.</p>
+  <div class="progress-wrap" data-module-progress="m00" data-module-units="m00:intro,m00:M0.1,m00:M0.2,m00:M0.3,m00:lab,m00:quiz,m00:summary">
+    <p class="progress-line"><strong data-progress-count>0 of 7</strong> units recorded
+      <span class="progress-bar" role="progressbar" aria-label="Units recorded" aria-valuemin="0"
+            aria-valuemax="7" aria-valuenow="0"><span data-progress-fill></span></span></p>
+    <p class="progress-note">Progress is recorded from what you do, never ticked by hand: a lesson unit
+      when its narration plays through its last slide or you read its section to the end in Read; the
+      lab when its checklist is complete and its evidence entry is exported; the knowledge check at
+      75%. It is stored in this browser only — <a href="./index.html">export or import</a> it
+      from the course home.</p>
   </div>
   <ol class="unit-list">
-<li class="unit" data-unit="m00:intro">
-  <label class="unit-check">
-    <input type="checkbox" data-progress="m00:intro">
+<li class="unit">
+  <a class="unit-link" href="./m00.html#slide-1" data-unit="m00:intro" data-first="1" data-last="2">
+    <svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg>
     <span class="unit-kind">Introduction</span>
-    <span class="unit-index">1</span>
     <span class="unit-title">Introduction</span>
     <span class="unit-time">51 sec</span>
-  </label>
+    <span class="sr-only" data-status-text>not started</span>
+  </a>
   
-  <a class="unit-open" href="./m00.html#slide-1">Slides →</a>
 </li>
-<li class="unit" data-unit="m00:M0.1">
-  <label class="unit-check">
-    <input type="checkbox" data-progress="m00:M0.1">
+<li class="unit">
+  <a class="unit-link" href="./m00.html#slide-3" data-unit="m00:M0.1" data-first="3" data-last="7">
+    <svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg>
     <span class="unit-kind">Lesson</span>
-    <span class="unit-index">2</span>
-    <span class="unit-title">M0.1</span>
+    <span class="unit-title">M0.1 Three archetypes, one method</span>
     <span class="unit-time">2.7 min</span>
-  </label>
+    <span class="sr-only" data-status-text>not started</span>
+  </a>
   <a class="unit-open" href="./lesson-m00.html">Read →</a>
-  <a class="unit-open" href="./m00.html#slide-3">Slides →</a>
 </li>
-<li class="unit" data-unit="m00:M0.2">
-  <label class="unit-check">
-    <input type="checkbox" data-progress="m00:M0.2">
+<li class="unit">
+  <a class="unit-link" href="./m00.html#slide-8" data-unit="m00:M0.2" data-first="8" data-last="11">
+    <svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg>
     <span class="unit-kind">Lesson</span>
-    <span class="unit-index">3</span>
-    <span class="unit-title">M0.2</span>
+    <span class="unit-title">M0.2 The Spec-to-Ship Loop</span>
     <span class="unit-time">2.2 min</span>
-  </label>
+    <span class="sr-only" data-status-text>not started</span>
+  </a>
   <a class="unit-open" href="./lesson-m00.html">Read →</a>
-  <a class="unit-open" href="./m00.html#slide-8">Slides →</a>
 </li>
-<li class="unit" data-unit="m00:M0.3">
-  <label class="unit-check">
-    <input type="checkbox" data-progress="m00:M0.3">
+<li class="unit">
+  <a class="unit-link" href="./m00.html#slide-12" data-unit="m00:M0.3" data-first="12" data-last="15">
+    <svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg>
     <span class="unit-kind">Lesson</span>
-    <span class="unit-index">4</span>
-    <span class="unit-title">M0.3</span>
+    <span class="unit-title">M0.3 Set up and get your first win</span>
     <span class="unit-time">2.2 min</span>
-  </label>
+    <span class="sr-only" data-status-text>not started</span>
+  </a>
   <a class="unit-open" href="./lesson-m00.html">Read →</a>
-  <a class="unit-open" href="./m00.html#slide-12">Slides →</a>
 </li>
-<li class="unit" data-unit="m00:lab">
-  <label class="unit-check">
-    <input type="checkbox" data-progress="m00:lab">
+<li class="unit">
+  <a class="unit-link" href="./lab-m00.html" data-unit="m00:lab" data-first="16" data-last="16">
+    <svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg>
     <span class="unit-kind">Exercise</span>
-    <span class="unit-index">5</span>
-    <span class="unit-title">Exercise</span>
+    <span class="unit-title">Lab M0</span>
     <span class="unit-time">35 sec slide · ~30 minutes including downloads (`make setup`, the Ollama installer, the model pull); the &quot;Before Module 1&quot; block below adds ~10 minutes. hands-on</span>
-  </label>
-  <a class="unit-open" href="./lab-m00.html">Checklist →</a>
-  <a class="unit-open" href="./m00.html#slide-16">Slides →</a>
+    <span class="sr-only" data-status-text>not started</span>
+  </a>
+  
 </li>
-<li class="unit" data-unit="m00:quiz">
-  <label class="unit-check">
-    <input type="checkbox" data-progress="m00:quiz">
+<li class="unit">
+  <a class="unit-link" href="./quiz-m00.html" data-unit="m00:quiz" data-first="17" data-last="17">
+    <svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg>
     <span class="unit-kind">Knowledge check</span>
-    <span class="unit-index">6</span>
     <span class="unit-title">Knowledge check</span>
     <span class="unit-time">33 sec</span>
-  </label>
-  <a class="unit-open" href="./quiz-m00.html">Take it →</a>
-  <a class="unit-open" href="./m00.html#slide-17">Slides →</a>
+    <span class="sr-only" data-status-text>not started</span>
+  </a>
+  
 </li>
-<li class="unit" data-unit="m00:summary">
-  <label class="unit-check">
-    <input type="checkbox" data-progress="m00:summary">
+<li class="unit">
+  <a class="unit-link" href="./m00.html#slide-18" data-unit="m00:summary" data-first="18" data-last="19">
+    <svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg>
     <span class="unit-kind">Summary</span>
-    <span class="unit-index">7</span>
     <span class="unit-title">Summary</span>
     <span class="unit-time">56 sec</span>
-  </label>
+    <span class="sr-only" data-status-text>not started</span>
+  </a>
   
-  <a class="unit-open" href="./m00.html#slide-18">Slides →</a>
 </li>
   </ol>
   <section class="path-section">
