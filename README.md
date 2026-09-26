@@ -112,8 +112,9 @@ shipping it.
 
 ## The course online
 
-**<https://tomqwu.github.io/ai_courses/>** — published from a `gh-pages` branch, because the repository
-cannot serve the generated HTML itself:
+**<https://tomqwu.github.io/ai_courses/>** — deployed automatically: every green merge to `main` runs the
+`deploy` job in `.github/workflows/gate.yml`, which builds the site from that commit and pushes it to the
+`gh-pages` branch Pages serves (the repository cannot serve the generated HTML itself). By hand:
 
 ```bash
 python3 course/publish_site.py                 # publish text-first (36 files, ~1 MB, no audio)

@@ -6,8 +6,8 @@ description: End-to-end procedure for adding or changing course content in this 
 # Course content: from idea to published
 
 The course is Markdown and JSON in `course/`; a generator builds the learner site; one gate
-(`course/check.sh`, CI `gate.yml`) proves it; `course/publish_site.py` publishes it to the
-`gh-pages` branch. Read `AGENTS.md` for the rules and the commit → PR → merge-on-green workflow.
+(`course/check.sh`, CI `gate.yml`) proves it; every green merge to `main` deploys it (the `deploy` job
+runs `course/publish_site.py`, which pushes the build to the `gh-pages` branch Pages serves). Read `AGENTS.md` for the rules and the commit → PR → merge-on-green workflow.
 The standard every artifact is held to is `course/01-design/content-standards.md` — read §0–§2
 before writing.
 
@@ -128,11 +128,14 @@ evidence.
 
 ## 9. Publish
 
-After the merge, from `main`:
+Automatic. When the PR merges, the push to `main` re-runs the gate and its `deploy` job publishes the
+text-first site from that commit to <https://tomqwu.github.io/ai_courses/>. Confirm the job is green
+on `main`; a red deploy is part of the same change.
+
+By hand, only to ship audio (the published copy is text-first until the release voice exists):
 
 ```bash
-make -C course publish          # runs the gate, then pushes the built site to gh-pages (text-first)
-make -C course publish-audio    # same, with recordings and captions, once the release voice exists
+make -C course publish-audio    # runs the gate, then publishes with recordings and captions
 ```
 
 Release voice: `make -C course narration` (needs `ELEVENLABS_API_KEY`). A human take:
