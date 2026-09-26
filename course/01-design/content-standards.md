@@ -98,8 +98,11 @@ bands only the named artifacts — but every repo pointer in them is checked lik
   line must occur in the cited file, inside the cited range. Anything else declares itself after the
   language: ```` ```bash commands ````, ```` ```text output ````, ```` ```markdown template ````,
   ```` ```text illustrative ```` — and an illustrative example is labelled so on the slide as well.
-  `verify.py` checks both.
-- **Everything on a slide is visible in its 16:9 frame with the narration panel present.** A
+  `verify.py` checks both. On the site a copy is shown as an exhibit panel headed by its file, lines
+  and pinned commit, numbered from the file itself; mark the lines the narration walks with `hl=`
+  after the language (```` ```swift hl=82 ````, or `hl=82-83,85`), so "read the guard" lands on a
+  highlighted line.
+- **Everything on a slide is visible in its 16:9 frame with the player bar present.** A
   recording never scrolls, so the browser check (`check_player.py --strict-fit`) fails a slide whose
   content needs scrolling. Trim bullets the exhibit already proves, or trim the exhibit to the lines
   the narration walks, before reaching for another slide.

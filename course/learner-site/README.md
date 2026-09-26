@@ -86,14 +86,34 @@ and what was deliberately changed, is written down rather than implied:
 | The 16:9 master | `--frame-width: min(100vw - 32px, (100dvh - chrome - narration) * 16/9)`, `.slide { aspect-ratio: 16/9 }` |
 | Container-query type | slide type is sized in `cqw`, so it scales with the frame instead of the viewport |
 | Kicker + title | `M0.1 — Three archetypes` renders as kicker `M0.1` and title `Three archetypes`, exactly ai_qe's `02 / Strategic target state` |
-| Source footer | every slide carries a full-height left spine — kicker, running head, module tag, `NN / NN`, transcript link |
-| Modes | presentation (full screen), reading view, notes drawer, one 16:9 slide per printed page |
-| Chapter grouping | `data-chapter` per slide; the picker is grouped with `<optgroup>` |
+| Source footer | *Replaced by the meta line (#76):* the section, an Evidence chip on proof slides, `NN / NN` |
+| Modes | presentation (full screen) and one 16:9 slide per printed page; Read is the lesson (#74) |
+| Chapter grouping | `data-chapter` per slide; the player's timeline has one segment per unit (#75) |
 
-Changed for this course: proof slides (`<!-- _class: proof -->`) get a dark, accented treatment so the
-evidence slides change the deck's rhythm; the vocabulary is limited to what these decks contain
-(bullets, tables, code, takeaways, pillars, metrics); and the honesty badge for the preview voice keeps
-its own light-theme styling because it must be legible wherever it appears.
+### The slide templates (#76)
+
+Four templates, all light, none with a rail; each opens on the meta line.
+
+| Template | Which slides | Shape |
+|---|---|---|
+| **Cover** | slide 1 | the module's title at display size, its promise, the narration note |
+| **Section opener** | each segment's first slide | the section number in cobalt (`M2.2`) above the title; the meta line says "Section 2 of 3" |
+| **Concept / flow** | the rest | title over content: a table, bullets, or a declared `_diagram` (seams in cobalt, core in ink) |
+| **Proof** | `<!-- _class: proof -->` with an exhibit | the claim and its bullets (~5/12) beside the exhibit (~7/12) |
+
+Type is title 48, body 22, code 17 at a 1280px frame (`--t-title`, `--t-body`, `--t-small`), in `cqw`
+so it scales with the frame; title/body is 2.18, above the owner's 2.0 floor (#71). The slides use IBM
+Plex Sans and Bricolage Grotesque at their true size — #72's size-adjusted "Slide" faces are retired.
+
+**Exhibits** are dark panels headed by the file, the cited lines and the pinned commit, resolved the
+way the gate resolves citations. Their line numbers are found in the cited file, so an elided or
+rewrapped line carries no number rather than a wrong one (a line cut short with `…` is matched by what
+precedes it). Long lines wrap with a hanging indent; `hl=82` after the fence's language highlights a
+line. A declared block (commands, output, template, illustrative) is headed with its kind instead. A
+slide that ends on a line of bare citations shows it as a **Source** line in the chrome size.
+
+The sections that follow describe the rail as it was, and why it was built; the measurements are kept
+because they are what the templates had to keep true.
 
 ### The editorial rail
 
@@ -123,8 +143,10 @@ run on a tighter seven-step document scale (`--d-1` … `--d-7`) because 1.25 st
 text; they previously used twenty sizes, nine of them inside 11–15px.
 
 `check_player.py` asserts the system's own rules so they cannot drift back: ≤8 type sizes, ≤8 text
-colours and ≤14 spacing values on any slide; title/body ≥2.5×; chrome ≥2% of frame height; every slide
-optically centred; a rail with a real spine rule on all 233; and **no text below WCAG AA**. These are
+colours and ≤14 spacing values on any slide; title/body ≥2.0× (2.5× under the rail); the meta line ≥2%
+of frame height; every slide optically centred in the space under its meta line; the meta line on
+every slide, the Evidence chip on every proof slide, no dark slide; every code block an exhibit panel,
+every `hl=` mark a highlighted line; and **no text below WCAG AA**. These are
 measured across **every** slide — an earlier version measured only the visible one, which in deck-ready
 mode is always the cover, so any content slide could have drifted unnoticed. Centring is measured on the
 *content extent*, not the body box: the body is a stretch-aligned grid item, so measuring its box would
@@ -447,7 +469,7 @@ whatever the slide.
 ```
 deck page (in the shell: outline · top bar)
 ├── main#slides.slides   one <section class="slide"> per slide
-│                        ├── .slide-rail / h2#slide-N-title / .slide-content
+│                        ├── .slide-meta / h2#slide-N-title / .slide-content (exhibits as panels)
 │                        └── the notes, the approved narration a sentence per line, and the
 │                            repo pointers it cites — carried in <template>s for the panel
 ├── .player-bar          the caption line

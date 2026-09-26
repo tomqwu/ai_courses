@@ -83,7 +83,9 @@ def render_diagram(kind: str, items: list[str], ordered: bool) -> str:
         for raw in items:
             label, caption = _label_caption(raw)
             cap = (f'<span class="d-caption">{inline(caption)}</span>' if caption else "")
-            nodes.append(f'<li class="d-node"><span class="d-label">{inline(label)}</span>{cap}</li>')
+            # Seams in cobalt, core in ink (#76): a node that names itself a seam is drawn as one.
+            seam = " is-seam" if re.search(r"\bseam\b", raw, re.I) else ""
+            nodes.append(f'<li class="d-node{seam}"><span class="d-label">{inline(label)}</span>{cap}</li>')
         extra = " diagram-loop" if kind == "loop" else ""
         return f'<ol class="diagram diagram-flow{extra}">' + "".join(nodes) + "</ol>"
     if kind == "steps":
@@ -132,12 +134,16 @@ def render_blocks(lines: list[str], diagram: str = "") -> str:
             i += 1
             continue
         if FENCE_RE.match(stripped):
+            # The info string travels with the block: it says whether the exhibit is a true copy
+            # or a declared kind, and which lines to highlight (#76).
+            info = stripped[3:].strip()
             body, i = [], i + 1
             while i < len(lines) and not FENCE_RE.match(lines[i].strip()):
                 body.append(html.escape(lines[i]))
                 i += 1
             i += 1
-            out.append("<pre><code>" + "\n".join(body) + "</code></pre>")
+            out.append(f'<pre data-info="{html.escape(info, quote=True)}"><code>' + "\n".join(body)
+                       + "</code></pre>")
             continue
         if stripped.startswith("|"):
             rows, i = [], i
@@ -432,34 +438,15 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
 BRAND_MARK = SH.BRAND_MARK
 
 
-def slide_rail(deck: dict, slide: dict, site_base: str) -> str:
-    """The spine: what this is, where you are, and where to read it.
-
-    The rail spans the full frame height on purpose. The layout audit found the content area a median
-    45% filled with the text sitting in the top-left corner of a large empty frame — leftover
-    whitespace. A full-height spine frames that space instead, and the body block is optically
-    centred against it.
-    """
-    total = len(deck["slides"])
-    # A running head, as a book would carry one: every page but the title page.
-    brand = "" if slide["cover"] else '<p class="rail-brand">AI Product Studio</p>'
-    # When a slide has no segment kicker the parser falls back to the module tag; don't print it twice.
-    module = ("" if slide["kicker"] == deck["module_tag"]
-              else f'<p class="rail-module">{html.escape(deck["module_tag"])}</p>')
-    return (f'<div class="slide-rail">'
-            f'<div class="rail-head">'
-            f'<p class="kicker">{html.escape(slide["kicker"])}</p>'
-            f'{brand}'
-            f'{module}'
-            f'</div>'
-            f'<div class="rail-foot">'
+def slide_meta(slide: dict, total: int, where: str) -> str:
+    """The slide's one line of chrome (#76): where it sits, an Evidence chip on a proof slide, and its
+    number. It replaces the 22% rail, which sat mostly empty and cost every slide a quarter of its
+    width; the transcript and module links it carried live in the player and the breadcrumb now."""
+    chip = '<span class="evidence-chip">Evidence</span>' if "proof" in slide["classes"] else ""
+    return (f'<div class="slide-meta">{chip}'
+            f'<span class="kicker">{html.escape(where)}</span>'
             f'<span class="slide-number" aria-label="Slide {slide["number"]} of {total}">'
-            f'{slide["number"]:02d} / {total:02d}</span>'
-            f'<a class="rail-link" '
-            f'href="{site_base}/transcript-{deck["id"]}.html#{slide["id"]}">Slide transcript</a>'
-            f'<a class="rail-link" '
-            f'href="{site_base}/module-{deck["id"]}.html">Module overview</a>'
-            f'</div></div>')
+            f'{slide["number"]:02d} / {total:02d}</span></div>')
 
 
 def slide_cta(deck: dict, slide: dict, site_base: str) -> str:
@@ -475,46 +462,165 @@ def slide_cta(deck: dict, slide: dict, site_base: str) -> str:
 
 
 def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
-                site_base: str, cover_note: str = "") -> str:
+                site_base: str, cover_note: str = "", place: dict | None = None) -> str:
+    """One slide in one of four templates (#76): the cover, a section opener (a segment's first
+    slide), a proof (claim beside exhibit), or a concept/flow slide (title over content).
+
+    `place` says where the slide sits: {"where": "M2.1 · One pipeline, two layers",
+    "opener": "M2.2" or "", "total": 26}.
+    """
+    place = place or {}
+    total = place.get("total") or slide["number"]
     classes = ["slide"]
     if slide["cover"]:
         classes.append("slide-cover")
     elif "proof" in slide["classes"]:
-        classes.append("slide-proof")          # the decks' evidence slides get a change of rhythm
+        classes.append("slide-proof")
+    if place.get("opener"):
+        classes.append("slide-opener")
     hidden = "" if slide["number"] == 1 else " hidden"
     media = ""
     if manifest_entry:
         media = (f' data-audio="{html.escape(manifest_entry["audio"], quote=True)}"'
                  f' data-captions="{html.escape(manifest_entry["captions"], quote=True)}"'
                  f' data-duration="{manifest_entry.get("duration", "")}"')
-    # The body is one block, centred in the frame: title, content, and — on the cover — the
-    # standing metadata about the deck.
     cover_meta = f'<p class="lede cover-meta">{cover_note}</p>' if slide["cover"] else ""
     # Speaker notes, the approved narration (one sentence per line) and the repo pointers travel with
     # the slide, so the player's panel can show them without a second request (#75).
     notes = html.escape(slide["notes"]) if slide["notes"] else ""
+    cited = slide_sources(slide)
     script = "".join(f"<li>{html.escape(s)}</li>" for s in sentences(slide.get("script_text", "")))
     sources = "".join(
         f'<li><a href="{html.escape(src["url"], quote=True)}" rel="noopener" data-kind="{src["kind"]}">'
         f'<span class="source-kind">{src["kind"]}</span><code class="source-path">{html.escape(src["pointer"])}</code>'
         f'<span class="source-open">Open at {src["commit"]}</span></a></li>'
-        for src in slide_sources(slide))
+        for src in cited)
+    content = source_footer(exhibits(slide["html"], cited))
+    opener = (f'<p class="opener-number" aria-hidden="true">{html.escape(place["opener"])}</p>'
+              if place.get("opener") else "")
+    title = f'{opener}<h2 id="{slide["id"]}-title">{inline(slide["title"])}</h2>'
+    figures = re.findall(r'<figure class="exhibit.*?</figure>', content, re.S)
+    if "slide-proof" in classes and figures:
+        # Proof: the claim and its bullets on the left (~5/12), the exhibit on the right (~7/12).
+        claim = re.sub(r'<figure class="exhibit.*?</figure>', "", content, flags=re.S)
+        body = (f'<div class="slide-body proof-split">'
+                f'<div class="proof-claim">{title}<div class="slide-content">{claim}</div>'
+                f'{slide_cta(deck, slide, site_base)}</div>'
+                f'<div class="proof-exhibit">{"".join(figures)}</div></div>')
+    else:
+        body = (f'<div class="slide-body">{title}<div class="slide-content">{content}</div>'
+                f'{slide_cta(deck, slide, site_base)}{cover_meta}</div>')
     return (f'<section class="{" ".join(classes)}" id="{slide["id"]}" data-number="{slide["number"]}"'
             f' data-chapter="{html.escape(slide["chapter"], quote=True)}"'
             f'{media}{hidden} aria-roledescription="slide" aria-labelledby="{slide["id"]}-title">'
-            f'{slide_rail(deck, slide, site_base)}'
-            f'<div class="slide-body">'
-            f'<h2 id="{slide["id"]}-title">{inline(slide["title"])}</h2>'
-            f'<div class="slide-content">{slide["html"]}</div>'
-            f'{slide_cta(deck, slide, site_base)}'
-            f'{cover_meta}'
-            f'</div>'
+            f'{slide_meta(slide, total, place.get("where") or slide["kicker"])}'
+            f'{body}'
             f'<div class="slide-notes-source" hidden>{notes}</div>'
             # Templates, not hidden lists: their rows stay out of the rendered document, so they
             # can never count towards the slide's type scale or its contrast audit.
             f'<template class="slide-script-source">{script}</template>'
             f'<template class="slide-sources-source">{sources}</template>'
             f'</section>')
+
+
+PRE_RE = re.compile(r'<pre data-info="([^"]*)"><code>(.*?)</code></pre>', re.S)
+KIND_NAMES = {"commands": "Commands", "output": "Output", "template": "Template",
+              "illustrative": "Illustrative — not a copy of a file"}
+FILE_ICON = ('<svg class="exhibit-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+             '<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/></svg>')
+
+
+def _hl(spec: str) -> set[int]:
+    """`hl=4` or `hl=82-83,85` → the line numbers to highlight."""
+    out: set[int] = set()
+    for part in spec.split(","):
+        a, _, b = part.partition("-")
+        if a.strip().isdigit():
+            out.update(range(int(a), int(b or a) + 1))
+    return out
+
+
+def _numbered(lines: list[str], source: dict | None) -> list[int | None]:
+    """Each exhibit line's number in the cited file, found by matching text inside the cited range.
+
+    Exhibits may elide (…) and rewrap, so a line is numbered only where it is found; elisions and
+    rewrapped lines carry no number rather than a wrong one.
+    """
+    if not source:
+        return [None] * len(lines)
+    import verify as V                                                         # noqa: PLC0415
+    text = source["target"].read_text(encoding="utf-8", errors="replace").splitlines()
+    ranges = V.parse_line_ranges(source["spec"]) if source["spec"] else None
+    lo, hi = (ranges[0][0], ranges[-1][1]) if ranges else (1, len(text))
+    out, at = [], lo
+    for line in lines:
+        want = html.unescape(line).strip()
+        # A line cut short with "…" still names its file line: match what precedes the ellipsis.
+        prefix = want[:-1].rstrip() if want.endswith("…") and len(want) > 4 else ""
+        found = None
+        if want and not V.EXHIBIT_ELIDE_RE.fullmatch(want):
+            for n in range(at, hi + 1):
+                have = text[n - 1].strip() if n - 1 < len(text) else None
+                if have is not None and (have == want or (prefix and have.startswith(prefix))):
+                    found = n
+                    break
+        out.append(found)
+        if found:
+            at = found + 1
+    return out
+
+
+def exhibits(content: str, cited: list[dict]) -> str:
+    """Code blocks as exhibit panels (#76): a header naming the file, its lines and the pinned
+    commit, line numbers from the file itself, highlighted lines, long lines wrapped with a hanging
+    indent instead of clipped. A declared block (commands, output, template, illustrative) says what
+    it is instead of naming a file."""
+    exhibit_sources = [c for c in cited if c["kind"] == "Exhibit"]
+
+    def panel(m: re.Match) -> str:
+        info = html.unescape(m.group(1)).split()
+        declared = next((k for k in KIND_NAMES if k in info), "")
+        hl = _hl(next((w[3:] for w in info if w.startswith("hl=")), ""))
+        lines = m.group(2).split("\n")
+        source = None
+        if not declared:
+            import verify as V                                                 # noqa: PLC0415
+            wanted = [V._exhibit_norm(html.unescape(l)) for l in lines if len(html.unescape(l).strip()) > 3]
+            source = next((s for s in exhibit_sources if _holds(s["target"], s["spec"], wanted, V)), None)
+        numbers = _numbered(lines, source)
+        rows = []
+        for i, (line, n) in enumerate(zip(lines, numbers), 1):
+            lit = (n in hl) if any(numbers) else (i in hl)
+            attrs = f' data-n="{n}"' if n else ""
+            rows.append(f'<span class="line{" is-hl" if lit else ""}"{attrs}>{line or " "}</span>')
+        if source:
+            repo, _, path = source["pointer"].partition("/")
+            file = f'{repo} / {path.split(":")[0].rsplit("/", 1)[-1]}'
+            span = source["spec"].replace("-", "–") if source["spec"] else "whole file"
+            head = (f'{FILE_ICON}<span class="exhibit-file">{html.escape(file)}</span>'
+                    f'<span class="exhibit-lines">{html.escape(span)} · {source["commit"]}</span>')
+        elif declared:
+            head = f'<span class="exhibit-file">{KIND_NAMES[declared]}</span>'
+        else:
+            head = '<span class="exhibit-file">Excerpt</span>'
+        numbered = " is-numbered" if any(numbers) else ""
+        return (f'<figure class="exhibit{numbered}"><figcaption class="exhibit-head">{head}</figcaption>'
+                f'<pre><code>{"".join(rows)}</code></pre></figure>')
+
+    return PRE_RE.sub(panel, content)
+
+
+SOURCE_LINE = re.compile(r"<p>((?:\s*<code>[^<]+</code>\s*(?:,|·|and|;)?\s*)+)</p>\s*$")
+
+
+def source_footer(content: str) -> str:
+    """A slide that ends on a line of bare citations gets it as its source line (#76): the Source
+    chip and the paths, in the chrome size, instead of a paragraph of code."""
+    m = SOURCE_LINE.search(content)
+    if not m:
+        return content
+    return (content[:m.start()] + f'<p class="slide-source"><span class="source-chip">Source</span>'
+            f'{m.group(1).strip()}</p>' + content[m.end():])
 
 
 SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[\"“(A-Z0-9])")
@@ -581,7 +687,7 @@ def slide_sources(slide: dict) -> list[dict]:
                 kind = "Exhibit"
             else:
                 kind = "On the slide"
-            out.append({"pointer": pointer, "url": url, "kind": kind,
+            out.append({"pointer": pointer, "url": url, "kind": kind, "target": target, "spec": spec,
                         "commit": SC.PINNED.get(rel.split("/", 1)[0], "main")})
     return out
 
@@ -594,6 +700,21 @@ CHEVRON = ('<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="
            '<path d="{d}"/></svg>')
 PRESENT_ICON = ('<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
                 '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>')
+
+
+def slide_place(deck: dict, slide: dict, units: list[dict]) -> dict:
+    """Where a slide sits, for its meta line (#76). A segment's first slide opens the section: it
+    carries the big section number and says "Section k of 3"; the rest of the segment names it."""
+    total = len(deck["slides"])
+    segments = [u for u in units if u["kind"] == "segment"]
+    n = slide["number"]
+    unit = next((u for u in units if u["first"] <= n <= u["last"]), None)
+    if slide["cover"] or not unit or unit["kind"] != "segment":
+        return {"total": total, "where": slide["kicker"]}
+    if n == unit["first"]:
+        return {"total": total, "opener": unit["id"],
+                "where": f"Module {int(deck['id'][1:])} · Section {segments.index(unit) + 1} of {len(segments)}"}
+    return {"total": total, "where": f"{unit['id']} · {unit['label']}"}
 
 
 def voice_label(deck_manifest: dict, provenance: dict, recorded: int, preview: int,
@@ -650,11 +771,12 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
                       f'{" Free preview voice — the release recording is pending." if preview_count else ""}'
                       f'{synthetic}'
                       f'</small>')
+    units = units or []
     sections = "\n".join(
-        slide_shell(deck, slide, deck_manifest.get(slide["id"]), site_base, cover_note)
+        slide_shell(deck, slide, deck_manifest.get(slide["id"]), site_base, cover_note,
+                    slide_place(deck, slide, units))
         for slide in deck["slides"])
 
-    units = units or []
     unit_meta = unit_meta or {}
     # The timeline: one segment per unit, as wide as its share of the deck. Each segment is a button
     # that opens its unit's first slide; the player fills the ones behind and at the current slide.
