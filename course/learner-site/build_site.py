@@ -888,7 +888,11 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
                text_only: bool = False, path_cards: str = "",
                module_paths: dict[str, int] | None = None,
                units_by_deck: dict[str, list[dict]] | None = None,
-               proof_html: str = "", subscribe_action: str = "") -> str:
+               proof_html: str = "", subscribe_action: str = "",
+               home_data: dict | None = None) -> str:
+    """Home (#79). A returning learner lands on where they were and what is next; a first-time
+    visitor gets the pitch and the first-win start. Both are built here; `home.js` shows the one
+    that fits from the stored progress, so the page works as a static file."""
     # The sign-up form posts to whatever mailing provider the operator configures at build time.
     # With none configured the form is shown disabled and says so, rather than silently posting
     # into the void and telling a visitor their address was taken.
@@ -951,7 +955,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
                  f"      <li>{all_slides} slide transcripts</li>\n"
                  "      <li>Present · read · print</li>\n"
                  "      <li>Design ported from ai_qe</li>")
-        section_note = "Each deck plays one slide at a time, or read and print it as a document."
+        section_note = "Each card shows your recorded progress and one next step."
         first_howto = ('      <li><strong>Text-first copy:</strong> narration and captions are not '
                        'published here, so the decks are read, presented and printed rather than '
                        'played.</li>\n'
@@ -969,7 +973,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
                  f"      <li>{int(grand_total // 60)} minutes of narration</li>\n"
                  "      <li>Captions on every slide</li>\n"
                  f"      <li>{status}</li>")
-        section_note = "Each deck plays one slide at a time. Press play when you are ready."
+        section_note = "Each card shows your recorded progress and one next step."
         first_howto = ('      <li>Narration never autoplays — press <strong>Play</strong> in the '
                        'player bar under any slide.</li>\n'
                        '      <li>Captions are on by default. The transcript sits under the slide and '
@@ -991,19 +995,54 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     </ul>
     <div class="hero-actions">
       <a class="btn-hero" href="{site_base}/lab-m00.html">Start here: your first win in about 30 minutes →</a>
-      <a class="btn-hero-quiet" href="#proof">See what this site proves about itself</a>
+      <a class="btn-hero-quiet" href="{site_base}/proof.html">See what this site proves about itself</a>
     </div>""")
-    content = f"""{head}
-  <div class="continue-strip" data-continue hidden>
-    <p><strong>Continue where you left off:</strong> <span data-continue-label></span></p>
-    <a class="btn-primary" href="{site_base}/index.html">Continue →</a>
-    <div class="progress-tools">
-      <button type="button" data-progress-export title="Download your progress as JSON">Export progress</button>
-      <button type="button" data-progress-import title="Load a progress file">Import</button>
-      <button type="button" data-progress-reset>Reset</button>
+    home_json = html.escape(json.dumps(home_data or {}, separators=(",", ":")), quote=True)
+    returning = f"""<div class="home-returning" data-continue data-home="{home_json}" hidden>
+  <header class="page-head home-head">
+    <h1>Pick up where you left off</h1>
+    <p class="page-lede"><span data-home-path>The full studio course</span> · labs graded pass/fail against real
+      repositories · <a href="{site_base}/paths.html">Change path</a></p>
+  </header>
+  <section class="resume-card" aria-labelledby="resume-title">
+    <div class="resume-thumb" aria-hidden="true">
+      <span class="thumb-kicker" data-thumb-kicker></span>
+      <span class="thumb-title" data-thumb-title></span>
+      <span class="thumb-line"></span><span class="thumb-line is-short"></span>
     </div>
+    <div class="resume-body">
+      <p class="resume-where" data-resume-where></p>
+      <h2 id="resume-title" data-resume-unit></h2>
+      <p class="resume-slide" data-resume-slide></p>
+      <p class="card-progress"><span class="card-bar"><span class="card-bar-fill" data-resume-fill></span></span>
+        <span class="card-count" data-resume-count></span></p>
+      <div class="resume-actions">
+        <a class="btn-start" href="{site_base}/index.html" data-resume-link data-continue-link>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/></svg>
+          <span>Resume</span></a>
+        <a class="btn-outline" href="{site_base}/index.html" data-resume-read>Read this segment instead</a>
+      </div>
+    </div>
+  </section>
+  <div class="home-row">
+    <section class="next-steps" aria-labelledby="next-title">
+      <h2 id="next-title" data-next-title>Next</h2>
+      <ul class="next-list" data-next-list></ul>
+    </section>
+    {proof_html}
   </div>
+  <div class="progress-tools">
+    <span>Your progress lives in this browser.</span>
+    <button type="button" data-progress-export title="Download your progress as JSON">Export progress</button>
+    <button type="button" data-progress-import title="Load a progress file">Import</button>
+    <button type="button" data-progress-reset>Reset</button>
+  </div>
+</div>"""
+    content = f"""{returning}
+<div class="home-new" data-home-new>
+{head}
 {proof_html}
+</div>
   <div class="section-heading">
     <h2>Start with what you want to build</h2>
     <span class="section-note">Each path teaches one product type end to end. Not sure what a
@@ -1013,7 +1052,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
 {path_cards}
   </div>
   <div class="section-heading">
-    <h2>Or open a single module</h2>
+    <h2>All modules</h2>
     <span class="section-note">{section_note}</span>
   </div>
   <div class="room-grid">
@@ -1106,7 +1145,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     return SH.document("AI Product Studio — narrated course",
                        "Build, ship and sell three kinds of AI product. Nine narrated modules with "
                        "captions and transcripts.", content, site_base, "index home-page",
-                       crumbs=[("Home", None)], current="home")
+                       crumbs=[("Home", None)], current="home", scripts=("home.js",))
 
 
 def main(argv=None) -> int:
@@ -1239,11 +1278,32 @@ def main(argv=None) -> int:
     import site_proof as SPR                                                      # noqa: PLC0415
     proof = SPR.gather(decks, manifest)
     (target / "proof.json").write_text(json.dumps(proof, indent=1, default=str), encoding="utf-8")
+    # What the home page needs to say where a learner is and what is next (#79): each module's units
+    # with their slides, where each starts in the lesson, the lab's time and the check's size.
+    anchors = {r["deck"]: r.get("read_anchors", {}) for r in records if r["kind"] == "lesson"}
+    questions = {r["deck"]: len(r.get("headings", [])) for r in records if r["kind"] == "quiz"}
+    home_data = {"modules": {deck["id"]: {
+        "number": int(deck["id"][1:]), "title": SH.short_label(deck), "slides": len(deck["slides"]),
+        "lab": SP.lab_time(deck["id"]), "questions": questions.get(deck["id"], 0),
+        "units": [{"id": u["id"], "kind": u["kind"], "name": SH.unit_name(u), "label": u["label"],
+                   "first": u["first"], "last": u["last"], "href": SH.unit_href(deck["id"], u),
+                   "read": anchors.get(deck["id"], {}).get(u["id"], "")}
+                  for u in units_by_deck[deck["id"]]]} for deck in decks}}
+    (target / "proof.html").write_text(
+        SH.document("What this site proves — AI Product Studio",
+                    "What the build measured about itself: pointers, facts, lab runs and narration.",
+                    SH.page_head("Proof", "How each number is checked",
+                                 "The numbers on the home page, and the checks that measured them when "
+                                 "this site was built.")
+                    + SPR.proof_section(proof, args.site_base),
+                    args.site_base, "doc-page proof-page",
+                    crumbs=[("Course", f"{args.site_base}/index.html"), ("Proof", None)]),
+        encoding="utf-8")
     (target / "index.html").write_text(
         index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration,
                    subscribe_action=args.subscribe_action,
                    path_cards=path_cards, module_paths=module_paths, units_by_deck=units_by_deck,
-                   proof_html=SPR.proof_section(proof, args.site_base)),
+                   proof_html=SPR.proof_card(proof, args.site_base), home_data=home_data),
         encoding="utf-8")
 
     # The transcripts are committed as Markdown, so a check must prove the committed copies still

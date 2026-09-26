@@ -372,10 +372,33 @@ def run(page, browser, base: str) -> list[str]:
     need(len(pinned) >= 5 and page.locator("nav.toc, .toc, [data-toc]").count(),
          f"lesson-m03: {len(pinned)} pinned pointer links, or no table of contents")
 
-    # Landing: linked proof, and a phone-width page with no sideways scroll.
+    # Home (#79). A returning learner lands on the resume point in one click; the proof numbers are
+    # the build's own; the full proof, with its sources, is one link away.
     page.goto(f"{base}/index.html")
+    last = page.evaluate("window.APSProgress.get().last.href")
+    resume = page.locator("[data-resume-link]")
+    need(page.locator("[data-home]").is_visible() and resume.get_attribute("href").endswith(last),
+         f"home: the resume card does not point at the stored position ({last})")
+    built = json.loads((SITE / "proof.json").read_text(encoding="utf-8"))
+    shown = page.locator("[data-home] .proof-value").all_inner_texts()
+    want = [f"{built['pointers']['checked']:,}", f"{built['pointers']['anchors']:,}", f"{built['narration']['recorded']:,}"]
+    need(shown == want, f"home: the proof numbers {shown} are not the build's {want}")
+    resume.click()
+    page.wait_for_selector(".slide[aria-current]")
+    need(page.url.endswith(last) and page.evaluate("document.querySelector('.slide[aria-current]').id") == last.split("#")[1],
+         "home: Resume did not land on the stored slide")
+    page.goto(f"{base}/proof.html")
     need(len(page.eval_on_selector_all(".proof a", "as => as.map(a => a.href)")) >= 3,
-         "index: the proof strip links fewer than three sources")
+         "proof: the proof section links fewer than three sources")
+    # A first-time visitor sees the pitch and the first-win start, not a resume card.
+    newcomer = browser.new_context(viewport={"width": 1280, "height": 900}).new_page()
+    newcomer.goto(f"{base}/index.html")
+    need(newcomer.locator("[data-home]").is_hidden()
+         and newcomer.locator('[data-home-new] a[href$="lab-m00.html"]').is_visible(),
+         "home: a first-time visitor is not offered the first-win start")
+    newcomer.close()
+    # Landing: a phone-width page with no sideways scroll.
+    page.goto(f"{base}/index.html")
     phone = browser.new_context(viewport={"width": 390, "height": 844}).new_page()
     phone.goto(f"{base}/index.html")
     overflow = phone.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
