@@ -320,7 +320,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *29.6s · sentence-measured*
 
-> Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until two hundred one tests pass. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision.
+> Welcome to Module 2, The On-Device AI App: Architecture. Today the abstraction ends. We open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs, stage by stage. Then, in the lab, you rebuild that core in Python as TinyCopilot until its whole test suite passes. The module runs about seventy-five minutes of lesson plus a three-hour lab. By the end, you will be able to point at a Swift file for every stage and defend each decision.
 
 ### Slide 2 — By the end you can…
 
@@ -452,7 +452,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *35.3s · sentence-measured*
 
-> Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports two hundred one tests passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model.
+> Lab M2 is where you build TinyCopilot's core. You will delete six Python modules, one at a time, and re-implement them test-first. The tests are the spec, and the reference implementation is your answer key. Start by running the full suite green, then read copilot.py, then delete a module. Expect a collection error on deletion: that is your real red run, and you should capture it before you go green. When the lab finishes, make lab-m2 reports every test passed at full coverage, the floor of ninety is enforced, and make demo prints three role outputs from a real model.
 
 ### Slide 24 — Quiz M2 — eight questions
 
@@ -627,7 +627,7 @@ The text below is what is spoken on each slide, in order. It is the same text as
 
 *35.8s · sentence-measured*
 
-> Lab M3 takes TinyCopilot from works to trustworthy. Step zero parks the shipped solution, so your red run is real. Step one, write the red-team test first: a mocked show response with a remote host set must be rejected in local mode. Then implement the privacy mode, the local model verification, host enforcement, and redirect refusal. Step two adds the real-language-model contract test, gated by the LAB_E2E environment variable. Step three sets the coverage floor and records a failure run, and step three-b adds behavioural evals above it. Step four builds the comparison table. Step five tags the tested commit and checksums the built artifact, and you record it as a candidate, because nothing is published yet. The suite gate is make lab-m3 finishing green with forty-nine tests passed.
+> Lab M3 takes TinyCopilot from works to trustworthy. Step zero parks the shipped solution, so your red run is real. Step one, write the red-team test first: a mocked show response with a remote host set must be rejected in local mode. Then implement the privacy mode, the local model verification, host enforcement, and redirect refusal. Step two adds the real-language-model contract test, gated by the LAB_E2E environment variable. Step three sets the coverage floor and records a failure run, and step three-b adds behavioural evals above it. Step four builds the comparison table. Step five tags the tested commit and checksums the built artifact, and you record it as a candidate, because nothing is published yet. The suite gate is make lab-m3 finishing green, every test passed.
 
 ### Slide 25 — Quiz M3
 

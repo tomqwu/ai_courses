@@ -53,7 +53,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 - **`PromptBuilder` — the pure prompt-construction layer** *(M2)* — A public enum of static functions: context in, request out, no I/O. `ListenToMe/Sources/ListenToMeCore/Prompt.swift`.
 - **`research.md`** *(M4)* — Phase 0 decisions: options evaluated, rationale, and the rejected alternatives. — `SignUpFlow/specs/014-security-hardening/research.md`.
 - **`tasks.md`** *(M4)* — Phase 2 output: checkbox tasks `[ID] [P?] [US#]`, tests first, exact file paths, checkpoints per story. — `SignUpFlow/specs/000-user-onboarding/tasks.md`.
-- **`verify_local_model()`** *(M3)* — The fail-closed `/api/show` check: `remote_host` and `remote_model` absent, `details.format` and `model_info` present and non-empty — `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:101-143`.
+- **`verify_local_model()`** *(M3)* — The fail-closed `/api/show` check: `remote_host` and `remote_model` absent, `details.format` and `model_info` present and non-empty — `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:101-145`.
 ### A
 
 - **Absolute path** *(M9)* — A folder address that starts from the top of the disk, such as `C:\Users\ada\code` or `/Users/ada/code`. It means the same thing wherever you are. Lives in `lesson.md`, Segment M9.2.
@@ -193,7 +193,7 @@ The terms the course leans on repeatedly — learn these once and they carry acr
 ### R
 
 - **Ralph loop** *(M4)* — The constitution's Context A: an agent picks the highest-priority incomplete spec, completes *all* acceptance criteria, and reports `<promise>DONE</promise>`. — `SignUpFlow/.specify/memory/constitution.md`.
-- **Redirect refusal (`RejectRedirects`)** *(M3)* — A transport that refuses every 3xx instead of following it, so meeting text can never be silently forwarded — the Swift URLSession delegate is `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`; the Python twin builds httpx with `follow_redirects=False` and raises on 3xx in `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
+- **Redirect refusal (`RejectRedirects`)** *(M3)* — A transport that refuses every 3xx instead of following it, so meeting text can never be silently forwarded — the Swift URLSession delegate is `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`; the Python twin builds httpx with `follow_redirects=False` and raises on 3xx in `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:50-92`.
 - **Relative path** *(M9)* — A folder address that starts from where you are, such as `code/my-catalog` or `..`. Lives in `lesson.md`, Segment M9.2.
 - **Repository** *(M9)* — A folder whose history Git records, plus its copy on GitHub. Created from the terminal with `gh repo create`. Lives in `lab.md`, Step 4.
 - **Reputation funnel** *(M7)* — The marketing surface a free or open-source product runs on: code, README, coverage badge, published competitor analysis, support, and a Pro tier. Lives in `course/01-design/curriculum.md`, M7.1.

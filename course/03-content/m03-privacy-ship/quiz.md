@@ -46,7 +46,7 @@
 - c) CI can't reach an Ollama daemon or audio hardware — the test needs a real model on a real machine, so it gates off (skips with a stated reason) in normal runs
 - d) CI runs it against a built-in mock daemon instead
 
-**Q7 (Short answer).** Your TinyCopilot is at 201 passed, 100% coverage, and a teammate says "tag v1.0 and ship." Before tagging, write the three-line self-review entry the September 2026 gap review models (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`): one finding of the kind tests cannot surface (name a concrete one for your copilot), the release claim you refuse to make until it is closed, and what "closed" looks like.
+**Q7 (Short answer).** Your TinyCopilot is at 208 passed, 100% coverage, and a teammate says "tag v1.0 and ship." Before tagging, write the three-line self-review entry the September 2026 gap review models (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`): one finding of the kind tests cannot surface (name a concrete one for your copilot), the release claim you refuse to make until it is closed, and what "closed" looks like.
 
 **Q8 (Short answer).** Given a comparison table with columns *platform, on-device?, privacy, model choice, price, focus*, write a positioning one-liner for a hypothetical product and annotate each clause with the column that proves it. The product runs its model on the device when it can and, on older devices, sends the transcript to the platform's private cloud: word the privacy clause so it stays true on both.
 

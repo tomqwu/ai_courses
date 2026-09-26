@@ -118,9 +118,11 @@ def verify_local_model(base_url: str, name: str, transport: Transport | None = N
     info = _parse_show_body(body)
     if info is None:
         return False, f"invalid JSON from /api/show for {name!r}"
-    remote_host = info.get("remote_host")
-    remote_model = info.get("remote_model")
-    if remote_host or remote_model:
+    # Presence, not truthiness: ModelPrivacy.isVerifiedLocal requires both keys to be absent, so a
+    # JSON null or an empty string - the daemon still reporting a remote side - fails closed too.
+    if "remote_host" in info or "remote_model" in info:
+        remote_host = info.get("remote_host")
+        remote_model = info.get("remote_model")
         return False, (
             f"{name!r} is a cloud alias (remote_host={remote_host!r}, "
             f"remote_model={remote_model!r}); using it would send the transcript "

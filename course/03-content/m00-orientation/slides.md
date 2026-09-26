@@ -261,7 +261,7 @@ Pointer: `course/03-content/m02-ondevice-app/tinycopilot/README.md`
 
 Guide: `course/03-content/m00-orientation/lab.md`
 
-<!-- NOTES: The lab has five steps and a six-item acceptance checklist — clone, Python version, Ollama, solver, evidence log, community post — and the pass gate is two things: the solver block and a non-empty `ollama list`. Before Module 1, run the TinyCopilot suite; it is the Module 2 reference implementation, and its gate. Run it from the course folder with pytest, or `make lab-m2`. Expected result: 201 passed at 100% coverage, with a ninety percent floor enforced. If a dependency is missing, name the exact missing package in your evidence log instead of guessing — an honest partial is a pass, an invented green is the only automatic fail. Timing: 3 minutes. Transition: quick check of your knowledge. -->
+<!-- NOTES: The lab has five steps and a six-item acceptance checklist — clone, Python version, Ollama, solver, evidence log, community post — and the pass gate is two things: the solver block and a non-empty `ollama list`. Before Module 1, run the TinyCopilot suite; it is the Module 2 reference implementation, and its gate. Run it from the course folder with pytest, or `make lab-m2`. Expected result: 208 passed at 100% coverage, with a ninety percent floor enforced. If a dependency is missing, name the exact missing package in your evidence log instead of guessing — an honest partial is a pass, an invented green is the only automatic fail. Timing: 3 minutes. Transition: quick check of your knowledge. -->
 
 ---
 

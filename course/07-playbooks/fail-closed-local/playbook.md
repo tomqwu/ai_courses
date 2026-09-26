@@ -281,7 +281,7 @@ Expected: `18 passed`. Then remove each defense in turn and confirm one test fai
 | `status != 200 or` | `test_a_non_200_fails_closed` |
 | the `.replace("</", ...)` in `fence` | `test_the_fence_cannot_be_closed_from_inside` |
 
-**The reference.** From `course/03-content/m02-ondevice-app/tinycopilot/` (Python 3.11, `pytest`, `httpx`): `python3 -m pytest tests/test_privacy.py tests/test_ollama_provider.py -q` gives `49 passed`; `python3 -m pytest tests/test_privacy.py -q` gives `31 passed`; `python3 -m pytest tests/test_injection.py -q` gives `10 passed` (all run 2026-09-26).
+**The reference.** From `course/03-content/m02-ondevice-app/tinycopilot/` (Python 3.11, `pytest`, `httpx`): `python3 -m pytest tests/test_privacy.py tests/test_ollama_provider.py -q` gives `56 passed`; `python3 -m pytest tests/test_privacy.py -q` gives `35 passed`; `python3 -m pytest tests/test_injection.py -q` gives `10 passed` (all run 2026-09-26).
 
 **Pass criteria.** `18 passed`; every row of the break table fails as shown and passes again when restored; your claim table has no empty code or test cell.
 

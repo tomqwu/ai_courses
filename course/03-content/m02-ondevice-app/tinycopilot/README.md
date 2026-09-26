@@ -24,7 +24,7 @@ red-team it.
 | `src/tinycopilot/model_router.py` | `ModelRanking.swift`, `ModelRouter.swift` | `/api/tags` discovery, local-first role defaults (Listener=fast, Quick=fastest, Deep=strongest), token-prefix capability hints |
 | `src/tinycopilot/privacy.py` | `ModelPrivacy.swift` | `PrivacyMode` (OFF/LOCAL/CLOUD); `verify_local_model()` **fail-closed** `/api/show` metadata check (remote_host/remote_model must be absent); localhost-only host rule |
 | `src/tinycopilot/copilot.py` | `MeetingSession.swift`, `CopilotRole.swift` | three roles → three models; per-role generation tokens cancel stale streams; only *completed* listener summaries ground Quick/Deep |
-| `tests/` | `Tests/ListenToMeCoreTests/` | the executable spec (201 tests; contract tests gated by `LAB_E2E=1`) |
+| `tests/` | `Tests/ListenToMeCoreTests/` | the executable spec (208 tests; contract tests gated by `LAB_E2E=1`) |
 | `demo.py` | — | feeds a scripted meeting through all three roles |
 
 ## Setup
@@ -49,8 +49,8 @@ make m3-restore  # bring the reference Lab M3 solution back; COV_FLOOR -> 90
 
 ## Verified status (as shipped)
 
-- `make lab-m2` → **201 passed**, coverage **100%** (floor: 90% enforced via `--cov-fail-under`)
-- `make lab-m3` → **49 passed**
+- `make lab-m2` → **208 passed**, coverage **100%** (floor: 90% enforced via `--cov-fail-under`)
+- `make lab-m3` → **56 passed**
 - `make e2e` → **2 passed** against a live Ollama daemon (cloud aliases and local models both work — the contract test is about the provider, not privacy)
 - `make demo` → produces labeled LISTENER / QUICK / DEEP outputs; picks models via `model_router.role_defaults`
 - `python3 -m pytest tests/test_injection.py -q` → **10 passed**: the prompt-injection red team. Remove

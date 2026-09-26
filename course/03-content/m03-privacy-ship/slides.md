@@ -416,10 +416,10 @@ final class OllamaContractE2ETests: XCTestCase {
 - Red-team test first, then implement
 - Contract test outside CI, coverage floor, comparison table
 - Step 5: tag, checksum, record the rung as candidate
-- Pass gate: `make lab-m3` → 49 passed
+- Pass gate: `make lab-m3` → 56 passed
 - Both daemon outcomes are valid
 
-<!-- NOTES: Lab M3 takes TinyCopilot from works to trustworthy. Step 0 parks the shipped solution so the red run is real. Step 1: red-team test first, then the privacy mode, local-model verification, host enforcement and redirect refusal. Step 2: the contract test gated by LAB_E2E. Step 3: the coverage floor and a recorded failure run; 3b: behavioural evals above it. Step 4: the comparison table. Step 5: tag the tested commit, checksum the artifact, and record the rung as candidate. Suite gate: make lab-m3, 49 passed. Timing: three minutes. Transition: the quiz. -->
+<!-- NOTES: Lab M3 takes TinyCopilot from works to trustworthy. Step 0 parks the shipped solution so the red run is real. Step 1: red-team test first, then the privacy mode, local-model verification, host enforcement and redirect refusal. Step 2: the contract test gated by LAB_E2E. Step 3: the coverage floor and a recorded failure run; 3b: behavioural evals above it. Step 4: the comparison table. Step 5: tag the tested commit, checksum the artifact, and record the rung as candidate. Suite gate: make lab-m3, 56 passed. Timing: three minutes. Transition: the quiz. -->
 
 ---
 

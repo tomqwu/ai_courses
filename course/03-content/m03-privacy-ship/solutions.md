@@ -2,7 +2,7 @@
 
 > Reference answers for Lab M3; the runnable reference is
 > `course/03-content/m02-ondevice-app/tinycopilot/`. Counts match Content Standards §0.2:
-> `make lab-m3` → **49 passed**; `make lab-m2` → **201 passed, 100% coverage**; `make e2e` →
+> `make lab-m3` → **56 passed**; `make lab-m2` → **208 passed, 100% coverage**; `make e2e` →
 > **2 passed** on a live daemon.
 
 ## Step 0 — Park the shipped solution
@@ -79,7 +79,7 @@ A passing case needs a downloaded model's shape —
 
 ```bash
 make lab-m3
-# 49 passed in 0.03s      <- timing varies, the count does not
+# 56 passed in 0.03s      <- timing varies, the count does not
 ```
 
 **Common wrong answers.** (1) Checking `remote_host` and forgetting `remote_model` — a keyword
@@ -131,7 +131,7 @@ python -m pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q
 # ERROR: Coverage failure: total of 78.26 is less than fail-under=90   <- exit 1, value varies
 
 make lab-m2                                                            # after restoring
-# 201 passed, 2 deselected in 0.08s
+# 208 passed, 2 deselected in 0.08s
 # Required test coverage of 90% reached. Total coverage: 100.00%
 ```
 
@@ -207,7 +207,7 @@ digest cannot reproduce it.
 | Criterion | Self-verification |
 |---|---|
 | Step 0 red recorded | `make lab-m3` after `make m3-start`: `ModuleNotFoundError`, exit 4, zero tests run |
-| Red-team test green | `make lab-m3` shows 49 passed, the cloud-alias test among them |
+| Red-team test green | `make lab-m3` shows 56 passed, the cloud-alias test among them |
 | Fail-closed on missing metadata | `details` absent → `ok is False` |
 | Non-loopback host rejected | `assert_host_local("http://example.com:11434")` raises `PrivacyViolation` |
 | Redirects refused | `FakeTransport(status=302)` raises `ServerError` matching `redirect` |

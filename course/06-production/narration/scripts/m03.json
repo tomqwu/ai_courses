@@ -95,7 +95,7 @@
     },
     "slide-24": {
       "title": "Lab M3 — Harden, Prove, Position",
-      "text": "Lab M3 takes TinyCopilot from works to trustworthy. Step zero parks the shipped solution, so your red run is real. Step one, write the red-team test first: a mocked show response with a remote host set must be rejected in local mode. Then implement the privacy mode, the local model verification, host enforcement, and redirect refusal. Step two adds the real-language-model contract test, gated by the LAB_E2E environment variable. Step three sets the coverage floor and records a failure run, and step three-b adds behavioural evals above it. Step four builds the comparison table. Step five tags the tested commit and checksums the built artifact, and you record it as a candidate, because nothing is published yet. The suite gate is make lab-m3 finishing green with forty-nine tests passed."
+      "text": "Lab M3 takes TinyCopilot from works to trustworthy. Step zero parks the shipped solution, so your red run is real. Step one, write the red-team test first: a mocked show response with a remote host set must be rejected in local mode. Then implement the privacy mode, the local model verification, host enforcement, and redirect refusal. Step two adds the real-language-model contract test, gated by the LAB_E2E environment variable. Step three sets the coverage floor and records a failure run, and step three-b adds behavioural evals above it. Step four builds the comparison table. Step five tags the tested commit and checksums the built artifact, and you record it as a candidate, because nothing is published yet. The suite gate is make lab-m3 finishing green, every test passed."
     },
     "slide-25": {
       "title": "Quiz M3",

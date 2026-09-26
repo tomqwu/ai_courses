@@ -53,7 +53,7 @@ TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopi
 it, so meeting text can never be silently forwarded — the Swift URLSession delegate is
 `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-142, 208-214`; the Python twin builds httpx with
 `follow_redirects=False` and raises on 3xx in
-`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:45-78`.
+`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/ollama_provider.py:50-92`.
 
 **Test tier** — The cheapest layer that can actually observe a risk: unit (mocked) → contract (real
 model, your machine) → human smoke (real audio, real permissions) — `ListenToMe/docs/manual-smoke-test.md`.
@@ -68,7 +68,7 @@ e.g. "Ollama Cloud — sends transcript and context" —
 
 **`verify_local_model()`** — The fail-closed `/api/show` check: `remote_host` and `remote_model`
 absent, `details.format` and `model_info` present and non-empty —
-`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:101-143`.
+`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:101-145`.
 
 ## Terms people get wrong
 
