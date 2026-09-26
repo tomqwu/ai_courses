@@ -160,6 +160,7 @@ def sidebar(site_base: str, deck_id: str | None = None, current: str | None = No
             f'<span class="outline-name">{html.escape(module["short"])}</span>{STATUS_TEXT}</a>'
             f'{units}</li>')
     tracks_json = html.escape(json.dumps(_CTX["tracks"], separators=(",", ":")), quote=True)
+    deck_attr = f' data-deck="{deck_id}"' if deck_id else ""
     home_current = ' aria-current="page"' if current == "home" else ""
     foot = []
     for key, label, href in (("glossary", "Glossary", "glossary.html"),
@@ -167,7 +168,7 @@ def sidebar(site_base: str, deck_id: str | None = None, current: str | None = No
         mark = ' aria-current="page"' if current == key else ""
         foot.append(f'<a href="{site_base}/{href}"{mark}>{label}</a>')
     return (f'<nav class="app-outline" id="app-outline" aria-label="Course outline" data-outline'
-            f' data-tracks="{tracks_json}"{f" data-deck=\"{deck_id}\"" if deck_id else ""}>'
+            f' data-tracks="{tracks_json}"{deck_attr}>'
             f'<div class="outline-head">'
             f'<a class="outline-brand" href="{site_base}/index.html">{BRAND_MARK}'
             f'<span>AI Product Studio</span></a>'
