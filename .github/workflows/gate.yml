@@ -63,6 +63,22 @@ jobs:
       - name: Gate
         run: bash course/check.sh
 
+      # Every page and slide template at desktop and phone widths (#81), so a reviewer sees what a
+      # change looks like without building it. Taken even when the gate failed: that is when a
+      # picture helps most.
+      - name: Screenshots — every page and slide template, desktop and phone
+        if: always()
+        run: python3 course/learner-site/screenshots.py --out "${{ runner.temp }}/screenshots"
+
+      - name: Upload the screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-screenshots
+          path: ${{ runner.temp }}/screenshots
+          if-no-files-found: warn
+          retention-days: 14
+
       # The free tools, run on this repository the way a stranger would run them on theirs.
       - name: aps-tools on this repository
         run: |

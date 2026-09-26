@@ -27,6 +27,13 @@ _CTX: dict = {"modules": [], "tracks": []}
 # lesson text, Lab the exercise, Check the knowledge check.
 MODES = (("watch", "Watch", "{d}.html"), ("read", "Read", "lesson-{d}.html"),
          ("lab", "Lab", "lab-{d}.html"), ("check", "Check", "quiz-{d}.html"))
+# The modes' icons: shown only in the phone's bottom tab bar (#81), where the label alone is small.
+MODE_ICONS = {
+    "watch": '<path d="M8 5l11 7-11 7z"/>',
+    "read": '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/>',
+    "lab": '<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/>',
+    "check": '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+}
 
 # One glyph with three states. CSS shows the ring, the half disc or the check according to the
 # row's status class, so "done" and "in progress" differ in shape as well as colour; the word is in
@@ -214,13 +221,19 @@ def topbar(site_base: str, crumbs: list[tuple[str, str | None]], deck_id: str | 
         links = []
         for key, label, pattern in MODES:
             mark = ' aria-current="page"' if key == mode else ""
-            links.append(f'<a href="{site_base}/{pattern.format(d=deck_id)}"{mark}>{label}</a>')
+            icon = (f'<svg class="icon mode-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+                    f'{MODE_ICONS[key]}</svg>')
+            links.append(f'<a href="{site_base}/{pattern.format(d=deck_id)}"{mark}>{icon}<span>{label}</span></a>')
         modes = f'<nav class="mode-switch" aria-label="Module mode">{"".join(links)}</nav>'
+    # On a phone the breadcrumb gives way to a title: where you are, and what this page is (#81).
+    where = crumbs[-2][0] if len(crumbs) > 1 else ""
+    title = (f'<p class="app-bar-title" aria-hidden="true"><span>{html.escape(where)}</span>'
+             f'<strong>{html.escape(crumbs[-1][0])}</strong></p>') if crumbs else ""
     return (f'<header class="app-bar">'
             f'<button type="button" class="app-bar-menu" data-outline-toggle aria-controls="app-outline"'
             f' aria-expanded="false">{MENU_ICON}<span>Outline</span></button>'
             f'<nav class="app-crumbs" aria-label="Breadcrumb">{trail}</nav>'
-            f'{modes}'
+            f'{title}{modes}'
             f'<button type="button" class="app-bar-search" data-search-open'
             f' aria-label="Search the course" title="Search the course (⌘K or /)">{SEARCH_ICON}</button>'
             f'</header>')

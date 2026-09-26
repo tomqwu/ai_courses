@@ -31,7 +31,7 @@ recordings is still fully readable, and the player says so instead of failing.
 | `assets/audio/…` | `generate_narration.py` | No — generated (see the narration README) |
 | `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
 | `assets/fonts/*.woff2` | IBM Plex Sans, Bricolage Grotesque, JetBrains Mono (variable, latin + latin-ext), SIL OFL 1.1, each with its `OFL-*.txt` | **Yes** |
-| `build_site.py`, `site_shell.py`, `site_pages.py`, `site_paths.py`, `site_content.py`, `site_proof.py`, `check_player.py`, `check_features.py` | hand-written | **Yes** |
+| `build_site.py`, `site_shell.py`, `site_pages.py`, `site_paths.py`, `site_content.py`, `site_proof.py`, `check_player.py`, `check_features.py`, `screenshots.py` | hand-written | **Yes** |
 
 ## The shell
 
@@ -57,6 +57,11 @@ and the page's own title in the content column. There is no hero band.
   asserts every module page offers exactly the four modes and every old URL still opens in its mode.
 - **Keyboard order** is skip link → outline (search included) → top bar → content, and
   `check_features.py` asserts it, along with the drawer's Escape and the outline after a reload.
+- **On a phone** (≤480px, #81) the top bar is the outline button, the page's title and search; the
+  four modes become a bottom tab bar with icons; the slide runs full width with its dark bar under it;
+  every control is a 44px touch target; and no page scrolls sideways. `check_features.py` asserts all
+  of it at 390×844 — the player, a lab and every built page — and CI uploads screenshots of every page
+  and slide template at desktop and phone widths (`screenshots.py`, the `site-screenshots` artifact).
 
 ## The learner's record
 
