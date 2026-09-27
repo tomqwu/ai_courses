@@ -515,7 +515,10 @@ def parse_lab(text: str, deck_id: str) -> dict:
         elif kind == "body":
             section["place"] = "reference" if steps_seen else "before"
         rendered.append(section)
-    return {"deck": deck_id, "title": title, "meta": meta, "sections": rendered,
+    # The header block is the lab's brief and is shown whole (goal, notes, prerequisites, time, pass
+    # gate): mining three fields out of it silently dropped the rest, the pass gate included.
+    brief_html = render_document("\n\n".join(l for l in head_lines if l.strip()))[0] if head_lines else ""
+    return {"deck": deck_id, "title": title, "meta": meta, "brief_html": brief_html, "sections": rendered,
             "checklist_ids": checklist_ids, "checklist_count": checklist_count,
             "evidence_md": evidence_md}
 
