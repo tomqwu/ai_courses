@@ -11,6 +11,15 @@ title: M4 — The Spec-Driven SaaS: From Idea to Executable Spec
 **Duration:** ~75 min lesson + 90–120 min Lab M4.
 **Case study:** SignUpFlow · `specs/014-security-hardening/`
 
+```figure
+kind: flow
+alt: A spec folder complete enough that a fresh agent session, with no chat history, implements story one without asking a question.
+source: SignUpFlow/specs/014-security-hardening/spec.md
+step: your spec folder — spec · plan · tasks @ The promise is narrow and testable
+step: a fresh agent session (seam) — no chat history, no questions @ The promise is narrow and testable
+step: story one, implemented (hl) @ The promise is narrow and testable
+```
+
 <!-- NOTES: Welcome to Module 4. In M1 you got the operating system; today we run it at production scale on a real multi-tenant SaaS. The promise is narrow and testable: by the end you can produce a spec folder complete enough that a fresh agent session — no chat history, no memory of your reasoning — can implement story 1 without asking you a single question. SignUpFlow drives features with spec-kit slash commands, and its 17 spec folders are the evidence. Timing: M4.1 about 25 minutes walking one folder, M4.2 about 25 on quality, M4.3 about 25 on shipping honestly. Transition: first, the shape of the whole pipeline. -->
 
 ---
@@ -30,16 +39,17 @@ title: M4 — The Spec-Driven SaaS: From Idea to Executable Spec
 
 ## M4.1 — The command chain
 
-```text illustrative
-specify    ── WHAT
-clarify    ── ≤3 Qs
-CHECKLIST  ── before plan
-plan (HOW) ── research · data-model · contracts · Constitution Check
-tasks      ── Phase 2
-implement  ⇄  converge, until Converged
+```figure
+kind: flow
+alt: The spec-kit command chain — each command reads what the last one wrote, with one cheap gate, the checklist, before any planning.
+step: specify — the WHAT @ Specify writes the WHAT
+step: clarify — at most 3 questions @ Specify writes the WHAT
+step: checklist (hl) — the one gate, before plan @ The checklist gates
+step: plan — the HOW: research · data model · contracts · Constitution Check @ Then plan adds the HOW
+step: tasks @ Tasks turn it into work
+step: implement ⇄ converge — until Converged @ Spec-kit one point oh closes the loop
 ```
 
-Illustrative diagram: each command consumes the previous one's output.
 SignUpFlow predates 1.0: dotted commands in `.claude/commands/`.
 
 <!-- NOTES: This is the entire mechanism, and its whole virtue is that it is boring. Each slash command reads what the last one wrote; nothing is carried in anyone's head. `/speckit.specify` writes WHAT and the requirements checklist; `/speckit.clarify` burns a small question budget; the checklist gates before any planning; plan adds HOW — research decisions, the data model, contracts that pin the seams, and the Constitution Check; tasks turn it into work. Spec-kit 1.0 closes the loop: implement, then converge, which checks the code against the spec and appends unmet work as tasks, until it reports Converged. SignUpFlow predates 1.0, so its dotted command definitions live in `.claude/commands/` and the templates in `.specify/templates/` — both openable in the clone. Notice there is exactly one gate, and it is cheap. Transition: now walk the folder itself, starting with WHAT. -->
@@ -178,10 +188,16 @@ Re-check after Phase 1 design.*
 
 ## M4.2 — The stranger test
 
-- Implementation runs as a Ralph loop
-- Agent gets "implement spec" and no history
-- It cannot ask follow-ups
-- So: strip the conversation — could a stranger implement?
+```figure
+kind: flow
+alt: The Ralph loop — an agent told only to implement the spec picks the top incomplete spec, meets every acceptance criterion and outputs a done promise, with no history and no questions.
+step: "implement spec" (seam) — no chat history, no follow-ups @ Started by a shell script
+step: picks the highest-priority incomplete spec @ Started by a shell script
+step: completes every acceptance criterion @ Started by a shell script
+step: outputs a done promise @ Started by a shell script
+```
+
+- So: delete the conversation — could a stranger implement?
 - Every rule below exists because of this
 
 `.specify/memory/constitution.md`, Context A
@@ -304,10 +320,15 @@ All pass/fail. Cheapest place to stop a bad spec.
 
 ## M4.3 — One PR per story
 
-- Task file groups by story, tests first
-- "Stop at any checkpoint to validate story independently"
-- One story is reviewable in one sitting
-- Demoable and revertable without collateral damage
+```figure
+kind: flow
+alt: Tasks grouped by story with tests first, a checkpoint to validate each story on its own, and one pull request per story that is reviewable, demoable and revertable.
+source: SignUpFlow/.specify/templates/tasks-template.md
+step: tasks grouped by story — tests written first, and failing @ Tasks are grouped by story
+step: checkpoint (seam) — validate the story independently @ Tasks are grouped by story
+step: one PR per story (hl) — reviewable in one sitting · demoable · revertable @ A pull request carrying exactly one story
+```
+
 - Tests-first phases make the PR self-evidencing
 
 `.specify/templates/tasks-template.md`

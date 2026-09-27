@@ -11,8 +11,19 @@ title: M6 — The Expertise Product: Evidence, Routing, Editions
 
 - **Promise:** turn expertise into a defensible, sellable content product
 - **Duration:** ~75 minutes, plus a ~2.5-hour lab
-- **Prerequisites:** Modules 1–5
-- **Case study:** AI × QE — `ai_qe/README.md`
+
+```figure
+kind: architecture
+alt: One expert's research base, every number carrying its evidence, served to many audiences as editions a skeptic can audit.
+source: ai_qe/README.md
+layer: One research base @ Here the product is your own research base
+  box: every number: citation · date · sample · method · label
+layer: Many audiences, nothing forked (chain)
+  box: four narrated decks
+  box: research pages
+  box: PDF editions
+layer: A skeptic can audit it (hl) @ The promise of this module
+```
 
 <!-- NOTES: Welcome to Module 6, the third archetype. Modules 2 and 3 shipped an on-device app; Modules 4 and 5 specced and hardened a SaaS. This module packages expertise itself. Your case study is AI × QE, a research-backed presentation site about modernizing quality engineering in regulated financial services. Its topic is banking QA; its discipline transfers to any field. The promise is narrow and testable: you will learn to publish claims a skeptic can audit. Timing: 1 minute. Transition: next, the four capabilities you leave with. -->
 
@@ -33,10 +44,24 @@ title: M6 — The Expertise Product: Evidence, Routing, Editions
 
 ## M6.1 — Credibility is the product
 
-- One expert's research base becomes a product
-- The citation is the evidence, not decoration
-- Failures and unknowns are published, not hidden
-- The signature qualifier does real commercial work
+```figure
+kind: architecture
+alt: Behind an ordinary-looking content site, every number carries five pieces of evidence, and the site also publishes what it could not verify.
+source: ai_qe/README.md
+layer: What a visitor sees @ AI and QE looks like an ordinary content site
+  box: four narrated decks
+  box: a fintech case study
+  box: research pages · PDFs
+layer: What every number carries @ Underneath, every number carries
+  box: citation
+  box: date
+  box: sample
+  box: method
+  box: epistemic label
+layer: Published, not hidden (hl) @ The site even publishes
+  box: what could not be verified
+```
+
 - Publish your own audit and convert skeptics
 
 <!-- NOTES: Segment M6.1 has one argument: in this archetype, trust is the product, and trust is engineered like software. AI × QE looks like a content site — four narrated decks, a fintech case study, research pages, downloadable PDFs. Underneath, every number carries a citation, a date, a sample, a method and an epistemic label, and the site publishes the things it could not verify. We will take that apart file by file over the next twenty-five minutes. Timing: 3 minutes. Transition: start with the rule that sounds obvious and is almost never followed. -->
@@ -183,12 +208,20 @@ Gartner AI-testing productivity figure; …
 
 ## M6.2 — One research base, many audiences
 
-- 116 slides, one research base
-- Two axes: audience × scenario
-- Four decks, nothing forked
+```figure
+kind: architecture
+alt: One research base of 116 narrated slides served as four decks along two axes — executive or technical, banking scenario or industry perspective — with nothing forked.
+layer: One research base — 116 narrated slides @ The site has one hundred
+  box: the same source records; a correction lands once (hl) @ Both trace back to the same source records
+layer: Executive — the strategic cut @ An executive gets
+  box: banking scenario
+  box: industry perspective
+layer: Technical — contracts, sequencing, evidence schemas @ A technical lead gets
+  box: banking scenario
+  box: industry perspective
+```
+
 - Routes reorder and omit; they never rewrite
-- The deck serves a conversation, not itself
-- Qualify leads with one role-routed form
 
 <!-- NOTES: Segment M6.2 is about distribution without duplication. The site has one hundred sixteen narrated slides and serves them as four decks along two axes: executive or technical, banking scenario or industry perspective. An executive gets the strategic cut; a technical lead gets contracts, sequencing and evidence schemas. Both trace back to the same source records. Nothing is forked, so a correction lands once and appears everywhere. Then we will look at how the same body of work qualifies leads through a single questionnaire. Timing: 3 minutes. Transition: here is the actual cut. -->
 
@@ -297,11 +330,15 @@ Gartner AI-testing productivity figure; …
 
 ## M6.3 — Content as code
 
-- Public content changes require a new edition
-- Site version and content editions are separate
-- Published editions are never overwritten
-- Changelogs record what is deliberately retained
-- Tests gate content like code
+```figure
+kind: flow
+alt: Content released like software — a change passes the build and tests, ships as a new edition that never overwrites the last, and the changelog records what was retained.
+step: a content change @ First, editions
+step: build and tests — an overflowing slide fails @ Second, tests
+step: a new edition (hl) — site version moves separately @ First, editions
+step: published editions never overwritten; changelog records what was retained @ Published editions are never overwritten
+```
+
 - The pilot sells measurement, not outcomes
 
 <!-- NOTES: Segment M6.3 applies software release discipline to content. Two ideas carry it. First, editions: the site version and the content editions move independently, so a player fix does not invalidate a client's PDF. Second, tests: content changes must pass a build, and a slide that overflows a projector viewport fails like a unit test. Then we take the same discipline to the commercial end of the funnel, where the product is a phased pilot that measures rather than promises. Timing: 3 minutes. Transition: look at how editions are separated. -->
