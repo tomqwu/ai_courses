@@ -12,6 +12,15 @@ title: M8 — Launch: Sales Page, Email Arc, Capstone
 
 **Duration:** ~75 minutes · 3 segments · Lab M8 capstone 6–10 hours
 
+```figure
+kind: flow
+alt: Shipped work becomes a business through three things — the page that sells, the emails that arrive, and a capstone that ships version one with recorded evidence.
+step: shipped work — three builds, priced @ Modules one through seven built the machine
+step: the page that sells @ This module closes the loop
+step: the emails that arrive @ This module closes the loop
+step: a capstone — version one, with evidence (hl) @ This module closes the loop
+```
+
 <!-- NOTES: Welcome to the last module. Modules 1 through 7 built the machine — the operating system, three builds, and the monetization package. This module closes the loop: the page that sells, the emails that arrive, and the capstone that ships v1 of one product with recorded evidence. Everything here is checkable against the course's own sales assets, which are the worked examples. Transition: here is exactly what you will be able to do. Timing: 1 minute. -->
 
 ---
@@ -176,10 +185,20 @@ Pointers: `SignUpFlow/docs/playbooks/validation.md` · `ai_qe/docs/principles.md
 
 ## M8.2 — Two phases, seven emails
 
-<!-- _diagram: flow -->
-
-- Warmup: origin, transformation proof, free tool
-- Conversion: cart open, objections, proof, final call
+```figure
+kind: architecture
+alt: A seven-email launch arc in two phases — warmup earns trust with origin, proof and a free tool; conversion spends it on cart open, objections, proof and the final call.
+source: course/04-sales/launch-plan.md
+layer: Warmup — earns trust; does not sell (chain) @ Warmup covers the origin story
+  box: origin
+  box: transformation proof
+  box: free tool (hl) — the hinge @ Read the free tool email
+layer: Conversion — spends the trust (chain) @ Conversion covers cart open
+  box: cart open
+  box: objections
+  box: proof
+  box: final call
+```
 
 - Warmup earns trust; it does not sell.
 - Conversion spends the trust warmup earned.
@@ -328,7 +347,17 @@ demo day · cohort channel.
 
 ## M8.3 — The capstone contract
 
-> ONE archetype, ONE shippable scope, the loop complete. The rubric scores the loop, not the size
+```figure
+kind: flow
+alt: The capstone is one archetype and one shippable scope taken through the whole Spec-to-Ship Loop, with evidence — the rubric scores the loop, not the size.
+loop: yes
+step: Study @ That means a deliberately small product
+step: Spec @ That means a deliberately small product
+step: Build @ That means a deliberately small product
+step: Validate @ That means a deliberately small product
+step: Release @ That means a deliberately small product
+step: Prove (hl) — with evidence @ That means a deliberately small product
+```
 
 - The complete Spec-to-Ship Loop, with evidence.
 - A small complete loop beats a sprawling half-loop.

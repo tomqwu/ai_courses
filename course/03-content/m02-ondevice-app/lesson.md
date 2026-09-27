@@ -3,6 +3,13 @@
 
 ## Overview
 
+```figure
+kind: scene
+alt: A video meeting on a laptop, with a copilot pane beside the call offering a suggestion.
+scene: meeting.svg
+caption: what ListenToMe is for — a copilot beside the call, not inside it
+```
+
 Module 1 gave you an operating system for AI-assisted building. This module opens the first product archetype: the **native on-device AI app** — a real-time system that captures the world, reasons about it locally, and keeps the user in control of every byte that leaves the machine. Your case study is ListenToMe, a free, open-source meeting copilot for macOS that listens to your microphone and the other participants' system audio, transcribes live on-device, and streams AI help through Ollama with a model you choose (`README.md`). One engineer shipped it with a 96% core-coverage badge — possible only because of the architecture you are about to study.
 
 The central engineering problem of this archetype: the interesting decisions — segmentation, context windowing, question detection, model routing, prompt assembly, stream-error handling — all live downstream of audio hardware and a live LLM daemon, neither of which a CI runner can touch. ListenToMe's answer is a hard split. Every decision lives in `Sources/ListenToMeCore`, a pure SwiftPM package of 45 Swift source files (5,194 lines as of 2026-09-16) that needs no microphone, no screen capture, and no network to run its tests; `App/` holds only platform glue — AVAudioEngine, ScreenCaptureKit, Speech, SwiftUI. The two sides meet at three protocol seams: `AudioCapturing`, `Transcribing`, and `LLMProvider`. The whole pipeline runs in a unit test against mocks; only the thin glue is left for a human to smoke-test.
