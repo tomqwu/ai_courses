@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 435" class="research-diagram" role="img" aria-labelledby="contract-chain-title"><title id="contract-chain-title">Four joined artifacts for payment API test generation</title><defs><marker id="contract-chain-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#096d69" stroke-width="1.6"/></marker></defs>
+<g class="diagram-node ">
+<rect x="20" y="80" width="245" height="180" rx="8" class="node"/>
+<text x="36" y="108" class="node-title" text-anchor="start">Task envelope</text>
+<text x="36" y="131" class="node-text" text-anchor="start">PAY-042 · payments-api</text>
+<text x="36" y="151" class="node-text" text-anchor="start">Versioned input hashes</text>
+<text x="36" y="171" class="node-text" text-anchor="start">Scope · expiry · budget</text>
+</g>
+<path d="M 265 169 H 323" class="edge" marker-end="url(#contract-chain-arrow)"/>
+<g class="diagram-node ">
+<rect x="325" y="80" width="245" height="180" rx="8" class="node node-teal"/>
+<text x="341" y="108" class="node-title" text-anchor="start">Policy decision</text>
+<text x="341" y="131" class="node-text" text-anchor="start">DEC-042 · policy v7</text>
+<text x="341" y="151" class="node-text" text-anchor="start">Allow sandbox test only</text>
+<text x="341" y="171" class="node-text" text-anchor="start">Identity + expiry binding</text>
+</g>
+<path d="M 570 169 H 628" class="edge" marker-end="url(#contract-chain-arrow)"/>
+<g class="diagram-node ">
+<rect x="630" y="80" width="245" height="180" rx="8" class="node"/>
+<text x="646" y="108" class="node-title" text-anchor="start">Evaluation manifest</text>
+<text x="646" y="131" class="node-text" text-anchor="start">EVAL-042 · corpus v3</text>
+<text x="646" y="151" class="node-text" text-anchor="start">Original passes</text>
+<text x="646" y="171" class="node-text" text-anchor="start">Mutant fails</text>
+<text x="646" y="191" class="node-text" text-anchor="start">Artifact + runner hashes</text>
+</g>
+<path d="M 875 169 H 933" class="edge" marker-end="url(#contract-chain-arrow)"/>
+<g class="diagram-node ">
+<rect x="935" y="80" width="245" height="180" rx="8" class="node node-teal"/>
+<text x="951" y="108" class="node-title" text-anchor="start">Evidence record</text>
+<text x="951" y="131" class="node-text" text-anchor="start">RUN-042 · review held</text>
+<text x="951" y="151" class="node-text" text-anchor="start">Links all three artifacts</text>
+<text x="951" y="171" class="node-text" text-anchor="start">No self-approval</text>
+</g>
+<rect x="20" y="305" width="1160" height="100" rx="8" class="lane"/>
+<text x="42" y="338" class="label" text-anchor="start">Every boundary verifies identity, versions, expiry, resource scope and the same artifact digest.</text>
+<text x="42" y="372" class="node-text" text-anchor="start">Mismatch, unavailable authorization or missing durable evidence → hold; no promotion.</text>
+</svg>

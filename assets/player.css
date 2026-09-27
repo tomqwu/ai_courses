@@ -702,6 +702,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-chrome span { width: 0.6em; height: 0.6em; border-radius: 50%; background: var(--line); }
 .fig-frame-phone { width: min(16em, 100%); margin: 0 auto; border: 0.55em solid var(--ink-strong);
   border-radius: 1.6em; }
+.fig-frame-none { border: 0; background: none; box-shadow: none; border-radius: 0.4em; }
 .fig-shot { position: relative; }
 .fig-shot img { display: block; width: 100%; height: auto; }
 .fig-pin { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center;
@@ -714,6 +715,34 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 
 /* scene: a hand-drawn illustration, centred, captioned as one */
 .fig-scene-art svg { display: block; width: 100%; max-height: 16em; margin: 0 auto; }
+/* The scenes' palette: every fill and stroke is a Studio token, so an illustration can never bring
+   a colour of its own. The SVGs in course/figures/scenes/ use only these classes. */
+.scene .sc-bg { fill: var(--wash); }
+.scene .sc-surface { fill: var(--surface); }
+.scene .sc-ink { fill: var(--ink-strong); }
+.scene .sc-mid { fill: var(--ink-mid); }
+.scene .sc-head { fill: var(--ink-faint); }
+.scene .sc-line { fill: var(--line); }
+.scene .sc-dark-line { fill: var(--dark-line); }
+.scene .sc-white { fill: var(--white); }
+.scene .sc-accent { fill: var(--accent); }
+.scene .sc-accent-soft { fill: var(--accent-soft); }
+.scene .sc-proof { fill: var(--proof-line); }
+.scene .sc-proof-bg { fill: var(--proof-bg); }
+.scene .sc-proof-ink { fill: var(--proof-ink); }
+.scene .sc-done { fill: var(--done); }
+.scene .sc-done-soft { fill: var(--done-soft); }
+.scene .sc-edge { stroke: var(--line); stroke-width: 2; }
+.scene .sc-edge-accent { stroke: var(--accent); stroke-width: 2; }
+.scene .sc-edge-proof { stroke: var(--proof-line); stroke-width: 2; }
+.scene [class*="sc-stroke"], .scene .sc-ring { fill: none; stroke-width: 4; stroke-linecap: round;
+  stroke-linejoin: round; }
+.scene .sc-stroke, .scene .sc-ring { stroke: var(--ink-strong); }
+.scene .sc-ring { stroke-width: 6; }
+.scene .sc-stroke-accent { stroke: var(--accent); }
+.scene .sc-stroke-done { stroke: var(--done); }
+.scene .sc-stroke-white { stroke: var(--white); }
+.scene .sc-dash { stroke-dasharray: 8 8; }
 
 /* build-ins: parts wait for their sentence, then arrive */
 .fig [data-step] { transition: opacity 0.35s ease, transform 0.35s ease; }
