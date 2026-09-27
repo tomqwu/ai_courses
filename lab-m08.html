@@ -19,92 +19,66 @@
 <header class="page-head"><p class="page-kicker">Module 8 · Lab · pass/fail</p><h1>Lab M8 — Capstone: Ship v1 Through the Full Loop</h1><p class="page-lede">The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, and the evidence entry you export is the format the rubrics grade.</p><p class="lab-facts">6–10 hours over 1–2 weeks (cohort: week 8, ending at demo day) · 8 steps · 13 checks decide the grade</p><p class="lab-prereq"><strong>Prerequisites:</strong> Modules 1–7 (earlier labs are the capstone's raw material — reuse and extend them; do not restart)</p></header>
 <div class="lab-root" data-lab="m08" data-lab-checks="13" data-lab-title="Lab M8 — Capstone: Ship v1 Through the Full Loop">
   <div class="lab-workspace">
-    <nav class="lab-steps" aria-label="Steps"><ol><li><a href="#before-you-start" data-step-go="0"><span class="step-dot" aria-hidden="true">i</span><span class="step-name">Before you start</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-1" data-step-go="1"><span class="step-dot" aria-hidden="true">1</span><span class="step-name">Post your plan before building</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-2" data-step-go="2"><span class="step-dot" aria-hidden="true">2</span><span class="step-name">Spec</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-3" data-step-go="3"><span class="step-dot" aria-hidden="true">3</span><span class="step-name">Build (TDD)</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-4" data-step-go="4"><span class="step-dot" aria-hidden="true">4</span><span class="step-name">Validate</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-5" data-step-go="5"><span class="step-dot" aria-hidden="true">5</span><span class="step-name">Release</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-6" data-step-go="6"><span class="step-dot" aria-hidden="true">6</span><span class="step-name">Sales assets</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-7" data-step-go="7"><span class="step-dot" aria-hidden="true">7</span><span class="step-name">Demo</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-8" data-step-go="8"><span class="step-dot" aria-hidden="true">8</span><span class="step-name">Assemble and score</span><span class="sr-only" data-step-state>to do</span></a></li></ol></nav>
-    <div class="lab-view doc-article"><section class="lab-step" id="before-you-start" data-step="0" aria-labelledby="before-you-start-title">
+    <nav class="lab-steps" aria-label="Steps"><ol><li><a href="#before-you-start" data-step-go="0"><span class="step-dot" aria-hidden="true">i</span><span class="step-name">Before you start</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-1" data-step-go="1"><span class="step-dot" aria-hidden="true">1</span><span class="step-name">Post your plan before building</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-2" data-step-go="2"><span class="step-dot" aria-hidden="true">2</span><span class="step-name">Spec</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-3" data-step-go="3"><span class="step-dot" aria-hidden="true">3</span><span class="step-name">Build (TDD)</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-4" data-step-go="4"><span class="step-dot" aria-hidden="true">4</span><span class="step-name">Validate</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-5" data-step-go="5"><span class="step-dot" aria-hidden="true">5</span><span class="step-name">Release</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-6" data-step-go="6"><span class="step-dot" aria-hidden="true">6</span><span class="step-name">Sales assets</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-7" data-step-go="7"><span class="step-dot" aria-hidden="true">7</span><span class="step-name">Demo</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-8" data-step-go="8"><span class="step-dot" aria-hidden="true">8</span><span class="step-name">Assemble and score</span><span class="sr-only" data-step-state>to do</span></a></li><li class="lab-steps-after"><a href="#required-artifacts-checklist-mapped-to-rubric-dimensions"><span class="step-dot" aria-hidden="true">✓</span><span class="step-name">Required artifacts checklist (mapped to rubric dimensions)</span></a></li><li class="lab-steps-after"><a href="#evidence-to-record"><span class="step-dot" aria-hidden="true">✎</span><span class="step-name">Evidence to record</span></a></li><li class="lab-steps-after"><a href="#acceptance-checklist-pass-every-box"><span class="step-dot" aria-hidden="true">✓</span><span class="step-name">Acceptance checklist (pass = every box)</span></a></li></ol></nav>
+    <div class="lab-main doc-article">
+      <div class="lab-view"><section class="lab-step" id="before-you-start" data-step="0" aria-labelledby="before-you-start-title">
   <p class="step-count">Before you start</p>
   <h2 id="before-you-start-title">Before you start</h2>
   
   <div class="step-body"><div class="step-context" id="lab"><p><strong>Goal.</strong> Ship v1 of one product through the full Spec-to-Ship Loop with a recorded evidence record, plus launch assets — an 8-section sales page and a 5-email mini-arc — and deliver a 5-minute demo. Pass = rubric ≥80% with no dimension below "meets," evidence record included, and a public artifact link that works.</p></div><div class="step-context" id="the-capstone-contract"><h3>The capstone contract</h3><p><strong>ONE archetype. ONE shippable scope. The complete loop.</strong> The rubric scores the loop and the evidence, not the code size — a complete loop at small scope out-scores a sprawling half-loop on every dimension. Pick your row:</p>
 <div class="table-wrap"><table><thead><tr><th>Archetype</th><th>v1 scope (shipped)</th><th>Discipline artifact (rubric D4)</th><th>Release evidence</th></tr></thead><tbody><tr><td><strong>Type 1 — on-device app</strong></td><td>Your TinyCopilot (M2/M3 labs) extended with ONE real feature</td><td>Privacy hardening: local-only mode with fail-closed tests, including the cloud-alias red-team case</td><td>Public repo, version tag pushed (e.g. <code>v0.1.0</code>)</td></tr><tr><td><strong>Type 2 — spec-driven SaaS</strong></td><td>The M4 feature implemented per its own spec and tasks</td><td>Tenant-isolation negative-path tests + playbook acceptance with a validating manifest</td><td>Deployed URL <strong>or</strong> public repo tag</td></tr><tr><td><strong>Type 3 — expertise product</strong></td><td>The M6 briefing expanded to 20 slides</td><td>Reconciled provenance — every slide claim has a provenance row — plus the questionnaire draft</td><td>Live page on any static host</td></tr></tbody></table></div>
 <p>"Shipped" means the public link works from a clean browser: a pushed tag on a public repo, or a deployed URL.</p></div></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev disabled>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  
 </section><section class="lab-step" id="step-1" data-step="1" aria-labelledby="step-1-title">
   <p class="step-count">Step 1 of 8</p>
   <h2 id="step-1-title">Post your plan before building</h2>
   
-  <div class="step-body"><p><strong>Post your plan before building</strong> (the M8.3 action step): archetype, one-sentence scope, each loop stage mapped to a named artifact (file, tag, or URL). Get one peer reply; revise.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-body"><p>(the M8.3 action step): archetype, one-sentence scope, each loop stage mapped to a named artifact (file, tag, or URL). Get one peer reply; revise.</p></div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 1 done</span></button></div>
 </section><section class="lab-step" id="step-2" data-step="2" aria-labelledby="step-2-title">
   <p class="step-count">Step 2 of 8</p>
   <h2 id="step-2-title">Spec</h2>
   
-  <div class="step-body"><p><strong>Spec.</strong> Type 2: reuse the M4 folder, updated to what you will actually ship. Types 1/3: write an equivalent scope spec — ≥2 independently testable stories with Given/When/Then acceptance criteria and explicit non-goals. Run the M4 requirements-checklist gate on it.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-body"><p>Type 2: reuse the M4 folder, updated to what you will actually ship. Types 1/3: write an equivalent scope spec — ≥2 independently testable stories with Given/When/Then acceptance criteria and explicit non-goals. Run the M4 requirements-checklist gate on it.</p></div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 2 done</span></button></div>
 </section><section class="lab-step" id="step-3" data-step="3" aria-labelledby="step-3-title">
   <p class="step-count">Step 3 of 8</p>
   <h2 id="step-3-title">Build (TDD)</h2>
   
-  <div class="step-body"><p><strong>Build (TDD).</strong> Failing test first, visible as its own commit; small reviewable commits; testable core separated from glue (protocols/seams for Types 1–2; data vs. rendering for Type 3).</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-body"><p>Failing test first, visible as its own commit; small reviewable commits; testable core separated from glue (protocols/seams for Types 1–2; data vs. rendering for Type 3).</p></div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 3 done</span></button></div>
 </section><section class="lab-step" id="step-4" data-step="4" aria-labelledby="step-4-title">
   <p class="step-count">Step 4 of 8</p>
   <h2 id="step-4-title">Validate</h2>
   
-  <div class="step-body"><p><strong>Validate.</strong> Run every tier you can: the unit suite; the archetype discipline tests (local-only fail-closed / tenant negative-path / provenance reconciliation); a real-provider contract test gated outside CI where applicable (the M3 pattern, <code>LAB_E2E=1</code>). Record commands and counts as you go.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-body"><p>Run every tier you can: the unit suite; the archetype discipline tests (local-only fail-closed / tenant negative-path / provenance reconciliation); a real-provider contract test gated outside CI where applicable (the M3 pattern, <code>LAB_E2E=1</code>). Record commands and counts as you go.</p></div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 4 done</span></button></div>
 </section><section class="lab-step" id="step-5" data-step="5" aria-labelledby="step-5-title">
   <p class="step-count">Step 5 of 8</p>
   <h2 id="step-5-title">Release</h2>
   
-  <div class="step-body"><p><strong>Release.</strong> Tag the public repo and push the tag, or deploy the page. Open the link in a clean browser session and confirm it is the exact artifact you tested.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-body"><p>Tag the public repo and push the tag, or deploy the page. Open the link in a clean browser session and confirm it is the exact artifact you tested.</p></div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 5 done</span></button></div>
 </section><section class="lab-step" id="step-6" data-step="6" aria-labelledby="step-6-title">
   <p class="step-count">Step 6 of 8</p>
   <h2 id="step-6-title">Sales assets</h2>
   
-  <div class="step-body"><p><strong>Sales assets.</strong> Write the 8-section sales page (M8.1 anatomy; length set by your M7 price) and the 5-email mini-arc (below).</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-body"><p>Write the 8-section sales page (M8.1 anatomy; length set by your M7 price) and the 5-email mini-arc (below).</p></div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 6 done</span></button></div>
 </section><section class="lab-step" id="step-7" data-step="7" aria-labelledby="step-7-title">
   <p class="step-count">Step 7 of 8</p>
   <h2 id="step-7-title">Demo</h2>
   
-  <div class="step-body"><p><strong>Demo.</strong> Record (or rehearse for demo day) the 5-minute demo: problem 30s → loop walkthrough 2 min → live demo 2 min → evidence + limits 30s.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-body"><p>Record (or rehearse for demo day) the 5-minute demo: problem 30s → loop walkthrough 2 min → live demo 2 min → evidence + limits 30s.</p></div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 7 done</span></button></div>
 </section><section class="lab-step" id="step-8" data-step="8" aria-labelledby="step-8-title">
   <p class="step-count">Step 8 of 8</p>
   <h2 id="step-8-title">Assemble and score</h2>
   
-  <div class="step-body"><p><strong>Assemble and score.</strong> Fill in the evidence record (template below), self-score with the rubric, exchange peer scores, submit — cohort: instructor final at demo day; self-paced: your community pair scores with the evidence posted.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done — then the checklist</button>
-  </div>
+  <div class="step-body"><p>Fill in the evidence record (template below), self-score with the rubric, exchange peer scores, submit — cohort: instructor final at demo day; self-paced: your community pair scores with the evidence posted.</p></div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 8 done</span></button></div>
 </section></div>
-    <aside class="lab-panel" aria-label="Acceptance checklist"><section class="lab-section lab-checklist" id="required-artifacts-checklist-mapped-to-rubric-dimensions">
+      <div class="lab-accept" aria-label="Acceptance"><section class="lab-section lab-checklist" id="required-artifacts-checklist-mapped-to-rubric-dimensions">
   <h2>Required artifacts checklist (mapped to rubric dimensions)</h2>
   <p class="check-progress"><strong data-check-count>0 of 13 checked</strong>
     <span class="progress-bar" aria-hidden="true"><span data-check-fill></span></span></p>
@@ -131,9 +105,8 @@ dig +short TXT _dmarc.&lt;your-domain&gt;                   # DMARC</code></pre>
   <ul><li class="check-item"><label><input type="checkbox" data-check="m08-lab-1"><span>Plan posted and peer-reviewed <strong>before</strong> building</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-2"><span>Spec artifacts exist; stories independently testable; checklist gate run</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-3"><span>A failing-test-first commit is visible in history</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-4"><span>All suites green — or every failure honestly recorded</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-5"><span>Tag pushed or page deployed; link verified from a clean browser</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-6"><span>Discipline artifact present and passing (Type 3: provenance reconciles)</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-7"><span>Sales page: 8 sections, one CTA, word target set by price, no unsourced claim</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-8"><span>5 emails drafted; one CTA each; the deadline real</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-9"><span>Deliverability verified on the sending domain before the arc is queued: <code>dig +short TXT _dmarc.&lt;domain&gt;</code> returns a <code>v=DMARC1;</code> record with an explicit <code>p=</code>, SPF returns exactly one <code>v=spf1</code> record ending <code>-all</code>/<code>~all</code>, DKIM returns a <code>v=DKIM1</code> key with a non-empty <code>p=</code>; the three answers and both test sends (Gmail + corporate) are in the evidence record</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-10"><span>Disclosure: every generated launch asset (voice-over, narration, images) says so on the asset, and the evidence record lists each asset and where its disclosure sits, or states "none generated"</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-11"><span>AI-engine citation baseline: the question your page answers, asked in at least two answer engines on launch day, with whether you were cited, the address and whether the citation matches your page — recorded, with a date to repeat it</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-12"><span>Demo recorded (≤5:30) or delivered live, ending on the limits</span></label></li><li class="check-item"><label><input type="checkbox" data-check="m08-lab-13"><span>Evidence record complete + self-score ≥80% (nothing below 3) + peer score exchanged</span></label></li></ul>
   <p class="lab-done" data-lab-done hidden><strong>Every item is checked.</strong> Now fill in the evidence entry and copy or download it: the checklist is your claim; the exported entry is your proof, and it is what completes the lab.</p>
   <p class="lab-done is-complete" data-lab-complete hidden><strong>Lab complete.</strong> The checklist is done and the evidence entry was exported; this lab now shows as complete on your module and path progress.</p>
-</section><a class="btn-dark lab-export" href="#evidence-to-record" data-evidence-jump>Write and export the evidence entry</a></aside>
-  </div>
-  <div class="lab-after doc-article">
+</section><a class="btn-dark lab-export" href="#evidence-to-record" data-evidence-jump>Write and export the evidence entry</a></div>
+      <div class="lab-after">
 <section class="lab-section " id="rubric-scoring-instructions"><h2>Rubric scoring instructions</h2><p>Score each dimension 0–5 (3 = meets; equal weights). <strong>Pass = total ≥80% AND no dimension below 3.</strong> The full rubric, restated from <code>01-design/assessment-and-rubrics.md</code>:</p>
 <div class="table-wrap"><table><thead><tr><th>#</th><th>Dimension</th><th>3 ("meets") looks like</th><th>5 ("exceptional") looks like</th></tr></thead><tbody><tr><td>1</td><td><strong>Spec quality</strong></td><td>Complete spec-kit artifacts for the shipped scope; stories independently testable; acceptance criteria concrete</td><td>A fresh agent session implemented a story without conversation context; checklist gate passed on first review</td></tr><tr><td>2</td><td><strong>Build discipline</strong></td><td>TDD evidence (failing test first); small reviewable commits; core separated from glue via protocols/seams</td><td>Coverage floor enforced; red-team/negative-path tests included; a real-provider contract test outside CI</td></tr><tr><td>3</td><td><strong>Evidence honesty</strong></td><td>Validation record with commands, counts, date, limitations; failures included, not hidden</td><td>Gap-style self-review identifying known limitations with priorities; "not verified" list present</td></tr><tr><td>4</td><td><strong>Privacy/safety engineering</strong> (Type 1/2) <strong>or claim discipline</strong> (Type 3)</td><td>Local-only/fail-closed mode OR tenant isolation OR provenance table implemented and tested</td><td>Multiple defenses layered with tests for each; or full four-level claim labeling with reconciled provenance</td></tr><tr><td>5</td><td><strong>Launch-readiness</strong></td><td>Positioning one-liner, pricing rationale with sourced comparators, sales page draft, 5-email arc</td><td>Sales page ready to publish; arc personalized with your own proof assets; demo delivered (recorded or live)</td></tr></tbody></table></div>
 <p>Sequence: <strong>self-score → peer-score → instructor final</strong> (cohort, at demo day). Self-paced: self-score, then exchange with your community pair against this table; post both scores with the evidence record. Honesty rule: use agents freely — the course teaches that — but the record states what the agent did and what you verified. A fabricated result or evidence line is the only automatic fail.</p></section><section class="lab-section lab-evidence" id="evidence-to-record">
@@ -176,9 +149,10 @@ Limitations / not verified:
 </section><section class="lab-section lab-stretch" id="stretch-goals"><h2>Stretch goals</h2><ul><li><strong>Publish for real.</strong> Put the sales page on any host (Gumroad, a static site) and link it from your repo README.</li><li><strong>Run the arc.</strong> Send the 5-email mini-arc to a real opt-in list — 20 people is enough — and record actuals (delivery, opens, clicks, conversions, revenue) in a launch evidence log; compare against your M8.2 model and note deviations honestly.</li><li><strong>Add the real-provider contract test</strong> (Types 1–2), gated outside CI per the M3 pattern.</li></ul></section><section class="lab-section lab-discussion" id="discussion-prompt-the-demo-day-post"><h2>Discussion prompt (the demo-day post)</h2><p>Post your demo using this template — cohort: before demo day; self-paced: when your pair has scored you:</p>
 <ul><li><strong>Archetype + one-sentence scope</strong> — what v1 does, for whom</li><li><strong>The loop map</strong> — spec → build → validate → release → prove, one artifact per stage (file, tag, or URL)</li><li><strong>The demo link</strong> (5 minutes)</li><li><strong>The top item from your not-verified list</strong> — what you would fix first, and why you didn't</li><li><strong>One ask</strong> — the specific feedback you want from viewers</li></ul>
 <p>Then score one peer against the rubric: the dimensions you would mark 3 or above, and the one you would push higher — naming the artifact that would get it there. This post is the course's testimonial engine; it is what fills the reserved slots on your sales page.</p></section>
-    <footer class="doc-footer">
-      <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m08-launch-capstone/lab.md</code>.</p>
-    </footer>
+      <footer class="doc-footer">
+        <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m08-launch-capstone/lab.md</code>.</p>
+      </footer>
+    </div>
   </div>
 </div>
 </main>

@@ -19,100 +19,71 @@
 <header class="page-head"><p class="page-kicker">Module 2 · Lab · pass/fail</p><h1>Lab M2 — Build TinyCopilot's Core (Python + Ollama)</h1><p class="page-lede">The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, and the evidence entry you export is the format the rubrics grade.</p><p class="lab-facts">9 steps · 8 checks decide the grade</p></header>
 <div class="lab-root" data-lab="m02" data-lab-checks="8" data-lab-title="Lab M2 — Build TinyCopilot&#x27;s Core (Python + Ollama)">
   <div class="lab-workspace">
-    <nav class="lab-steps" aria-label="Steps"><ol><li><a href="#before-you-start" data-step-go="0"><span class="step-dot" aria-hidden="true">i</span><span class="step-name">Before you start</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-1" data-step-go="1"><span class="step-dot" aria-hidden="true">1</span><span class="step-name">Run <code>make lab-m2</code> before touching anything</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-2" data-step-go="2"><span class="step-dot" aria-hidden="true">2</span><span class="step-name">Delete the first module's implementation</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-3" data-step-go="3"><span class="step-dot" aria-hidden="true">3</span><span class="step-name">Re-implement <code>conversation_store.py</code> from its test file</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-4" data-step-go="4"><span class="step-dot" aria-hidden="true">4</span><span class="step-name">Delete and re-implement <code>question_detector.py</code> from <code>test_question_detector.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-5" data-step-go="5"><span class="step-dot" aria-hidden="true">5</span><span class="step-name">Delete and re-implement <code>prompts.py</code> from <code>test_prompts.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-6" data-step-go="6"><span class="step-dot" aria-hidden="true">6</span><span class="step-name">Delete and re-implement <code>model_router.py</code> from <code>test_model_router.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-7" data-step-go="7"><span class="step-dot" aria-hidden="true">7</span><span class="step-name">Delete and re-implement <code>ollama_provider.py</code> from <code>test_ollama_provider.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-8" data-step-go="8"><span class="step-dot" aria-hidden="true">8</span><span class="step-name">Delete and re-implement <code>copilot.py</code> from <code>test_copilot.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-9" data-step-go="9"><span class="step-dot" aria-hidden="true">9</span><span class="step-name">Run the demo: <code>make demo</code></span><span class="sr-only" data-step-state>to do</span></a></li></ol></nav>
-    <div class="lab-view doc-article"><section class="lab-step" id="before-you-start" data-step="0" aria-labelledby="before-you-start-title">
+    <nav class="lab-steps" aria-label="Steps"><ol><li><a href="#before-you-start" data-step-go="0"><span class="step-dot" aria-hidden="true">i</span><span class="step-name">Before you start</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-1" data-step-go="1"><span class="step-dot" aria-hidden="true">1</span><span class="step-name">Run <code>make lab-m2</code> before touching anything</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-2" data-step-go="2"><span class="step-dot" aria-hidden="true">2</span><span class="step-name">Delete the first module's implementation</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-3" data-step-go="3"><span class="step-dot" aria-hidden="true">3</span><span class="step-name">Re-implement <code>conversation_store.py</code> from its test file</span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-4" data-step-go="4"><span class="step-dot" aria-hidden="true">4</span><span class="step-name">Delete and re-implement <code>question_detector.py</code> from <code>test_question_detector.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-5" data-step-go="5"><span class="step-dot" aria-hidden="true">5</span><span class="step-name">Delete and re-implement <code>prompts.py</code> from <code>test_prompts.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-6" data-step-go="6"><span class="step-dot" aria-hidden="true">6</span><span class="step-name">Delete and re-implement <code>model_router.py</code> from <code>test_model_router.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-7" data-step-go="7"><span class="step-dot" aria-hidden="true">7</span><span class="step-name">Delete and re-implement <code>ollama_provider.py</code> from <code>test_ollama_provider.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-8" data-step-go="8"><span class="step-dot" aria-hidden="true">8</span><span class="step-name">Delete and re-implement <code>copilot.py</code> from <code>test_copilot.py</code></span><span class="sr-only" data-step-state>to do</span></a></li><li><a href="#step-9" data-step-go="9"><span class="step-dot" aria-hidden="true">9</span><span class="step-name">Run the demo: <code>make demo</code></span><span class="sr-only" data-step-state>to do</span></a></li><li class="lab-steps-after"><a href="#acceptance-checklist-all-must-be-true"><span class="step-dot" aria-hidden="true">✓</span><span class="step-name">Acceptance checklist (all must be true)</span></a></li><li class="lab-steps-after"><a href="#evidence-to-record"><span class="step-dot" aria-hidden="true">✎</span><span class="step-name">Evidence to record</span></a></li></ol></nav>
+    <div class="lab-main doc-article">
+      <div class="lab-view"><section class="lab-step" id="before-you-start" data-step="0" aria-labelledby="before-you-start-title">
   <p class="step-count">Before you start</p>
   <h2 id="before-you-start-title">Before you start</h2>
   
   <div class="step-body"><div class="step-context" id="goal"><h3>Goal</h3><p>Build the working core of <strong>TinyCopilot</strong> — a multi-role AI copilot in Python that mirrors ListenToMe's architecture: a conversation store with a character-budgeted context window, a question detector with debounce, pure prompt builders for three roles, per-role model routing with local-first defaults, streaming Ollama calls with typed errors, and an orchestrator that wires roles to models with per-role cancellation. Lab M3 will later harden this same core with a fail-closed local-only mode, so do not break its tests.</p></div><div class="step-context" id="prerequisites"><h3>Prerequisites</h3><ul><li>Module 1 complete (you have a starter repo with <code>constitution.md</code>, <code>AGENTS.md</code>, <code>specs/</code>, and an evidence log).</li><li>Python 3.11+ on your PATH.</li><li>Ollama installed and running, with one model pulled: <code>ollama pull qwen3:0.6b</code> (any small chat model works; note its name).</li><li>The <code>tinycopilot/</code> reference repo in this module's folder.</li></ul></div><div class="step-context" id="time"><h3>Time</h3><p>~3 hours. The six modules average 25–30 minutes each when you let the tests drive.</p></div><div class="step-context" id="the-starter"><h3>The starter</h3><p>The <code>tinycopilot/</code> folder is a <em>reference implementation plus a full test suite</em>. Treat it with a specific discipline: <strong>the tests are the spec, and the reference implementation is the answer key.</strong> You will delete the six marked modules and re-implement each one TDD-style to green — reading the answer key when stuck is legitimate, copying it without running the tests is not. The Makefile runs everything:</p>
 <ul><li><code>make lab-m2</code> — runs this module's test suite and enforces the coverage floor (90).</li><li><code>make demo</code> — feeds a small canned transcript through all three roles with your real Ollama model.</li><li><code>make lab-m3</code> — Lab M3's privacy suite. Its files (<code>src/tinycopilot/privacy.py</code>, <code>tests/test_privacy.py</code>, <code>tests/test_contract_real_llm.py</code>) ship here as the reference solution; Lab M3's <code>make m3-start</code> parks them before that lab begins. In this lab leave them alone — <code>test_privacy.py</code>'s 35 tests already run inside <code>make lab-m2</code>.</li></ul></div></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev disabled>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  
 </section><section class="lab-step" id="step-1" data-step="1" aria-labelledby="step-1-title">
   <p class="step-count">Step 1 of 9</p>
   <h2 id="step-1-title">Run <code>make lab-m2</code> before touching anything</h2>
   
   <div class="step-body"><p>Run <code>make lab-m2</code> before touching anything. Confirm the suite is green and the coverage floor passes. You are looking at the finished answer key — take ten minutes to read <code>src/tinycopilot/copilot.py</code> and see how the pieces connect before you delete them.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 1 done</span></button></div>
 </section><section class="lab-step" id="step-2" data-step="2" aria-labelledby="step-2-title">
   <p class="step-count">Step 2 of 9</p>
   <h2 id="step-2-title">Delete the first module's implementation</h2>
   
   <div class="step-body"><p>Delete the first module's implementation: <code>git rm src/tinycopilot/conversation_store.py</code> (all modules live under <code>src/tinycopilot/</code>; their tests are <code>tests/test_&lt;module&gt;.py</code>). Run <code>make lab-m2</code> and <strong>capture the red output</strong> in your evidence log. It is not a list of failing tests: <code>src/tinycopilot/__init__.py:8-34</code> re-exports every module and <code>tests/conftest.py:13</code> imports the package, so pytest stops at collection with <code>ModuleNotFoundError: No module named 'tinycopilot.conversation_store'</code> and exit code 4, zero tests run. Record that verbatim as the red; the test file, not the error, is your spec, and once a stub imports, the red becomes assertion-level failures.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 2 done</span></button></div>
 </section><section class="lab-step" id="step-3" data-step="3" aria-labelledby="step-3-title">
   <p class="step-count">Step 3 of 9</p>
   <h2 id="step-3-title">Re-implement <code>conversation_store.py</code> from its test file</h2>
   
   <div class="step-body"><p>Re-implement <code>conversation_store.py</code> from its test file (<code>test_conversation_store.py</code>): apply finalized vs partial segments, and <code>recent_context(max_chars)</code> keeping the newest segments that fit a character budget — always at least the newest one. Run <code>make lab-m2</code> until green.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 3 done</span></button></div>
 </section><section class="lab-step" id="step-4" data-step="4" aria-labelledby="step-4-title">
   <p class="step-count">Step 4 of 9</p>
   <h2 id="step-4-title">Delete and re-implement <code>question_detector.py</code> from <code>test_question_detector.py</code></h2>
   
   <div class="step-body"><p>Delete and re-implement <code>question_detector.py</code> from <code>test_question_detector.py</code>: trailing "?", leading interrogatives, word-boundary phrase cues. Include the debounce test — a burst of questions triggers at most once per window.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 4 done</span></button></div>
 </section><section class="lab-step" id="step-5" data-step="5" aria-labelledby="step-5-title">
   <p class="step-count">Step 5 of 9</p>
   <h2 id="step-5-title">Delete and re-implement <code>prompts.py</code> from <code>test_prompts.py</code></h2>
   
   <div class="step-body"><p>Delete and re-implement <code>prompts.py</code> from <code>test_prompts.py</code>: three base role prompts (anti-preamble Quick, never-invent Listener, depth-over-brevity Deep), the persona directive appended to every role, and the per-role user-message builder. These must be pure functions — no I/O.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 5 done</span></button></div>
 </section><section class="lab-step" id="step-6" data-step="6" aria-labelledby="step-6-title">
   <p class="step-count">Step 6 of 9</p>
   <h2 id="step-6-title">Delete and re-implement <code>model_router.py</code> from <code>test_model_router.py</code></h2>
   
   <div class="step-body"><p>Delete and re-implement <code>model_router.py</code> from <code>test_model_router.py</code>: token-prefix marker matching (no substring false hits — "gemini" must not match "mini"), role defaults (Listener and Quick both take the <strong>fastest</strong> model, Deep takes the <strong>strongest</strong>, and roles share a model when fewer exist), and <code>:cloud</code> filtered out of local-first defaults. <strong>Documented divergence:</strong> ListenToMe's Swift <code>ModelRanking.roleDefaults</code> additionally picks a <em>second, distinct</em> fast model for Listener when one is available (<a class="pointer" href="https://github.com/tomqwu/ListenToMe/blob/a9bde8e/Sources/ListenToMeCore/ModelRanking.swift#L91-L111" rel="noopener"><code>ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:91-111</code></a>); this lab's executable spec does not, and the tests are authoritative here. Implement to the tests and note the difference — noticing that a re-implementation has simplified a rule is exactly the kind of drift the course teaches you to record rather than hide.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 6 done</span></button></div>
 </section><section class="lab-step" id="step-7" data-step="7" aria-labelledby="step-7-title">
   <p class="step-count">Step 7 of 9</p>
   <h2 id="step-7-title">Delete and re-implement <code>ollama_provider.py</code> from <code>test_ollama_provider.py</code></h2>
   
   <div class="step-body"><p>Delete and re-implement <code>ollama_provider.py</code> from <code>test_ollama_provider.py</code>: streaming chat against <code>http://localhost:11434/api/chat</code> with an injectable transport (tests use a fake), NDJSON line parsing, and typed errors — in-stream <code>{"error": ...}</code>, truncated stream (no <code>done</code>), and empty stream (no content) must each raise a distinct error type, never return success.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 7 done</span></button></div>
 </section><section class="lab-step" id="step-8" data-step="8" aria-labelledby="step-8-title">
   <p class="step-count">Step 8 of 9</p>
   <h2 id="step-8-title">Delete and re-implement <code>copilot.py</code> from <code>test_copilot.py</code></h2>
   
   <div class="step-body"><p>Delete and re-implement <code>copilot.py</code> from <code>test_copilot.py</code>: the orchestrator that routes each role to its model, builds that role's prompt, streams the response, and — via a generation counter per role — cancels a stale stream when the role's model switches mid-flight (a switched model's predecessor must not write output).</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done, next step</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 8 done</span></button></div>
 </section><section class="lab-step" id="step-9" data-step="9" aria-labelledby="step-9-title">
   <p class="step-count">Step 9 of 9</p>
   <h2 id="step-9-title">Run the demo: <code>make demo</code></h2>
   
   <div class="step-body"><p>Run the demo: <code>make demo</code>. It feeds a small transcript through all three roles against your pulled model. Capture the output — Listener summary, Quick suggestion, Deep answer.</p></div>
-  <div class="step-actions">
-    <button type="button" data-step-prev>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>Mark done — then the checklist</button>
-  </div>
+  <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step 9 done</span></button></div>
 </section></div>
-    <aside class="lab-panel" aria-label="Acceptance checklist"><section class="lab-section lab-checklist" id="acceptance-checklist-all-must-be-true">
+      <div class="lab-accept" aria-label="Acceptance"><section class="lab-section lab-checklist" id="acceptance-checklist-all-must-be-true">
   <h2>Acceptance checklist (all must be true)</h2>
   <p class="check-progress"><strong data-check-count>0 of 8 checked</strong>
     <span class="progress-bar" aria-hidden="true"><span data-check-fill></span></span></p>
@@ -124,9 +95,8 @@
   <p class="section-note">From this lab's rubric (<code>lab-rubrics.md</code>). Any one of these fails the lab whatever the checklist shows, so read them before you submit.</p>
   <p>The lab fails regardless of score if any of these is true:</p>
 <ol><li><strong>Fabricated evidence</strong> — output that does not match a real run (e.g. "208 failed" as the red run, or counts that contradict the recorded environment).</li><li><strong>No red run</strong> — any of the six modules goes from the answer key to green with no deletion capture, or the red capture is dated after its green run.</li><li><strong>Tests weakened to pass</strong> — edits to any <code>tests/test_&lt;module&gt;.py</code> assertion, or to the Makefile's <code>--cov-fail-under</code>, or to <code>tests/test_privacy.py</code>.</li><li><strong>Green by copying</strong> — a byte-identical restore of the reference file with no test-first cycle and no evidence entry explaining what the tests specified.</li><li><strong>Coverage floor bypassed</strong> — deleting or excluding modules from <code>--cov</code>, or skipping tests to raise the percentage.</li></ol>
-</section><a class="btn-dark lab-export" href="#evidence-to-record" data-evidence-jump>Write and export the evidence entry</a></aside>
-  </div>
-  <div class="lab-after doc-article">
+</section><a class="btn-dark lab-export" href="#evidence-to-record" data-evidence-jump>Write and export the evidence entry</a></div>
+      <div class="lab-after">
 <section class="lab-section lab-evidence" id="evidence-to-record">
   <h2>Evidence to record</h2>
   <p>For each module: the failing <code>make lab-m2</code> output after deletion, the passing output after re-implementation, and one sentence on what the tests specified that the prompt didn't. Then record the final full <code>make lab-m2</code> run (with coverage line) and the complete <code>make demo</code> transcript with the model name visible. Use the course evidence format: commands, outcomes, date, environment, limitations.</p>
@@ -150,9 +120,10 @@
   </form>
 </section><section class="lab-section lab-stretch" id="stretch-goals"><h2>Stretch goals</h2><ul><li><strong>Swift track (Mac only):</strong> open the real ListenToMeCore files and map each Python module to its Swift counterpart — <code>conversation_store.py</code> → <code>Sources/ListenToMeCore/ConversationStore.swift</code>, <code>question_detector.py</code> → <code>QuestionDetector.swift</code>, <code>prompts.py</code> → <code>Prompt.swift</code>, <code>model_router.py</code> → <code>ModelRanking.swift</code> (+ <code>MeetingSession</code> routing), <code>ollama_provider.py</code> → <code>OllamaProvider.swift</code>, <code>copilot.py</code> → <code>MeetingSession.swift</code>. Write down two design decisions the Swift version makes that your Python version doesn't, and why.</li><li><strong>Add a fourth role</strong> (e.g., a "Critique" role): its own base prompt, default-model rule, dropdown, and tests. Follow the same red → green cycle.</li><li><strong>Add a VAD-style segmentation heuristic</strong> to the store: split a flat transcript blob into utterances using an RMS threshold and trailing-silence rule mirroring <code>Sources/ListenToMeCore/VAD.swift</code>, with tests proving each boundary fires exactly once.</li></ul></section><section class="lab-section lab-discussion" id="discussion-prompt"><h2>Discussion prompt</h2><p>Post to the community: your <code>make demo</code> output, plus the answer to — which of the six modules had the biggest gap between "what I thought it should do" and "what the tests said it must do"? Use the template:</p>
 <blockquote><p><strong>TinyCopilot M2 — [your name]</strong> Demo output: [paste] Most surprising module: [module] — I expected [X]; the tests specified [Y] because [reason grounded in a ListenToMe file pointer].</p></blockquote></section>
-    <footer class="doc-footer">
-      <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m02-ondevice-app/lab.md</code>.</p>
-    </footer>
+      <footer class="doc-footer">
+        <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/m02-ondevice-app/lab.md</code>.</p>
+      </footer>
+    </div>
   </div>
 </div>
 </main>
