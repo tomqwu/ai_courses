@@ -109,6 +109,26 @@ class Render(unittest.TestCase):
         self.assertIn('fig-pin', html)
 
 
+    def test_frameless_screenshot_and_bad_frame(self):
+        base = "kind: screenshot\nalt: an app window that carries its own chrome\nimage: app.png\n"
+        self.assertIn("fig-frame-none", F.render(F.parse(base + "frame: none\n")))
+        with self.assertRaises(F.FigureError):
+            F.render(F.parse(base + "frame: tablet\n"))
+
+    def test_every_scene_inlines_with_its_alt_and_only_palette_classes(self):
+        import re
+        for svg in sorted(F.SCENES.glob("*.svg")):
+            html = F.render(F.parse(f"kind: scene\nalt: the {svg.stem} illustration\nscene: {svg.name}\n"))
+            self.assertIn(f'role="img" aria-label="the {svg.stem} illustration"', html)
+            self.assertIn("Illustration", html)
+            text = svg.read_text()
+            self.assertIn("<title>", text, svg.name)
+            self.assertNotRegex(text, r"#[0-9a-fA-F]{3,6}\b|rgb\(|fill=\"(?!none)", svg.name)
+            for cls in re.findall(r'class="([^"]+)"', text):
+                for c in cls.split():
+                    self.assertTrue(c == "scene" or c.startswith("sc-"), f"{svg.name}: {c}")
+
+
 class FromList(unittest.TestCase):
     def test_stack_becomes_architecture_with_same_words(self):
         fig = F.from_list("stack", ["mic (.you) · system audio (.others)", "PCM chunks"])

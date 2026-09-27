@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" class="scene">
+<title>A small cohort watches one member demo a working build on a shared screen</title>
+<rect class="sc-bg" x="0" y="0" width="640" height="360" rx="18"/>
+<rect class="sc-ink" x="180" y="30" width="280" height="168" rx="12"/>
+<rect class="sc-surface" x="192" y="42" width="256" height="144" rx="4"/>
+<rect class="sc-ink" x="208" y="56" width="110" height="12" rx="4"/>
+<rect class="sc-done-soft" x="208" y="80" width="224" height="30" rx="6"/><path class="sc-stroke-done" d="M218 95l5 5 9-10"/><rect class="sc-done" x="242" y="91" width="120" height="8" rx="4"/>
+<rect class="sc-line" x="208" y="120" width="104" height="54" rx="6"/>
+<rect class="sc-accent" x="220" y="152" width="14" height="14"/><rect class="sc-accent" x="240" y="140" width="14" height="26"/><rect class="sc-accent" x="260" y="130" width="14" height="36"/><rect class="sc-accent" x="280" y="146" width="14" height="20"/>
+<rect class="sc-line" x="322" y="120" width="110" height="10" rx="5"/><rect class="sc-line" x="322" y="138" width="90" height="10" rx="5"/><rect class="sc-line" x="322" y="156" width="100" height="10" rx="5"/>
+<rect class="sc-mid" x="308" y="198" width="24" height="26"/>
+<circle class="sc-head" cx="92" cy="218" r="22"/><path class="sc-accent" d="M48 330c0-48 20-78 44-78s44 30 44 78z"/>
+<circle class="sc-head" cx="220" cy="248" r="22"/><path class="sc-done" d="M176 348c0-44 20-70 44-70s44 26 44 70z"/>
+<circle class="sc-head" cx="420" cy="248" r="22"/><path class="sc-proof" d="M376 348c0-44 20-70 44-70s44 26 44 70z"/>
+<circle class="sc-head" cx="548" cy="218" r="22"/><path class="sc-ink" d="M504 330c0-48 20-78 44-78s44 30 44 78z"/>
+<path class="sc-stroke" d="M128 262l52-40"/>
+</svg>

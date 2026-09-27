@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" class="scene">
+<title>A stranger at a desk clones a repository and follows its README to a passing check</title>
+<rect class="sc-bg" x="0" y="0" width="640" height="360" rx="18"/>
+<rect class="sc-mid" x="60" y="292" width="520" height="14" rx="7"/>
+<rect class="sc-ink" x="232" y="70" width="300" height="190" rx="12"/>
+<rect class="sc-mid" x="370" y="260" width="24" height="32"/><rect class="sc-mid" x="336" y="286" width="92" height="8" rx="4"/>
+<circle class="sc-done" cx="256" cy="92" r="5"/><circle class="sc-proof" cx="272" cy="92" r="5"/><circle class="sc-accent" cx="288" cy="92" r="5"/>
+<rect class="sc-accent" x="252" y="116" width="18" height="8" rx="3"/><rect class="sc-dark-line" x="278" y="116" width="150" height="8" rx="4"/>
+<rect class="sc-dark-line" x="252" y="136" width="210" height="8" rx="4"/>
+<rect class="sc-dark-line" x="252" y="156" width="170" height="8" rx="4"/>
+<rect class="sc-accent" x="252" y="182" width="18" height="8" rx="3"/><rect class="sc-dark-line" x="278" y="182" width="110" height="8" rx="4"/>
+<rect class="sc-done" x="252" y="206" width="140" height="10" rx="5"/>
+<path class="sc-stroke-done" d="M404 211l6 6 12-14"/>
+<circle class="sc-head" cx="150" cy="170" r="26"/>
+<path class="sc-accent" d="M96 292c0-52 24-86 54-86s54 34 54 86z"/>
+<path class="sc-stroke" d="M190 236l52 18"/>
+<rect class="sc-surface sc-edge" x="462" y="30" width="148" height="92" rx="10"/>
+<path class="sc-proof" d="M480 52h26l8 8h40v44h-74z"/>
+<rect class="sc-line" x="566" y="60" width="30" height="8" rx="4"/><rect class="sc-line" x="566" y="76" width="22" height="8" rx="4"/>
+<path class="sc-stroke-accent sc-dash" d="M512 122c0 36-20 50-54 62"/>
+<path class="sc-stroke-accent" d="M466 176l-10 9 13 3"/>
+</svg>

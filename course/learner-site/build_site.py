@@ -1181,6 +1181,11 @@ def main(argv=None) -> int:
     if args.check:
         shutil.rmtree(target, ignore_errors=True)
         target.mkdir(parents=True)
+    # Screenshot copies for figures (#100) ship with the site, in every copy of it: they are the
+    # byte-identical files course/figures/manifest.json records, never regenerated here.
+    shots = COURSE_DIR / "figures" / "shots"
+    if shots.is_dir():
+        shutil.copytree(shots, target / "figures" / "shots", dirs_exist_ok=True)
     # What the *player* is told. In a text-first publish this is deliberately empty: the recordings
     # exist, but offering them would mean offering files the published copy does not contain.
     player_manifest = {"decks": {}} if args.no_narration else manifest

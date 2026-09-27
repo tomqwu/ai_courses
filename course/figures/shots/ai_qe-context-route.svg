@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" class="research-diagram" role="img" aria-labelledby="context-route-title"><title id="context-route-title">Proposed permission-aware retrieval pipeline with provenance and an untrusted-content boundary</title><defs><marker id="context-route-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="#096d69" stroke-width="1.6"/></marker></defs>
+<g class="diagram-node ">
+<rect x="20" y="55" width="240" height="124" rx="8" class="node"/>
+<text x="36" y="83" class="node-title" text-anchor="start">Approved sources</text>
+<text x="36" y="106" class="node-text" text-anchor="start">Contracts + code</text>
+<text x="36" y="126" class="node-text" text-anchor="start">Synthetic fixtures</text>
+<text x="36" y="146" class="node-text" text-anchor="start">Access + retention</text>
+</g>
+<g class="diagram-node ">
+<rect x="325" y="55" width="240" height="124" rx="8" class="node node-teal"/>
+<text x="341" y="83" class="node-title" text-anchor="start">Retrieval service</text>
+<text x="341" y="106" class="node-text" text-anchor="start">User and agent scope</text>
+<text x="341" y="126" class="node-text" text-anchor="start">Filter by current access</text>
+<text x="341" y="146" class="node-text" text-anchor="start">Relevant passages</text>
+</g>
+<g class="diagram-node ">
+<rect x="630" y="55" width="240" height="124" rx="8" class="node"/>
+<text x="646" y="83" class="node-title" text-anchor="start">Context snapshot</text>
+<text x="646" y="106" class="node-text" text-anchor="start">Source IDs + versions</text>
+<text x="646" y="126" class="node-text" text-anchor="start">Minimal task evidence</text>
+<text x="646" y="146" class="node-text" text-anchor="start">Classified + traceable</text>
+</g>
+<g class="diagram-node on-dark">
+<rect x="935" y="55" width="245" height="124" rx="8" class="node node-navy"/>
+<text x="951" y="83" class="node-title" text-anchor="start">Agent runtime</text>
+<text x="951" y="106" class="node-text" text-anchor="start">Read as task evidence</text>
+<text x="951" y="126" class="node-text" text-anchor="start">Treat text as data</text>
+<text x="951" y="146" class="node-text" text-anchor="start">Scoped proposals</text>
+</g>
+<path d="M 260 118 H 323" class="edge" marker-end="url(#context-route-arrow)"/>
+<path d="M 565 118 H 628" class="edge" marker-end="url(#context-route-arrow)"/>
+<path d="M 870 118 H 933" class="edge" marker-end="url(#context-route-arrow)"/>
+<g class="diagram-node ">
+<rect x="325" y="302" width="385" height="115" rx="8" class="node node-sand"/>
+<text x="341" y="330" class="node-title" text-anchor="start">Retrieval evaluation</text>
+<text x="341" y="353" class="node-text" text-anchor="start">Relevant evidence and correct citations</text>
+<text x="341" y="373" class="node-text" text-anchor="start">Forbidden / stale access tests</text>
+</g>
+<path d="M 750 179 V 262 H 517 V 300" class="edge edge-dashed" marker-end="url(#context-route-arrow)"/>
+<g class="diagram-node ">
+<rect x="785" y="302" width="395" height="115" rx="8" class="node"/>
+<text x="801" y="330" class="node-title" text-anchor="start">Action authority remains external</text>
+<text x="801" y="353" class="node-text" text-anchor="start">Retrieved text cannot grant tool access</text>
+<text x="801" y="373" class="node-text" text-anchor="start">Gateway rechecks the requested action</text>
+</g>
+<path d="M 1057 179 V 300" class="edge" marker-end="url(#context-route-arrow)"/>
+<text x="35" y="481" class="small" text-anchor="start">Proposed checks include denied retrieval, access revocation, stale content and conflicting source passages.</text>
+</svg>
