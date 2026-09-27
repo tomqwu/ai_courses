@@ -68,6 +68,18 @@ Keep two vocabularies that share a JSON array from contaminating each other — 
 
 ### Lesson
 
+```figure
+kind: screenshot
+alt: SignUpFlow's Swap requests screen — a coach slot with a swap requested, and the admin's approve or deny decision.
+source: SignUpFlow/docs/screenshots/current/basketball/1440/replacement-needed.png
+image: signupflow-replacement-needed.png
+frame: browser
+crop: 32
+title: Two vocabularies on one screen: the slot asks for a qualification; the decision is a permission.
+callout: 29,19 — COACH: a qualification the slot needs
+callout: 40,24 — approve or deny: an admin decision
+```
+
 A `Person` in SignUpFlow carries one `roles` JSON array holding two unrelated kinds of strings (`api/models.py` via `CLAUDE.md` "Key Patterns"). **Permission roles** are exactly one of `volunteer` or `admin` — enforced by the frozenset `PERMISSION_ROLES = {"admin", "volunteer"}` (`api/roles.py`, line 8) and by the rule "Grant exactly one permission role" (`AGENTS.md`, line 60). A `volunteer` views own data and manages availability; an `admin` gets full CRUD, the solver, and invitations (`CLAUDE.md`, "RBAC"). **Scheduling qualifications** — `usher`, `coach`, `worship_leader`, `musician`, `sound`, `children_leader` — live in the *same* array but are "never interpreted as permissions" (`AGENTS.md`, line 60). The solver uses them to decide who may fill a role slot; no code path uses them to decide who may administer.
 
 The trap this prevents is the natural-language one: "she leads worship, so she should have the admin toggle." `docs/playbooks/church.md` refuses it in one sentence — "**Do not grant admin access merely because someone leads a ministry.** The app has only admin/volunteer access levels, not department-scoped manager permissions" (lines 26–27). The actors table above that line shows the Worship coordinator — operationally the most important volunteer — with access `volunteer` plus qualification `worship_leader`, not `admin` (line 19). The product has no "manager of the music ministry" authority level; pretending a qualification is one would mint a new privilege every time someone invents a skill string.
@@ -115,6 +127,18 @@ Step 4 deserves emphasis because it is the one most teams skip: a denied write t
 Design acceptance as a tier pyramid that proves different properties per tier, playbook scenarios that test failure modes a feature list cannot, and a coverage manifest whose honesty is validated by pytest before a single test collects.
 
 ### Lesson
+
+```figure
+kind: screenshot
+alt: SignUpFlow's admin dashboard at first sign-in — setup progress, four health tiles and the queues that need attention.
+source: SignUpFlow/docs/screenshots/current/basketball/1440/dashboard.png
+image: signupflow-dashboard.png
+frame: browser
+title: Operable, not only functional: what an admin sees before anything is scheduled.
+callout: 29,15 — setup progress comes first: 0 of 4
+callout: 29,24 — volunteers, events, coverage, health — as numbers
+callout: 29,48 — responses needing attention, assignments, swaps
+```
 
 **The seven-tier pyramid.** `docs/TESTING.md` (2026-09-14 policy) defines seven Python tiers, each run in a separate process by `make test-all` — API and browser event-loop fixtures differ, so combining them in one pytest process is forbidden (lines 48–50):
 

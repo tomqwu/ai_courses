@@ -11,7 +11,14 @@ title: M9 — Ship a Product Catalog with GitHub Pages
 
 **AI Product Studio (APS-3)** · ~45 minutes · Free and standalone · No prerequisites
 
-From nothing installed to a public catalog page.
+```figure
+kind: flow
+alt: From nothing installed to a public product catalog — tools installed and proven, a repository cloned, changed and pushed, and a page live on GitHub Pages.
+step: nothing installed
+step: tools installed and proven @ By the end you will have
+step: a repository you cloned, changed and pushed @ By the end you will have
+step: a public catalog on GitHub Pages (hl) @ By the end you will have
+```
 
 <!-- NOTES: Welcome to M9. This module is free and needs nothing: take it first if you have never used a terminal. Promise: by the end the learner has the tools installed and proven, a repository they cloned and pushed, and a public product catalog at their own github.io address. Say plainly that every command is given for Windows and for macOS, side by side. Timing: 1 minute. Transition: the five outcomes. -->
 
@@ -31,12 +38,17 @@ From nothing installed to a public catalog page.
 
 ## M9.1 — Four things, one job each
 
-| Name | What it does |
-|---|---|
-| **Terminal** | a window where you type commands instead of clicking |
-| **Git** | records versions of a folder; each saved version is a commit |
-| **GitHub** | stores a copy of that folder, a repository, and can publish it |
-| **gh** | the GitHub CLI: drives GitHub from the terminal |
+```figure
+kind: architecture
+alt: Git and the terminal live on your computer, GitHub lives on the internet, and the gh command line tool connects them.
+layer: Your computer
+  box: Terminal — type commands instead of clicking @ The terminal is a window
+  box: Git — records versions of a folder; each is a commit @ Git records versions
+layer: The link (seam) @ And gh, the GitHub CLI
+  box: gh — the GitHub CLI: drives GitHub from the terminal
+layer: The internet @ GitHub is a website
+  box: GitHub — stores the folder, a repository, and can publish it
+```
 
 <!-- NOTES: Keep this concrete. Git is on the learner's computer; GitHub is a website; gh connects the two from the terminal. Most beginner confusion is mixing up Git and GitHub, so name the difference once and move on. Timing: 1 minute. Transition: opening a terminal. -->
 
@@ -125,14 +137,20 @@ FAIL  not signed in to GitHub from the terminal
 
 ## M9.2 — You are always somewhere
 
-| What you want | Windows and macOS | Notes |
-|---|---|---|
-| Where am I? | `pwd` | prints the current folder |
-| What is here? | `ls` | PowerShell also takes `dir` |
-| Go into a folder | `cd code` | relative to where you are |
-| Go up one level | `cd ..` | two dots: the folder above |
-| Go home | `cd ~` | the tilde is your home folder |
-| Open it in the file window | `start .` · `open .` | Windows · macOS |
+```figure
+kind: architecture
+alt: Five commands, the same on Windows and macOS, cover almost everything — pwd and ls to look, cd to move, and start or open to see the folder in a window.
+layer: Look — the same on Windows and macOS
+  box: `pwd` — where am I? @ P W D prints
+  box: `ls` — what is here? PowerShell also takes `dir` @ L S lists
+layer: Move
+  box: `cd code` — into a folder @ C D followed by a name
+  box: `cd ..` — up one level @ C D dot dot
+  box: `cd ~` (hl) — home, from anywhere @ And C D tilde
+layer: See it in a window
+  box: `start .` — Windows @ To see the folder
+  box: `open .` — macOS @ To see the folder
+```
 
 <!-- NOTES: The same five commands work in PowerShell and in the Mac Terminal, which surprises people. Demonstrate each once. Mention Tab completion out loud: it is the fastest way to avoid typos. Timing: 3 minutes. Transition: paths. -->
 
@@ -214,13 +232,19 @@ nothing to commit, working tree clean
 
 ## M9.3 — Five files, and you edit one
 
-| File | What it is | Edit it? |
-|---|---|---|
-| `products.js` | store name, contact, the products | **yes** |
-| `index.html` | the page | the description line only |
-| `styles.css` | colours and layout | the colours, if you like |
-| `app.js` | draws cards, filters, search, sort | no |
-| `.nojekyll` | an empty file | no, keep it |
+```figure
+kind: architecture
+alt: The catalog starter's five files — edit products.js; touch one line of index.html and the colours in styles.css; leave app.js and the empty .nojekyll alone.
+source: course/03-content/m09-github-pages/catalog-starter/products.js
+layer: Edit (hl)
+  box: `products.js` — store name, contact, the products @ Products dot J S holds
+layer: Touch lightly
+  box: `index.html` — the description line only @ The page itself is
+  box: `styles.css` — the colours, if you like @ The colours live
+layer: Leave alone
+  box: `app.js` — cards, filters, search, sort @ The app script draws
+  box: `.nojekyll` — empty; tells Pages to publish as-is @ And there is one empty file
+```
 
 `course/03-content/m09-github-pages/catalog-starter/`
 

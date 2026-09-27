@@ -438,7 +438,7 @@ def check_exhibits() -> list[str]:
 # Figures (#99). A module listed here is held to the standard's coverage rule: its cover slide
 # carries the hero figure and every segment's first slide carries a figure. A module joins the list
 # in the change that draws its figures (the course-content skill's "A new module" step).
-FIGURE_MODULES: list[str] = ["m00", "m01", "m02", "m03", "m04", "m05", "m06"]
+FIGURE_MODULES: list[str] = ["m00", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08", "m09"]
 FIGURES = ROOT / "figures"
 FIGURE_FENCE_RE = re.compile(r"^```figure[^\n]*\n(.*?)^```", re.S | re.M)
 

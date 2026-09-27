@@ -113,6 +113,12 @@ class Render(unittest.TestCase):
         self.assertIn('fig-pin', html)
 
 
+    def test_crop_shows_the_top_and_rescales_pins(self):
+        html = F.render(F.parse("kind: screenshot\nalt: the swap requests screen, top half\n"
+                                "image: signupflow-replacement-needed.png\ncrop: 50\ncallout: 10,20 — here\n"))
+        self.assertIn('aspect-ratio:2880/900', html)
+        self.assertIn('top:40%', html)
+
     def test_frameless_screenshot_and_bad_frame(self):
         base = "kind: screenshot\nalt: an app window that carries its own chrome\nimage: app.png\n"
         self.assertIn("fig-frame-none", F.render(F.parse(base + "frame: none\n")))

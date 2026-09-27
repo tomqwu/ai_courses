@@ -148,6 +148,13 @@ Write the 8-section sales-page skeleton; assign the hero's role correctly; expla
 
 ### Lesson
 
+```figure
+kind: scene
+alt: A buyer reads a product page, presses Buy, and receives a receipt.
+scene: buyer-checkout.svg
+caption: the buyer is the hero; the page is the guide
+```
+
 **The hero is the buyer.** StoryBrand positioning, per the research: "the student is the hero, you're the guide" (`course/00-research/02-course-market-research.md` §E). Every section of your page answers the buyer's question — *does this get me there, and can I trust you?* — not yours. For a technical audience, "real shipped projects ARE the social proof" (§E): the repos, demos, dated evidence lines, and test badges you have been recording since Module 1 are your proof assets. Use them. Do not manufacture social proof — the course's own rule: "Never invent testimonials; ship beta before claiming social proof" (`course/04-sales/pricing-and-platforms.md`, honest-marketing checklist).
 
 **Sales-page anatomy.** Eight sections, from the research's template drawn from 32k+ courses — a restructure along these lines took one creator from 1% to 8% conversion (§E):

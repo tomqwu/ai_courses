@@ -74,6 +74,13 @@ Structure the 7–10 email arc with warmup strictly separated from conversion; e
 
 ### Lesson
 
+```figure
+kind: scene
+alt: A launch arc — a sequence of emails leads readers, step by step, to the course page.
+scene: launch-arc.svg
+caption: seven emails, one destination
+```
+
 **Two phases, seven emails, four weeks.** The arc comes from the launch research (§E): 7–10 emails over ~4 weeks (full launches can run 10–15 over 10–14 days — Learning Revolution, §E), but the phase structure never changes:
 
 | # | Email | Phase | Its one job |
@@ -117,6 +124,13 @@ Adapt `04-sales/launch-plan.md` to your product. Write all seven emails — subj
 Commit to the capstone contract — ONE archetype, ONE shippable scope, the complete loop; map all five rubric dimensions to concrete artifacts before building anything; and rehearse the 5-minute demo structure.
 
 ### Lesson
+
+```figure
+kind: scene
+alt: A small cohort watches one member demo a working build on a shared screen.
+scene: cohort.svg
+caption: demo day — the five-minute demo, ending on its limits
+```
 
 **The contract.** The capstone is not "build something big." It is: pick ONE archetype, define ONE shippable scope, and execute the full Spec-to-Ship Loop — Study → Spec → Build → Validate → Release → Prove (`00-research/00-synthesis.md`) — with recorded evidence. The rubric scores the loop's completeness and the evidence's honesty, not the build's size; the instructor guide's capstone unblock says it exactly: "ONE archetype, ONE shippable scope, the loop complete. The rubric scores the loop, not the size." A complete loop at deliberately small scope out-scores a sprawling half-loop on every dimension — "graded on code size" is the misconception to drop: no rubric dimension counts lines.
 

@@ -32,6 +32,13 @@ Apply AI × QE's research conventions to claims in your own field: write benchma
 
 ### Lesson
 
+```figure
+kind: scene
+alt: A reviewer checks a list of claims against the evidence; most hold, one is flagged.
+scene: auditor.svg
+caption: the reader this archetype is built for — a skeptic with a checklist
+```
+
 **The citation is the evidence.** The research conventions (`ai_qe/CONTRIBUTING.md`, "Research conventions") open with a rule that sounds obvious and is almost never followed: "Research sources … are cited by name because the citation is the evidence; no vendor is endorsed." They continue: "Every benchmark record includes date, sample, method, unit, self-reported vs measured, sponsor, and what claim it can support. Anything unverifiable is listed as such." No client, partner or engagement names — "the bank", "the sponsor", "the advisory team".
 
 Open `ai_qe/docs/evidence/benchmarks.md` and read one record end to end. The METR entry shows the shape: **Finding** — "AI-allowed issues took 19% longer (CI +2% to +39%); developers expected 24% faster and afterwards believed 20% faster." **Supports** — "Task efficiency (negative)." **Caveats** — elite developers on repositories they know well; expand for the rest: 16 maintainers, 246 issues, randomized; time per issue; "Measured (screen recording); independent non-profit." Two entries down, Peng: "55.8% faster (71.2 vs 160.9 minutes; CI 21% to 89%)"; 95 freelancers, one synthetic task; measured; "vendor-affiliated (Microsoft Research, GitHub, MIT)". Two real, measured results — one negative and independent, one positive and vendor-affiliated — and the record structure forces you to see the difference instead of averaging them into "AI makes developers 20–55% faster."
@@ -77,6 +84,15 @@ Open the cloned `ai_qe` repo and verify with your own eyes, recording findings i
 Re-cut one body of research into audience-specific decks and guided routes over stable slide IDs; script the meeting the deck serves; and design a questionnaire that qualifies leads by role — applying the design rules and failed-form post-mortem from `ai_qe/docs/method/discovery-questionnaire.md`.
 
 ### Lesson
+
+```figure
+kind: screenshot
+alt: ai_qe's own contract-chain diagram — a task envelope, a policy decision and an evaluation manifest, linked by one evidence record.
+source: ai_qe/_includes/diagrams/contract-chain.svg
+image: ai_qe-contract-chain.svg
+frame: none
+title: What the technical cut carries: ai_qe's contract chain, as its own site draws it.
+```
 
 **One research base, four decks.** `_data/briefing_room.json` defines the presentation room — 116 slides re-cut along two axes, audience (executive/technical) × scenario (banking/industry):
 

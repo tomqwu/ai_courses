@@ -120,7 +120,7 @@ and in Read. Five kinds:
 | `architecture` | a system in layers — what sits on what, where the seams are | `layer:` lines, each with indented `box:` lines |
 | `flow` | a pipeline, a procedure, a loop | `step:` lines; `loop: yes` for a cycle |
 | `compare` | two or three options side by side (before/after, fail open/fail closed) | `column:` lines, each with indented `item:` lines |
-| `screenshot` | a claim about a product — show the product | `image:` (a copy in `course/figures/shots/`), `frame: browser\|phone\|mac`, `callout: x,y — text` (x, y in % of the image) |
+| `screenshot` | a claim about a product — show the product | `image:` (a copy in `course/figures/shots/`), `frame: browser\|phone\|mac`, `callout: x,y — text` (x, y in % of the image); `crop: N` shows the top N% (display only — the file is never edited) |
 | `scene` | a situation (a meeting, a stranger cloning the repo, a buyer) | `scene:` (an SVG in `course/figures/scenes/`), `caption:` |
 
 A part is `label [(flags)] [— note] [@ opening words]`. Flags: `seam` (drawn in cobalt, dashed, and

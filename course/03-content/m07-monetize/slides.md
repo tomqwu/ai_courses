@@ -11,7 +11,14 @@ title: M7 — Monetize: Pricing, Packaging, Positioning
 
 **AI Product Studio (APS-3)** · ~60 minutes · Prerequisites: Modules 1–6
 
-Price it, package it, position it — from evidence.
+```figure
+kind: flow
+alt: Three working product cores become priced products — a pricing model per archetype from a sourced table, a cost floor, and a positioning line a skeptic can falsify.
+step: three working product cores — built in Modules 1–6 @ In Modules 1 through 6
+step: a pricing model per archetype — from a sourced table @ By the end of this module
+step: a cost floor @ By the end of this module
+step: a positioning line a skeptic can falsify (hl) @ By the end of this module
+```
 
 <!-- NOTES: Welcome to M7. In M1–M6 you built three working product cores; today you price them. Say the promise plainly: by the end of this module you will have chosen a pricing model per archetype from a sourced table, computed a cost floor, and written a positioning line a skeptical engineer can falsify. Timing for the module: roughly 60 minutes of lesson, about 20 per segment. Transition: we start with the one decision rule that removes the guesswork. -->
 
@@ -32,10 +39,17 @@ Price it, package it, position it — from evidence.
 
 ## M7.1 — Price the way your costs recur
 
-- Cloud per-user compute recurs monthly
-- That cost makes a subscription honest
-- On-device compute recurs zero times per user
-- Then a subscription is a tax users audit
+```figure
+kind: compare
+alt: Price the way costs recur — cloud per-user compute recurs monthly so a subscription is honest; on-device compute never recurs, so a subscription is a tax users audit.
+column: Costs recur monthly — cloud per-user compute @ If your per-user costs recur monthly
+  item: price monthly
+  item: the recurring cost makes a subscription honest
+column: Costs recur zero times — on-device inference @ If they do not recur
+  item: price once
+  item: a subscription is a tax users audit you against
+```
+
 - The table shows the pattern, not a style
 - Evidence first, then the model
 
@@ -187,15 +201,17 @@ Pointer: `ai_qe/_data/engagement.json`; `ai_qe/index.md`; `ai_qe/discovery.md`
 
 ## M7.2 — Cohort and self-paced are different products
 
-| Maven band — live hours + artifacts | Cohort price |
-|---|---|
-| 6–8 live hours + 1+ project | $800–1,200 |
-| 8–12 hours + multiple projects/capstone | $1,200–1,800 |
-| 12–20 hours + multiple projects + capstone | $1,800–2,450 |
+```figure
+kind: compare
+alt: The same content as two products — self-paced around $97–297, and a live cohort priced by Maven's live-hour bands from $800 to $2,450.
+column: Self-paced — $97–297 @ As a rule of thumb
+  item: the same content, on the buyer's schedule
+column: Live 4-week cohort — $500–2,000+ (hl) @ As a rule of thumb
+  item: 6–8 live hours + 1 project: $800–1,200 @ Maven's published benchmarks
+  item: 8–12 hours + projects: $1,200–1,800 @ Maven's published benchmarks
+  item: 12–20 hours + capstone: $1,800–2,450 @ Maven's published benchmarks
+```
 
-- Same content, two value propositions
-- Rule of thumb: $97–297 self-paced
-- Live 4-week cohort: $500–2,000+
 - The cohort buyer pays for live feedback and peers
 
 <!-- NOTES: Source is `course/00-research/02-course-market-research.md` §C, citing ShopSpace and Maven's published benchmarks. The point to make: these are not the same product at two prices; they are two value propositions. The cohort buyer pays for live instruction, peer interaction, and feedback — which is exactly what Maven's live-hour bands price. Say the bands slowly, because students will use them as a comparator in Lab M7. Timing: 3 minutes. Transition: the rule that connects the two prices. -->
@@ -308,11 +324,15 @@ Gumroad-only start + Circle ~$49/mo or Discord $0 + email ~$29/mo
 
 ## M7.3 — The hero is the buyer
 
-- StoryBrand: the student is the hero, you are the guide
-- Every page section answers the buyer's question
-- "Does this get me there, and can I trust you?"
-- For technical audiences, shipped projects ARE social proof
-- Repos, demos, dated evidence lines, test badges
+```figure
+kind: flow
+alt: The buyer is the hero and you are the guide; every section answers the buyer's question, and for technical buyers shipped work is the proof.
+step: the buyer (hl) — the hero, the subject of every sentence @ The buyer is the subject
+step: you — the guide who walked the path @ The buyer is the subject
+step: every section answers — "does this get me there, and can I trust you?" @ Every page section answers
+step: proof — repos · demos · dated evidence lines · test badges @ For a technical audience
+```
+
 - Never invent a testimonial
 
 <!-- NOTES: Source: `course/00-research/02-course-market-research.md` §E. The reframe is grammatical: the buyer is the subject of every sentence, and you are the guide who has already walked the path. For a technical audience the proof assets are concrete — the repos, the demos, the dated evidence lines, the test badges you have been recording since Module 1. Say the course's own rule from `course/04-sales/pricing-and-platforms.md`: never invent testimonials; ship beta before claiming social proof. Timing: 3 minutes. Transition: the page skeleton. -->

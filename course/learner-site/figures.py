@@ -19,6 +19,7 @@ The grammar, one `key: value` per line:
       item: an unknown host throws
     image: signupflow-dashboard.png · frame: browser | phone | mac | none               (screenshot)
     callout: 12,30 — The admin sees gaps before members do
+    crop: 60                                                  (show the top 60%; display only)
     scene: stranger-clone.svg · caption: …                                        (scene)
 
 A part's value is `label [(flags)] [— note] [@ at-words]`. Flags are seam, hl, good, bad, and
@@ -38,6 +39,7 @@ FLAGS = {"seam", "hl", "good", "bad", "chain"}
 REPEATED = {"step", "layer", "column"}
 CHILDREN = {"box", "item"}
 SCENES = Path(__file__).resolve().parents[1] / "figures" / "scenes"
+SHOTS = Path(__file__).resolve().parents[1] / "figures" / "shots"
 
 LINK = ('<svg class="fig-link" viewBox="0 0 40 16" aria-hidden="true" focusable="false">'
         '<path class="fig-link-line" d="M2 8h29"/><path class="fig-link-head" d="M27 3l7 5-7 5"/></svg>')
@@ -80,7 +82,7 @@ def _flags(text: str) -> tuple[str, set]:
 
 def parse(text: str) -> dict:
     fig = {"kind": "", "alt": "", "source": "", "title": "", "items": [], "loop": False,
-           "image": "", "frame": "browser", "scene": "", "caption": "", "callouts": []}
+           "image": "", "frame": "browser", "scene": "", "caption": "", "callouts": [], "crop": ""}
     for n, raw in enumerate(text.splitlines(), 1):
         if not raw.strip() or raw.lstrip().startswith("#"):
             continue
@@ -251,8 +253,23 @@ def _compare(fig: dict, sentences, inline) -> str:
     return f'<div class="fig-columns" style="--cols:{max(1, len(cols))}">{"".join(cols)}</div>'
 
 
+def _png_size(path: Path) -> tuple[int, int] | None:
+    head = path.read_bytes()[:24] if path.is_file() else b""
+    if head[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+
+
 def _screenshot(fig: dict, base: str, inline) -> str:
-    pins = "".join(f'<span class="fig-pin" style="left:{c["x"]:g}%;top:{c["y"]:g}%" aria-hidden="true">{i}</span>'
+    # `crop: 45` shows the top 45% of the image — display only; the file stays byte-identical.
+    crop, shot_style = 100.0, ""
+    if fig["crop"]:
+        size = _png_size(SHOTS / fig["image"])
+        crop = float(fig["crop"].rstrip("%"))
+        if not size or not 10 <= crop < 100:
+            raise FigureError("crop: a percentage (10–99) of a PNG screenshot's height, from the top")
+        shot_style = f' style="aspect-ratio:{size[0]}/{round(size[1] * crop / 100)}"'
+    pins = "".join(f'<span class="fig-pin" style="left:{c["x"]:g}%;top:{c["y"] * 100 / crop:.4g}%" aria-hidden="true">{i}</span>'
                    for i, c in enumerate(fig["callouts"], 1))
     if fig["frame"] not in FRAMES:
         raise FigureError(f"frame must be one of {', '.join(FRAMES)} (got {fig['frame']!r})")
@@ -262,7 +279,7 @@ def _screenshot(fig: dict, base: str, inline) -> str:
              if fig["callouts"] else "")
     src = f"{base}/figures/shots/{fig['image']}"
     return (f'<div class="fig-frame fig-frame-{_esc(fig["frame"])}">{chrome}'
-            f'<div class="fig-shot"><img src="{html.escape(src, quote=True)}" alt="{html.escape(fig["alt"], quote=True)}"'
+            f'<div class="fig-shot{" is-cropped" if fig["crop"] else ""}"{shot_style}><img src="{html.escape(src, quote=True)}" alt="{html.escape(fig["alt"], quote=True)}"'
             f' loading="lazy">{pins}</div></div>{notes}')
 
 

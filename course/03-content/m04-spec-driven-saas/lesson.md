@@ -4,6 +4,20 @@
 
 ## Overview
 
+```figure
+kind: screenshot
+alt: SignUpFlow's Get started screen — four onboarding steps to a published schedule, each with its own action.
+source: SignUpFlow/docs/screenshots/current/basketball/1440/onboarding.png
+image: signupflow-onboarding.png
+frame: browser
+crop: 62
+title: The product these spec folders built: SignUpFlow's first-run checklist, captured at the pinned commit.
+callout: 29,14 — progress: 0 of 4, in any order
+callout: 29,22 — invite the people you schedule
+callout: 29,38 — generate a schedule: the solver builds the roster
+callout: 29,46 — publish it to volunteers
+```
+
 Module 1 gave you the operating system — constitution, agent rules, templates, one mini-loop. This module runs that loop at production scale on a real SaaS. SignUpFlow is a multi-tenant volunteer-scheduling product (FastAPI + SQLAlchemy 2.0 + JWT) whose features are technically ordinary — CRUD plus a greedy heuristic solver. What the repo demonstrates is a governance system for building with AI agents: 17 spec folders under `specs/`, each a complete, self-contained instruction set. The archetype lesson holds: **agents don't lower the bar for process — they raise it.** When code appears in minutes, the bottleneck moves to specification, verification, and honesty about what was validated.
 
 The exemplar is `specs/014-security-hardening/` — security work specced down to 8 user stories, 44 functional requirements, and roughly 4,700 lines of contracts. This module walks every artifact in that folder, then teaches you to judge spec quality by a single test — *could a fresh agent session with zero conversation memory implement from these files alone?* — and closes with the honest change record: one PR per story, local review with severity-tagged findings, and verification of generated artifacts against the repo itself.
@@ -85,6 +99,13 @@ Open the repo and recount the claims above: `ls specs/` (17 folders), `ls specs/
 State the one test that defines spec quality — a fresh agent session with zero conversation memory can implement from the artifacts alone — and apply its consequences: WHAT/HOW separation, story independence, test-ready acceptance scenarios, bounded clarification, exact-path tasks, and contracts as the interface between sessions.
 
 ### Lesson
+
+```figure
+kind: scene
+alt: A stranger at a desk clones a repository and follows its README to a passing check.
+scene: stranger-clone.svg
+caption: the stranger test — only what is written down reaches the agent
+```
 
 **The stranger test.** SignUpFlow runs implementation as a Ralph loop: a script starts an agent with, in essence, the prompt "implement spec" (`.specify/memory/constitution.md`, Context A). That agent has no chat history, no memory of why any decision was made, and — in Ralph mode — no appetite for questions. Everything it knows, it reads from the spec folder and the repo. So the quality test for every artifact: strip away the conversation — could a stranger implement? Every rule below exists because a stranger can't ask follow-ups.
 
