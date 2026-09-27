@@ -352,7 +352,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   margin: 0 0 8px; color: var(--accent); font-size: var(--d-2); font-weight: 650;
   letter-spacing: .1em; text-transform: uppercase;
 }
-.page-head h1 { font-size: clamp(1.9rem, 3vw, 2.4rem); line-height: 1.1; letter-spacing: -.025em; max-width: 32ch; }
+.page-head h1 { font-size: clamp(1.9rem, 3vw, 2.4rem); line-height: 1.1; letter-spacing: -.025em; max-width: 32ch; text-wrap: balance; }
 .page-lede { max-width: 70ch; margin: 12px 0 0; color: var(--ink-soft); font-size: var(--d-5); line-height: 1.55; }
 
 .app-bar-title, .mode-icon { display: none; }
@@ -1417,7 +1417,11 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
 .lab-page .app-content { width: min(1320px, calc(100% - 48px)); }
 .lab-root { container-type: inline-size; container-name: lab; }
 .lab-facts { margin: 12px 0 0; color: var(--ink-soft); font-size: var(--d-4); }
-.lab-prereq { margin: 6px 0 0; max-width: 80ch; color: var(--ink-soft); font-size: var(--d-3); }
+.lab-brief { max-width: 84ch; margin: 14px 0 0; padding: 14px 18px; background: var(--surface);
+  border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px;
+  color: var(--ink); font-size: var(--d-4); line-height: 1.55; }
+.lab-brief p { margin: 0; }
+.lab-brief p + p { margin-top: 8px; }
 .lab-workspace { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
 .lab-steps ol { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .lab-steps a {

@@ -32,6 +32,7 @@ import threading
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parent
+COURSE = SITE.parent
 sys.path.insert(0, str(SITE))
 
 
@@ -325,6 +326,18 @@ def run(page, browser, base: str) -> list[str]:
         section = page.locator("#auto-fail")
         need(section.count() == 1 and section.is_visible() and section.locator("li").count() >= 3,
              f"{lp.name}: the rubric's auto-fail list is not shown exactly once")
+        # The lab's header block is its brief, shown whole: every line of it is on the page (it once
+        # mined three fields and dropped the rest, the pass gate included).
+        src = next(COURSE.glob(f"03-content/{lp.stem[4:]}-*/lab.md")).read_text(encoding="utf-8").splitlines()[1:]
+        quoted = []
+        for l in src:
+            if l.strip().startswith(">"):
+                if l.strip("> ").strip():
+                    quoted.append(l)
+            elif l.strip():
+                break
+        need(page.locator(".lab-brief p").count() == len(quoted),
+             f"{lp.name}: the brief shows {page.locator('.lab-brief p').count()} of the {len(quoted)} header lines")
         # One page (#110): every step shown in full, in order, then the checklist — nothing paged,
         # nothing in a scrolling side panel.
         steps = page.locator(".lab-step")

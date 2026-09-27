@@ -298,12 +298,13 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
             mark = "✓" if sec["kind"] == "checklist" else "✎"
             rows.append(f'<li class="lab-steps-after"><a href="#{SC.slug(sec["title"])}"><span class="step-dot" aria-hidden="true">{mark}</span>'
                         f'<span class="step-name">{SC.inline(sec["title"])}</span></a></li>')
-    facts_row = " · ".join(SC.inline(x) for x in (
-        meta.get("Time", ""), f"{len(counted)} steps", f"{lab['checklist_count']} checks decide the grade") if x)
-    head = SH.page_head(f"Module {number} · Lab · pass/fail", SC.inline(lab["title"]), goal,
-                        f'<p class="lab-facts">{facts_row}</p>'
-                        + (f'<p class="lab-prereq"><strong>Prerequisites:</strong> {SC.inline(meta["Prerequisites"])}</p>'
-                           if meta.get("Prerequisites") else ""))
+    facts_row = f"{len(counted)} steps · {lab['checklist_count']} checks decide the grade"
+    # The lab's own header block, whole — goal, notes, prerequisites, time and the pass gate — as the
+    # brief under the title. Labs that open without one keep the generic line.
+    brief = (f'<div class="lab-brief">{lab["brief_html"]}</div>' if lab.get("brief_html")
+             else f'<p class="page-lede">{goal}</p>')
+    head = SH.page_head(f"Module {number} · Lab · pass/fail", SC.inline(lab["title"]), "",
+                        brief + f'<p class="lab-facts">{facts_row}</p>')
     body = f"""{head}
 <div class="lab-root" data-lab="{deck['id']}" data-lab-checks="{lab['checklist_count']}" data-lab-title="{html.escape(lab['title'], quote=True)}">
   <div class="lab-workspace">
