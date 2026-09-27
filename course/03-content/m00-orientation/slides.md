@@ -7,10 +7,27 @@ title: M0 — Orientation: Three Products, One Method
 
 ## M0 — Orientation: Three Products, One Method
 
-- **Promise:** run real production software before Module 1
-- **Duration:** ~30 minutes
-- **Prerequisites:** none
-- **Outcome:** three repos cloned, one solver run, one local model
+**Promise:** run real production software before Module 1. **Duration:** ~30 minutes
+
+```figure
+kind: architecture
+alt: The course in one picture — three real products built by one method, and this module's first win on all three.
+layer: Three real products @ You will clone three real products
+  box: ListenToMe · on-device AI app
+  box: SignUpFlow · spec-driven AI SaaS
+  box: ai_qe · expertise content product
+layer: One method (chain)
+  box: Study
+  box: Spec
+  box: Build
+  box: Validate
+  box: Release
+  box: Prove
+layer: This module (hl) @ By the end you will have
+  box: three repos cloned
+  box: one solver run
+  box: one local model
+```
 
 <!-- NOTES: Welcome. In the next thirty minutes you will not watch anyone else build anything — you will clone three real products, run one of them end to end, and pull a local model onto your own machine. That is deliberate. Most courses lose people at the first hard lab; here the first win happens in Module 0, in about thirty minutes, most of it downloads, with output you can paste into the community. Keep a terminal open beside this video. Timing: 1 minute. Transition: next we name what you will be able to do by the end. -->
 
@@ -114,14 +131,17 @@ Reviewed edition: **1.2.1**, commit `fd1133…`
 
 ## M0.2 — The Spec-to-Ship Loop
 
-<!-- _diagram: loop -->
-
-- Study: research, competition, positioning
-- Spec: what an agent can execute
-- Build: TDD, small reviewable edits
-- Validate: tests, coverage floors, playbooks
-- Release: notarize, edition, deploy
-- Prove: evidence, provenance, honest claims
+```figure
+kind: flow
+alt: The Spec-to-Ship Loop — Study, Spec, Build, Validate, Release, Prove — and back to Study for the next change.
+loop: yes
+step: Study — research, competition, positioning @ Study produces research
+step: Spec — what an agent can execute @ Spec produces something
+step: Build — TDD, small reviewable edits @ Build is tests first
+step: Validate — tests, coverage floors, playbooks @ Validate is tests
+step: Release — notarize, edition, deploy @ Release is signing
+step: Prove (hl) — evidence, provenance, honest claims @ Prove is the honest account
+```
 
 <!-- NOTES: Six stages, and you will run all six in every module of this course. Study produces a positioning artifact, not a slogan. Spec produces something a fresh agent session could execute without conversation memory. Build is tests first. Validate is a record, not a feeling. Release is signing, editioning, deploying. Prove is the honest account of what was verified and what was not. Copy this diagram into your notes — you will reuse it immediately. Timing: 5 minutes. Transition: each stage has a real artifact behind it. Open these files. -->
 

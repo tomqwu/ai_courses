@@ -10,6 +10,15 @@ title: M1 — The AI Product Operating System
 
 **Promise:** govern agents, specify work, record evidence — in your own repo.
 
+```figure
+kind: flow
+alt: The AI product operating system — governance, specification and evidence — ending in your own constitution, AGENTS.md and one spec-to-TDD loop.
+step: Governance — constitution · AGENTS.md @ This module hands you the machinery
+step: Specification — spec-kit, one file per step @ This module hands you the machinery
+step: Evidence — commands, counts, limits @ This module hands you the machinery
+step: Your repo (hl) — constitution, AGENTS.md, one spec-to-TDD loop @ By the end you will have written
+```
+
 **Duration:** ~60 minutes · 3 segments · Lab M1 ~2 hours
 
 <!-- NOTES: Welcome to Module 1. Module 0 gave you three shipped products and one loop; this module hands you the machinery that made them shippable by one engineer working with AI agents. Governance, specification, evidence discipline — three parts, three segments. By the end you will have written your own constitution and AGENTS.md and run one complete spec-to-TDD loop. That is the deliverable, not the notes. Transition: let's state exactly what you will be able to do. Timing: 1 minute. -->
@@ -29,9 +38,18 @@ title: M1 — The AI Product Operating System
 
 ## Why governance comes before product type
 
-- Agents do not replace process; they raise its stakes.
-- Code appears at agent speed; verification stays human-speed.
-- The bottleneck moves to: specify, verify, admit limits.
+```figure
+kind: compare
+alt: Code now arrives at agent speed while verification stays at human speed, so the bottleneck moves to specifying, verifying and admitting limits.
+column: Agents raise the stakes (bad) @ Code now appears at agent speed
+  item: code appears at agent speed
+  item: verification stays human-speed
+column: The bottleneck moves to (good) @ So the bottleneck moves
+  item: specify what you want
+  item: verify what you got
+  item: admit the limits of what was validated
+```
+
 - Archetypes differ; the operating system is identical.
 - Most builders skip it, then pay for it.
 
@@ -263,14 +281,20 @@ Pointer: `SignUpFlow/api/routers/availability.py`
 
 - Local-only validation is a tested policy, not an omission.
 - "Never recreate hosted checks or require CI statuses."
-- A policy-regression test guards the rule.
-- Evidence travels with the revision instead.
 
-| A hosted check | An evidence record |
-|---|---|
-| A pass/fail snapshot | Commands, counts, date |
-| Silent about the environment | Names the environment |
-| Silent about the limits | Lists what was not verified |
+```figure
+kind: compare
+alt: A hosted check is a pass or fail snapshot that says nothing of commands, environment or limits; an evidence record names all three.
+source: SignUpFlow/.specify/memory/constitution.md:34-39
+column: A hosted check (bad) @ A hosted check tells you
+  item: a pass/fail snapshot
+  item: silent about the environment
+  item: silent about the limits
+column: An evidence record (good) @ So the evidence travels
+  item: commands, counts, date
+  item: names the environment
+  item: lists what was not verified
+```
 
 Pointer: `SignUpFlow/.specify/memory/constitution.md:34-39`
 

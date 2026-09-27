@@ -9,8 +9,27 @@ title: M2 — The On-Device AI App: Architecture
 
 # M2 — The On-Device AI App: Architecture
 
-**Promise:** trace one real on-device pipeline, then rebuild its core.
-**Duration:** ~75 min lesson + ~3 h lab.
+**Promise:** trace one real on-device pipeline, then rebuild its core. **Duration:** ~75 min lesson + ~3 h lab.
+
+```figure
+kind: architecture
+alt: ListenToMe's shipped Swift pipeline, stage by stage, and the same six stages rebuilt in Python as TinyCopilot in the lab.
+source: ListenToMe/Sources/ListenToMeCore/MeetingSession.swift
+layer: ListenToMe — shipped macOS copilot, Swift (chain) @ We open ListenToMe
+  box: capture
+  box: transcribe
+  box: store
+  box: context
+  box: prompt
+  box: route
+layer: TinyCopilot — your rebuild in Python (chain) (hl) @ Then, in the lab
+  box: capture
+  box: transcribe
+  box: store
+  box: context
+  box: prompt
+  box: route
+```
 
 <!-- NOTES: Welcome to Module 2. Today the abstraction ends: we open ListenToMe, a shipped macOS meeting copilot, and read the actual pipeline it runs. Then in the lab you rebuild that core in Python as TinyCopilot until 208 tests pass. By the end of this module you will be able to point at a Swift file for every stage and defend each decision. (45 seconds; move to objectives.) -->
 
@@ -180,14 +199,18 @@ for segment in utterances.reversed() {
 
 ## M2.2 — Three roles, three models
 
-| Role | Job | Wants |
-|---|---|---|
-| Listener | rolling summary | speed |
-| Quick | hotkey, proactive | speed |
-| Deep | long reasoning | strength |
-
-- Four panes: Transcript, Listener, Quick, Deep.
-- Each pane has its own model dropdown.
+```figure
+kind: screenshot
+alt: ListenToMe's window. The transcript fills the left; on the right, the Listener, Quick and Deep panes each carry their own model dropdown.
+source: ListenToMe/Sources/ListenToMeCore/CopilotRole.swift
+image: listentome-app.png
+frame: none
+callout: 25,19 — Transcript
+callout: 53,11 — Listener: rolling summary · wants speed
+callout: 53,41 — Quick: hotkey, proactive · wants speed
+callout: 53,72 — Deep: long reasoning · wants strength
+callout: 91,11 — each pane has its own model dropdown
+```
 
 <!-- NOTES: Roles are an enum — `listener`, `quick`, `deep` in `Sources/ListenToMeCore/CopilotRole.swift` — not a UI accident. Quick answers on a global hotkey and fires proactively, so latency is the whole game. Deep is on-demand long reasoning. Listener auto-refreshes continuously, so speed beats depth. "Just use the best model everywhere" fails twice: it burns latency where it isn't needed and pins the product to one model's quirks. (75 seconds; next, the defaults.) -->
 
@@ -291,10 +314,17 @@ static func hasMarker(_ model: String, _ marker: String) -> Bool {
 
 ## M2.3 — Proactive is restraint
 
-- Question detection is 28 lines.
-- Deliberately simple; swappable later.
-- Ship the cheap heuristic behind a seam.
-- Spend complexity elsewhere.
+```figure
+kind: flow
+alt: A finalized transcript line passes a 28-line question heuristic, then a debounce, before Quick answers — the trigger is small, the gates around it are the work.
+source: ListenToMe/Sources/ListenToMeCore/QuestionDetector.swift · ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:41-50
+step: a finalized line from others
+step: question heuristic (seam) — 28 lines, swappable @ Question detection is twenty-eight lines
+step: debounce — at most once every few seconds @ The design spec calls for
+step: Quick answers (hl)
+```
+
+- Ship the cheap heuristic behind a seam; spend complexity elsewhere.
 - Trigger is 5%; discipline is 95%.
 
 <!-- NOTES: "Proactive" sounds like it needs intelligence; it needs restraint. `Sources/ListenToMeCore/QuestionDetector.swift` is 28 lines. The design spec at `docs/superpowers/specs/2026-06-18-listentome-design.md` §4.4 says question detection is a lightweight heuristic, debounced so it fires at most once per N seconds, kept deliberately simple and swappable later. The lesson is to make the trigger a seam and put your effort into the gates around it. (75 seconds; the three rules.) -->
