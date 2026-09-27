@@ -45,6 +45,7 @@
   const ui = {
     play: $('[data-play]'), time: $('[data-time]'), speed: $('[data-speed]'), cc: $('[data-cc]'),
     auto: $('[data-auto]'), caption: $('[data-caption]'), status: $('[data-status]'), retry: $('[data-retry]'),
+    replay: $('[data-fig-replay]'),
   };
 
   let entries = {};
@@ -155,7 +156,9 @@
 
   function renderCaption() {
     const live = clip && !audioFailed && !audio.seeking;
-    highlight(live ? rows.findIndex(r => audio.currentTime >= r.start && audio.currentTime < r.end) : -1);
+    const row = live ? rows.findIndex(r => audio.currentTime >= r.start && audio.currentTime < r.end) : -1;
+    highlight(row);
+    followBuild(row);
     const i = live ? currentCueIndex() : -1;
     if (!clip || !captionsOn || audioFailed || audio.seeking) { clearCaption(); return; }
     const text = i >= 0 ? cueList[i].text : '';
@@ -226,6 +229,55 @@
       event.preventDefault();
     });
   });
+
+  /* ---------------------------------------------------------------- figure build-ins (#99) */
+
+  // A figure's parts may carry data-step: the index of the narration sentence at which they arrive.
+  // While the narration plays, each part appears as its sentence is spoken; paused, the build stays
+  // where it is. Otherwise — no recording, reduced motion, the narration over, a slide just opened —
+  // the figure is complete. Replay (the button, or ".") re-runs the build without the audio.
+  let buildTimer = 0;
+  let buildAt = Infinity;
+  const buildParts = () => Array.from(slides[index].querySelectorAll('.fig [data-step]'));
+
+  function showBuild(n) {
+    buildAt = n;
+    buildParts().forEach(part => {
+      const on = Number(part.dataset.step) <= n;
+      part.classList.toggle('is-shown', on);
+      part.classList.toggle('is-pending', !on);
+    });
+  }
+
+  function resetBuild() {
+    clearTimeout(buildTimer);
+    buildTimer = 0;
+    showBuild(Infinity);
+    if (ui.replay) ui.replay.hidden = !buildParts().length;
+  }
+
+  function followBuild(row) {
+    if (buildTimer || audio.paused || row < 0 || reduceMotion.matches || row === buildAt) return;
+    if (buildParts().length) showBuild(row);
+  }
+
+  function replayBuild() {
+    const parts = buildParts();
+    if (!parts.length) return;
+    clearTimeout(buildTimer);
+    buildTimer = 0;
+    if (reduceMotion.matches) { showBuild(Infinity); return; }
+    const steps = Array.from(new Set(parts.map(part => Number(part.dataset.step)))).sort((a, b) => a - b);
+    let k = -1;
+    showBuild(-1);
+    const next = () => {
+      k += 1;
+      if (k >= steps.length) { buildTimer = 0; showBuild(Infinity); return; }
+      showBuild(steps[k]);
+      buildTimer = setTimeout(next, 900);
+    };
+    buildTimer = setTimeout(next, 400);
+  }
 
   /* ---------------------------------------------------------------- the bar */
 
@@ -337,6 +389,7 @@
     renderTimeline();
     renderSources();
     renderUpNext();
+    resetBuild();
     loadClip();
   }
 
@@ -487,6 +540,7 @@
   const togglePlay = () => ((advanceTimer || (!audio.paused && !audio.ended)) ? pausePlayback() : play());
 
   function onEnded() {
+    showBuild(Infinity);
     // The narration played through: on a unit's last slide, that unit is watched.
     const unit = unitAt(index + 1);
     if (clip && unit && unit.last === index + 1 && unit.kind !== 'lab' && unit.kind !== 'quiz'
@@ -521,6 +575,7 @@
   });
 
   els.prev.addEventListener('click', () => move(-1));
+  if (ui.replay) ui.replay.addEventListener('click', replayBuild);
   els.next.addEventListener('click', () => move(1));
   ui.play.addEventListener('click', togglePlay);
   ui.speed.addEventListener('change', () => { audio.playbackRate = Number(ui.speed.value); });
@@ -594,6 +649,7 @@
     else if (key === 'End') { goTo(slides.length - 1); event.preventDefault(); }
     else if (key === 'f' || key === 'F' || key === 'p' || key === 'P') { togglePresentation(); event.preventDefault(); }
     else if (key === 't' || key === 'T') { selectTab('transcript', true); event.preventDefault(); }
+    else if (key === '.') { replayBuild(); event.preventDefault(); }
     else if (key === 'n' || key === 'N') { selectTab('sources', true); event.preventDefault(); }
     else if (key === 'Escape') { leavePresentation(); }
   });

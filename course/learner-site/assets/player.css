@@ -608,67 +608,135 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   --c-quote-rule: var(--accent);
   color: var(--c-ink);
 }
-/* ── declared diagrams ─────────────────────────────────────────────────────────────────────────
-   A slide's own bullet list, rendered as the structure it describes. The words are frozen —
-   they are the author's bullets, only the arrangement is declared — so the narration stays
-   true. Five kinds: flow (a chain), loop (a cycle), steps (a numbered procedure), grid
-   (parallel items), stack (layers with connectors). Semantic tokens only, so proof and cover
-   slides resolve their own colours. */
-.diagram { margin: 0.6em 0; font-size: 0.95em; }
-.diagram .d-label { color: var(--c-ink-strong); font-weight: 650; line-height: 1.25; }
-.diagram .d-caption { display: block; margin-top: 0.15em; color: var(--c-ink-soft);
+/* ── figures (#99) ─────────────────────────────────────────────────────────────────────────────
+   Architecture, flow, compare, screenshot and scene, declared in the Markdown and drawn by
+   figures.py as HTML cards joined by inline SVG connectors. Text is HTML so it wraps, keeps the
+   slide's type scale and is contrast-audited. The slide's semantic colours (--c-*) fall back to the
+   page tokens, so the same figure reads on a slide, in Read and on the module page. Cobalt marks a seam — "act here" — and is always
+   labelled too; ink is the core. Two sizes only: the label and the note. */
+.fig { margin: 0.6em 0; font-size: 0.95em; }
+.fig .fig-label { display: block; color: var(--c-ink-strong, var(--ink-strong)); font-weight: 650; line-height: 1.25; }
+.fig .fig-note { display: block; margin-top: 0.15em; color: var(--c-ink-soft, var(--ink-soft));
   font-weight: 400; font-size: 0.78em; line-height: 1.35; }
+.fig .fig-flag { padding: 0.05em 0.45em; border-radius: 1em;
+  background: var(--accent); color: var(--white); font-size: 0.78em; font-weight: 650;
+  letter-spacing: 0.02em; line-height: 1.35; }
+/* a flag is a tag on the part's top border: it labels the part (never colour alone) without
+   making it taller */
+.fig-node > .fig-flag, .fig-box > .fig-flag { position: absolute; top: 0; right: 0.6em;
+  transform: translateY(-55%); }
+.fig-title { margin-top: 0.5em; color: var(--c-ink-soft, var(--ink-soft)); font-size: 0.78em; line-height: 1.35; }
+.fig .fig-source { display: flex; align-items: center; gap: 0.5em; margin: 0.45em 0 0;
+  font-size: 0.78em; color: var(--c-ink-soft, var(--ink-soft)); }
+.fig .fig-source code { font-size: 1em; background: none; padding: 0; overflow-wrap: anywhere; }
+/* On a slide the figure's sources are listed in the Sources tab with every other citation. */
+.slide .fig .fig-source { display: none; }
 
-/* flow + loop: nodes chained left to right, arrows drawn between them */
-.diagram-flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.45em 1.1em;
-  padding: 0; margin: 0.6em 0; list-style: none; }
-.diagram-flow .d-node { position: relative; display: flex; flex-direction: column;
-  justify-content: center; background: var(--surface); border: 2px solid var(--c-ink-strong);
-  border-radius: 0.6em; padding: 0.45em 0.85em; }
-.diagram-flow .d-node.is-seam { background: var(--accent-soft); border-color: var(--accent); }
-.diagram-flow .d-node::after { content: "\2192"; position: absolute; left: 100%;
-  margin-left: 0.4em; top: 50%; transform: translateY(-50%); color: var(--c-accent); font-weight: 700; }
-.diagram-flow .d-node:last-child::after { content: none; }
+/* connectors: an arrow drawn between parts; the line draws in once when the figure is shown */
+.fig-link { flex: none; align-self: center; width: 2.2em; height: 0.9em; overflow: visible;
+  fill: none; stroke: var(--ink-faint); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.fig-link .fig-link-line { stroke-dasharray: 30; stroke-dashoffset: 0; }
+.fig-link .fig-link-line {
+  animation: fig-draw 0.6s ease-out both; }
+.fig-link.is-live { stroke: var(--accent); }
+.fig-link.is-live .fig-link-line { stroke-dasharray: 4 4; animation: fig-flow 0.8s linear infinite; }
+@keyframes fig-draw { from { stroke-dashoffset: 30; } to { stroke-dashoffset: 0; } }
+@keyframes fig-flow { from { stroke-dashoffset: 8; } to { stroke-dashoffset: 0; } }
 
-/* loop: the same chain, with a drawn return path closing the cycle */
-.diagram-loop { position: relative; padding-bottom: 1.5em; }
-.diagram-loop::after { content: ""; position: absolute; left: 1.1em; right: 1.1em; bottom: 0.35em;
-  height: 0.9em; border: 2px solid var(--c-accent); border-top: none;
-  border-radius: 0 0 0.8em 0.8em; opacity: 0.6; }
+/* flow: cards in a row, wrapping; a loop draws its return path under the row */
+.fig-track { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.45em 0.35em; }
+.fig-node, .fig-box { position: relative; display: flex; flex-direction: column; justify-content: center; min-width: 0;
+  background: var(--surface); border: 2px solid var(--c-ink-strong, var(--ink-strong)); border-radius: 0.6em;
+  padding: 0.45em 0.85em; }
+.fig-node.is-seam, .fig-box.is-seam { background: var(--accent-soft); border-color: var(--accent);
+  border-style: dashed; }
+.fig-node.is-hl, .fig-box.is-hl { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.fig-track.is-numbered { counter-reset: fig-step; }
+.fig-number { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; margin-bottom: 0.25em;
+  border-radius: 50%; background: var(--c-ink-strong, var(--ink-strong)); color: var(--white); font-size: 0.78em; font-weight: 700; }
+.fig-loop { display: block; width: 100%; height: 0.9em; margin-top: 0.15em; fill: none;
+  stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; opacity: 0.7; }
+/* a numbered procedure reads top to bottom, not across */
+.fig-track.is-numbered { flex-direction: column; flex-wrap: nowrap; gap: 0.2em; }
+.fig-track.is-numbered .fig-node { flex-direction: row; align-items: baseline; gap: 0.55em;
+  padding: 0.25em 0.6em; border-width: 1px; border-color: var(--c-rule, var(--line)); }
+.fig-track.is-numbered .fig-node .fig-label { display: inline; }
+.fig-track.is-numbered .fig-node .fig-note { display: inline; margin: 0; }
+.fig-track.is-numbered .fig-link { display: none; }
+.fig-track.is-numbered .fig-number { flex: none; margin: 0; align-self: center; }
 
-/* steps: a numbered procedure, one row per step */
-.diagram-steps { padding: 0; margin: 0.6em 0; list-style: none; counter-reset: dstep;
-  display: grid; gap: 0.18em; }
-.diagram-steps li { display: grid; grid-template-columns: 1.75em 1fr; gap: 0.55em;
-  align-items: baseline; padding: 0.12em 0.3em 0.12em 0.1em; line-height: 1.3;
-  border-left: 2px solid var(--c-rule); counter-increment: dstep; }
-.diagram-steps .d-caption { display: inline; margin-top: 0; font-size: 0.92em; }
-.diagram-steps li::before { content: counter(dstep); display: inline-grid; place-items: center;
-  width: 1.75em; height: 1.75em; border-radius: 50%; background: var(--c-ink-strong);
-  color: var(--white); font-size: 0.8em; font-weight: 700; }
+/* architecture: layered bands, each a heading over a row of boxes */
+.fig-bands { display: grid; gap: 0.35em; }
+.fig-layer { border: 1px solid var(--c-rule, var(--line)); border-radius: 0.6em; background: var(--wash);
+  padding: 0.3em 0.6em 0.45em; }
+.fig-layer.is-seam { background: var(--accent-soft); border: 1px dashed var(--accent); }
+.fig-band-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.6em; }
+.fig-band-head .fig-note { margin: 0; }
+.fig-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.55em 0.4em; margin-top: 0.45em; }
+.fig-band-head:empty + .fig-row, .fig-layer > .fig-row:first-child { margin-top: 0; }
+.fig-row .fig-box { flex: 1 1 auto; padding: 0.3em 0.7em; border-width: 1.5px; }
+.fig-row .fig-link { width: 1.6em; }
 
-/* grid: parallel items of equal weight */
-.diagram-grid { padding: 0; margin: 0.6em 0; list-style: none;
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5em, 1fr)); gap: 0.6em; }
-.diagram-grid .d-card { background: var(--c-surface); border: 1px solid var(--c-rule);
-  border-radius: 0.45em; padding: 0.55em 0.8em; }
-.diagram-grid .d-caption { margin: 0; }
+/* compare: columns side by side, each headed with a drawn mark as well as its colour */
+.fig-columns { display: grid; grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr)); gap: 0.6em; }
+.fig-column { border: 1px solid var(--c-rule, var(--line)); border-top: 4px solid var(--c-ink-strong, var(--ink-strong));
+  border-radius: 0.45em; background: var(--surface); padding: 0.5em 0.8em; }
+.fig-column.is-good { border-top-color: var(--done); }
+.fig-column.is-bad { border-top-color: var(--proof-ink); }
+.fig-column.is-seam, .fig-column.is-hl { border-top-color: var(--accent); }
+.fig-column-head { display: flex; align-items: center; gap: 0.4em; margin: 0; }
+.fig-tone { flex: none; width: 1.1em; height: 1.1em; fill: none; stroke-width: 2.6; stroke-linecap: round;
+  stroke-linejoin: round; }
+.is-good .fig-tone { stroke: var(--done); }
+.is-bad .fig-tone { stroke: var(--proof-ink); }
+.fig-items { margin: 0.3em 0 0; padding-left: 1.1em; color: var(--c-ink, var(--ink)); line-height: 1.35; }
+.fig-items li { margin: 0.1em 0; }
+.fig-compare.is-from-list .fig-items { list-style: none; padding: 0; color: var(--c-ink-soft, var(--ink-soft));
+  font-size: 0.78em; }
 
-/* stack: layers in order, connected down a spine — the drawing the hand-typed │▼ faked */
-.diagram-stack { padding: 0 0 0 1.3em; margin: 0.6em 0; list-style: none; position: relative;
-  display: grid; gap: 0.45em; }
-.diagram-stack::before { content: ""; position: absolute; left: 0.4em; top: 0.5em; bottom: 0.6em;
-  width: 2px; background: var(--c-rule); }
-.diagram-stack .d-row { position: relative; color: var(--c-ink); line-height: 1.45; }
-.diagram-stack .d-row::before { content: ""; position: absolute; left: -1.1em; top: 0.75em;
-  width: 0.6em; height: 2px; background: var(--c-rule); }
-.diagram-stack .d-seam { font-size: 0.8em; color: var(--accent-deep);
-  border-top: 1px dashed var(--accent); padding-top: 0.3em; }
-.diagram-stack .d-chain { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35em; }
-.diagram-stack .d-chip { display: inline-block; background: var(--c-surface);
-  border: 1px solid var(--c-rule); border-radius: 0.45em; padding: 0.4em 0.75em; }
-.diagram-stack .d-chip + .d-chip::before { content: "\2192"; margin-right: 0.35em;
-  color: var(--c-accent); font-weight: 700; }
+/* screenshot: the real image in a frame; numbered pins over it, the same numbers listed under it */
+.fig-frame { position: relative; max-width: 100%; border: 1px solid var(--line); border-radius: 0.6em;
+  overflow: hidden; background: var(--surface); box-shadow: 0 0.4em 1.4em rgb(22 24 29 / 12%); }
+.fig-chrome { display: flex; gap: 0.35em; padding: 0.45em 0.6em; background: var(--wash);
+  border-bottom: 1px solid var(--line); }
+.fig-chrome span { width: 0.6em; height: 0.6em; border-radius: 50%; background: var(--line); }
+.fig-frame-phone { width: min(16em, 100%); margin: 0 auto; border: 0.55em solid var(--ink-strong);
+  border-radius: 1.6em; }
+.fig-shot { position: relative; }
+.fig-shot img { display: block; width: 100%; height: auto; }
+.fig-pin { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center;
+  width: 1.7em; height: 1.7em; border-radius: 50%; background: var(--accent); color: var(--white);
+  border: 2px solid var(--white); font-size: 0.78em; font-weight: 700;
+  box-shadow: 0 0.15em 0.4em rgb(22 24 29 / 30%); }
+.fig-callouts { margin: 0.5em 0 0; padding-left: 1.5em; color: var(--c-ink, var(--ink)); font-size: 0.78em;
+  line-height: 1.4; }
+.fig-callouts li::marker { color: var(--accent); font-weight: 700; }
+
+/* scene: a hand-drawn illustration, centred, captioned as one */
+.fig-scene-art svg { display: block; width: 100%; max-height: 16em; margin: 0 auto; }
+
+/* build-ins: parts wait for their sentence, then arrive */
+.fig [data-step] { transition: opacity 0.35s ease, transform 0.35s ease; }
+.fig [data-step].is-pending { opacity: 0.15; transform: translateY(0.2em); }
+.fig [data-step].is-shown { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fig [data-step].is-pending { opacity: 1; transform: none; }
+  .fig-link .fig-link-line, .fig-link.is-live .fig-link-line { animation: none !important;
+    stroke-dasharray: none; }
+}
+@media print {
+  .fig [data-step].is-pending { opacity: 1; transform: none; }
+  .fig-link .fig-link-line { animation: none !important; stroke-dasharray: none; }
+}
+/* a phone: flows read top to bottom, connectors turn to point down, columns stack */
+@media (max-width: 480px) {
+  body .fig-track { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+  body .fig-track > .fig-link { transform: rotate(90deg); width: 1.4em; margin: 0.1em auto; }
+  body .fig-columns { grid-template-columns: 1fr; }
+  body .fig-layer:not(.is-chain) > .fig-row { flex-direction: column; }
+  body .fig-row .fig-box { flex: 0 1 auto; }
+}
 
 .deck-ready .slide { margin-bottom: 0; }
 

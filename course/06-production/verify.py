@@ -12,6 +12,9 @@ Checks
   7. narration: every deck has approved words, and every recording matches them word for word
   8. the learner site, when built, has one page per deck with the right slide count
   9. every slide exhibit is a copy of a file the slide cites, or declares what else it is
+ 10. figures: each parses, says what it shows, cites what resolves, builds in on a sentence the
+     narration speaks, uses files that exist; screenshot copies match their origin; covered
+     modules open with a hero and head every segment with a figure
 
 Usage:
   python3 verify.py                # full report, exit 1 on any failure
@@ -412,8 +415,8 @@ def check_exhibits() -> list[str]:
                              if rngs else whole[-1])
             where = f"{deck.parent.name}/slides.md slide {n}"
             for info, body in EXHIBIT_FENCE_RE.findall(shown):
-                if EXHIBIT_KINDS & set(info.split()[1:]):
-                    continue
+                if EXHIBIT_KINDS & set(info.split()[1:]) or info.split()[:1] == ["figure"]:
+                    continue    # a declared kind, or a figure (checked by check_figures)
                 if not whole:
                     problems.append(f"{where}: an exhibit cites no file it copies; cite the source "
                                     f"or declare it ({', '.join(sorted(EXHIBIT_KINDS))})")
@@ -429,6 +432,126 @@ def check_exhibits() -> list[str]:
                             problems.append(f"{where}: exhibit line not in the cited file(s): {piece[:90]!r}")
                         elif not any(piece in s for s in cited):
                             problems.append(f"{where}: exhibit line is outside the cited range: {piece[:90]!r}")
+    return problems
+
+
+# Figures (#99). A module listed here is held to the standard's coverage rule: its cover slide
+# carries the hero figure and every segment's first slide carries a figure. A module joins the list
+# in the change that draws its figures (the course-content skill's "A new module" step).
+FIGURE_MODULES: list[str] = []
+FIGURES = ROOT / "figures"
+FIGURE_FENCE_RE = re.compile(r"^```figure[^\n]*\n(.*?)^```", re.S | re.M)
+
+
+def _figure_sources(value: str) -> list[str]:
+    return [v.strip() for v in re.split(r"\s+·\s+|;\s*", value) if v.strip()]
+
+
+def check_figure_manifest() -> tuple[int, list[str]]:
+    """Every screenshot copy is byte-identical to the file at the commit it was copied from."""
+    import hashlib                                                             # noqa: PLC0415
+    import json                                                                # noqa: PLC0415
+    manifest = FIGURES / "manifest.json"
+    if not manifest.exists():
+        return 0, []
+    problems = []
+    entries = json.loads(manifest.read_text(encoding="utf-8")).get("shots", [])
+    for e in entries:
+        copy = FIGURES / "shots" / e["name"]
+        if not copy.is_file():
+            problems.append(f"figures/shots/{e['name']}: in the manifest but missing")
+            continue
+        got = hashlib.sha256(copy.read_bytes()).hexdigest()
+        if got != e["sha256"]:
+            problems.append(f"figures/shots/{e['name']}: differs from the manifest (edited after copying?)")
+        origin = subprocess.run(["git", "-C", str(REPO / e["repo"]), "show", f"{e['commit']}:{e['path']}"],
+                                capture_output=True)
+        if origin.returncode != 0:
+            problems.append(f"figures/shots/{e['name']}: {e['repo']}/{e['path']} not found at {e['commit'][:12]}")
+        elif hashlib.sha256(origin.stdout).hexdigest() != e["sha256"]:
+            problems.append(f"figures/shots/{e['name']}: not the file at {e['repo']}@{e['commit'][:12]}")
+    listed = {e["name"] for e in entries}
+    for extra in sorted((FIGURES / "shots").glob("*")) if (FIGURES / "shots").is_dir() else []:
+        if extra.name not in listed:
+            problems.append(f"figures/shots/{extra.name}: not in manifest.json — copy it with figures_shots.py")
+    return len(entries), problems
+
+
+def check_figures() -> list[str]:
+    """The figures standard (content-standards.md, Figures), in the Markdown and in the built slides."""
+    site = ROOT / "learner-site"
+    for extra in (site, ROOT / "06-production" / "narration", ROOT / "06-production" / "slides"):
+        if str(extra) not in sys.path:
+            sys.path.insert(0, str(extra))
+    import figures as F                                                        # noqa: PLC0415
+    import build_site as B                                                     # noqa: PLC0415
+    import site_paths as SP                                                    # noqa: PLC0415
+    from narration_data import load_scripts                                    # noqa: PLC0415
+    from deck_lint import split_slides                                         # noqa: PLC0415
+    scripts = load_scripts()["decks"]
+    problems: list[str] = []
+    count = stepped = 0
+
+    def one(where: str, body: str, said: list[str] | None) -> None:
+        nonlocal count, stepped
+        count += 1
+        try:
+            fig = F.parse(body)
+        except F.FigureError as exc:
+            problems.append(f"{where}: {exc}")
+            return
+        if len(fig["alt"]) < 12:
+            problems.append(f"{where}: alt is too short to say what the figure shows")
+        for src in _figure_sources(fig["source"]):
+            path, _, spec = src.partition(":")
+            target = resolve_case_path(path)
+            if target is None or not target.is_file():
+                problems.append(f"{where}: source {src!r} does not resolve")
+                continue
+            ranges = parse_line_ranges(spec) if spec else None
+            if ranges:
+                n = len(target.read_text(encoding="utf-8", errors="replace").splitlines())
+                if any(hi > n or lo < 1 or lo > hi for lo, hi in ranges):
+                    problems.append(f"{where}: source {src!r} is outside the file ({n} lines)")
+        if fig["kind"] == "screenshot" and not (FIGURES / "shots" / fig["image"]).is_file():
+            problems.append(f"{where}: image {fig['image']} is not in course/figures/shots/")
+        if fig["kind"] == "scene" and not (FIGURES / "scenes" / fig["scene"]).is_file():
+            problems.append(f"{where}: scene {fig['scene']} is not in course/figures/scenes/")
+        parts = [p for item in fig["items"] for p in (item, *item["children"])]
+        ats = [p for p in parts if p["at"]]
+        if ats:
+            stepped += 1
+        for p in ats:
+            if said is None:
+                problems.append(f"{where}: `@ {p['at']}` — only a slide's figure builds on narration")
+            elif F.step_index(p["at"], said) is None:
+                problems.append(f"{where}: `@ {p['at']}` opens no sentence of this slide's narration")
+
+    for deck_path in sorted(CONTENT.glob("*/slides.md")):
+        deck_id = deck_path.parent.name.split("-")[0]
+        slides = split_slides(deck_path.read_text(encoding="utf-8"))[1]
+        for n, raw in enumerate(slides, 1):
+            text = scripts.get(deck_id, {}).get("slides", {}).get(f"slide-{n}", {}).get("text", "")
+            for body in FIGURE_FENCE_RE.findall(raw):
+                one(f"{deck_path.parent.name}/slides.md slide {n}", body, B.sentences(text))
+    for lesson in sorted(CONTENT.glob("*/lesson.md")):
+        for body in FIGURE_FENCE_RE.findall(lesson.read_text(encoding="utf-8")):
+            one(f"{lesson.parent.name}/lesson.md", body, None)
+
+    for deck_id in FIGURE_MODULES:
+        deck = B.parse_deck(deck_id, scripts)
+        units = SP.module_units(deck)
+        figs = F.deck_figures(deck, units)
+        if not figs["hero"]:
+            problems.append(f"{deck_id}: the cover slide has no hero figure")
+        for unit in units:
+            if unit["kind"] == "segment" and unit["id"] not in figs["segments"]:
+                problems.append(f"{deck_id}: segment {unit['id']} opens (slide {unit['first']}) with no figure")
+
+    shots, manifest_problems = check_figure_manifest()
+    problems += manifest_problems
+    check_figures.summary = (f"{count} figures, {stepped} stepped, {shots} screenshots, "
+                             f"{len(FIGURE_MODULES)} modules covered")
     return problems
 
 
@@ -563,6 +686,7 @@ def main(argv: list[str]) -> int:
         ("Track bundles", check_bundles),
         ("Decks", check_decks),
         ("Slide exhibits", check_exhibits),
+        ("Figures", check_figures),
         ("Sales claims", check_sales_claims),
         ("Narration contract", check_narration),
         ("Learner site", check_learner_site),
@@ -571,7 +695,8 @@ def main(argv: list[str]) -> int:
     for title, fn in sections:
         problems = fn()
         status = "PASS" if not problems else f"FAIL ({len(problems)})"
-        print(f"[{status}] {title}")
+        summary = getattr(fn, "summary", "")
+        print(f"[{status}] {title}" + (f" ({summary})" if summary else ""))
         for p in problems[:25]:
             print("    " + p)
         if len(problems) > 25:

@@ -449,6 +449,38 @@ def run(page, browser, base: str) -> list[str]:
          and newcomer.locator('[data-home-new] a[href$="lab-m00.html"]').is_visible(),
          "home: a first-time visitor is not offered the first-win start")
     newcomer.close()
+    # Figures build on the narration (#99): a stepped figure opens complete, Replay (or ".") takes it
+    # back to its first part and builds it one step at a time to complete, and under reduced motion
+    # it never hides a part. In Read the same figure heads its segment, complete, with no steps.
+    pending = "document.querySelectorAll('.slide[aria-current] .fig [data-step].is-pending').length"
+    page.goto(f"{base}/m02.html#slide-3")
+    page.wait_for_timeout(300)
+    steps = page.evaluate("document.querySelectorAll('.slide[aria-current] .fig [data-step]').length")
+    need(steps >= 3, f"m02 slide-3: the stepped figure has {steps} build steps")
+    need(page.evaluate(pending) == 0, "m02 slide-3: a stepped figure does not open complete")
+    need(page.locator("[data-fig-replay]").is_visible(), "m02 slide-3: no Replay figure control")
+    page.locator(".slide[aria-current] h2, .slide[aria-current] h1").first.click()
+    page.keyboard.press(".")
+    page.wait_for_timeout(200)
+    need(page.evaluate(pending) == steps, "m02 slide-3: '.' did not take the figure back to its first part")
+    page.wait_for_timeout(1500)
+    mid = page.evaluate(pending)
+    need(0 < mid < steps, f"m02 slide-3: the replay did not build step by step ({mid} of {steps} pending)")
+    page.wait_for_timeout(900 * steps + 600)
+    need(page.evaluate(pending) == 0, "m02 slide-3: the replay did not finish complete")
+    page.goto(f"{base}/m02.html#slide-4")
+    need(page.locator("[data-fig-replay]").is_hidden(), "m02 slide-4: Replay figure shown on a slide with no stepped figure")
+    calm = browser.new_context(viewport={"width": 1280, "height": 900}, reduced_motion="reduce").new_page()
+    calm.goto(f"{base}/m02.html#slide-3")
+    calm.keyboard.press(".")
+    calm.wait_for_timeout(300)
+    need(calm.evaluate(pending) == 0, "m02 slide-3: reduced motion still hides figure parts")
+    calm.close()
+    page.goto(f"{base}/lesson-m02.html")
+    need(page.locator(".doc-article [data-figure]").count() >= 1
+         and page.locator(".doc-article [data-figure] [data-step]").count() == 0,
+         "lesson-m02: the segment figure is missing from Read, or carries build steps")
+
     # Landing: a phone-width page with no sideways scroll.
     page.goto(f"{base}/index.html")
     phone = browser.new_context(viewport={"width": 390, "height": 844}).new_page()

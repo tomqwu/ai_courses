@@ -45,6 +45,21 @@ slide in deck order, 25–190 words each, written to be spoken: no line numbers,
 aloud awkwardly (add pronunciations to `narration/pronunciations.json`, e.g. `"gh": "G H"`).
 Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spoken text.
 
+**Figures** — a module is taught with pictures, not bullet walls (content standard §2.1a):
+
+- **Hero** on the cover slide: a ```` ```figure ```` of the whole system or method with this
+  module's part marked `(hl)`. It also heads the module page.
+- **A figure on every segment's first slide** — the architecture or flow that segment teaches, its
+  parts stepped with `@ opening words` of the narration sentences that introduce them. It also heads
+  the segment in Read.
+- **A screenshot wherever a slide makes a claim about a product.** Copy it at the pinned commit:
+  `python3 course/06-production/figures_shots.py copy <Repo>/<path> --as <name>.png`, then
+  `kind: screenshot` with `image: <name>.png` and numbered `callout:`s.
+- **A scene** (`course/figures/scenes/*.svg`) for a situation — captioned as an illustration.
+- A figure replaces bullets on the slide; check it fits (`check_player.py --deck mNN --strict-fit`)
+  and looks right in the player (`http://localhost:8766/mNN.html#slide-N`, press `.` to replay the
+  build).
+
 **Register the module** (every one of these, or the gate or the site misses it):
 
 1. `course/06-production/narration/narration_data.py` — add `"mNN"` to `DECK_IDS`.
@@ -59,6 +74,8 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
    whether the module is inside the paid certificate before touching "nine modules" claims.
 7. If the lab ships code (a starter, scripts, a test suite), add its suite to the `labs` job in
    `.github/workflows/gate.yml`.
+8. `course/06-production/verify.py` — add `"mNN"` to `FIGURE_MODULES`, so the gate holds the module
+   to the hero and segment-opener rule.
 
 ## 3. Editing existing content
 

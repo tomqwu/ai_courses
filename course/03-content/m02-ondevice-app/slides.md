@@ -31,13 +31,25 @@ title: M2 — The On-Device AI App: Architecture
 
 ## M2.1 — One pipeline, two layers
 
-<!-- _diagram: stack -->
-
-- mic (.you) · system audio (.others)
-- PCM chunks
-- capture → transcribe → store → context → prompt → route
-- seam: capture · transcribe · prompt
-- App/ glue · Core (pure)
+```figure
+kind: architecture
+alt: ListenToMe in two layers. Tagged audio enters a six-stage pipeline; App/ glue implements the three seams and the pure core runs everything between them.
+source: ListenToMe/Sources/ListenToMeCore/MeetingSession.swift · ListenToMe/Sources/ListenToMeCore/Capture.swift:4 · ListenToMe/Sources/ListenToMeCore/Transcriber.swift:4 · ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:13
+layer: Audio in (chain) @ Microphone audio is tagged
+  box: mic (.you) · system audio (.others)
+  box: PCM chunks
+layer: The pipeline (chain) @ The pipeline then runs
+  box: capture (seam)
+  box: transcribe (seam)
+  box: store
+  box: context
+  box: prompt (seam)
+  box: route
+layer: Two layers
+  box: App/ glue — touches hardware @ The split is the important part
+  box: the seams (seam) — AudioCapturing · Transcribing · LLMProvider @ The three seams are
+  box: Core (pure) (hl) — runnable in a unit test against mocks @ That layering is what makes
+```
 
 <!-- NOTES: Read this left to right once, then say the split out loud: everything in `App/` touches hardware; everything in `Sources/ListenToMeCore` is pure. The three seams are `AudioCapturing`, `Transcribing`, and `LLMProvider`. The reason this matters is testability: the pipeline is fully runnable in a unit test against mocks. Hold the diagram; we now walk each layer. (75 seconds; next slide is capture.) -->
 
