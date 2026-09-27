@@ -666,15 +666,15 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-track.is-numbered .fig-number { flex: none; margin: 0; align-self: center; }
 
 /* architecture: layered bands, each a heading over a row of boxes */
-.fig-bands { display: grid; gap: 0.35em; }
+.fig-bands { display: grid; gap: 0.4em; }
 .fig-layer { border: 1px solid var(--c-rule, var(--line)); border-radius: 0.6em; background: var(--wash);
-  padding: 0.3em 0.6em 0.45em; }
+  padding: 0.4em 0.6em; }
 .fig-layer.is-seam { background: var(--accent-soft); border: 1px dashed var(--accent); }
 .fig-band-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.6em; }
 .fig-band-head .fig-note { margin: 0; }
-.fig-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.55em 0.4em; margin-top: 0.45em; }
+.fig-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.6em 0.4em; margin-top: 0.4em; }
 .fig-band-head:empty + .fig-row, .fig-layer > .fig-row:first-child { margin-top: 0; }
-.fig-row .fig-box { flex: 1 1 auto; padding: 0.3em 0.7em; border-width: 1.5px; }
+.fig-row .fig-box { flex: 1 1 auto; padding: 0.4em 0.6em; border-width: 1.5px; }
 .fig-row .fig-link { width: 1.6em; }
 
 /* compare: columns side by side, each headed with a drawn mark as well as its colour */
@@ -712,6 +712,12 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-callouts { margin: 0.5em 0 0; padding-left: 1.5em; color: var(--c-ink, var(--ink)); font-size: 0.78em;
   line-height: 1.4; }
 .fig-callouts li::marker { color: var(--accent); font-weight: 700; }
+/* On a slide the frame is 16:9 and cannot scroll: the image sits beside its numbered notes. */
+.slide .fig-screenshot { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 0 1.2em; align-items: center; }
+.slide .fig-screenshot .fig-callouts { margin: 0; }
+.slide .fig-screenshot .fig-callouts li + li { margin-top: 0.35em; }
+.slide .fig-screenshot > .fig-title { grid-column: 1 / -1; }
 
 /* scene: a hand-drawn illustration, centred, captioned as one */
 .fig-scene-art svg { display: block; width: 100%; max-height: 16em; margin: 0 auto; }
