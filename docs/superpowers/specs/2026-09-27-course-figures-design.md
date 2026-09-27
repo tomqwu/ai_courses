@@ -39,10 +39,11 @@ lines (parsed by a small hand-written reader — no new dependency). Every figur
 Any part of an `architecture` or `flow` figure may carry `at: <words>` — the opening words of the
 narration sentence at which it builds in.
 
-Rendering: `course/learner-site/figures.py` turns each block into inline SVG (architecture, flow,
-compare) or an `<figure>` with framed `<img>` and positioned callouts (screenshot, scene). Colours come
-only from the Studio tokens: cobalt marks a seam / "act here", amber marks evidence, ink the core. Text
-in SVG is real `<text>` (searchable, selectable, contrast-audited).
+Rendering: `course/learner-site/figures.py` turns each block into HTML — cards, layered bands and
+columns joined by inline SVG connectors (architecture, flow, compare) — or a `<figure>` with a framed
+`<img>` and numbered callouts (screenshot, scene). Text is HTML, not SVG `<text>`, so it wraps on a
+phone, uses the slide type scale, and is contrast-audited like every other line. Colours come only from
+the Studio tokens: cobalt marks a seam / "act here", amber marks evidence, ink the core.
 
 ## Where figures appear
 
