@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" class="scene">
+<title>A reviewer checks a list of claims against the evidence; most hold, one is flagged</title>
+<rect class="sc-bg" x="0" y="0" width="640" height="360" rx="18"/>
+<rect class="sc-mid" x="300" y="34" width="232" height="296" rx="14"/>
+<rect class="sc-surface" x="312" y="56" width="208" height="262" rx="6"/>
+<rect class="sc-ink" x="376" y="26" width="80" height="26" rx="8"/>
+<rect class="sc-done-soft" x="326" y="76" width="22" height="22" rx="5"/><path class="sc-stroke-done" d="M331 87l4 4 8-9"/><rect class="sc-line" x="358" y="82" width="140" height="10" rx="5"/>
+<rect class="sc-done-soft" x="326" y="116" width="22" height="22" rx="5"/><path class="sc-stroke-done" d="M331 127l4 4 8-9"/><rect class="sc-line" x="358" y="122" width="120" height="10" rx="5"/>
+<rect class="sc-proof-bg sc-edge-proof" x="320" y="150" width="192" height="36" rx="8"/>
+<rect class="sc-proof" x="326" y="157" width="22" height="22" rx="5"/><path class="sc-stroke-white" d="M337 162v7M337 174v1"/><rect class="sc-proof-ink" x="358" y="163" width="130" height="10" rx="5"/>
+<rect class="sc-done-soft" x="326" y="198" width="22" height="22" rx="5"/><path class="sc-stroke-done" d="M331 209l4 4 8-9"/><rect class="sc-line" x="358" y="204" width="132" height="10" rx="5"/>
+<rect class="sc-line" x="326" y="238" width="22" height="22" rx="5"/><rect class="sc-line" x="358" y="244" width="100" height="10" rx="5"/>
+<rect class="sc-line" x="326" y="278" width="22" height="22" rx="5"/><rect class="sc-line" x="358" y="284" width="116" height="10" rx="5"/>
+<circle class="sc-head" cx="170" cy="150" r="28"/>
+<path class="sc-ink" d="M110 330c0-62 26-100 60-100s60 38 60 100z"/>
+<circle class="sc-ring" cx="262" cy="176" r="30"/><path class="sc-stroke" d="M240 198l-30 30"/>
+<path class="sc-stroke-accent sc-dash" d="M290 172h30"/>
+</svg>

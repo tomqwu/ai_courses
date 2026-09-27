@@ -17,7 +17,7 @@ The grammar, one `key: value` per line:
       box: capture (seam)
     column: Fail closed (good)                                                    (compare)
       item: an unknown host throws
-    image: signupflow-dashboard.png · frame: browser | phone | mac                (screenshot)
+    image: signupflow-dashboard.png · frame: browser | phone | mac | none               (screenshot)
     callout: 12,30 — The admin sees gaps before members do
     scene: stranger-clone.svg · caption: …                                        (scene)
 
@@ -33,6 +33,7 @@ import re
 from pathlib import Path
 
 KINDS = ("flow", "architecture", "compare", "screenshot", "scene")
+FRAMES = ("browser", "phone", "mac", "none")    # none: the image carries its own window chrome
 FLAGS = {"seam", "hl", "good", "bad", "chain"}
 REPEATED = {"step", "layer", "column"}
 CHILDREN = {"box", "item"}
@@ -247,6 +248,8 @@ def _compare(fig: dict, sentences, inline) -> str:
 def _screenshot(fig: dict, base: str, inline) -> str:
     pins = "".join(f'<span class="fig-pin" style="left:{c["x"]:g}%;top:{c["y"]:g}%" aria-hidden="true">{i}</span>'
                    for i, c in enumerate(fig["callouts"], 1))
+    if fig["frame"] not in FRAMES:
+        raise FigureError(f"frame must be one of {', '.join(FRAMES)} (got {fig['frame']!r})")
     chrome = '<div class="fig-chrome" aria-hidden="true"><span></span><span></span><span></span></div>' \
         if fig["frame"] in ("browser", "mac") else ""
     notes = ("<ol class=\"fig-callouts\">" + "".join(f"<li>{inline(c['text'])}</li>" for c in fig["callouts"]) + "</ol>"

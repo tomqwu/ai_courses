@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" class="scene">
+<title>A video meeting on a laptop, with a copilot pane beside the call offering a suggestion</title>
+<rect class="sc-bg" x="0" y="0" width="640" height="360" rx="18"/>
+<rect class="sc-ink" x="92" y="40" width="456" height="262" rx="14"/>
+<rect class="sc-surface" x="106" y="54" width="428" height="234" rx="6"/>
+<path class="sc-mid" d="M60 302h520l-26 22H86z"/>
+<rect class="sc-line" x="118" y="66" width="120" height="102" rx="6"/>
+<rect class="sc-line" x="246" y="66" width="120" height="102" rx="6"/>
+<rect class="sc-line" x="118" y="176" width="120" height="100" rx="6"/>
+<rect class="sc-accent-soft" x="246" y="176" width="120" height="100" rx="6"/>
+<circle class="sc-head" cx="178" cy="104" r="16"/><path class="sc-done" d="M150 168c0-20 12-32 28-32s28 12 28 32z"/>
+<circle class="sc-head" cx="306" cy="104" r="16"/><path class="sc-proof" d="M278 168c0-20 12-32 28-32s28 12 28 32z"/>
+<circle class="sc-head" cx="178" cy="214" r="16"/><path class="sc-ink" d="M150 276c0-20 12-32 28-32s28 12 28 32z"/>
+<circle class="sc-head" cx="306" cy="214" r="16"/><path class="sc-accent" d="M278 276c0-20 12-32 28-32s28 12 28 32z"/>
+<rect class="sc-bg" x="378" y="66" width="144" height="210" rx="6"/>
+<path class="sc-stroke-accent" d="M392 88v10M400 82v22M408 86v14M416 78v30M424 86v14M432 82v22M440 88v10"/>
+<rect class="sc-line" x="392" y="122" width="116" height="8" rx="4"/>
+<rect class="sc-line" x="392" y="138" width="92" height="8" rx="4"/>
+<rect class="sc-line" x="392" y="154" width="104" height="8" rx="4"/>
+<rect class="sc-surface sc-edge-accent" x="388" y="178" width="124" height="70" rx="8"/>
+<rect class="sc-accent" x="400" y="192" width="54" height="8" rx="4"/>
+<rect class="sc-accent-soft" x="400" y="208" width="98" height="8" rx="4"/>
+<rect class="sc-accent-soft" x="400" y="222" width="80" height="8" rx="4"/>
+<circle class="sc-accent" cx="512" cy="178" r="10"/><path class="sc-stroke-white" d="M507 178l4 4 6-8"/>
+</svg>

@@ -21,6 +21,7 @@ course/06-production/slides/out/
 # Generated learner-site artifacts (build with `make -C course site`)
 course/learner-site/*.html
 course/learner-site/narration.json
+course/learner-site/figures/
 course/learner-site/assets/audio/
 
 # Design-review screenshots (regenerate, don't commit)

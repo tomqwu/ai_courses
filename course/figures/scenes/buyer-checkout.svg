@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" class="scene">
+<title>A buyer reads a product page, presses Buy, and receives a receipt</title>
+<rect class="sc-bg" x="0" y="0" width="640" height="360" rx="18"/>
+<rect class="sc-surface sc-edge" x="170" y="36" width="300" height="288" rx="14"/>
+<rect class="sc-line" x="170" y="36" width="300" height="30" rx="14"/><rect class="sc-line" x="170" y="52" width="300" height="14"/>
+<circle class="sc-proof" cx="190" cy="51" r="5"/><circle class="sc-done" cx="206" cy="51" r="5"/><circle class="sc-accent" cx="222" cy="51" r="5"/>
+<rect class="sc-ink" x="196" y="86" width="170" height="16" rx="5"/>
+<rect class="sc-line" x="196" y="114" width="244" height="8" rx="4"/>
+<rect class="sc-line" x="196" y="130" width="210" height="8" rx="4"/>
+<rect class="sc-accent-soft" x="196" y="156" width="244" height="84" rx="10"/>
+<path class="sc-stroke-done" d="M212 178l6 6 10-12M212 206l6 6 10-12"/>
+<rect class="sc-mid" x="238" y="176" width="150" height="8" rx="4"/><rect class="sc-mid" x="238" y="204" width="120" height="8" rx="4"/>
+<rect class="sc-proof-bg sc-edge-proof" x="196" y="258" width="88" height="42" rx="8"/><rect class="sc-proof-ink" x="212" y="274" width="56" height="10" rx="5"/>
+<rect class="sc-accent" x="300" y="258" width="140" height="42" rx="21"/><rect class="sc-white" x="340" y="274" width="60" height="10" rx="5"/>
+<circle class="sc-head" cx="96" cy="176" r="24"/><path class="sc-done" d="M46 300c0-50 22-82 50-82s50 32 50 82z"/>
+<path class="sc-stroke" d="M136 250c40-6 110 12 164 16"/>
+<rect class="sc-surface sc-edge" x="492" y="120" width="112" height="150" rx="6"/>
+<path class="sc-bg" d="M492 262l14 12 14-12 14 12 14-12 14 12 14-12 14 12 14-12v10h-112z"/>
+<rect class="sc-ink" x="508" y="140" width="60" height="10" rx="5"/>
+<rect class="sc-line" x="508" y="162" width="80" height="6" rx="3"/><rect class="sc-line" x="508" y="176" width="64" height="6" rx="3"/>
+<rect class="sc-line" x="508" y="190" width="80" height="6" rx="3"/>
+<circle class="sc-done" cx="548" cy="228" r="16"/><path class="sc-stroke-white" d="M540 228l6 6 10-12"/>
+<path class="sc-stroke-accent sc-dash" d="M444 280c24 0 36-20 46-40"/>
+</svg>

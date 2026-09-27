@@ -94,7 +94,7 @@ def stage_site(stage: Path, with_audio: bool) -> None:
                          + "\n  ".join(missing[:20]))
 
 
-ASSET_REF = re.compile(r'(?:src|href)="(?:\.?/)?((?:assets/)[^"#?]+)"')
+ASSET_REF = re.compile(r'(?:src|href)="(?:\.?/)?((?:assets/|figures/)[^"#?]+)"')
 
 
 def missing_assets(stage: Path) -> list[str]:

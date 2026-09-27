@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" class="scene">
+<title>A launch arc: a sequence of emails leads readers, step by step, to the course page</title>
+<rect class="sc-bg" x="0" y="0" width="640" height="360" rx="18"/>
+<path class="sc-stroke-accent sc-dash" d="M60 300C150 300 170 190 250 190S360 110 430 110"/>
+<g><rect class="sc-surface sc-edge" x="40" y="258" width="64" height="44" rx="6"/><path class="sc-stroke" d="M44 262l28 22 28-22"/><circle class="sc-accent" cx="104" cy="258" r="12"/><rect class="sc-white" x="100" y="254" width="8" height="8" rx="2"/></g>
+<g><rect class="sc-surface sc-edge" x="140" y="218" width="64" height="44" rx="6"/><path class="sc-stroke" d="M144 222l28 22 28-22"/><circle class="sc-accent" cx="204" cy="218" r="12"/><rect class="sc-white" x="200" y="214" width="8" height="8" rx="2"/></g>
+<g><rect class="sc-surface sc-edge" x="240" y="164" width="64" height="44" rx="6"/><path class="sc-stroke" d="M244 168l28 22 28-22"/><circle class="sc-accent" cx="304" cy="164" r="12"/><rect class="sc-white" x="300" y="160" width="8" height="8" rx="2"/></g>
+<g><rect class="sc-surface sc-edge" x="330" y="112" width="64" height="44" rx="6"/><path class="sc-stroke" d="M334 116l28 22 28-22"/><circle class="sc-accent" cx="394" cy="112" r="12"/><rect class="sc-white" x="390" y="108" width="8" height="8" rx="2"/></g>
+<rect class="sc-surface sc-edge" x="430" y="40" width="180" height="250" rx="12"/>
+<rect class="sc-line" x="430" y="40" width="180" height="26" rx="12"/><rect class="sc-line" x="430" y="54" width="180" height="12"/>
+<rect class="sc-ink" x="448" y="84" width="120" height="14" rx="5"/>
+<rect class="sc-line" x="448" y="108" width="144" height="8" rx="4"/><rect class="sc-line" x="448" y="122" width="120" height="8" rx="4"/>
+<rect class="sc-accent-soft" x="448" y="146" width="144" height="70" rx="8"/>
+<path class="sc-stroke-accent" d="M460 200l24-20 20 12 30-26 30 16"/>
+<rect class="sc-accent" x="448" y="234" width="144" height="36" rx="18"/><rect class="sc-white" x="488" y="248" width="64" height="8" rx="4"/>
+</svg>

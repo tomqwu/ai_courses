@@ -1,0 +1,60 @@
+{
+ "shots": [
+  {
+   "name": "ai_qe-context-route.svg",
+   "repo": "ai_qe",
+   "path": "_includes/diagrams/context-route.svg",
+   "commit": "6388f0ab7aa6b4b590ad82b3b121764977eadeea",
+   "sha256": "a7a4c9d7e32d433a35bb22b41ba783cc131fb9f7a825278b839d560cecf42f54",
+   "bytes": 3723
+  },
+  {
+   "name": "ai_qe-contract-chain.svg",
+   "repo": "ai_qe",
+   "path": "_includes/diagrams/contract-chain.svg",
+   "commit": "6388f0ab7aa6b4b590ad82b3b121764977eadeea",
+   "sha256": "73c6c3fd3dfe6fa116dc1945b730b0e845a6834d6274bcae08eedc6616d13372",
+   "bytes": 3003
+  },
+  {
+   "name": "listentome-app.png",
+   "repo": "ListenToMe",
+   "path": "docs/images/screenshot.png",
+   "commit": "a9bde8ec9b8ac671cd9fad5773777e1fdbdc8f35",
+   "sha256": "130ce41f55f11541c663901f9953f80a8f32c19e8ffc5a685526a6ac6c2609e9",
+   "bytes": 207534
+  },
+  {
+   "name": "signupflow-dashboard.png",
+   "repo": "SignUpFlow",
+   "path": "docs/screenshots/current/basketball/1440/dashboard.png",
+   "commit": "c550d46c120ef2ec5aead56f7c5dab56d6912582",
+   "sha256": "62ebf371714f4578da0b63b12de9b4b21fe6b65e0352fbc59cace6a3af738381",
+   "bytes": 145103
+  },
+  {
+   "name": "signupflow-onboarding.png",
+   "repo": "SignUpFlow",
+   "path": "docs/screenshots/current/basketball/1440/onboarding.png",
+   "commit": "c550d46c120ef2ec5aead56f7c5dab56d6912582",
+   "sha256": "bcf3ae5c61296611b91e3919e0973069dcbd26284aa13de635f0d5d83b0bffdd",
+   "bytes": 138907
+  },
+  {
+   "name": "signupflow-replacement-needed.png",
+   "repo": "SignUpFlow",
+   "path": "docs/screenshots/current/basketball/1440/replacement-needed.png",
+   "commit": "c550d46c120ef2ec5aead56f7c5dab56d6912582",
+   "sha256": "c95a252ec38b9fbfdd4baac92d7fbe36690c3015f5159cd40818c44b08f407cc",
+   "bytes": 81758
+  },
+  {
+   "name": "signupflow-schedule-change-admin.png",
+   "repo": "SignUpFlow",
+   "path": "docs/screenshots/current/basketball/1440/schedule-change-admin.png",
+   "commit": "c550d46c120ef2ec5aead56f7c5dab56d6912582",
+   "sha256": "5af94a38b61c44e6f07df9a4c22bec7946c217594c8d752f6ad8569815f039db",
+   "bytes": 164925
+  }
+ ]
+}
