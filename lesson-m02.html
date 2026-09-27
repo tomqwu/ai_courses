@@ -22,6 +22,32 @@
   <article class="doc-article">
 <blockquote><p>Part of AI Product Studio (APS-3) · ~75 minutes · Prerequisites: Module 1</p></blockquote>
 <h2 id="overview">Overview</h2>
+<figure class="diagram fig fig-scene" data-figure><div class="fig-scene-art"><svg role="img" aria-label="A video meeting on a laptop, with a copilot pane beside the call offering a suggestion." xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" class="scene">
+<title>A video meeting on a laptop, with a copilot pane beside the call offering a suggestion</title>
+<rect class="sc-bg" x="0" y="0" width="640" height="360" rx="18"/>
+<rect class="sc-ink" x="92" y="40" width="456" height="262" rx="14"/>
+<rect class="sc-surface" x="106" y="54" width="428" height="234" rx="6"/>
+<path class="sc-mid" d="M60 302h520l-26 22H86z"/>
+<rect class="sc-line" x="118" y="66" width="120" height="102" rx="6"/>
+<rect class="sc-line" x="246" y="66" width="120" height="102" rx="6"/>
+<rect class="sc-line" x="118" y="176" width="120" height="100" rx="6"/>
+<rect class="sc-accent-soft" x="246" y="176" width="120" height="100" rx="6"/>
+<circle class="sc-head" cx="178" cy="104" r="16"/><path class="sc-done" d="M150 168c0-20 12-32 28-32s28 12 28 32z"/>
+<circle class="sc-head" cx="306" cy="104" r="16"/><path class="sc-proof" d="M278 168c0-20 12-32 28-32s28 12 28 32z"/>
+<circle class="sc-head" cx="178" cy="214" r="16"/><path class="sc-ink" d="M150 276c0-20 12-32 28-32s28 12 28 32z"/>
+<circle class="sc-head" cx="306" cy="214" r="16"/><path class="sc-accent" d="M278 276c0-20 12-32 28-32s28 12 28 32z"/>
+<rect class="sc-bg" x="378" y="66" width="144" height="210" rx="6"/>
+<path class="sc-stroke-accent" d="M392 88v10M400 82v22M408 86v14M416 78v30M424 86v14M432 82v22M440 88v10"/>
+<rect class="sc-line" x="392" y="122" width="116" height="8" rx="4"/>
+<rect class="sc-line" x="392" y="138" width="92" height="8" rx="4"/>
+<rect class="sc-line" x="392" y="154" width="104" height="8" rx="4"/>
+<rect class="sc-surface sc-edge-accent" x="388" y="178" width="124" height="70" rx="8"/>
+<rect class="sc-accent" x="400" y="192" width="54" height="8" rx="4"/>
+<rect class="sc-accent-soft" x="400" y="208" width="98" height="8" rx="4"/>
+<rect class="sc-accent-soft" x="400" y="222" width="80" height="8" rx="4"/>
+<circle class="sc-accent" cx="512" cy="178" r="10"/><path class="sc-stroke-white" d="M507 178l4 4 6-8"/>
+</svg>
+</div><figcaption class="fig-title">Illustration · what ListenToMe is for — a copilot beside the call, not inside it</figcaption></figure>
 <p>Module 1 gave you an operating system for AI-assisted building. This module opens the first product archetype: the <strong>native on-device AI app</strong> — a real-time system that captures the world, reasons about it locally, and keeps the user in control of every byte that leaves the machine. Your case study is ListenToMe, a free, open-source meeting copilot for macOS that listens to your microphone and the other participants' system audio, transcribes live on-device, and streams AI help through Ollama with a model you choose (<code>README.md</code>). One engineer shipped it with a 96% core-coverage badge — possible only because of the architecture you are about to study.</p>
 <p>The central engineering problem of this archetype: the interesting decisions — segmentation, context windowing, question detection, model routing, prompt assembly, stream-error handling — all live downstream of audio hardware and a live LLM daemon, neither of which a CI runner can touch. ListenToMe's answer is a hard split. Every decision lives in <code>Sources/ListenToMeCore</code>, a pure SwiftPM package of 45 Swift source files (5,194 lines as of 2026-09-16) that needs no microphone, no screen capture, and no network to run its tests; <code>App/</code> holds only platform glue — AVAudioEngine, ScreenCaptureKit, Speech, SwiftUI. The two sides meet at three protocol seams: <code>AudioCapturing</code>, <code>Transcribing</code>, and <code>LLMProvider</code>. The whole pipeline runs in a unit test against mocks; only the thin glue is left for a human to smoke-test.</p>
 <p>In this module you trace that pipeline end to end (M2.1), learn how three AI roles get routed to different models with per-role cancellation (M2.2), and see how "proactive intelligence" is actually a cheap heuristic wrapped in budgets, debounces, and typed errors (M2.3). In the lab you build TinyCopilot — the same architecture in Python + Ollama, small enough to finish in one sitting.</p>

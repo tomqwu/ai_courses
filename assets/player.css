@@ -705,6 +705,8 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-frame-none { border: 0; background: none; box-shadow: none; border-radius: 0.4em; }
 .fig-shot { position: relative; }
 .fig-shot img { display: block; width: 100%; height: auto; }
+.fig-shot.is-cropped { overflow: hidden; }
+.fig-shot.is-cropped img { height: 100%; object-fit: cover; object-position: top; }
 .fig-pin { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center;
   width: 1.7em; height: 1.7em; border-radius: 50%; background: var(--accent); color: var(--white);
   border: 2px solid var(--white); font-size: 0.78em; font-weight: 700;
