@@ -56,7 +56,8 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
   `python3 course/06-production/figures_shots.py copy <Repo>/<path> --as <name>.png`, then
   `kind: screenshot` with `image: <name>.png` and numbered `callout:`s.
 - **A scene** (`course/figures/scenes/*.svg`) for a situation — captioned as an illustration.
-- A figure replaces bullets on the slide; check it fits (`check_player.py --deck mNN --strict-fit`)
+- A figure replaces bullets on the slide at a readable size; the slide grows if it needs to. Check
+  nothing is clipped (`check_player.py --deck mNN --strict-fit`)
   and looks right in the player (`http://localhost:8766/mNN.html#slide-N`, press `.` to replay the
   build).
 
@@ -86,9 +87,10 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
 - **Change spoken words** only in all three places: `scripts/mNN.json` (what is recorded), the
   slide's NOTES, and the `video-scripts.md` narration. Then `make -C course transcripts`, and list
   the slide for re-recording in the PR.
-- **Trim to fit**, never split or renumber: slide numbers key the narration, audio, units and deep
-  links. Cut bullets the exhibit or narration already carries; trim exhibits to the narrated lines
-  with `…` and correct the cited range.
+- **Never shrink or cut to fit a frame**: a slide grows with its content, and labs and lessons are
+  full pages. Never split or renumber slides either — numbers key the narration, audio, units and deep
+  links. Cut bullets only when the exhibit or narration already carries them; trim exhibits to the
+  narrated lines with `…` and correct the cited range.
 - **Exhibits** are copies of the cited file within the cited range, or declare
   `commands` / `output` / `template` / `illustrative` after the fence language. An illustrative
   example is also labelled so in the visible slide text.

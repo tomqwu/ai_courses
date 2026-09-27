@@ -215,6 +215,9 @@ def _body(part: dict, inline) -> str:
 
 
 def _flow(fig: dict, sentences, inline) -> str:
+    # More than six steps do not read as one row at a readable size: they become a numbered list.
+    if len(fig["items"]) > 6 and not fig["loop"]:
+        fig = {**fig, "numbered": True}
     nodes = []
     for i, part in enumerate(fig["items"]):
         if i:

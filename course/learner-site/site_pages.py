@@ -201,11 +201,12 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
     short = short_label(deck)
     number = int(deck["id"][1:])
     meta = lab["meta"]
-    goal = SC.inline(meta["Goal"]) if meta.get("Goal") else \
+    goal = SC.inline(meta["Goal"][:1].upper() + meta["Goal"][1:]) if meta.get("Goal") else \
         ("The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, "
          "and the evidence entry you export is the format the rubrics grade.")
-    # The workspace (#77): the steps one at a time, the acceptance panel always beside them, and the
-    # evidence entry, templates, stretch goals and discussion below. `sections` collects the panel.
+    # One page, read top to bottom: every step in full, then the acceptance checklist, the auto-fail
+    # list, the evidence entry, stretch goals and discussion — nothing paged or boxed into a panel.
+    # A sticky step list beside the steps is the only navigation. `sections` collects the checklist.
     sections = []
     steps: list[dict] = []
     before: list[str] = []
@@ -280,18 +281,24 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
         rows.append(f'<li><a href="#{step["id"]}" data-step-go="{i}"><span class="step-dot" aria-hidden="true">{dot}</span>'
                     f'<span class="step-name">{SC.inline(step["title"])}</span>'
                     f'<span class="sr-only" data-step-state>to do</span></a></li>')
-        last = i == len(steps) - 1
+        toggle = "" if step.get("intro") else (
+            f'<div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false">'
+            f'<span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>Mark step {number_of} done</span>'
+            f'</button></div>')
         views.append(f"""<section class="lab-step" id="{step['id']}" data-step="{i}" aria-labelledby="{step['id']}-title">
   <p class="step-count">{where}</p>
   <h2 id="{step['id']}-title">{SC.inline(step['title'])}</h2>
   {time}
   <div class="step-body">{step['html']}</div>
-  <div class="step-actions">
-    <button type="button" data-step-prev{" disabled" if i == 0 else ""}>Previous step</button>
-    <button type="button" class="btn-primary" data-step-next>{"Mark done — then the checklist" if last else "Mark done, next step"}</button>
-  </div>
+  {toggle}
 </section>""")
-    facts_row = " · ".join(html.escape(x) for x in (
+    # After the steps, the list points at what decides the grade.
+    for sec in lab["sections"]:
+        if sec["kind"] in ("checklist", "evidence") and sec["title"]:
+            mark = "✓" if sec["kind"] == "checklist" else "✎"
+            rows.append(f'<li class="lab-steps-after"><a href="#{SC.slug(sec["title"])}"><span class="step-dot" aria-hidden="true">{mark}</span>'
+                        f'<span class="step-name">{SC.inline(sec["title"])}</span></a></li>')
+    facts_row = " · ".join(SC.inline(x) for x in (
         meta.get("Time", ""), f"{len(counted)} steps", f"{lab['checklist_count']} checks decide the grade") if x)
     head = SH.page_head(f"Module {number} · Lab · pass/fail", SC.inline(lab["title"]), goal,
                         f'<p class="lab-facts">{facts_row}</p>'
@@ -301,14 +308,15 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
 <div class="lab-root" data-lab="{deck['id']}" data-lab-checks="{lab['checklist_count']}" data-lab-title="{html.escape(lab['title'], quote=True)}">
   <div class="lab-workspace">
     <nav class="lab-steps" aria-label="Steps"><ol>{"".join(rows)}</ol></nav>
-    <div class="lab-view doc-article">{"".join(views)}</div>
-    <aside class="lab-panel" aria-label="Acceptance checklist">{"".join(sections)}</aside>
-  </div>
-  <div class="lab-after doc-article">
+    <div class="lab-main doc-article">
+      <div class="lab-view">{"".join(views)}</div>
+      <div class="lab-accept" aria-label="Acceptance">{"".join(sections)}</div>
+      <div class="lab-after">
 {"".join(after)}
-    <footer class="doc-footer">
-      <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/{html.escape(deck['source'].split('/')[1])}/lab.md</code>.</p>
-    </footer>
+      <footer class="doc-footer">
+        <p class="index-footnote">Checklist ticks, finished steps and the evidence draft are stored in this browser only. Export your progress from the course home if you change machines. Source: <code>course/03-content/{html.escape(deck['source'].split('/')[1])}/lab.md</code>.</p>
+      </footer>
+    </div>
   </div>
 </div>"""
     step_headings = [{"text": s["title"], "id": s["id"], "step": True,

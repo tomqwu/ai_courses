@@ -325,26 +325,25 @@ def run(page, browser, base: str) -> list[str]:
         section = page.locator("#auto-fail")
         need(section.count() == 1 and section.is_visible() and section.locator("li").count() >= 3,
              f"{lp.name}: the rubric's auto-fail list is not shown exactly once")
-        # The workspace (#77): a step list and its steps, one shown at a time, with the checklist and
-        # the auto-fail list in the panel beside them.
+        # One page (#110): every step shown in full, in order, then the checklist — nothing paged,
+        # nothing in a scrolling side panel.
         steps = page.locator(".lab-step")
         shown = sum(1 for i in range(steps.count()) if steps.nth(i).is_visible())
-        need(steps.count() >= 3 and page.locator(".lab-steps [data-step-go]").count() == steps.count() and shown == 1,
-             f"{lp.name}: not a workspace ({steps.count()} steps, {shown} shown)")
-        need(page.locator(".lab-panel #auto-fail").count() == 1 and page.locator(".lab-panel [data-check]").count() > 0,
-             f"{lp.name}: the checklist and auto-fail list are not in the panel beside the steps")
-    # A step is marked done and the next one opens; both survive a reload; a deep link opens a step.
+        need(steps.count() >= 3 and page.locator(".lab-steps [data-step-go]").count() == steps.count()
+             and shown == steps.count(),
+             f"{lp.name}: not one page ({steps.count()} steps, {shown} shown)")
+        boxed = page.evaluate("""() => [...document.querySelectorAll('.lab-root *')].filter(e => {
+            const s = getComputedStyle(e); return /(auto|scroll)/.test(s.overflowY) && e.scrollHeight > e.clientHeight + 2
+              && !e.matches('pre, textarea'); }).length""")
+        need(page.locator(".lab-accept [data-check]").count() > 0 and boxed == 0,
+             f"{lp.name}: the checklist is missing, or {boxed} part(s) of the lab scroll inside a box")
+    # A step's own toggle marks it done, and that survives a reload.
     page.goto(f"{base}/lab-m05.html")
-    first = page.locator(".lab-step:visible").get_attribute("id")
-    page.locator(".lab-step:visible [data-step-next]").click()
-    second = page.locator(".lab-step:visible").get_attribute("id")
+    page.locator(".lab-step").nth(1).locator("[data-step-done]").click()
     page.reload()
-    need(second != first and page.locator(".lab-step:visible").get_attribute("id") == second
-         and "is-done" in (page.locator('[data-step-go="0"]').get_attribute("class") or ""),
-         f"lab-m05: 'Mark done, next step' did not move on and persist ({first} → {second})")
-    target = page.locator(".lab-step").nth(3).get_attribute("id")
-    page.goto(f"{base}/lab-m05.html#{target}")
-    need(page.locator(".lab-step:visible").get_attribute("id") == target, "lab-m05: a deep link to a step did not open it")
+    need(page.locator(".lab-step").nth(1).locator("[data-step-done]").get_attribute("aria-pressed") == "true"
+         and "is-done" in (page.locator('[data-step-go="1"]').get_attribute("class") or ""),
+         "lab-m05: marking a step done did not persist")
 
     # Search is a command palette (#80): "/" and Ctrl/⌘+K open it from any page; results come back
     # grouped by kind with the matched words marked; ↓ ↵ open a result; every glossary term is found

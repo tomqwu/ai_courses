@@ -275,6 +275,17 @@ function next() {
         // slide itself: it grows a scrollbar the recording cannot scroll. Measure that instead.
         var content = slide.querySelector(".slide-content");
         out.contentOverflow = content ? Math.max(0, content.scrollHeight - content.clientHeight) : 0;
+        // A slide grows with its content, so nothing on it may hide or scroll its own content: any
+        // element that clips (overflow hidden/auto/scroll/clip) while its content is bigger is reported.
+        // A screenshot's declared crop is the one deliberate exception.
+        out.clipped = [];
+        Array.prototype.forEach.call(slide.querySelectorAll("*"), function (e) {
+          if (e.closest(".sr-only, .is-cropped, template")) return;
+          var cs = f.contentWindow.getComputedStyle(e);
+          if (!/(hidden|auto|scroll|clip)/.test(cs.overflowX + " " + cs.overflowY)) return;
+          var dy = e.scrollHeight - e.clientHeight, dx = e.scrollWidth - e.clientWidth;
+          if (dy > 2 || dx > 2) out.clipped.push((String(e.className || e.tagName).split(" ")[0]) + " by " + Math.max(dy, dx) + "px");
+        });
         // The deck contrast audit sees slide 1 (a cover, no diagram); the slides that carry a
         // diagram or an exhibit get audited here, at their real layout. Every slide is measured.
         if (audit) { out.contrast = apsAuditContrast(f.contentWindow, f.contentDocument); }
@@ -536,12 +547,12 @@ GEOMETRY_SIZES = ((1600, 1000), (1280, 800))
 
 
 def check_diagram_geometry(browser: str, port: int) -> list[str]:
-    """A declared diagram must fit its slide frame, and no slide's content may need scrolling.
+    """Nothing on a slide is clipped, at two desktop sizes.
 
-    The frames are 16:9 with overflow hidden, so an oversized diagram is silently clipped —
-    invisible content, not a style bug. This is measured, not assumed: every slide is opened by
-    deep link and its diagram and its content box are measured against the frame in a real
-    layout.
+    A slide is at least 16:9 and grows with its content, so content is never trimmed to a frame —
+    but anything that still hides or scrolls its own content (an overflow box, a figure wider than
+    its column) is invisible content, not a style bug. This is measured, not assumed: every slide
+    is opened by deep link and measured in a real layout.
     """
     sys.path.insert(0, str(SITE_ROOT))
     import build_site as B                                                      # noqa: PLC0415
@@ -606,6 +617,9 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
         if r.get("overflowing") and not r.get("diagrams"):
             problems.append(f"{deck_id} slide-{n}{at}: the slide overflows its frame, so the code "
                             f"exhibit or the text under it is clipped")
+        for c in (r.get("clipped") or [])[:3]:
+            problems.append(f"{deck_id} slide-{n}{at}: {c} is clipped — a slide grows with its content, "
+                            f"so nothing on it may be cut off or scroll inside a box")
         if (r.get("contentOverflow") or 0) > 2:
             FIT_WARNINGS.append(f"{deck_id} slide-{n}{at}: the content needs {r['contentOverflow']}px of "
                                 f"scrolling — a recorded slide cannot scroll, so that part is never seen")
@@ -815,9 +829,10 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         return [f"{deck_id}: layout probe returned unreadable data"]
 
     problems: list[str] = []
-    if not (1.70 <= data["ratio"] <= 1.85):
+    # At least 16:9: a slide may be taller when its content needs it, never shorter.
+    if data["ratio"] > 1.80:
         problems.append(f"{deck_id}: slide rendered {data['slideWidth']}x{data['slideHeight']} "
-                        f"(ratio {data['ratio']}), not the 16:9 frame the design uses")
+                        f"(ratio {data['ratio']}), shorter than the 16:9 minimum")
     if data["slideWidth"] < 900:
         problems.append(f"{deck_id}: the slide frame collapsed to {data['slideWidth']}px wide")
     if data["overflowing"]:
@@ -872,6 +887,10 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
         c = thin[0]
         problems.append(f"{deck_id}/{c['id']}: title/body is {c['title'] / c['body']:.2f}x, "
                         f"below the 2.0x hierarchy floor ({len(thin)} slide(s) affected)")
+    # Proportions are measured against the 16:9 frame the width implies: a slide that grows taller
+    # for its content must not fail a type floor because it grew.
+    for c in comp:
+        c["frameH"] = min(c["frameH"], round(data["slideWidth"] * 9 / 16)) if c["frameH"] else c["frameH"]
     small = [c for c in comp if c["frameH"] and c["chrome"] / c["frameH"] < 0.02]
     if small:
         c = small[0]
@@ -890,9 +909,12 @@ def check_layout(browser: str, port: int, deck_id: str, slide_count: int) -> lis
     if data["panelTop"] < 0 or data["panelBottom"] > data["viewportHeight"] + 1:
         problems.append(f"{deck_id}: the player bar is off-screen "
                         f"({data['panelTop']}..{data['panelBottom']} in a {data['viewportHeight']}px viewport)")
-    if abs(data["panelTop"] - data["stageBottom"]) > 1:
-        problems.append(f"{deck_id}: the player bar ({data['panelTop']}) is not directly under the stage "
-                        f"({data['stageBottom']})")
+    # The bar sits under the stage, or — when a tall slide runs past the screen — sticks to the
+    # bottom of the viewport so the controls stay reachable.
+    stuck = abs(data["panelBottom"] - data["viewportHeight"]) <= 1 and data["stageBottom"] > data["panelTop"]
+    if abs(data["panelTop"] - data["stageBottom"]) > 1 and not stuck:
+        problems.append(f"{deck_id}: the player bar ({data['panelTop']}) is neither under the stage "
+                        f"({data['stageBottom']}) nor stuck to the bottom of the screen")
     for control in ("present", "play", "sourcesTab"):
         if not data[control]:
             problems.append(f"{deck_id}: {control} control is missing from the player")
