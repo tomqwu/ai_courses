@@ -33,8 +33,10 @@ Clone the case studies beside `course/` at the commits `gate.yml` pins before ru
 - **A slide exhibit (fenced block) is a true copy of a file the slide cites**, within the cited range.
   Rewrapping and `…` elisions are allowed. Anything else declares itself in the info string:
   ` ```bash commands `, ` ```text output `, ` ```markdown template `, ` ```text illustrative `.
-- **Every slide fits its 16:9 frame with the narration panel present** (`check_player.py --strict-fit`).
-  Trim; do not split slides or change type sizes.
+- **Nothing on a slide is clipped** (`check_player.py --strict-fit`, measured at 1600x1000 and
+  1280x800). A slide is at least 16:9 and grows with its content; the narration bar sticks to the
+  bottom of the screen. Do not shrink type or cut substance to make content fit a frame. Do not
+  split or renumber slides (numbers key the narration, audio and deep links).
 - **Narration never speaks a line number.** The words in `scripts/mNN.json` are what is recorded and
   captioned. If you change them, keep the slide's `NOTES` and the `video-scripts.md` narration
   consistent, regenerate transcripts (`make -C course transcripts`), and add the slide to the

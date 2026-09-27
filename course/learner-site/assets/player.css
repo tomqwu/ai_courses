@@ -133,10 +133,10 @@
   --narration-gap: 12px;
   --chrome-height: 112px;
 
-  /* One 16:9 master, constrained by width and height, giving back the space the narration panel
-     occupies — so a narrated slide still fits above the panel at 16:9. */
-  --frame-width: min(calc(100vw - var(--sidebar-w) - 2 * var(--player-pad)),
-                     calc((100dvh - var(--chrome-height) - var(--narration-height, 0px)) * 16 / 9));
+  /* The slide takes the content column's width (up to a reading limit). It is at least 16:9 and grows
+     with its content: nothing is shrunk or trimmed to fit a frame, and the narration bar stays
+     reachable because it sticks to the bottom of the screen. */
+  --frame-width: min(calc(100vw - var(--sidebar-w) - 2 * var(--player-pad)), 1400px);
   --player-pad: 40px;
 
   /* ── the app shell (#73): the course outline's width, zero when it is a drawer ── */
@@ -417,6 +417,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .player { width: var(--frame-width); margin: 0 auto; padding: 24px 0 48px; }
 .deck-page .slide { border-radius: 14px 14px 0 0; border-bottom: 0; box-shadow: none; scroll-margin-top: calc(var(--bar-h) + 24px); }
 .player-bar {
+  position: sticky; bottom: 0; z-index: 5;
   display: flex; flex-direction: column; gap: 6px;
   padding: 10px 14px;
   background: var(--ink-strong); color: var(--dark-ink);
@@ -580,12 +581,11 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   display: flex;
   flex-direction: column;
   gap: var(--s4);
-  aspect-ratio: 16 / 9;
+  min-height: calc(100cqw * 9 / 16);   /* at least 16:9; taller when the content needs it */
   padding: var(--s5) var(--s6);
   background: var(--surface);
   border: 1px solid var(--c-rule);
   box-shadow: 0 1px 2px color-mix(in srgb, var(--ink-strong) 5%, transparent);
-  overflow: hidden;
 
   /* ── component colours, resolved per slide kind ───────────────────────────────────────────────
      Components reference these semantic names, never a palette token directly. That closes a whole
@@ -617,10 +617,8 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig { margin: 0.6em 0; font-size: 0.95em; }
 /* On a slide a figure is sized on the slide's own scale (cqw), like every other line: inheriting the
    page's px size made it the one thing that did not shrink with the frame, so it clipped on a laptop. */
-.slide .fig { font-size: var(--t-small); }
+.slide .fig { font-size: var(--t-body); }
 .module-hero .fig { font-size: var(--d-5); }
-/* a numbered procedure is a list, read like the slide's bullets: the body size */
-.slide .fig:has(.fig-track.is-numbered) { font-size: var(--t-body); }
 .fig .fig-label { display: block; color: var(--c-ink-strong, var(--ink-strong)); font-weight: 650; line-height: 1.25; }
 .fig .fig-note { display: block; margin-top: 0.15em; color: var(--c-ink-soft, var(--ink-soft));
   font-weight: 400; font-size: 0.78em; line-height: 1.35; }
@@ -656,7 +654,9 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-track > .fig-node { flex: 1 1 auto; }
 /* on a slide the row is fixed and measured, so a long label may break anywhere; in Read the row
    wraps instead and words stay whole */
-.slide .fig-node .fig-label, .slide .fig-box .fig-label { overflow-wrap: anywhere; }
+.fig-node .fig-label, .fig-box .fig-label { overflow-wrap: break-word; }
+/* a card never narrows below its longest word, so labels break between words, not inside them */
+.fig-track > .fig-node, .fig-row > .fig-box { min-width: auto; }
 /* Off a slide (Read, the module page) there is no fixed frame: a flow of five or more steps reads top
    to bottom, like on a phone, rather than wrapping into rows that end on a dangling arrow. */
 .fig-track.is-long { flex-direction: column; }
@@ -716,6 +716,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 /* boxes that are not a sequence share a row evenly instead of wrapping one onto a line alone */
 .fig-layer:not(.is-chain) > .fig-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(8em, 100%), 1fr)); }
 .fig-layer.is-chain > .fig-row { flex-wrap: nowrap; }
+.fig-row:has(.fig-flag) { margin-top: 0.75em; }
 .fig-band-head:empty + .fig-row, .fig-layer > .fig-row:first-child { margin-top: 0; }
 .fig-row .fig-box { flex: 1 1 auto; padding: 0.4em 0.6em; border-width: 1.5px; }
 .fig-row .fig-link { width: 1.6em; }
@@ -759,7 +760,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   line-height: 1.4; }
 .fig-callouts li::marker { color: var(--accent); font-weight: 700; }
 /* On a slide the frame is 16:9 and cannot scroll: the image sits beside its numbered notes. */
-.slide .fig-screenshot { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+.slide .fig-screenshot { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   gap: 0 1.2em; align-items: center; }
 .slide .fig-screenshot .fig-callouts { margin: 0; }
 .slide .fig-screenshot .fig-callouts li + li { margin-top: 0.35em; }
@@ -858,7 +859,6 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   display: flex;
   flex-direction: column;
   justify-content: center;         /* the block is placed in the space under the meta line */
-  min-height: 0;
   gap: var(--s3);
 }
 .slide-body h2 {
@@ -887,11 +887,10 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   text-wrap: pretty;
 }
 
-.slide-content {
-  min-height: 0;
-  overflow: auto;
-  scrollbar-width: thin;
-}
+
+/* nothing on a slide shrinks below its content: the slide grows instead (an overflow-hidden flex item
+   would otherwise be squeezed to the frame and clip) */
+.slide-body > *, .slide-content > *, .proof-exhibit > * { flex-shrink: 0; }
 .slide-content > *:first-child { margin-top: 0; }
 .slide-content > *:last-child { margin-bottom: 0; }
 .slide-content p, .slide-content li {
@@ -917,7 +916,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 /* The exhibit (#76): a dark code panel with a file · lines · commit header, line numbers taken from
    the cited file, highlighted lines, and long lines wrapped with a hanging indent, never clipped. */
 .exhibit {
-  display: flex; flex-direction: column; min-height: 0; margin: 0;
+  display: flex; flex-direction: column; margin: 0;
   border-radius: .75em; overflow: hidden; background: var(--code-bg);
 }
 .exhibit-head {
@@ -928,15 +927,16 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .exhibit-file { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .exhibit-lines { flex: none; }
 .exhibit pre {
-  margin: 0; padding: .9em 0; overflow: hidden;
+  margin: 0; padding: .9em 0;
   font-family: var(--font-mono); font-size: var(--t-small); line-height: 1.5;
   color: var(--dark-ink); white-space: pre-wrap;
 }
 .exhibit pre code { display: block; background: none; border: 0; padding: 0; color: inherit; font-size: 1em; }
 .exhibit .line { display: block; position: relative; padding: 0 1.2em 0 calc(1.2em + 2ch); text-indent: -2ch; overflow-wrap: anywhere; }
-.exhibit.is-numbered .line { padding-left: calc(1.2em + 6ch); }
+/* the gutter holds four-digit line numbers (narration-review.json:1974) on one line */
+.exhibit.is-numbered .line { padding-left: calc(1.2em + 7ch); }
 .exhibit.is-numbered .line::before {
-  content: attr(data-n); position: absolute; left: 1.2em; width: 3.5ch;
+  content: attr(data-n); position: absolute; left: 1.2em; width: 4.5ch; white-space: nowrap;
   text-align: right; text-indent: 0; color: var(--code-num);
 }
 .exhibit .line.is-hl { background: var(--code-hl); box-shadow: inset 3px 0 0 var(--accent-bright); }
@@ -959,7 +959,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
    stays light; the Evidence chip in the meta line and the exhibit panel carry the change of kind. */
 .proof-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s6); align-items: center; }
 .proof-claim { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
-.proof-exhibit { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; min-height: 0; }
+.proof-exhibit { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
 
 /* Cover: the module's title at display size, light like every other slide. */
 .slide-cover h2 {
@@ -1042,6 +1042,8 @@ html.js .deck-page:not(.deck-ready) .slide:not(:first-of-type) { display: none; 
 
 .deck-page.presentation-mode { --frame-width: min(calc(100vw - 24px),
                      calc((100dvh - var(--chrome-height) - var(--narration-height, 0px)) * 16 / 9)); }
+/* full screen shows a slide at 16:9 when it fits and lets a taller one scroll, never clipped */
+body.presentation-mode { overflow-y: auto; }
 body.presentation-mode { --sidebar-w: 0px; background: var(--dark-deep); }
 .presentation-mode .app-outline, .presentation-mode .app-bar, .presentation-mode .player-below { display: none; }
 .presentation-mode .player { padding: 12px 0 0; }
@@ -1310,15 +1312,12 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
   .slide, .slide[hidden] {
     display: grid !important;
     width: 100%;
-    height: 7.5in;
-    min-height: 0;
+    min-height: 7.5in;
     aspect-ratio: auto;
     margin: 0 !important;
     border: 0;
     box-shadow: none;
     break-after: page;
-    break-inside: avoid;
-    overflow: hidden;
   }
   .slide:last-child { break-after: auto; }
   .slide-content { overflow: visible; }
@@ -1379,7 +1378,8 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
 .doc-article a.pointer:hover code { background: var(--accent-bright); color: var(--ink-strong); }
 .codeblock { position: relative; margin: 0 0 16px; }
 .codeblock pre {
-  margin: 0; padding: 14px 16px; background: var(--ink-strong); color: var(--dark-ink);
+  /* the right padding keeps the Copy button off the first line of the code */
+  margin: 0; padding: 14px 76px 14px 16px; background: var(--ink-strong); color: var(--dark-ink);
   border-radius: 6px; overflow: auto; font-size: var(--d-3); line-height: 1.5;
 }
 .codeblock pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; }
@@ -1412,14 +1412,13 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
 .letter-nav a { padding: 3px 9px; border-radius: 4px; background: var(--surface); color: var(--accent-deep); font-size: var(--d-2); font-weight: 650; text-decoration: none; border: 1px solid var(--line); }
 .letter-nav a:hover { border-color: var(--accent); }
 
-/* lab: the workspace (#77) — the step list, one step at a time, and the acceptance panel always in
-   view. Three columns when the content column has room, the step list above when it does not. */
+/* lab: one page read top to bottom — every step in full, then the checklist, the auto-fail list and
+   the evidence entry as ordinary sections. The only thing beside the steps is a sticky step list. */
 .lab-page .app-content { width: min(1320px, calc(100% - 48px)); }
 .lab-root { container-type: inline-size; container-name: lab; }
 .lab-facts { margin: 12px 0 0; color: var(--ink-soft); font-size: var(--d-4); }
 .lab-prereq { margin: 6px 0 0; max-width: 80ch; color: var(--ink-soft); font-size: var(--d-3); }
-.lab-workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); gap: 28px; align-items: start; }
-.lab-steps { grid-column: 1 / -1; }
+.lab-workspace { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
 .lab-steps ol { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .lab-steps a {
   display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 6px 12px 6px 8px;
@@ -1427,56 +1426,53 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
 }
 .lab-steps a:hover { background: var(--wash); color: var(--ink-strong); }
 .lab-steps a[aria-current] { background: var(--accent-soft); color: var(--accent-deep); font-weight: 650; }
-.lab-steps .step-name {
-  display: none; min-width: 0; overflow-wrap: anywhere;
-  -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-}
+.lab-steps .step-name { display: none; min-width: 0; overflow-wrap: anywhere; }
 .lab-steps .step-name code { font-size: .92em; }
-.lab-steps a[aria-current] .step-name { display: -webkit-box; }
+.lab-steps-after { margin-top: 8px; }
 .step-dot {
   display: inline-grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%;
   border: 2px solid var(--ink-faint); color: var(--ink-strong); font-size: var(--d-2); font-weight: 650;
 }
 .is-current .step-dot { border-color: var(--accent); background: var(--accent); color: var(--white); }
 .is-done .step-dot { border-color: var(--done); background: var(--done); color: var(--white); }
-@container lab (min-width: 1040px) {
-  .lab-workspace { grid-template-columns: 250px minmax(0, 1fr) minmax(280px, 340px); }
-  .lab-steps { grid-column: auto; position: sticky; top: calc(var(--bar-h) + 16px); }
+@container lab (min-width: 900px) {
+  .lab-workspace { grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
+  .lab-steps { position: sticky; top: calc(var(--bar-h) + 16px); }
   .lab-steps ol { flex-direction: column; flex-wrap: nowrap; gap: 2px; }
-  .lab-steps .step-name { display: -webkit-box; }
+  .lab-steps .step-name { display: block; }
   .lab-steps a { align-items: flex-start; padding: 8px 10px; }
 }
-@container lab (max-width: 720px) {
-  .lab-workspace { grid-template-columns: minmax(0, 1fr); }
-}
-.lab-view { max-width: 72ch; }
+.lab-main { min-width: 0; max-width: 84ch; }
+.lab-step { padding: 28px 0 32px; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--bar-h) + 16px); }
+.lab-step:first-child { border-top: 0; padding-top: 4px; }
 .lab-step h2 { margin: 4px 0 8px; font-size: var(--d-7); }
 .lab-step h3 { margin: 18px 0 6px; font-size: var(--d-5); }
 .step-count { margin: 0; color: var(--ink-mid); font-size: var(--d-2); font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
 .step-time { margin: 0 0 10px; color: var(--ink-soft); font-size: var(--d-3); }
 .step-body blockquote { margin: 14px 0; padding: 12px 16px; border: 1px solid var(--line); border-left: 3px solid var(--proof-ink); border-radius: 8px; background: var(--surface); color: var(--ink); }
 .step-context + .step-context { margin-top: 18px; }
-.step-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-.step-actions button { min-height: 44px; padding: 0 18px; border-radius: 10px; font-size: var(--d-4); }
-.step-actions .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--white); font-weight: 650; }
-.step-actions .btn-primary:hover { background: var(--accent-deep); }
-.lab-panel {
-  position: sticky; top: calc(var(--bar-h) + 16px); display: flex; flex-direction: column; gap: 14px;
-  max-height: calc(100vh - var(--bar-h) - 32px); overflow-y: auto; padding: 18px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+.step-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.step-done {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px 0 12px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink-strong);
+  font-size: var(--d-4); font-weight: 650;
 }
-.lab-panel .lab-section { margin: 0; }
-.lab-panel .lab-checklist { padding: 0; border: 0; }
-.lab-panel .lab-checklist h2, .lab-panel .lab-autofail h2 { font-size: var(--d-5); }
-.lab-panel .check-item label { font-size: var(--d-3); padding: 8px 2px; }
-.lab-panel .lab-autofail { padding: 12px 14px; font-size: var(--d-3); }
-.lab-panel .lab-autofail .section-note { font-size: var(--d-2); }
+.step-done:hover { border-color: var(--ink-faint); }
+.step-done-box { width: 20px; height: 20px; border: 2px solid var(--ink-faint); border-radius: 5px; }
+.step-done[aria-pressed="true"] { border-color: var(--done); background: var(--done-soft); color: var(--done); }
+.step-done[aria-pressed="true"] .step-done-box { border-color: var(--done); background: var(--done)
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat; }
+.lab-accept { display: grid; gap: 20px; margin-top: 12px; scroll-margin-top: calc(var(--bar-h) + 16px); }
+.lab-accept .lab-section { margin: 0; scroll-margin-top: calc(var(--bar-h) + 16px); }
+.lab-accept > * { min-width: 0; }
+.lab-accept table { display: block; max-width: 100%; overflow-x: auto; }
+.lab-accept .lab-export { justify-self: start; }
 .btn-dark {
   display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 16px;
   border-radius: 10px; background: var(--ink-strong); color: var(--page); font-weight: 650; text-decoration: none;
 }
 .btn-dark:hover { background: var(--dark-mid); }
-.lab-after { max-width: 78ch; margin-top: 36px; }
+.lab-after { margin-top: 36px; }
 .lab-section { margin: 0 0 30px; }
 .lab-section h2 { margin-top: 28px; }
 .lab-checklist { padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 6px; }

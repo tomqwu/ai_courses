@@ -80,7 +80,7 @@ bands only the named artifacts — but every repo pointer in them is checked lik
 - **≤ 6 bullets per slide, ≤ 10 words per bullet.** Slides are prompts for the presenter, not prose.
   A list declared with a `<!-- _diagram: … -->` directive is exempt from the bullet count — it renders
   as component nodes (flow, loop, steps, grid, stack), not a bullet wall — but every item in it is still
-  word-checked, and the learner-site gate asserts the declared component renders and fits its slide frame.
+  word-checked, and the learner-site gate asserts the declared component renders and nothing on it is clipped.
 - Required slide sequence: title (module, promise, duration), "By the end you can…" objectives,
   one slide per segment sub-topic, at least one **proof slide** per segment carrying the repo file
   pointer *on the slide*, lab slide (`Lab M#` goal + pass gate), quiz slide, recap, discussion prompt.
@@ -102,10 +102,12 @@ bands only the named artifacts — but every repo pointer in them is checked lik
   and pinned commit, numbered from the file itself; mark the lines the narration walks with `hl=`
   after the language (```` ```swift hl=82 ````, or `hl=82-83,85`), so "read the guard" lands on a
   highlighted line.
-- **Everything on a slide is visible in its 16:9 frame with the player bar present.** A
-  recording never scrolls, so the browser check (`check_player.py --strict-fit`) fails a slide whose
-  content needs scrolling. Trim bullets the exhibit already proves, or trim the exhibit to the lines
-  the narration walks, before reaching for another slide.
+- **A slide is at least 16:9 and as tall as its content needs.** Content is never shrunk or cut to
+  fit a frame: a figure or an exhibit is shown at a readable size, and the slide grows (the page
+  scrolls; the narration bar stays at the bottom of the screen). What the gate fails is anything
+  *clipped* — a box that hides or scrolls its own content, or a figure wider than its column
+  (`check_player.py --strict-fit`, at 1600x1000 and 1280x800). Still cut what the narration or the
+  exhibit already carries — for clarity, not to fit.
 - **Pictures are figures, never ASCII.** A system, a flow or a comparison is drawn with a
   ```` ```figure ```` block (§2.1a), a real product screenshot or a labelled illustration. No
   box-drawing characters, and no flow written as a chain of text arrows.
@@ -153,8 +155,9 @@ Rules:
 - **`alt` says what the figure shows** in one sentence (≥ 12 characters). **`source`** cites what
   the figure depicts (`Repo/path[:N-M]`, several joined with ` · `); it resolves like any pointer.
 - **Scenes are illustrations** and are captioned as such; they cite nothing and prove nothing.
-- **A figure replaces bullets; it never adds to a full slide.** The slide still fits its 16:9 frame,
-  and the narration's words do not change — `@` words must open a sentence the narration already says.
+- **A figure replaces the bullets it draws**, at a readable size — the slide grows if it needs to.
+  The narration's words do not change: `@` words must open a sentence the narration already says.
+  A flow of more than six steps is drawn as a numbered list; five or six read as one row.
 - The older `<!-- _diagram: flow|loop|steps|grid|stack -->` directive still works (it upgrades the
   next list into a figure with the same words); new work uses a `figure` block.
 

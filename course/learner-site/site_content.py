@@ -530,7 +530,8 @@ def list_steps(text: str) -> list[dict]:
 
     Two forms are written: a numbered list (`1. **Create the repo.** …`) and bold numbered
     paragraphs (`**0. Run the baseline and the leak.** …`). The title is the bold lead or, without
-    one, the item's first sentence; the step's body is the whole item, so no words are dropped.
+    one, the item's first sentence; the step's body is the rest of the item (a bold lead is the
+    heading, so it is not repeated), so no words are dropped.
     """
     items: list[list[str]] = []
     in_fence = False
@@ -549,8 +550,11 @@ def list_steps(text: str) -> list[dict]:
     for lines in items:
         rest = lines[1:]
         indent = min((len(l) - len(l.lstrip()) for l in rest if l.strip()), default=0)
-        body = "\n".join([lines[0]] + [l[indent:] for l in rest]).strip()
         lead = re.match(r"^\*\*(.+?)\*\*\s*", lines[0])
+        # A bold lead becomes the step's heading, so the body starts after it rather than
+        # repeating it; every other word stays.
+        first_line = lines[0][lead.end():].lstrip(" :—–-") if lead else lines[0]
+        body = "\n".join([first_line] + [l[indent:] for l in rest]).strip()
         if lead:
             title = lead.group(1).strip().rstrip(".:")
         else:
