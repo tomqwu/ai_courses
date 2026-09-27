@@ -512,6 +512,7 @@ Slide variants: `slide-cover` (slide 1, always), `slide-proof` (from `_class: pr
 | Transcript | <kbd>T</kbd> | the slide's narration a sentence per line: the spoken sentence is highlighted, a click seeks to it |
 | Sources | the tab, or <kbd>N</kbd> | every repo file the slide cites, at the pinned commit (Exhibit / On the slide / In the notes), and the speaker notes |
 | Presentation | the present button, <kbd>F</kbd> or <kbd>P</kbd> | full screen; the outline, top bar and panels hidden; <kbd>Esc</kbd> leaves it |
+| Figure build | while the narration plays; *Replay figure* or <kbd>.</kbd> | a figure's parts arrive on the sentence that introduces them (`at:` in the figure); complete otherwise and under reduced motion |
 | Print | <kbd>⌘P</kbd> | one 16:9 slide per page (`@page 13.333in 7.5in`) |
 
 The Sources chips are resolved the way the gate resolves citations (`verify.EXHIBIT_REF_RE`,

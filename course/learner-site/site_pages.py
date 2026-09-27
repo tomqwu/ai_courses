@@ -43,14 +43,21 @@ def short_label(deck: dict) -> str:
 
 # ---------------------------------------------------------------- reading pages
 
-def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str) -> tuple[str, dict]:
-    """Lesson, handout or glossary as a reading page. Returns (html, index_record)."""
+def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str,
+                  segment_figures: dict[str, str] | None = None) -> tuple[str, dict]:
+    """Lesson, handout or glossary as a reading page. Returns (html, index_record).
+
+    `segment_figures` (unit id → figure HTML) heads each segment of a lesson with the figure that
+    opens it on the slides (#99): one picture, taught in both modes.
+    """
     short = short_label(deck)
     number = int(deck["id"][1:])
     title, body = SC.split_title(text)
     rendered, headings, _ = SC.render_document(body)
     if kind == "lesson":
         rendered = reading_marks(rendered, deck["id"])
+        if segment_figures:
+            rendered = segment_heads(rendered, segment_figures)
     toc = SC.toc_html(headings, 2, 3 if kind == "lesson" else 2)
     ledes = {
         "lesson": "The master text for the three segments — what the narration teaches, in full, with every repo pointer linked at the commit it was verified against.",
@@ -104,6 +111,19 @@ READ_UNIT = (
     (re.compile(r"^(?:Segment\s+)?(M\d+\.\d)\b"), None),
     (re.compile(r"^Recap\b", re.I), "summary"),
 )
+
+
+def segment_heads(rendered: str, figures_by_unit: dict[str, str]) -> str:
+    """Put each segment's figure right under the lesson heading that opens that segment."""
+    def place(m: re.Match) -> str:
+        text = html.unescape(re.sub(r"<[^>]+>", "", m.group(1))).strip()
+        for rx, fixed in READ_UNIT:
+            hit = rx.match(text)
+            if hit:
+                fig = figures_by_unit.get(fixed or hit.group(1), "")
+                return m.group(0) + fig
+        return m.group(0)
+    return re.sub(r"<h2[^>]*>(.*?)</h2>", place, rendered, flags=re.S)
 
 
 def reading_marks(rendered: str, deck_id: str) -> str:

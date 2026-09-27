@@ -91,6 +91,12 @@ class Render(unittest.TestCase):
         self.assertIn('data-step="2"', html)
         self.assertIn('is-hl', html)
 
+    def test_chain_layer_links_its_boxes(self):
+        html = F.render(F.parse("kind: architecture\nalt: a pipeline drawn as a chain row\n"
+                                "layer: Pipeline (chain)\n  box: a\n  box: b\n  box: c\n"))
+        self.assertEqual(html.count('class="fig-link"'), 2)
+        self.assertIn('fig-layer is-chain', html)
+
     def test_text_is_escaped(self):
         html = F.render(F.parse("kind: flow\nalt: escape check for markup\nstep: <b>x</b>\n"))
         self.assertIn("&lt;b&gt;", html)

@@ -29,6 +29,7 @@ from captions import words
 from narration_data import (COURSE_DIR, DECK_IDS, EDITION, MANIFEST_PATH, PROVENANCE_PATH,  # noqa: E402
                             SITE_ROOT, load_manifest, load_scripts, read_json, write_json)
 import site_shell as SH                                  # noqa: E402
+import figures as FIG                                    # noqa: E402
 
 # Our decks already write `M0.1 — Real title` and `Type 1 — Real title`, which is exactly the
 # kicker/title split ai_qe uses (`02 / Strategic target state`). Only an em dash splits: an en dash
@@ -61,69 +62,28 @@ def inline(text: str) -> str:
     return out
 
 
-LABEL_CAPTION = re.compile(r"^(.*?)(?::\s+|\s+—\s+)(.*)$", re.DOTALL)
-
-
-def _label_caption(raw: str) -> tuple[str, str]:
-    """`Study: research…` and `**Host check** — loopback…` both split into node label + caption."""
-    m = LABEL_CAPTION.match(raw.strip())
-    return (m.group(1).strip(), m.group(2).strip()) if m else (raw.strip(), "")
-
-
 def render_diagram(kind: str, items: list[str], ordered: bool) -> str:
-    """Render a slide's own list as a diagram component.
+    """Render a slide's own list as a figure (#99).
 
     The words are frozen — they come from the same bullets the author wrote — only the
-    arrangement is declared. `flow`/`loop` chain the items; `steps` stacks them numbered;
-    `grid` lays parallel items out as cards; `stack` keeps row order and draws the
-    connectors the hand-typed ASCII was faking (│ ▼) with CSS.
+    arrangement is declared: `flow`/`loop`/`steps` become a flow of cards joined by drawn
+    connectors, `stack` layered bands, `grid` side-by-side columns.
     """
-    if kind in ("flow", "loop"):
-        nodes = []
-        for raw in items:
-            label, caption = _label_caption(raw)
-            cap = (f'<span class="d-caption">{inline(caption)}</span>' if caption else "")
-            # Seams in cobalt, core in ink (#76): a node that names itself a seam is drawn as one.
-            seam = " is-seam" if re.search(r"\bseam\b", raw, re.I) else ""
-            nodes.append(f'<li class="d-node{seam}"><span class="d-label">{inline(label)}</span>{cap}</li>')
-        extra = " diagram-loop" if kind == "loop" else ""
-        return f'<ol class="diagram diagram-flow{extra}">' + "".join(nodes) + "</ol>"
-    if kind == "steps":
-        rows = []
-        for raw in items:
-            label, caption = _label_caption(raw)
-            # Inline, not under: eight labelled rows stack twice as tall when the caption
-            # wraps to its own line, and the slide frame is 16:9 with overflow hidden.
-            cap = (f'<span class="d-caption"> — {inline(caption)}</span>' if caption else "")
-            # One grid cell for the whole step body: two sibling spans would put the caption
-            # on its own implicit grid row, doubling the height of every labelled step.
-            rows.append(f'<li><span class="d-step-body">'
-                        f'<span class="d-label">{inline(label)}</span>{cap}'
-                        f"</span></li>")
-        return '<ol class="diagram diagram-steps">' + "".join(rows) + "</ol>"
-    if kind == "grid":
-        cards = []
-        for raw in items:
-            label, caption = _label_caption(raw)
-            cap = (f'<p class="d-caption">{inline(caption)}</p>' if caption else "")
-            cards.append(f'<li class="d-card"><span class="d-label">{inline(label)}</span>{cap}</li>')
-        return '<ul class="diagram diagram-grid">' + "".join(cards) + "</ul>"
-    if kind == "stack":
-        rows = []
-        for raw in items:
-            if " → " in raw:
-                chips = "".join(f'<span class="d-chip">{inline(c.strip())}</span>'
-                                for c in raw.split("→"))
-                rows.append(f'<li class="d-row d-chain">{chips}</li>')
-            elif raw.strip().lower().startswith("seam"):
-                rows.append(f'<li class="d-row d-seam">{inline(raw)}</li>')
-            else:
-                rows.append(f'<li class="d-row">{inline(raw)}</li>')
-        return '<ul class="diagram diagram-stack">' + "".join(rows) + "</ul>"
-    raise SystemExit(f"unknown diagram kind: {kind}")
+    try:
+        return FIG.render(FIG.from_list(kind, items), inline=inline)
+    except FIG.FigureError as exc:
+        raise SystemExit(f"_diagram: {exc}") from exc
 
 
-def render_blocks(lines: list[str], diagram: str = "") -> str:
+def render_figure(body: list[str], sentences: list[str] | None) -> str:
+    """A ```figure fence: parsed and drawn; parts with `at:` build in on their narration sentence."""
+    try:
+        return FIG.render(FIG.parse("\n".join(body)), sentences=sentences, inline=inline)
+    except FIG.FigureError as exc:
+        raise SystemExit(f"figure: {exc}") from exc
+
+
+def render_blocks(lines: list[str], diagram: str = "", sentences: list[str] | None = None) -> str:
     """Render the block subset: fenced code, tables, quotes, lists, headings, paragraphs."""
     out: list[str] = []
     i = 0
@@ -139,9 +99,13 @@ def render_blocks(lines: list[str], diagram: str = "") -> str:
             info = stripped[3:].strip()
             body, i = [], i + 1
             while i < len(lines) and not FENCE_RE.match(lines[i].strip()):
-                body.append(html.escape(lines[i]))
+                body.append(lines[i])
                 i += 1
             i += 1
+            if info.split()[:1] == ["figure"]:
+                out.append(render_figure(body, sentences))
+                continue
+            body = [html.escape(line) for line in body]
             out.append(f'<pre data-info="{html.escape(info, quote=True)}"><code>' + "\n".join(body)
                        + "</code></pre>")
             continue
@@ -166,7 +130,7 @@ def render_blocks(lines: list[str], diagram: str = "") -> str:
             while i < len(lines) and lines[i].strip().startswith("> "):
                 quote.append(lines[i].strip()[2:])
                 i += 1
-            out.append("<blockquote>" + render_blocks(quote) + "</blockquote>")
+            out.append("<blockquote>" + render_blocks(quote, sentences=sentences) + "</blockquote>")
             continue
         match_ul = re.match(r"^(\s*)[-*+]\s+(.*)$", line)
         match_ol = re.match(r"^(\s*)\d+\.\s+(.*)$", line)
@@ -250,14 +214,20 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
         raw_title = title_match.group(1).strip() if title_match else f"Slide {index}"
         # The heading becomes the slide's own chrome, so keep it out of the rendered body.
         content_body = re.sub(r"^#{1,4}\s+.*$", "", body, count=1, flags=re.MULTILINE).strip()
+        # The approved narration is the source of truth for anything spoken; the deck Markdown is
+        # the source of truth for what is displayed.
+        script_text = ((scripts or {}).get(deck_id, {}).get("slides", {})
+                       .get(f"slide-{index}", {}).get("text", "").strip())
+        # A figure's parts build in on the sentence of this narration their `at:` names.
+        said = sentences(script_text)
         d_match = DIAGRAM_AT.search(content_body)
         if d_match:
             head = content_body[:d_match.start()].strip()
             tail = content_body[d_match.end():].strip()
-            rendered = ((render_blocks(head.splitlines()) + "\n") if head else "") \
-                + render_blocks(tail.splitlines(), diagram=d_match.group(1).strip())
+            rendered = ((render_blocks(head.splitlines(), sentences=said) + "\n") if head else "") \
+                + render_blocks(tail.splitlines(), diagram=d_match.group(1).strip(), sentences=said)
         else:
-            rendered = render_blocks(content_body.splitlines())
+            rendered = render_blocks(content_body.splitlines(), sentences=said)
         cover = index == 1
         if cover:
             # The opening slide is a title slide: the deck's own name, not a section label.
@@ -268,10 +238,6 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
             kicker, title = split_kicker(raw_title, standing)
             if re.fullmatch(r"M\d+\.\d+", kicker):
                 chapter = kicker            # a segment heading opens a new chapter, carried forward
-        # The approved narration is the source of truth for anything spoken; the deck Markdown is
-        # the source of truth for what is displayed.
-        script_text = ((scripts or {}).get(deck_id, {}).get("slides", {})
-                       .get(f"slide-{index}", {}).get("text", "").strip())
         slides.append({
             "id": f"slide-{index}",
             "raw": body,
@@ -625,7 +591,7 @@ def source_footer(content: str) -> str:
 
 SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[\"“(A-Z0-9])")
 POINTER_TOKEN = re.compile(r"\b(?:ListenToMe|SignUpFlow|ai_qe|course)/[^\s`'\"),;<>]+")
-DECLARED = ("commands", "output", "template", "illustrative")
+DECLARED = ("commands", "output", "template", "illustrative", "figure")
 
 
 def sentences(text: str) -> list[str]:
@@ -871,6 +837,7 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
     <p class="slide-status" role="status" aria-live="polite" aria-atomic="true"></p>
     <p class="player-status" data-status role="status" aria-live="polite"></p>
     <button type="button" class="pb-link" data-retry hidden>Retry captions</button>
+    <button type="button" class="pb-link" data-fig-replay hidden title="Replay the figure (.)">Replay figure</button>
     <label class="pb-auto"><input type="checkbox" data-auto checked> Auto-next</label>
     <p class="voice-label" data-voice-label>{html.escape(label)}</p>
   </div>
@@ -899,7 +866,7 @@ def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
       <span class="up-title" data-up-title></span>
       <span class="up-meta" data-up-meta></span>
     </a>
-    <p class="player-keys">Keys: <kbd>←</kbd> <kbd>→</kbd> slide · <kbd>Space</kbd> play · <kbd>T</kbd> transcript · <kbd>F</kbd> present</p>
+    <p class="player-keys">Keys: <kbd>←</kbd> <kbd>→</kbd> slide · <kbd>Space</kbd> play · <kbd>T</kbd> transcript · <kbd>.</kbd> replay figure · <kbd>F</kbd> present</p>
   </aside>
 </div>
 </div>
@@ -1223,6 +1190,7 @@ def main(argv=None) -> int:
     import site_content as SC                                                     # noqa: PLC0415
     import site_pages as SPG                                                      # noqa: PLC0415
     units_by_deck = {deck["id"]: SP.module_units(deck) for deck in decks}
+    figs_by_deck = {deck["id"]: FIG.deck_figures(deck, units_by_deck[deck["id"]]) for deck in decks}
     # Every page carries the course outline (#73), so the shell learns the modules, their units and
     # the paths once, before the first page is written.
     SH.configure(decks, units_by_deck, SP.TRACKS)
@@ -1256,7 +1224,8 @@ def main(argv=None) -> int:
         folder = COURSE_DIR / deck["source"].rsplit("/", 1)[0]
         for kind in ("lesson", "handout", "glossary"):
             html_out, record = SPG.document_page(deck, kind, SC.read(folder / f"{kind}.md"),
-                                                 args.site_base, BRAND_MARK)
+                                                 args.site_base, BRAND_MARK,
+                                                 figs_by_deck[deck["id"]]["segments"])
             (target / f"{kind}-{deck['id']}.html").write_text(html_out, encoding="utf-8")
             record["module"] = SPG.short_label(deck)
             if kind == "glossary":
@@ -1299,7 +1268,8 @@ def main(argv=None) -> int:
         tracks_for = SP.paths_for_module(deck_id, built_tracks)
         (target / f"module-{deck_id}.html").write_text(
             SP.module_page(decks_by_id[deck_id], units_by_deck[deck_id], seconds, args.site_base,
-                           BRAND_MARK, tracks_for, args.no_narration), encoding="utf-8")
+                           BRAND_MARK, tracks_for, args.no_narration,
+                           hero=figs_by_deck[deck_id]["hero"]), encoding="utf-8")
     (target / "paths.html").write_text(
         SP.paths_page(SP.TRACKS, units_by_deck, seconds, args.site_base, BRAND_MARK),
         encoding="utf-8")

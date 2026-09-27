@@ -281,7 +281,7 @@ function next() {
         out.diagrams = [];
         Array.prototype.forEach.call(slide.querySelectorAll(".diagram"), function (dg) {
           var r = dg.getBoundingClientRect();
-          out.diagrams.push({ kind: dg.className.split(" ")[1] || dg.className,
+          out.diagrams.push({ kind: (dg.className.match(/fig-[a-z]+/) || [dg.className])[0],
             h: Math.round(r.height),
             insideFrame: r.bottom <= sb.bottom + 1 && r.right <= sb.right + 1 });
         });
@@ -742,13 +742,13 @@ def check_units() -> list[str]:
             if bad:
                 problems.append(f"{sid}: hand-typed box-drawing {bad} — draw it, declare it, "
                                 f"or leave it as prose")
-            outside = re.sub(r'<(ol|ul) class="diagram[^"]*">.*?</\1>', "", h, flags=re.S)
+            outside = re.sub(r'<figure class="diagram[^"]*" data-figure>.*?</figure>', "", h, flags=re.S)
             # Per text block, not per slide: one arrow in a bullet is legitimate notation
             # ("command → result"); a chain of four-plus stages in one bullet is a diagram
             # trying to escape as prose. Objectives and recaps that REHEARSE a chain already
             # drawn as a diagram elsewhere in the deck are allowlisted, with the reason.
             rehearsal = {("m01", "slide-24"): "recap restates the flow drawn on m01 slide-12",
-                         ("m02", "slide-2"): "objective rehearses the stack drawn on m02 slide-3",
+                         ("m02", "slide-2"): "objective rehearses the figure drawn on m02 slide-3",
                          ("m04", "slide-2"): "objective rehearses the flow drawn on m01 slide-12"}
             for block in re.split(r"</li>|</p>", outside):
                 if block.count("→") >= 3 and (deck_id, slide["id"]) not in rehearsal:
@@ -756,9 +756,8 @@ def check_units() -> list[str]:
                                     f"outside a diagram — a flow encoded as prose")
             kind = slide.get("diagram")
             if kind:
-                needle = ("diagram-flow diagram-loop" if kind == "loop"
-                          else f"diagram diagram-{kind}")
-                if h.count(needle) != 1:
+                # A declared list is drawn as exactly one figure (#99), whatever else the slide holds.
+                if h.count("is-from-list\" data-figure") != 1:
                     problems.append(f"{sid}: _diagram:{kind} declared but not rendered")
     return problems
 

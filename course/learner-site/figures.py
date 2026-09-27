@@ -21,7 +21,8 @@ The grammar, one `key: value` per line:
     callout: 12,30 — The admin sees gaps before members do
     scene: stranger-clone.svg · caption: …                                        (scene)
 
-A part's value is `label [(flags)] [— note] [@ at-words]`. Flags are seam, hl, good, bad; the
+A part's value is `label [(flags)] [— note] [@ at-words]`. Flags are seam, hl, good, bad, and
+chain (a layer whose boxes are a sequence, drawn joined by connectors); the
 `at-words` are the opening words of the narration sentence at which the part builds in, and become
 `data-step` when the slide's sentences are known.
 """
@@ -32,7 +33,7 @@ import re
 from pathlib import Path
 
 KINDS = ("flow", "architecture", "compare", "screenshot", "scene")
-FLAGS = {"seam", "hl", "good", "bad"}
+FLAGS = {"seam", "hl", "good", "bad", "chain"}
 REPEATED = {"step", "layer", "column"}
 CHILDREN = {"box", "item"}
 SCENES = Path(__file__).resolve().parents[1] / "figures" / "scenes"
@@ -137,7 +138,8 @@ def from_list(kind: str, items: list[str]) -> dict:
         for raw in items:
             chain = [c.strip() for c in raw.split("→")] if " → " in raw else []
             seam = raw.strip().lower().startswith("seam")
-            layer = {"label": "" if chain else raw.strip(), "note": "", "flags": {"seam"} if seam else set(),
+            flags = ({"seam"} if seam else set()) | ({"chain"} if chain else set())
+            layer = {"label": "" if chain else raw.strip(), "note": "", "flags": flags,
                      "at": "", "children": [{"label": c, "note": "", "flags": set(), "at": "", "children": []}
                                             for c in chain]}
             fig["items"].append(layer)
@@ -217,8 +219,8 @@ def _architecture(fig: dict, sentences, inline) -> str:
     for layer in fig["items"]:
         boxes = []
         for i, box in enumerate(layer["children"]):
-            if i and not layer["label"]:
-                boxes.append(LINK)          # a chain row: its boxes are a sequence
+            if i and "chain" in layer["flags"]:
+                boxes.append(LINK)          # a chain: its boxes are a sequence
             boxes.append(f'<div class="{_classes("fig-box", box)}"{_step(box, sentences)}>{_body(box, inline)}</div>')
         head = (f'<div class="fig-band-head">{_body(layer, inline)}</div>'
                 if layer["label"] or layer["note"] else "")
@@ -291,3 +293,30 @@ def render(fig: dict, *, sentences: list[str] | None = None, inline=_esc, base: 
     listed = " is-from-list" if fig.get("from_list") else ""
     return (f'<figure class="diagram fig fig-{kind}{stepped}{listed}" data-figure>'
             f'{alt}{inner}{title}{source}</figure>')
+
+
+# ---------------------------------------------------------------- reuse outside the player
+
+FIGURE_HTML = re.compile(r'<figure class="diagram[^"]*" data-figure>.*?</figure>', re.S)
+
+
+def first_figure(rendered: str) -> str:
+    """The first figure in a rendered slide, complete: the module page and Read have no narration
+    to build it on, so its steps are dropped."""
+    m = FIGURE_HTML.search(rendered)
+    if not m:
+        return ""
+    return re.sub(r' data-step="\d+"', "", m.group(0)).replace(" is-stepped", "")
+
+
+def deck_figures(deck: dict, units: list[dict]) -> dict:
+    """The module's hero (the cover slide's figure) and each segment opener's figure, by unit id."""
+    by_number = {s["number"]: s for s in deck["slides"]}
+    hero = first_figure(by_number[1]["html"]) if 1 in by_number else ""
+    segments = {}
+    for unit in units:
+        if unit["kind"] == "segment" and unit["first"] in by_number:
+            fig = first_figure(by_number[unit["first"]]["html"])
+            if fig:
+                segments[unit["id"]] = fig
+    return {"hero": hero, "segments": segments}

@@ -653,7 +653,7 @@ def _module_row(deck: dict, units: list[dict], minutes: float, site_base: str,
 
 
 def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_base: str,
-                brand: str, tracks_for: list[dict], text_only: bool) -> str:
+                brand: str, tracks_for: list[dict], text_only: bool, hero: str = "") -> str:
     """Microsoft Learn's module page: objectives, prerequisites, then the ordered unit list.
 
     `tracks_for` is every built path that includes this module. Modules are shared between paths —
@@ -751,8 +751,13 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     <p class="module-start-note" data-start-note>{html.escape(f"Begins with the {KIND_LABEL[first_unit['kind']].lower()}, then {len(units) - 1} more units." if first_unit else "")}</p>
     <p class="module-next" data-module-next hidden>Next: <a href="#" data-module-next-link></a></p>
   </section>"""
+    # The module at a glance (#99): the cover slide's figure — the whole system or method, with this
+    # module's part marked — so the page opens on a picture of what is taught, not a list.
+    hero_section = (f'<section class="path-section module-hero" aria-label="The module at a glance">{hero}</section>'
+                    if hero else "")
     body = f"""{head}
 {start}
+{hero_section}
   <section class="path-section">
     <h2>Learning objectives</h2>
     <ul class="objectives">{objectives_html}</ul>

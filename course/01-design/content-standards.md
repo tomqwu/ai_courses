@@ -106,8 +106,61 @@ bands only the named artifacts — but every repo pointer in them is checked lik
   recording never scrolls, so the browser check (`check_player.py --strict-fit`) fails a slide whose
   content needs scrolling. Trim bullets the exhibit already proves, or trim the exhibit to the lines
   the narration walks, before reaching for another slide.
-- No images required (the deck must render with no external assets). If you reference a diagram,
-  build it from text/ASCII or a table.
+- **Pictures are figures, never ASCII.** A system, a flow or a comparison is drawn with a
+  ```` ```figure ```` block (§2.1a), a real product screenshot or a labelled illustration. No
+  box-drawing characters, and no flow written as a chain of text arrows.
+
+### 2.1a Figures — the module is taught with pictures
+
+A figure is a fenced block of `key: value` lines, written once and drawn by the build on the slide
+and in Read. Five kinds:
+
+| Kind | Use it for | Parts |
+|---|---|---|
+| `architecture` | a system in layers — what sits on what, where the seams are | `layer:` lines, each with indented `box:` lines |
+| `flow` | a pipeline, a procedure, a loop | `step:` lines; `loop: yes` for a cycle |
+| `compare` | two or three options side by side (before/after, fail open/fail closed) | `column:` lines, each with indented `item:` lines |
+| `screenshot` | a claim about a product — show the product | `image:` (a copy in `course/figures/shots/`), `frame: browser\|phone\|mac`, `callout: x,y — text` (x, y in % of the image) |
+| `scene` | a situation (a meeting, a stranger cloning the repo, a buyer) | `scene:` (an SVG in `course/figures/scenes/`), `caption:` |
+
+A part is `label [(flags)] [— note] [@ opening words]`. Flags: `seam` (drawn in cobalt, dashed, and
+tagged "seam" — never colour alone), `hl` (the part this slide is about), `good` / `bad` (a compare
+column's verdict, drawn with a mark as well as a colour), `chain` (a layer whose boxes are a sequence).
+`@ opening words` makes the part **build in** when the narration speaks the sentence that opens with
+those words; use it on architecture and flow figures that the narration walks part by part.
+
+```figure
+kind: architecture
+alt: ListenToMe in two layers — App/ glue implements the seams, the pure core runs everything between.
+source: ListenToMe/Sources/ListenToMeCore/MeetingSession.swift
+layer: The pipeline (chain) @ The pipeline then runs
+  box: capture (seam)
+  box: store
+layer: Two layers
+  box: App/ glue — touches hardware @ The split is the important part
+  box: Core (pure) (hl) — runnable in a unit test against mocks
+```
+
+Rules:
+- **Every module has a hero and a figure on each segment opener.** The cover slide carries the
+  high-level picture (the whole system or method, this module's part marked with `hl`); it heads the
+  module page. Each segment's first slide carries the architecture or flow it teaches; it heads that
+  segment in Read.
+- **A product claim shows the product.** Where a slide says what an app does, use a `screenshot` of
+  it, copied at the pinned commit with `course/06-production/figures_shots.py` (which records the
+  repo, path, commit and sha256 in `course/figures/manifest.json`). Callouts are drawn over the
+  image, never into it.
+- **`alt` says what the figure shows** in one sentence (≥ 12 characters). **`source`** cites what
+  the figure depicts (`Repo/path[:N-M]`, several joined with ` · `); it resolves like any pointer.
+- **Scenes are illustrations** and are captioned as such; they cite nothing and prove nothing.
+- **A figure replaces bullets; it never adds to a full slide.** The slide still fits its 16:9 frame,
+  and the narration's words do not change — `@` words must open a sentence the narration already says.
+- The older `<!-- _diagram: flow|loop|steps|grid|stack -->` directive still works (it upgrades the
+  next list into a figure with the same words); new work uses a `figure` block.
+
+`verify.py` (**Figures**) checks every figure parses, has `alt`, cites what resolves, uses files that
+exist and builds on sentences the narration speaks; that screenshot copies are byte-identical to the
+file at their commit; and, for every module in `FIGURE_MODULES`, the hero and segment-opener rule.
 
 ### 2.2 `solutions.md` — Lab solutions
 For **every step** of the module's `lab.md`:
@@ -213,6 +266,8 @@ recommended path. Rationale must cite the pricing research in
 - [ ] All 8 artifacts exist and are inside their length bands.
 - [ ] `slides.md` has Marp front matter, `theme: aps`, ≤ 6 bullets/slide, and speaker notes on
       **every** slide.
+- [ ] A hero figure on the cover slide, a figure on every segment's first slide, and a screenshot
+      wherever a slide makes a claim about a product (§2.1a); the module is in `FIGURE_MODULES`.
 - [ ] Every repo claim in every artifact carries a pointer that resolves.
 - [ ] No number appears that is not in §0.2 or re-derived from a pointed file.
 - [ ] Solutions' expected outputs match §0.2 where the lab is runnable.

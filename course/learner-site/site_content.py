@@ -17,6 +17,8 @@ import html
 import re
 from pathlib import Path
 
+import figures as FIG
+
 INLINE_CODE = re.compile(r"`([^`]+)`")
 BOLD = re.compile(r"\*\*([^*]+)\*\*")
 ITALIC = re.compile(r"(?<![*\w])\*([^*\n]+)\*(?![*\w])")
@@ -165,6 +167,12 @@ def _fence(lines: list[str], i: int) -> tuple[str, int]:
     if body:
         pad = min((len(s) - len(s.lstrip(" ")) for s in body if s.strip()), default=0)
         body = [s[pad:] for s in body]
+    if lang.split()[:1] == ["figure"]:
+        # Read shows a figure complete: no narration here, so no build-in steps (#99).
+        try:
+            return FIG.render(FIG.parse("\n".join(body)), inline=inline), i
+        except FIG.FigureError as exc:
+            raise SystemExit(f"figure: {exc}") from exc
     code = html.escape("\n".join(body))
     cls = f' class="lang-{html.escape(lang)}"' if lang else ""
     return (f'<div class="codeblock"><button type="button" class="copy-code" data-copy '
