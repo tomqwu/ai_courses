@@ -13,7 +13,7 @@ segments, learning paths, playbooks, narration edits, and publishing.
 | Path | What it is |
 |---|---|
 | `course/01-design/content-standards.md` | The content standard: artifacts, word bands, deck rules, exhibits, slide fit |
-| `course/03-content/mNN-slug/` | One module: lesson, slides (Marp), lab, quiz, and the 8 banded artifacts |
+| `course/03-content/mNN-slug/` | One module: lesson, slides (the parts of its Learn page), lab, quiz, and the 8 banded artifacts |
 | `course/06-production/narration/scripts/mNN.json` | The approved spoken narration, per slide (source of truth for audio and captions) |
 | `course/06-production/verify.py` | Package gate: artifacts, bands, pointers, anchors, exhibits, narration, site |
 | `course/06-production/pointer-anchors.json` | Line ranges pinned to the text they must contain |
@@ -33,10 +33,11 @@ Clone the case studies beside `course/` at the commits `gate.yml` pins before ru
 - **A slide exhibit (fenced block) is a true copy of a file the slide cites**, within the cited range.
   Rewrapping and `…` elisions are allowed. Anything else declares itself in the info string:
   ` ```bash commands `, ` ```text output `, ` ```markdown template `, ` ```text illustrative `.
-- **Nothing on a slide is clipped** (`check_player.py --strict-fit`, measured at 1600x1000 and
-  1280x800). A slide is at least 16:9 and grows with its content; the narration bar sticks to the
-  bottom of the screen. Do not shrink type or cut substance to make content fit a frame. Do not
-  split or renumber slides (numbers key the narration, audio and deep links).
+- **There are no slides on the site; every page is a full page** (#112). Each `---` section of
+  `slides.md` is a *part* of the module's Learn page (`mNN.html`, anchor `#slide-N`), shown at full
+  width with its narration as text. Nothing on a page may be clipped (`check_player.py --strict-fit`,
+  measured at 1600x1000 and 1280x800). Do not shrink type or cut substance to fit anything. Do not
+  split or renumber parts (numbers key the narration, audio and deep links).
 - **Narration never speaks a line number.** The words in `scripts/mNN.json` are what is recorded and
   captioned. If you change them, keep the slide's `NOTES` and the `video-scripts.md` narration
   consistent, regenerate transcripts (`make -C course transcripts`), and add the slide to the

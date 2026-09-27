@@ -624,12 +624,12 @@ def check_learner_site() -> list[str]:
                                   .read_text(encoding="utf-8"))[1] if list(
                 CONTENT.glob(f"{deck_id}-*/slides.md")) else []
             html = page.read_text(encoding="utf-8")
-            rendered = html.count('aria-roledescription="slide"')
+            rendered = html.count('class="learn-section')
             if slides and rendered != len(slides):
-                problems.append(f"{page.name}: renders {rendered} slides, deck has {len(slides)}")
+                problems.append(f"{page.name}: renders {rendered} parts, the module has {len(slides)}")
             if len(script["slides"]) != len(slides) and slides:
                 problems.append(f"{page.name}: script covers {len(script['slides'])} of {len(slides)} slides")
-            for asset in ("assets/player.js", "assets/narration-media.js", "assets/player.css"):
+            for asset in ("assets/learn.js", "assets/narration-media.js", "assets/player.css"):
                 if f'"{asset}"' not in html and f'/{asset}"' not in html:
                     problems.append(f"{page.name}: does not load {asset}")
     finally:

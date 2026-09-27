@@ -66,7 +66,11 @@ bands only the named artifacts — but every repo pointer in them is checked lik
 
 ## 2. Artifact specifications
 
-### 2.1 `slides.md` — Marp deck
+### 2.1 `slides.md` — the parts of the Learn page
+
+The site has no slide player (#112): each `---` section below is one *part* of the module's Learn page
+(`mNN.html#slide-N`), shown at full width with its narration as text, grouped into the module's units.
+The file stays Marp-compatible, so it can still be presented from a laptop.
 - Front matter exactly:
   ```
   ---
@@ -102,9 +106,8 @@ bands only the named artifacts — but every repo pointer in them is checked lik
   and pinned commit, numbered from the file itself; mark the lines the narration walks with `hl=`
   after the language (```` ```swift hl=82 ````, or `hl=82-83,85`), so "read the guard" lands on a
   highlighted line.
-- **A slide is at least 16:9 and as tall as its content needs.** Content is never shrunk or cut to
-  fit a frame: a figure or an exhibit is shown at a readable size, and the slide grows (the page
-  scrolls; the narration bar stays at the bottom of the screen). What the gate fails is anything
+- **A part is as long as its content needs.** Content is never shrunk or cut to fit a frame: a figure
+  or an exhibit is shown at a readable size and the page grows. What the gate fails is anything
   *clipped* — a box that hides or scrolls its own content, or a figure wider than its column
   (`check_player.py --strict-fit`, at 1600x1000 and 1280x800). Still cut what the narration or the
   exhibit already carries — for clarity, not to fit.

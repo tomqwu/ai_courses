@@ -1,15 +1,9 @@
 /* AI Product Studio — learner site.
  *
  * The palette and type are "Studio" (#72): ink on warm paper, IBM Plex Sans for reading, Bricolage
- * Grotesque for display, JetBrains Mono for code, all self-hosted. The frame system is ported from
- * ai_qe (the third case study): one shared 16:9
- * slide frame whose type scales with the frame through container queries, presentation mode,
- * reading view, a notes drawer, and a narration panel that reserves its own height so the frame
- * and the captions never fight for the same space.
- *
- * Adapted rather than copied: the vocabulary covers what these decks actually contain (kickers,
- * bullets, proof slides, spec tables, code), and it shares the palette of the slides and
- * transcripts so the course reads as one product.
+ * Grotesque for display, JetBrains Mono for code, all self-hosted. Every page is a full page in one
+ * shell (#73): the course outline, a top bar, and content that grows as long as it needs — the module
+ * itself is a narrated page (Learn, #112), not a deck of fixed frames.
  */
 
 @font-face {
@@ -126,19 +120,7 @@
   --d-6: 20px;
   --d-7: 25px;
 
-  /* ── chrome budget ────────────────────────────────────────────────────────────────────────
-     Header + badge + nav + gaps. player.js replaces this with a measurement; the number here is
-     only the no-JavaScript fallback. */
-  --narration-height: 0px;
-  --narration-gap: 12px;
-  --chrome-height: 112px;
-
-  /* The slide takes the content column's width (up to a reading limit). It is at least 16:9 and grows
-     with its content: nothing is shrunk or trimmed to fit a frame, and the narration bar stays
-     reachable because it sticks to the bottom of the screen. */
-  --frame-width: min(calc(100vw - var(--sidebar-w) - 2 * var(--player-pad)), 1400px);
-  --player-pad: 40px;
-
+  
   /* ── the app shell (#73): the course outline's width, zero when it is a drawer ── */
   --sidebar-w: 0px;
   --bar-h: 64px;
@@ -158,7 +140,6 @@ body {
 }
 
 h1, h2, h3 { color: var(--ink-strong); margin: 0; font-family: var(--font-display); overflow-wrap: break-word; }
-.slides h1, .slides h2, .slides h3 { font-family: var(--font-slide-display); }
 a { color: var(--accent); text-underline-offset: .2em; }
 button, select, input { font: inherit; }
 button, select, a { -webkit-tap-highlight-color: transparent; }
@@ -382,8 +363,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   .mode-icon { display: block; width: 20px; height: 20px; }
   body:has(.app-bar .mode-switch) { padding-bottom: 64px; }
   body :is(button, select, .card-action, .btn-primary, .btn-outline, .btn-start, .view-tabs a, .lab-steps a,
-  .outline-modules a, .outline-home, .outline-foot a, .outline-search, .panel-tabs [role="tab"]) { min-height: 44px; }
-  .player-bar .pb-speed, .player-bar .pb-cc { height: 44px; }
+  .outline-modules a, .outline-home, .outline-foot a, .outline-search) { min-height: 44px; }
   .evidence-actions button, .progress-tools button { padding: 0 14px; }
 }
 
@@ -407,97 +387,8 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 }
 .evidence-log-count { align-self: center; color: var(--ink-soft); font-size: var(--d-3); }
 
-/* ──────────────────────────────────────────────────────────── the player ──
- * Watch (#75). The stage and its dark bar are one unit, sized to fit the viewport: --chrome-height
- * is everything above the stage and --narration-height is the bar, both measured by player.js and
- * given back from the 16:9 frame, so the controls are on screen whatever the slide. Below the fold:
- * the slide's transcript and sources, beside an Up next card.
- */
+/* A part's sources: every repo file it cites, at the pinned commit. */
 
-.player { width: var(--frame-width); margin: 0 auto; padding: 24px 0 48px; }
-.deck-page .slide { border-radius: 14px 14px 0 0; border-bottom: 0; box-shadow: none; scroll-margin-top: calc(var(--bar-h) + 24px); }
-.player-bar {
-  position: sticky; bottom: 0; z-index: 5;
-  display: flex; flex-direction: column; gap: 6px;
-  padding: 10px 14px;
-  background: var(--ink-strong); color: var(--dark-ink);
-  border-radius: 0 0 14px 14px;
-}
-.player-caption {
-  margin: 0; min-height: 1.45em; text-align: center; color: var(--white);
-  font-size: var(--d-5); font-weight: 500; line-height: 1.45;
-}
-.player-controls { display: flex; align-items: center; gap: 8px; }
-.player-bar button, .player-bar select {
-  color: var(--dark-ink); background: transparent; border: 1px solid var(--dark-line); border-radius: 8px;
-}
-.player-bar button:hover:not(:disabled) { background: var(--dark-mid); }
-.player-bar .pb-icon {
-  display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0;
-  border-color: transparent;
-}
-.player-bar .pb-play {
-  display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 0;
-  border: 0; border-radius: 50%; background: var(--page); color: var(--ink-strong);
-}
-.player-bar .pb-play:hover:not(:disabled) { background: var(--white); }
-.pb-play .icon { width: 16px; height: 16px; fill: currentColor; stroke: none; }
-.pb-play .icon-pause, .pb-play.is-playing .icon-play { display: none; }
-.pb-play.is-playing .icon-pause { display: block; }
-.pb-time {
-  flex: none; min-width: 84px; text-align: center; color: var(--dark-ink-soft);
-  font-family: var(--font-mono); font-size: var(--d-2); font-variant-numeric: tabular-nums;
-}
-.player-timeline { flex: 1; min-width: 80px; display: flex; gap: 4px; align-items: center; }
-.player-bar .tl-seg {
-  position: relative; flex-basis: 0; min-width: 8px; height: 22px; padding: 0;
-  border: 0; border-radius: 3px; background: transparent;
-}
-.tl-seg::after, .tl-fill {
-  content: ""; position: absolute; left: 0; top: 8px; height: 6px; border-radius: 3px;
-}
-.tl-seg::after { right: 0; background: var(--dark-line); }
-.tl-fill { z-index: 1; width: 0; background: var(--accent-bright); }
-.player-bar .tl-seg:hover { background: transparent; }
-.tl-seg:hover::after, .tl-seg.is-current::after { background: var(--dark-ink-soft); }
-.player-bar .pb-speed { height: 36px; padding: 0 6px; font-size: var(--d-2); }
-.pb-speed option { color: var(--ink); background: var(--surface); }
-.player-bar .pb-cc { height: 36px; padding: 0 10px; font-size: var(--d-2); font-weight: 650; }
-.player-bar .pb-cc[aria-pressed="true"]:not(:disabled) { background: var(--page); border-color: var(--page); color: var(--ink-strong); }
-.player-meta {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 16px;
-  color: var(--dark-ink-soft); font-size: var(--d-2);
-}
-.player-meta p { margin: 0; }
-.slide-status { color: var(--dark-ink); font-variant-numeric: tabular-nums; }
-.player-status:empty { display: none; }
-.player-bar .pb-link { padding: 0; border: 0; color: var(--accent-bright); text-decoration: underline; font-size: var(--d-2); }
-.pb-auto { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; }
-.pb-auto input { accent-color: var(--accent-bright); }
-.voice-label { flex-basis: 100%; font-size: var(--d-1); line-height: 1.4; }
-
-.player-below { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 24px; margin-top: 24px; }
-.panel-tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--line); }
-.panel-tabs [role="tab"] {
-  padding: 10px 0; border: 0; border-bottom: 2px solid transparent; border-radius: 0;
-  background: transparent; color: var(--ink-soft); font-size: var(--d-4); font-weight: 600;
-}
-.panel-tabs [role="tab"]:hover { background: transparent; color: var(--ink-strong); }
-.panel-tabs [aria-selected="true"] { color: var(--ink-strong); border-bottom-color: var(--accent); }
-.panel-body { padding: 12px 0 0; }
-.transcript-lines {
-  display: flex; flex-direction: column; gap: 2px; max-height: 300px; margin: 0; padding: 0;
-  overflow-y: auto; list-style: none; font-size: var(--d-4); line-height: 1.6;
-}
-.transcript-lines li { padding: 4px 10px; border-radius: 6px; color: var(--ink); }
-.transcript-lines li.is-active { background: var(--accent-soft); color: var(--ink-strong); }
-.line-seek {
-  display: block; width: 100%; padding: 0; border: 0; background: transparent;
-  color: inherit; font: inherit; text-align: left;
-}
-.line-seek:hover { background: transparent; text-decoration: underline; }
-.panel-foot { margin: 12px 0 0; font-size: var(--d-3); }
-.panel-empty { margin: 0; color: var(--ink-soft); font-size: var(--d-3); }
 .source-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .source-list a {
   display: flex; align-items: center; gap: 12px; padding: 12px 14px;
@@ -511,103 +402,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 }
 .source-path { flex: 1; min-width: 0; font-family: var(--font-mono); font-size: var(--d-2); overflow-wrap: anywhere; }
 .source-open { flex: none; color: var(--accent); font-size: var(--d-2); }
-.notes-title {
-  margin: 20px 0 6px; font-family: var(--font-body); font-size: var(--d-2); font-weight: 650;
-  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft);
-}
-.up-next h2 {
-  margin: 0; padding: 10px 0; border-bottom: 1px solid var(--line);
-  font-family: var(--font-body); font-size: var(--d-4); font-weight: 600;
-}
-.up-next-card {
-  display: flex; flex-direction: column; gap: 4px; margin-top: 12px; padding: 14px 16px;
-  border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
-  color: var(--ink-strong); text-decoration: none;
-}
-.up-next-card:hover { border-color: var(--accent); }
-.up-kind { color: var(--ink-mid); font-size: var(--d-1); font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
-.up-title { font-size: var(--d-4); font-weight: 650; }
-.up-meta { color: var(--ink-soft); font-size: var(--d-2); }
-.player-keys { margin: 14px 0 0; color: var(--ink-soft); font-size: var(--d-2); line-height: 1.8; }
-.player-keys kbd {
-  font-family: var(--font-mono); font-size: var(--d-1); padding: 1px 6px;
-  border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; background: var(--surface);
-}
-@media (max-width: 900px) { .player-below { grid-template-columns: minmax(0, 1fr); } }
 
-/* ─────────────────────────────────────────────────────────────── slides ──
- *
- * Editorial rail. Measured before the redesign: across all 233 slides the content area was a median
- * 45% filled, 89% of slides were under 60% filled, and the text sat as a small block in the top-left
- * of a large empty frame — leftover whitespace, not composed whitespace. The rail gives the frame a
- * full-height structural spine and the body block is optically centred, so the emptiness is framed.
- * The same audit found 17 unsystematic spacing values and 11 near-identical type sizes; both are now
- * one scale, declared here and nothing else.
- */
-
-.slides {
-  font-family: var(--font-slide);
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  container-type: inline-size;
-
-  /* ── type (#76): title 48, body 22, code 17 at a 1280px frame; one scale, sizes in cqw so they
-     scale with the frame. title / body = 2.18, above the 2.0 hierarchy floor the owner set on #71.
-     --t-chrome is 15px at 1280 — 2.1% of the frame height, above the 2% floor for a projector. */
-  --t-chrome: 1.17cqw;
-  --t-small: 1.33cqw;
-  --t-body: 1.72cqw;
-  --t-lead: 2.03cqw;
-  --t-h3: 2.50cqw;
-  --t-title: 3.75cqw;
-  --t-metric: 4.40cqw;
-  --t-display: 6.25cqw;
-
-  /* ── space: one 8pt grid, expressed proportionally so it scales with the frame ── */
-  --u: 0.65cqw;                   /* 8px at a 1228px frame */
-  --s1: 0.65cqw;
-  --s2: 1.30cqw;
-  --s3: 1.95cqw;
-  --s4: 2.60cqw;
-  --s5: 3.25cqw;
-  --s6: 3.91cqw;
-  --s8: 5.21cqw;
-}
-
-/* Four templates (#76), all light, none with a rail: a meta line at the top, then the body — a
-   section opener, a concept or flow slide (title over content), or a proof (claim beside exhibit). */
-.slide {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s4);
-  min-height: calc(100cqw * 9 / 16);   /* at least 16:9; taller when the content needs it */
-  padding: var(--s5) var(--s6);
-  background: var(--surface);
-  border: 1px solid var(--c-rule);
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--ink-strong) 5%, transparent);
-
-  /* ── component colours, resolved per slide kind ───────────────────────────────────────────────
-     Components reference these semantic names, never a palette token directly. That closes a whole
-     bug class: previously every light-theme component colour needed a matching hand-written
-     `.slide-proof` override, so each new component was one forgotten override away from invisible
-     text. Two had already been forgotten — inline `code` on the cover rendered at 1.16:1, and
-     `blockquote` on a proof slide at 2.31:1. The slide kind now redefines the tokens once. */
-  --c-ink: var(--ink);
-  --c-ink-soft: var(--ink-soft);
-  --c-ink-strong: var(--ink-strong);
-  --c-accent: var(--accent);
-  --c-rule: var(--line);
-  --c-rule-soft: var(--line-soft);
-  --c-surface: var(--wash);
-  --c-surface-ink: var(--ink);
-  --c-code-bg: var(--wash);
-  --c-code-rule: var(--line-soft);
-  --c-code-ink: var(--ink);
-  --c-quote-ink: var(--ink-soft);
-  --c-quote-rule: var(--accent);
-  color: var(--c-ink);
-}
 /* ── figures (#99) ─────────────────────────────────────────────────────────────────────────────
    Architecture, flow, compare, screenshot and scene, declared in the Markdown and drawn by
    figures.py as HTML cards joined by inline SVG connectors. Text is HTML so it wraps, keeps the
@@ -617,7 +412,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig { margin: 0.6em 0; font-size: 0.95em; }
 /* On a slide a figure is sized on the slide's own scale (cqw), like every other line: inheriting the
    page's px size made it the one thing that did not shrink with the frame, so it clipped on a laptop. */
-.slide .fig { font-size: var(--t-body); }
+
 .module-hero .fig { font-size: var(--d-5); }
 .fig .fig-label { display: block; color: var(--c-ink-strong, var(--ink-strong)); font-weight: 650; line-height: 1.25; }
 .fig .fig-note { display: block; margin-top: 0.15em; color: var(--c-ink-soft, var(--ink-soft));
@@ -634,7 +429,6 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   font-size: 0.78em; color: var(--c-ink-soft, var(--ink-soft)); }
 .fig .fig-source code { font-size: 1em; background: none; padding: 0; overflow-wrap: anywhere; }
 /* On a slide the figure's sources are listed in the Sources tab with every other citation. */
-.slide .fig .fig-source { display: none; }
 
 /* connectors: an arrow drawn between parts; the line draws in once when the figure is shown */
 .fig-link { flex: none; align-self: center; width: 2.2em; height: 0.9em; overflow: visible;
@@ -665,13 +459,6 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-track.is-long + .fig-loop::before { display: none; }
 .fig-track.is-long + .fig-loop .fig-loop-label { position: static; transform: none; padding: 0; }
 .fig-track.is-long + .fig-loop .fig-loop-label::before { content: "\2191  "; }
-.slide .fig-track.is-long { flex-direction: row; }
-.slide .fig-track.is-long > .fig-link { transform: none; width: 2.2em; margin: 0; }
-.slide .fig-track.is-long + .fig-loop { height: 1.1em; margin: 0.1em 1.4em 0.4em; border: 2px solid var(--accent);
-  border-top: 0; text-align: left; }
-.slide .fig-track.is-long + .fig-loop::before { display: block; }
-.slide .fig-track.is-long + .fig-loop .fig-loop-label { position: absolute; transform: translateX(-50%); padding: 0 0.5em; }
-.slide .fig-track.is-long + .fig-loop .fig-loop-label::before { content: none; }
 /* room above the row for the tags that sit on a card's top border */
 .fig-track:has(.fig-flag) { padding-top: 0.6em; }
 .fig-node, .fig-box { position: relative; display: flex; flex-direction: column; justify-content: center; min-width: 0;
@@ -759,12 +546,6 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-callouts { margin: 0.5em 0 0; padding-left: 1.5em; color: var(--c-ink, var(--ink)); font-size: 0.78em;
   line-height: 1.4; }
 .fig-callouts li::marker { color: var(--accent); font-weight: 700; }
-/* On a slide the frame is 16:9 and cannot scroll: the image sits beside its numbered notes. */
-.slide .fig-screenshot { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 0 1.2em; align-items: center; }
-.slide .fig-screenshot .fig-callouts { margin: 0; }
-.slide .fig-screenshot .fig-callouts li + li { margin-top: 0.35em; }
-.slide .fig-screenshot > .fig-title { grid-column: 1 / -1; }
 
 /* scene: a hand-drawn illustration, centred, captioned as one */
 .fig-scene-art svg { display: block; width: 100%; max-height: 16em; margin: 0 auto; }
@@ -824,95 +605,22 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   body .fig-loop::before { display: none; }
   body .fig-loop-label { position: static; transform: none; padding: 0; }
   body .fig-loop-label::before { content: "\2191  "; }
-  body .slide .fig-track.is-long { flex-direction: column; }
-  body .slide .fig-track.is-long > .fig-link { transform: rotate(90deg); width: 1.4em; margin: 0.1em auto; }
-  body .slide .fig-track.is-long + .fig-loop { height: auto; margin: 0.4em 0 0; border: 0; text-align: center; }
-  body .slide .fig-track.is-long + .fig-loop::before { display: none; }
-  body .slide .fig-track.is-long + .fig-loop .fig-loop-label { position: static; transform: none; padding: 0; }
-  body .slide .fig-track.is-long + .fig-loop .fig-loop-label::before { content: "\2191  "; }
   /* a numbered step with a note: the note goes under the label, not squeezed beside it */
   body .fig-track.is-numbered .fig-node { display: grid; grid-template-columns: auto 1fr; column-gap: 0.6em; }
   body .fig-track.is-numbered .fig-number { grid-row: span 2; align-self: start; margin-top: 0.1em; }
   body .fig-row .fig-box { flex: 0 1 auto; }
 }
 
-.deck-ready .slide { margin-bottom: 0; }
-
 /* The meta line: the section, an Evidence chip on a proof slide, and the slide number. */
-.slide-meta {
-  display: flex; align-items: center; gap: var(--s2);
-  font-size: var(--t-chrome); line-height: 1.3; color: var(--c-ink-soft);
-}
-.slide-meta .kicker { flex: 1; min-width: 0; }
-.slide-number { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
 .evidence-chip, .source-chip {
   flex: none; padding: .3em .6em; border-radius: .4em; background: var(--proof-bg); color: var(--proof-ink);
   font-weight: 650; letter-spacing: .08em; text-transform: uppercase;
 }
-.opener-number {
-  margin: 0; font-family: var(--font-slide-display); font-size: var(--t-display); font-weight: 700;
-  line-height: .95; letter-spacing: -.03em; color: var(--c-accent);
-}
-
-.slide-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;         /* the block is placed in the space under the meta line */
-  gap: var(--s3);
-}
-.slide-body h2 {
-  margin: 0;
-  font-size: var(--t-title);
-  font-weight: 600;
-  line-height: 1.06;
-  letter-spacing: -.02em;
-  color: var(--c-ink-strong);
-  max-width: 30ch;
-  text-wrap: balance;
-}
-.slide-body h3 {
-  margin: var(--s3) 0 var(--s2);
-  font-size: var(--t-h3);
-  font-weight: 600;
-  letter-spacing: -.02em;
-  line-height: 1.14;
-}
-.slide-body .lede {
-  margin: 0;
-  font-size: var(--t-lead);
-  line-height: 1.42;
-  color: var(--c-ink);
-  max-width: 54ch;
-  text-wrap: pretty;
-}
-
 
 /* nothing on a slide shrinks below its content: the slide grows instead (an overflow-hidden flex item
    would otherwise be squeezed to the frame and clip) */
-.slide-body > *, .slide-content > *, .proof-exhibit > * { flex-shrink: 0; }
-.slide-content > *:first-child { margin-top: 0; }
-.slide-content > *:last-child { margin-bottom: 0; }
-.slide-content p, .slide-content li {
-  margin: 0;
-  font-size: var(--t-body);
-  line-height: 1.42;
-  max-width: 62ch;
-  text-wrap: pretty;
-}
-.slide-content p + p { margin-top: var(--s2); }
-.slide-content ul, .slide-content ol { margin: 0; padding-left: 1.15em; }
-.slide-content li + li { margin-top: var(--s1); }
-.slide-content code {
-  font-family: var(--font-mono);
-  font-size: .9em;
-  background: var(--c-code-bg);
-  border: 1px solid var(--c-code-rule);
-  color: var(--c-code-ink);
-  border-radius: 3px;
-  padding: .06em .32em;
-  overflow-wrap: anywhere;
-}
+
 /* The exhibit (#76): a dark code panel with a file · lines · commit header, line numbers taken from
    the cited file, highlighted lines, and long lines wrapped with a hanging indent, never clipped. */
 .exhibit {
@@ -942,41 +650,11 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .exhibit .line.is-hl { background: var(--code-hl); box-shadow: inset 3px 0 0 var(--accent-bright); }
 
 /* A slide that ends on a line of bare citations shows it as its source line. */
-.slide-content .slide-source {
-  display: flex; flex-wrap: wrap; align-items: center; gap: .4em .8em; margin-top: var(--s3); max-width: none;
-  font-size: var(--t-chrome); color: var(--c-ink-soft);
-}
-.slide-content .slide-source code { font-size: 1em; background: none; border: 0; padding: 0; color: var(--c-ink-soft); }
-.slide a { color: var(--c-accent); text-decoration-color: var(--c-rule); }
-.slide-content blockquote {
-  margin: 0;
-  padding: var(--s1) 0 var(--s1) var(--s4);
-  border-left: 3px solid var(--c-quote-rule);
-  color: var(--c-quote-ink);
-}
 
 /* Proof: the claim and its bullets on the left (~5/12), the exhibit on the right (~7/12). The slide
    stays light; the Evidence chip in the meta line and the exhibit panel carry the change of kind. */
-.proof-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s6); align-items: center; }
-.proof-claim { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
-.proof-exhibit { display: flex; flex-direction: column; gap: var(--s3); min-width: 0; }
 
 /* Cover: the module's title at display size, light like every other slide. */
-.slide-cover h2 {
-  font-size: var(--t-metric);
-  line-height: 1.02;
-  letter-spacing: -.03em;
-  max-width: 22ch;
-}
-.slide-cover .cover-meta { max-width: 46ch; font-size: var(--t-small); color: var(--c-ink-soft); }
-.slide-cover .cover-meta strong {
-  display: block;
-  margin-bottom: var(--s1);
-  font-size: var(--t-body);
-  font-weight: 650;
-  color: var(--c-ink-strong);
-}
-.slide-cover .cover-meta small { display: block; font-size: var(--t-chrome); }
 
 /* Content components the decks use. */
 .takeaway {
@@ -1010,13 +688,13 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   margin-bottom: var(--s1);
 }
 
-.slide table, .spec-table {
+.spec-table{
   width: 100%;
   border-collapse: collapse;
   text-align: left;
   font-size: var(--t-small);
 }
-.slide table th, .spec-table th {
+.spec-table th{
   color: var(--c-accent);
   text-transform: uppercase;
   letter-spacing: .06em;
@@ -1025,7 +703,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   padding: 0 var(--s2) var(--s1) 0;
   border-bottom: 1px solid var(--c-rule);
 }
-.slide table td, .spec-table td {
+.spec-table td{
   padding: var(--s1) var(--s2) var(--s1) 0;
   vertical-align: top;
   border-top: 1px solid var(--c-rule);
@@ -1033,20 +711,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 
 /* ────────────────────────────────────────────────────────── navigation ── */
 
-.no-script { padding: 1rem; text-align: center; }
-
 /* ─────────────────────────────────────────────────────────────── modes ── */
-
-/* Before the deck script runs, show every slide so a failed script degrades to a document. */
-html.js .deck-page:not(.deck-ready) .slide:not(:first-of-type) { display: none; }
-
-.deck-page.presentation-mode { --frame-width: min(calc(100vw - 24px),
-                     calc((100dvh - var(--chrome-height) - var(--narration-height, 0px)) * 16 / 9)); }
-/* full screen shows a slide at 16:9 when it fits and lets a taller one scroll, never clipped */
-body.presentation-mode { overflow-y: auto; }
-body.presentation-mode { --sidebar-w: 0px; background: var(--dark-deep); }
-.presentation-mode .app-outline, .presentation-mode .app-bar, .presentation-mode .player-below { display: none; }
-.presentation-mode .player { padding: 12px 0 0; }
 
 .drawer-notes { white-space: pre-line; font-size: var(--d-4); line-height: 1.55; color: var(--ink); }
 .drawer-empty { color: var(--ink-soft); font-style: italic; }
@@ -1135,7 +800,6 @@ body.transcript .voice-badge { width: auto; margin: 14px 0 0; }
 }
 
 /* ───────────────────────────────────────────────────── learning paths ── */
-
 
 /* "At a glance" — on Microsoft Learn every value here is a catalogue filter; here it is a fact. */
 .at-a-glance {
@@ -1265,38 +929,6 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
 }
 
 @media (max-width: 700px) {
-  :root { --player-pad: 10px; --frame-width: calc(100vw - 20px); }
-  .player { padding-top: 12px; }
-  .player-controls { flex-wrap: wrap; }
-  .player-timeline { order: 5; flex-basis: 100%; }
-  .pb-time { min-width: 0; }
-  /* One breakpoint, one place: these used to be a dozen separate font-size overrides. */
-  .slides {
-    --t-chrome: .78rem;
-    --t-small: .88rem;
-    --t-body: 1rem;
-    --t-lead: 1.06rem;
-    --t-h3: 1.2rem;
-    --t-metric: 1.6rem;
-    --t-title: clamp(1.55rem, 6.4vw, 2.15rem);
-    --t-display: clamp(2rem, 8.5vw, 2.9rem);
-    --u: .5rem;
-    --s1: .5rem; --s2: .75rem; --s3: 1rem; --s4: 1.25rem;
-    --s5: 1.25rem; --s6: 1.5rem; --s8: 2rem;
-  }
-  /* On a phone the slide grows to its content instead of holding 16:9. */
-  .slide {
-    aspect-ratio: auto;
-    min-height: 0;
-    padding: var(--s4) var(--s3) var(--s3);
-    overflow: visible;
-  }
-  .proof-split { grid-template-columns: minmax(0, 1fr); }
-  .slide-body { justify-content: flex-start; }
-  .slide-body h2, .slide-cover h2 { max-width: none; }
-  .slide-content p, .slide-content li { max-width: none; }
-  .slide-content { padding: 0; }
-  .slide-cover .slide-content { flex: none; padding: 0; overflow: visible; }
   .three-up, .two-up { grid-template-columns: 1fr; gap: 1.2rem; }
   .metric { font-size: 2.1rem; }
 }
@@ -1305,23 +937,8 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
 
 @page { size: 13.333in 7.5in; margin: 0; }
 @media print {
-  body, body.presentation-mode { background: var(--white); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .player-bar, .player-below, .skip-link { display: none !important; }
-  .player { width: 100% !important; padding: 0; }
-  .slides { width: 100% !important; margin: 0; }
-  .slide, .slide[hidden] {
-    display: grid !important;
-    width: 100%;
-    min-height: 7.5in;
-    aspect-ratio: auto;
-    margin: 0 !important;
-    border: 0;
-    box-shadow: none;
-    break-after: page;
-  }
-  .slide:last-child { break-after: auto; }
-  .slide-content { overflow: visible; }
-  .slide a { text-decoration: none; }
+  body{ background: var(--white); print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .skip-link{ display: none !important; }
 }
 
 /* ──────────────────────────────────────────────────────────── reading pages ──
@@ -1523,7 +1140,14 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
 .q-dots li.is-wrong { background: var(--proof-ink); }
 .q-dots li.is-current { background: var(--accent); }
 .q-objective { flex: none; max-width: 40%; color: var(--ink-soft); font-size: var(--d-2); text-align: right; }
-.qq { margin: 0; }
+.qq { margin: 0; padding: 28px 0; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--bar-h) + 16px); }
+.qq:first-of-type { border-top: 0; padding-top: 4px; }
+.q-count-line { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; margin: 0 0 10px;
+  color: var(--ink-soft); font-size: var(--d-3); font-weight: 650; }
+.q-count-line .q-objective { max-width: none; font-weight: 400; text-align: left; }
+.quiz-summary { margin-top: 12px; padding: 20px 22px; border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 8px; background: var(--surface); }
+.quiz-summary h2 { margin-top: 0; }
 .q-stem { font-family: var(--font-display); font-size: var(--d-7); font-weight: 600; line-height: 1.3; color: var(--ink-strong); }
 .q-stem p { margin: 0 0 10px; }
 .q-stem p:last-child { margin-bottom: 0; }
@@ -1753,4 +1377,81 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
 .capture-note { margin: 12px 0 0; font-size: var(--d-2); color: var(--ink); }
 .capture-note code { padding: 1px 4px; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 3px; }
 
-
+/* ───────────────────────────────────────────────────────────── Learn (#112) ──
+ * The module as one page: units as parts, each former slide a section — heading, figures and
+ * exhibits at full width, its points, then its narration as text — and a mini-player that reads the
+ * page aloud. Content that was written for slides uses the page's type scale here. */
+.learn {
+  --t-chrome: var(--d-2); --t-small: var(--d-3); --t-body: var(--d-5); --t-lead: var(--d-6);
+  --t-h3: var(--d-6); --t-title: var(--d-7); --t-metric: 2rem; --t-display: 2.4rem;
+  --u: 8px; --s1: 6px; --s2: 10px; --s3: 16px; --s4: 20px; --s5: 24px; --s6: 32px; --s8: 48px;
+  --c-ink: var(--ink); --c-ink-soft: var(--ink-soft); --c-ink-strong: var(--ink-strong);
+  --c-accent: var(--accent); --c-rule: var(--line); --c-surface: var(--wash);
+  max-width: 980px; margin-top: 8px;
+}
+.learn-voice { margin: 10px 0 0; max-width: 84ch; color: var(--ink-soft); font-size: var(--d-3); }
+.learn-unit { margin: 0 0 24px; padding-top: 40px; scroll-margin-top: calc(var(--bar-h) + 16px); }
+.learn-unit + .learn-unit { border-top: 2px solid var(--line); }
+.learn-unit-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 20px; align-items: end; }
+.learn-unit-head .page-kicker, .learn-unit-head h2, .learn-unit-facts { grid-column: 1; }
+.learn-unit-head h2 { margin: 2px 0 4px; font-size: var(--d-7); }
+.learn-unit-facts { margin: 0; color: var(--ink-soft); font-size: var(--d-3); }
+.learn-listen-unit { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+.learn-section { padding: 28px 0 8px; scroll-margin-top: calc(var(--bar-h) + 16px); }
+.learn-section + .learn-section { border-top: 1px solid var(--line-soft); }
+.learn-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; align-items: start; }
+.learn-head.is-bare { grid-template-columns: 1fr; justify-items: end; margin-bottom: 8px; }
+.learn-kicker { grid-column: 1; display: flex; align-items: center; gap: 8px; margin: 0; color: var(--ink-mid);
+  font-size: var(--d-2); font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
+.learn-head h3 { grid-column: 1; margin: 4px 0 12px; font-size: var(--d-6); line-height: 1.25; }
+.learn-head .learn-listen { grid-column: 2; grid-row: 1 / span 2; }
+.learn-listen, .learn-listen-unit {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px 0 10px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink-strong);
+  font-size: var(--d-3); font-weight: 650; white-space: nowrap;
+}
+.learn-listen:hover, .learn-listen-unit:hover { border-color: var(--accent); color: var(--accent-deep); }
+.learn-listen .icon, .learn-listen-unit .icon { width: 16px; height: 16px; }
+.learn-section.is-playing .learn-listen { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-deep); }
+.learn-body { font-size: var(--d-5); }
+.learn-body > :first-child { margin-top: 0; }
+.learn-body .slide-source { margin: 12px 0 0; color: var(--ink-soft); font-size: var(--d-3); }
+.learn-body .slide-source code { font-size: 1em; background: none; border: 0; padding: 0; }
+.learn-body .exhibit { margin: 16px 0; }
+.learn-said { margin: 16px 0 0; padding: 2px 0 2px 16px; border-left: 3px solid var(--accent-soft); }
+.learn-said p { margin: 0; color: var(--ink); font-size: var(--d-5); line-height: 1.7; }
+.said { border-radius: 3px; transition: background-color .2s ease; }
+.said.is-said { background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent-soft); }
+.said.is-found { text-decoration: underline 2px var(--accent); text-underline-offset: 3px; }
+.learn-more { margin: 14px 0 0; font-size: var(--d-3); }
+.learn-more summary { cursor: pointer; color: var(--ink-soft); font-weight: 650; }
+.learn-more .source-list { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.learn-more .drawer-notes { margin: 10px 0 0; }
+.learn-foot { margin: 40px 0 0; padding-top: 20px; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: var(--d-4); }
+.learn-player {
+  position: sticky; bottom: 12px; z-index: 20; display: flex; align-items: center; gap: 10px;
+  max-width: 980px; margin: 24px 0 12px; padding: 8px 12px; border-radius: 14px;
+  background: var(--ink-strong); color: var(--dark-ink); box-shadow: 0 8px 24px color-mix(in srgb, var(--ink-strong) 25%, transparent);
+}
+.learn-player button, .learn-player select {
+  display: inline-grid; place-items: center; min-width: 44px; height: 44px; border: 1px solid var(--dark-line);
+  border-radius: 10px; background: var(--dark-soft); color: var(--dark-ink);
+}
+.learn-player .lp-play { width: 44px; height: 44px; border-radius: 50%; background: var(--page); color: var(--ink-strong); border-color: var(--page); }
+.learn-player .icon { width: 18px; height: 18px; }
+.learn .icon-pause, .learn-player .icon-pause, .lp-play.is-playing .icon-play,
+.learn-section.is-playing .learn-listen .icon-play { display: none; }
+.lp-play.is-playing .icon-pause, .learn-section.is-playing .learn-listen .icon-pause { display: block; }
+.learn .icon-play, .learn-player .icon-play { fill: currentColor; stroke: none; }
+.learn .icon-pause rect, .learn-player .icon-pause rect { fill: currentColor; stroke: none; }
+.lp-now { flex: 1; min-width: 0; display: flex; flex-direction: column; margin: 0; }
+.lp-where { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--d-3); font-weight: 650; color: var(--white); }
+.lp-time { font-family: var(--font-mono); font-size: var(--d-2); color: var(--dark-ink-soft); }
+.learn-player select { padding: 0 6px; font-size: var(--d-2); }
+.lp-auto { display: flex; align-items: center; gap: 6px; font-size: var(--d-2); color: var(--dark-ink-soft); }
+@media (max-width: 700px) {
+  .learn-unit-head, .learn-head { grid-template-columns: 1fr; }
+  .learn-listen-unit, .learn-head .learn-listen { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 8px; }
+  .learn-player { gap: 6px; padding: 6px 8px; }
+  .learn-player select, .lp-auto { display: none; }
+}

@@ -336,7 +336,8 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
 
 def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
               units: list[dict] | None = None) -> tuple[str, dict]:
-    """Check (#78): one question at a time, feedback that links back to the slide that teaches it.
+    """Check (#78, #112): every question on one page, feedback under each answer that links back to
+    the part of the Learn page that teaches it, and the result at the end.
 
     Every question maps to a lesson objective, and the objective names its segment (M2.1), so the
     Rewatch link is the segment's first slide — derived, never hand-written.
@@ -350,13 +351,15 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
         n = q["n"]
         unit = by_segment.get(q.get("objective", ""))
         rewatch = (f'<a class="q-rewatch" href="{site_base}/{deck["id"]}.html#slide-{unit["first"]}">'
-                   f'Rewatch {html.escape(unit["id"])} — {SC.inline(unit["label"])}</a>') if unit else ""
+                   f'Revisit {html.escape(unit["id"])} — {SC.inline(unit["label"])}</a>') if unit else ""
         attrs = (f'data-n="{n}" data-objective="{html.escape(q.get("objective_text", ""), quote=True)}"'
                  f' data-rewatch="{site_base}/{deck["id"]}.html#slide-{unit["first"]}"' if unit else
                  f'data-n="{n}" data-objective="{html.escape(q.get("objective_text", ""), quote=True)}"')
-        nav = (f'<div class="q-nav"><button type="button" data-prev{" disabled" if index == 1 else ""}>Previous</button>'
-               f'<button type="button" class="btn-primary" data-next disabled>'
-               f'{"See your result" if index == total else "Next question"}</button></div>')
+        objective = q.get("objective_text", "")
+        nav = ""
+        count = (f'<p class="q-count-line" id="q{n}-count"><span>Question {index} of {total}</span>'
+                 + (f'<span class="q-objective">Objective: {html.escape(objective)}</span>' if objective else "")
+                 + '</p>')
         if q["type"] == "mc":
             opts = "".join(
                 f'<label class="q-option" data-letter="{o["letter"]}">'
@@ -365,6 +368,7 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
                 f'<span class="q-text">{o["html"]}</span><span class="q-mark" data-mark></span></label>'
                 for o in q["options"])
             blocks.append(f"""<section class="qq is-mc" {attrs} data-answer="{q['answer']}" aria-labelledby="q{n}-count">
+  {count}
   <div class="q-stem" id="q{n}-stem">{q['stem_html']}</div>
   <fieldset class="q-field" aria-describedby="q{n}-stem">
     <legend class="sr-only">Question {index} of {total}: choose one answer</legend>
@@ -377,6 +381,7 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
 </section>""")
         else:
             blocks.append(f"""<section class="qq is-short" {attrs} aria-labelledby="q{n}-count">
+  {count}
   <div class="q-stem" id="q{n}-stem">{q['stem_html']}</div>
   <label class="q-write">Your answer<textarea rows="5" placeholder="Write it first — the model answer unlocks after 20 characters."></textarea></label>
   <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>Reveal the model answer</button></div>
@@ -390,20 +395,14 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
         "Each question maps to one lesson objective, and the distractors are the misconceptions the "
         "lesson argues against. Multiple choice is checked instantly; short answers reveal the model "
         "answer only after you have written yours. Best score is kept; 75% is the certificate threshold.")
-    dots = "".join("<li></li>" for _ in quiz["questions"])
     body = f"""{head}
 <div class="doc-main">
   <article class="doc-article quiz-article" data-quiz="{deck['id']}" data-total="{total}">
-    <div class="quiz-progress">
-      <span class="q-count" data-q-count>Question 1 of {total}</span>
-      <ol class="q-dots" aria-hidden="true">{dots}</ol>
-      <span class="q-objective" data-q-objective></span>
-    </div>
     <p class="quiz-score sr-only" data-quiz-score role="status" aria-live="polite"></p>
 {"".join(blocks)}
-    <section class="quiz-summary" data-quiz-summary hidden aria-labelledby="quiz-result-title">
+    <section class="quiz-summary" data-quiz-summary aria-labelledby="quiz-result-title">
       <h2 id="quiz-result-title" tabindex="-1">Your result</h2>
-      <p data-summary-text></p>
+      <p data-summary-text>Answer every question above; your result appears here.</p>
       <div data-revisit hidden><h3>Objectives to revisit</h3><ul class="revisit-list" data-revisit-list></ul></div>
       <div class="evidence-actions"><button type="button" data-quiz-again>Try again</button>
         <a class="btn-primary" href="{site_base}/module-{deck['id']}.html">Back to the module →</a></div>

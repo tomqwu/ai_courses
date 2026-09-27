@@ -79,12 +79,12 @@ course/
         ├── captions.py · providers.py · narration_data.py
         └── test_captions.py (32) · test_providers.py (13)
 
-└── learner-site/                   ← the learner-facing build: one slide at a time, narrated
-    ├── build_site.py              ← decks + narration manifest → static site (no framework)
-    ├── check_player.py            ← headless browser check: measures the rendered 16:9 frame,
-    │                                 the loaded font and the Present/Read all/notes modes
+└── learner-site/                   ← the learner-facing build: each module a narrated Learn page
+    ├── build_site.py              ← slides.md + narration manifest → static site (no framework)
+    ├── check_player.py            ← headless browser check: every part present, narration = script,
+    │                                 audio wired, nothing clipped, contrast
     ├── transcripts/               ← committed transcripts: mNN.md × 9 + ALL.md
-    └── assets/player.js · narration-media.js · player.css
+    └── assets/learn.js · narration-media.js · player.css
 ```
 
 ## How to use this package

@@ -1,7 +1,8 @@
 # Learner site
 
-The learner-facing build of the course: nine decks, one slide at a time, with narration, synchronized
-captions, a transcript, and navigation that works with a keyboard.
+The learner-facing build of the course. Every page is a full page (#112): each module is a **Learn**
+page — its units and parts in order, figures and exhibits at full width, the narration as text, and a
+mini-player that reads it aloud — beside the lesson (Read), the lab and the knowledge check.
 
 ```bash
 cd course
@@ -10,8 +11,8 @@ make site                # generate index.html and mNN.html
 make serve               # http://localhost:8043
 ```
 
-`make site` is enough to read the decks; narration is layered on when recordings exist. A deck with no
-recordings is still fully readable, and the player says so instead of failing.
+`make site` is enough to read everything; narration is layered on when recordings exist. A module with
+no recordings is the same page without the player — its narration is still there as text.
 
 ## What is generated
 
@@ -29,7 +30,7 @@ recordings is still fully readable, and the player says so instead of failing.
 | `assets/progress.js`, `shell.js`, `home.js`, `quiz.js`, `lab.js`, `search.js`, `evidence.js` | hand-written | **Yes** |
 | `narration.json` | `06-production/narration/manifest.json` | No — copied at build time |
 | `assets/audio/…` | `generate_narration.py` | No — generated (see the narration README) |
-| `assets/player.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
+| `assets/learn.js`, `narration-media.js`, `player.css` | hand-written | **Yes** |
 | `assets/fonts/*.woff2` | IBM Plex Sans, Bricolage Grotesque, JetBrains Mono (variable, latin + latin-ext), SIL OFL 1.1, each with its `OFL-*.txt` | **Yes** |
 | `build_site.py`, `site_shell.py`, `site_pages.py`, `site_paths.py`, `site_content.py`, `site_proof.py`, `check_player.py`, `check_features.py`, `screenshots.py` | hand-written | **Yes** |
 
@@ -42,26 +43,26 @@ and the page's own title in the content column. There is no hero band.
   bar, every module, and — inside a module — its units: Introduction, the three segments, the lab, the
   knowledge check and the summary. It is rendered from `site_paths.module_units`, so it cannot list a
   unit the site does not have. `assets/shell.js` marks each row done, in progress or not started from
-  the stored progress: a different shape and a word for each, never a colour alone. On a deck page it
-  follows the player (`aps:slide`) and marks the current unit `aria-current`.
-- **The top bar** carries the breadcrumb, the module's four modes (Watch · Read · Lab · Check) and
+  the stored progress: a different shape and a word for each, never a colour alone. On a Learn page it
+  follows the part in view (`aps:slide`) and marks the current unit `aria-current`.
+- **The top bar** carries the breadcrumb, the module's four modes (Learn · Read · Lab · Check) and
   search: a command palette (#80) that opens on `/` or ⌘K / Ctrl+K from any page, groups its results
   (Slides, Glossary, Lesson text, Labs), marks the matched words, moves with ↑ ↓ and opens with ↵. A
-  slide found by a sentence of its narration opens the player at the moment it is spoken (`?t=`), when
-  the copy publishes its captions.
-- **Four modes, not nine tabs** (#74). Watch is the deck (its transcript page is a view of Watch);
+  part found by a sentence of its narration opens the Learn page on that sentence, and Play starts at
+  the moment it is spoken (`?t=`), when the copy publishes its captions.
+- **Four modes, not nine tabs** (#74). Learn is the module as a narrated page (its transcript page is a view of Learn);
   Read is the lesson with its handout and glossary as views (`lesson-`, `handout-`, `glossary-mNN.html`,
   each keeping its URL so every existing link resolves); Lab and Check are the lab and the knowledge
   check. The module overview is the module's landing page: it opens on **Start module**, which
-  becomes **Resume · slide N** once the learner has stopped inside the deck. `check_features.py`
+  becomes **Resume · part N** once the learner has stopped inside the module. `check_features.py`
   asserts every module page offers exactly the four modes and every old URL still opens in its mode.
 - **Keyboard order** is skip link → outline (search included) → top bar → content, and
   `check_features.py` asserts it, along with the drawer's Escape and the outline after a reload.
 - **On a phone** (≤480px, #81) the top bar is the outline button, the page's title and search; the
-  four modes become a bottom tab bar with icons; the slide runs full width with its dark bar under it;
+  four modes become a bottom tab bar with icons; the Learn page runs full width with its player docked;
   every control is a 44px touch target; and no page scrolls sideways. `check_features.py` asserts all
-  of it at 390×844 — the player, a lab and every built page — and CI uploads screenshots of every page
-  and slide template at desktop and phone widths (`screenshots.py`, the `site-screenshots` artifact).
+  of it at 390×844 — the Learn page, a lab and every built page — and CI uploads screenshots of every
+  page kind at desktop and phone widths (`screenshots.py`, the `site-screenshots` artifact).
 
 ## The learner's record
 
@@ -73,14 +74,14 @@ of events (`{unit, kind, at}`), and a unit is done once it has one:
 
 | Event | When |
 |---|---|
-| `watched` | the narration plays through a lesson unit's last slide (paging past it records nothing) |
+| `watched` | the narration plays through a lesson unit's last part |
 | `read` | the learner reads the unit's section of the lesson to its end (Overview → introduction, "Segment M2.1" → M2.1, Recap → summary) |
 | `passed` | the knowledge check scores at least 75%, the certificate threshold |
 | `completed` | the lab's checklist is complete **and** its evidence entry is filled in (project, commands, environment, revision) and copied or downloaded |
 | `migrated` | carried over from the v1/v2 stores, where units were ticked |
 
 No page offers a checkbox that marks a unit. The module page lists its units as links with their
-recorded status and opens on **Start module** (or **Resume · slide N**), followed by the next unit;
+recorded status and opens on **Start module** (or **Resume · part N**), followed by the next unit;
 the home and path cards are plain light cards with the recorded progress and one action. A "continue
 where you left off" strip on the course home, and export / import / reset as plain JSON — the learner
 owns it, nothing is uploaded. The same store remembers the path the learner last opened, which the
@@ -97,6 +98,11 @@ quiz key names no option or a lab loses its auto-fail list; both were tried by b
 page.
 
 ## Design system
+
+> **History.** The 16:9 slide frame, its templates, the editorial rail and the player described in this
+> section and in *Declared diagrams* were retired in #112: modules are Learn pages now. The tokens, the
+> type scale for pages, the per-kind colour resolution and the contrast audit still apply; the slide-
+> specific measurements are kept as the record of why the design changed.
 
 The presentation layer is ported from **ai_qe**, the third case study, because that site is the one
 this course holds up as its own standard for publishing claims a skeptic can audit. What was borrowed,
@@ -484,81 +490,42 @@ Transcripts verified: 10 documents match the approved scripts (22,239 words)
 
 ## Page structure
 
-Each deck page is **Watch**, the lesson player (#75): inside the shell, the 16:9 stage with one dark
-control bar directly under it, and below the fold the slide's transcript and sources beside an Up
-next card. The stage and the bar are sized together to fit the viewport (`--chrome-height` above the
-stage, `--narration-height` for the bar, both measured by `player.js`), so the controls are on screen
-whatever the slide.
+Each module's **Learn** page (`mNN.html`, #112) is the module as one page, in the shell:
 
 ```
-deck page (in the shell: outline · top bar)
-├── main#slides.slides   one <section class="slide"> per slide
-│                        ├── .slide-meta / h2#slide-N-title / .slide-content (exhibits as panels)
-│                        └── the notes, the approved narration a sentence per line, and the
-│                            repo pointers it cites — carried in <template>s for the panel
-├── .player-bar          the caption line
-│                        ← · play/pause · → · time · timeline (one segment per unit) · speed · CC · present
-│                        slide status · narration status · auto-next · the voice label (#57)
-└── .player-below        Transcript | Sources on this slide (tabs) · Up next · the keys
+body.learn-page[data-learn-deck][data-units]
+  header.page-head                the module title, units · parts · minutes narrated, the voice label
+  div.learn[data-learn]
+    section.learn-unit#unit-…     one per unit: Introduction, MN.1–MN.3, Lab, Knowledge check, Summary
+      header                      "Section k of 3" / "Unit k of 7", its name, facts, Listen to this unit
+      section.learn-section#slide-N   one per part (what was a slide), keeping its anchor
+                                  data-audio / data-captions / data-duration when recorded
+        header.learn-head         Evidence chip, the part's title, its ▶ Listen button
+        .learn-body               figures, exhibits and points, full width; the lab / check link
+        .learn-said               the approved narration as text, one span per sentence
+        details.learn-more        the repo files it cites, at the pinned commit, and the speaker notes
+      span.read-end               read to here, the unit is recorded as read
+  .learn-player                   ‹ · play/pause · › · where and time · speed · Continue (sticky)
 ```
 
-Slide variants: `slide-cover` (slide 1, always), `slide-proof` (from `_class: proof`).
+A unit's opening part is headed by the unit itself, so it carries no second title. The published
+text-first copy is the same page without audio or the player. Without JavaScript every part is still
+there to read.
 
-### Modes and keys
+## Learn behaviour
 
-| Mode | Control | Behaviour |
-|---|---|---|
-| One slide at a time | default, <kbd>←</kbd> <kbd>→</kbd>, <kbd>Home</kbd>/<kbd>End</kbd> | `goTo()` hides every other slide; the timeline's segments jump to a unit |
-| Play | the round button or <kbd>Space</kbd> | narration with captions; <kbd>Space</kbd> moves on when a slide has no recording |
-| Transcript | <kbd>T</kbd> | the slide's narration a sentence per line: the spoken sentence is highlighted, a click seeks to it |
-| Sources | the tab, or <kbd>N</kbd> | every repo file the slide cites, at the pinned commit (Exhibit / On the slide / In the notes), and the speaker notes |
-| Presentation | the present button, <kbd>F</kbd> or <kbd>P</kbd> | full screen; the outline, top bar and panels hidden; <kbd>Esc</kbd> leaves it |
-| Figure build | while the narration plays; *Replay figure* or <kbd>.</kbd> | a figure's parts arrive on the sentence that introduces them (`at:` in the figure); complete otherwise and under reduced motion |
-| Print | <kbd>⌘P</kbd> | one slide per page (`@page 13.333in 7.5in`); a taller slide continues on the next page |
-
-The Sources chips are resolved the way the gate resolves citations (`verify.EXHIBIT_REF_RE`,
-`verify.resolve_case_path`), and a chip is labelled **Exhibit** only when the slide's fenced block is
-found in that file within its cited range.
-
-A deck without JavaScript still shows every slide in order; the Read mode (the lesson) is the
-long-form version of the deck.
-
-### Other pages
-
-Every generated deck page is:
-
-```
-body[data-narration-manifest][data-narration-deck][data-site-base][data-voice][data-units]
-  main#slides
-    section.slide#slide-N     aria-roledescription="slide", aria-labelledby="slide-N-title"
-                                data-audio / data-captions / data-duration from the manifest
-      .slide-content          the rendered slide
-      .slide-notes-source     the presenter notes (not read aloud)
-      template.slide-script-source   the approved narration, one <li> per sentence
-      template.slide-sources-source  the repo pointers the slide cites
-  .player-bar                 caption · controls · meta (status, auto-next, voice label)
-    audio[data-narration-audio]
-  .player-below               [role=tablist] Transcript | Sources · .up-next
-```
-
-Slides after the first are `hidden` so the page does not flash 233 slides before the script runs. A
-`<noscript>` block reverses that for no-JS readers, and `@media print` reveals every slide.
-
-## Player behaviour
-
-* **No autoplay, ever.** Play starts the current slide; auto-next (on by default, opt-out) continues.
-* **One clock.** Captions, the seek bar and the time readout all derive from `audio.currentTime`.
-* **One audio owner per frame tree.** `narration-media.js` claims focus synchronously before buffering,
-  coordinates across tabs via `BroadcastChannel` (with a `localStorage` fallback), and a cancelled play
-  request cannot steal focus back.
-* **A beat between slides.** Auto-next waits 2000 ms, or 700 ms under `prefers-reduced-motion`, and is
-  cancelled by any navigation, seek, dialog or hidden tab.
-* **Resume.** The last slide is remembered per deck in `localStorage` and offered back on return.
-* **Captions on by default.** CC toggles them; every slide also has the full transcript in a dialog,
-  labelled with the voice and the caption method.
-* **A slide without a recording still navigates**, with an explanation rather than a dead player.
-* **Keyboard:** `→`/`Space`/`PageDown` next, `←`/`PageUp` previous, `Home`/`End` first/last. Shortcuts
-  are ignored while typing in a control or while a dialog is open.
+* **No autoplay, ever.** A part's ▶, a unit's *Listen to this unit* or the player's Play starts the
+  narration; with *Continue* on (the default) it goes on part after part, scrolling each into view.
+* **One clock.** The highlighted sentence, the figure's build and the time all derive from
+  `audio.currentTime`; sentences are timed from the caption cues word by word.
+* **Figures build on the narration** while their part plays (`at:` in the figure), and are complete
+  otherwise and under reduced motion.
+* **One audio owner per frame tree.** `narration-media.js` claims focus before playing and coordinates
+  across tabs via `BroadcastChannel` (with a `localStorage` fallback).
+* **Where you are** follows the part in view: the outline marks its unit, and the course home's Resume
+  goes back to it. A unit is *watched* when its narration plays through, *read* when scrolled to its end.
+* **Deep links** keep working: `#slide-N` opens that part; `?t=` from a search hit marks the spoken
+  sentence and Play starts there.
 
 ## Accessibility
 
@@ -606,61 +573,22 @@ python3 course/publish_site.py --with-audio
 
 ## Verifying the site
 
-`check_player.py` does two things: it drives the player's behaviour, and it **measures the rendered
-frame** rather than trusting the stylesheet. The second part exists because a design port can look
-right in source and still render wrong — and it caught exactly that during this work (the `@font-face`
-URL was copied from ai_qe's `/assets/css/` layout while our CSS sits in `/assets/`, so the font 404'd
-and silently fell back).
-
-The probe loads the deck in a same-origin iframe at a fixed 1600x1000 viewport, then asserts geometry
-and interaction:
-
-```
-$ python3 learner-site/check_player.py --deck m06 --measure
-{
-  "slideWidth": 1228, "slideHeight": 691, "ratio": 1.778, "aspectRatio": "16 / 9",
-  "overflowing": false,
-  "fontLoaded": true, "fontsStatus": "loaded",
-  "kicker": "AI Product Studio · Module 6 of 9",
-  "title": "The Expertise Product: Evidence, Routing, Editions",
-  "footer": "AI Product Studio / M6 · The Expertise Product / Slide transcript / 01 / 28",
-  "panelHeight": "124px", "panelTop": 812, "panelBottom": 936, "navTop": 948, "viewportHeight": 1000,
-  "coverSlide": true, "chapters": 4, "optgroups": 4, "titleIds": 28, "footerLinks": 28,
-  "presentMode": true, "readingMode": true, "slidesVisibleWhileReading": 28,
-  "backToOneSlide": 1, "drawerOpen": true, "drawerHasNotes": true, "drawerClosed": true
-}
-```
-
-This is not ceremony. It has caught four bugs that all rendered wrong while looking right in source:
-
-| Bug | What the measurement showed |
-|---|---|
-| `@font-face` URL | copied from ai_qe's `/assets/css/` layout while our CSS sits in `/assets/`, so the font 404'd and silently fell back to a system sans |
-| **Read all** | switched the class but left every other slide `hidden` — 1 slide visible when 28 should be |
-| Narration panel | pushed to 897..1021 in a 900px viewport: the controls were **off-screen**, because `--frame-width` is declared on `:root` and a `var()` inside a custom property is substituted where that property is declared, so setting `--narration-height` on `<body>` never reached the frame maths |
-| Chrome budget | the honesty badge adds ~49px that a hardcoded `112px` constant did not know about, so the panel ran under the navigation strip |
-
-The fourth is why `--chrome-height` is measured by the player rather than assumed.
-
-So every deck is checked for: the slide is at least 16:9, the typeface actually
-loaded, the kicker/title exist on the current slide, **the player bar is inside the viewport,
-under the stage or stuck to the bottom of the screen, with its height reserved**, every slide has an anchored title, the timeline
-has a segment per unit and a segment opens its unit, the transcript panel lists the slide's narration,
-the Sources tab shows its notes, Up next names what follows, and Present changes state. (The measured
-example above is from the earlier player.)
-
-
 ```bash
-python3 course/learner-site/check_player.py        # headless Chrome, no npm install
-python3 course/learner-site/build_site.py --check  # build into a temp dir
-python3 course/06-production/verify.py             # the whole course gate, incl. narration
+python3 course/learner-site/check_player.py --all --strict-fit   # headless Chrome, no npm install
+python3 course/learner-site/check_features.py                   # Playwright: behaviour
+python3 course/learner-site/build_site.py --check                # build into a temp dir
 ```
 
-`check_player.py` drives a browser already on the machine (Chrome or Chromium) and asserts that the
-panel was injected, exactly one slide is `aria-current`, the status region names the right slide, the
-CC control became enabled (which can only happen after the `.vtt` fetched *and* parsed), a cue is
-rendered, and a deep link (`#slide-5`) navigates correctly. It exits 2 with a clear message if no
-browser is installed, so it can never become an unverifiable dependency.
+`check_player.py` drives a browser already on the machine (Chrome or Chromium; it exits 2 with a clear
+message if there is none) and asserts, per module, that the Learn page has every part in order with its
+`#slide-N` anchor, that the narration on the page is the approved script sentence for sentence, that
+each recorded part is wired to audio and captions that exist, and that the player is present exactly
+when something is recorded. It then opens each Learn page at **1600×1000 and 1280×800** and fails any
+box that hides or scrolls its content, any figure wider than its column, and any text below WCAG AA;
+and it audits contrast on every other page. `check_features.py` plays a unit, checks the sentence
+highlight, the figure build, reduced motion, progress, deep links, the one-page quiz and lab, the phone
+layout, and that the browser parses the whole stylesheet (a stray bracket once dropped 616 of its
+712 rules while every page still "rendered").
 
 ## Troubleshooting
 

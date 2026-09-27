@@ -23,9 +23,10 @@ import re
 
 _CTX: dict = {"modules": [], "tracks": []}
 
-# The four modes of a module (#74 folds the other tabs into them). Watch is the player, Read the
-# lesson text, Lab the exercise, Check the knowledge check.
-MODES = (("watch", "Watch", "{d}.html"), ("read", "Read", "lesson-{d}.html"),
+# The four modes of a module (#74 folds the other tabs into them). Learn is the module as a narrated
+# page (#112; the key stays "watch" so links and stored state keep resolving), Read the lesson text,
+# Lab the exercise, Check the knowledge check.
+MODES = (("watch", "Learn", "{d}.html"), ("read", "Read", "lesson-{d}.html"),
          ("lab", "Lab", "lab-{d}.html"), ("check", "Check", "quiz-{d}.html"))
 # The modes' icons: shown only in the phone's bottom tab bar (#81), where the label alone is small.
 MODE_ICONS = {

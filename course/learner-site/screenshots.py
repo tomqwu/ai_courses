@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Screenshot every page and slide template of the built site, at desktop and phone widths (#81).
+"""Screenshot every page kind of the built site, at desktop and phone widths (#81, #112).
 
     python3 screenshots.py --out /tmp/aps-screens      # after the site is built (make -C .. site)
 
 CI uploads the folder as an artifact of every gate run, so a reviewer sees what a change looks like
-without building it. The list names each page kind and each of the four slide templates once; it is
+without building it. The list names each page kind once, and the Learn page at several of its parts; it is
 a picture of the design, not a test — check_player.py and check_features.py are the tests.
 """
 from __future__ import annotations
@@ -25,11 +25,11 @@ SHOTS = [
     ("paths", "paths.html", None),
     ("path", "path-on-device-app.html", None),
     ("module", "module-m02.html", None),
-    ("slide-cover", "m02.html#slide-1", None),
-    ("slide-section-opener", "m02.html#slide-10", None),
-    ("slide-proof", "m02.html#slide-9", None),
-    ("slide-flow", "m01.html#slide-12", None),
-    ("slide-concept", "m04.html#slide-6", None),
+    ("learn", "m02.html", None),
+    ("learn-architecture", "m02.html#slide-3", None),
+    ("learn-proof", "m02.html#slide-9", None),
+    ("learn-flow", "m01.html#slide-12", None),
+    ("learn-screenshot", "m02.html#slide-10", None),
     ("read-lesson", "lesson-m02.html", None),
     ("read-handout", "handout-m02.html", None),
     ("read-glossary", "glossary-m02.html", None),

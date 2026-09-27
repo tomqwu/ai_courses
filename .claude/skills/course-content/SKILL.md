@@ -56,10 +56,9 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
   `python3 course/06-production/figures_shots.py copy <Repo>/<path> --as <name>.png`, then
   `kind: screenshot` with `image: <name>.png` and numbered `callout:`s.
 - **A scene** (`course/figures/scenes/*.svg`) for a situation — captioned as an illustration.
-- A figure replaces bullets on the slide at a readable size; the slide grows if it needs to. Check
-  nothing is clipped (`check_player.py --deck mNN --strict-fit`)
-  and looks right in the player (`http://localhost:8766/mNN.html#slide-N`, press `.` to replay the
-  build).
+- A figure replaces bullets in its part, at a readable size. Check nothing is clipped
+  (`check_player.py --deck mNN --strict-fit`) and look at it on the Learn page
+  (`http://localhost:8043/mNN.html#slide-N`; press its ▶ to hear the narration build it).
 
 **Register the module** (every one of these, or the gate or the site misses it):
 
@@ -87,7 +86,7 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
 - **Change spoken words** only in all three places: `scripts/mNN.json` (what is recorded), the
   slide's NOTES, and the `video-scripts.md` narration. Then `make -C course transcripts`, and list
   the slide for re-recording in the PR.
-- **Never shrink or cut to fit a frame**: a slide grows with its content, and labs and lessons are
+- **Never shrink or cut to fit a frame**: there are no slides on the site — a part grows with its content, and labs and lessons are
   full pages. Never split or renumber slides either — numbers key the narration, audio, units and deep
   links. Cut bullets only when the exhibit or narration already carries them; trim exhibits to the
   narrated lines with `…` and correct the cited range.
@@ -121,10 +120,9 @@ python3 course/06-production/verify.py               # everything except audio p
 make -C course serve                                 # look at it: http://localhost:8043
 ```
 
-Slide fit, with the narration panel present (needs preview audio, section 7):
-`python3 course/learner-site/check_player.py --all --strict-fit`. When measuring a single slide in
-your own script, open each slide in a fresh browser context — the player resumes from
-localStorage, which overrides the deep link.
+The Learn pages in a browser (needs preview audio for the narration checks, section 7):
+`python3 course/learner-site/check_player.py --all --strict-fit` — every part present, narration
+matching the script, audio wired, nothing clipped at two sizes, contrast.
 
 ## 7. Full gate, exactly as CI runs it
 
