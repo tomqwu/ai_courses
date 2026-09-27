@@ -4,8 +4,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-# The gate's preview voice and audio measurement (the narration step of `make -C course check`).
-sudo apt-get update -q >/dev/null && sudo apt-get install -y -q --no-install-recommends ffmpeg espeak-ng >/dev/null
+# The gate's preview voice and audio measurement (the narration step of `make -C course check`), and
+# zstd, which Ollama's installer now needs to unpack itself (without it post-create stops there).
+sudo apt-get update -q >/dev/null && sudo apt-get install -y -q --no-install-recommends ffmpeg espeak-ng zstd >/dev/null
 
 python -m pip install --upgrade pip >/dev/null
 python -m pip install pytest pytest-cov httpx playwright >/dev/null
