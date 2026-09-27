@@ -404,17 +404,6 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
 BRAND_MARK = SH.BRAND_MARK
 
 
-def slide_meta(slide: dict, total: int, where: str) -> str:
-    """The slide's one line of chrome (#76): where it sits, an Evidence chip on a proof slide, and its
-    number. It replaces the 22% rail, which sat mostly empty and cost every slide a quarter of its
-    width; the transcript and module links it carried live in the player and the breadcrumb now."""
-    chip = '<span class="evidence-chip">Evidence</span>' if "proof" in slide["classes"] else ""
-    return (f'<div class="slide-meta">{chip}'
-            f'<span class="kicker">{html.escape(where)}</span>'
-            f'<span class="slide-number" aria-label="Slide {slide["number"]} of {total}">'
-            f'{slide["number"]:02d} / {total:02d}</span></div>')
-
-
 def slide_cta(deck: dict, slide: dict, site_base: str) -> str:
     """The unit's next step, on the slide that opens it: the lab checklist or the knowledge check."""
     title = slide.get("full_title", slide["title"])
@@ -425,68 +414,6 @@ def slide_cta(deck: dict, slide: dict, site_base: str) -> str:
         return (f'<p class="slide-cta"><a href="{site_base}/quiz-{deck["id"]}.html">'
                 f'Take the knowledge check →</a></p>')
     return ""
-
-
-def slide_shell(deck: dict, slide: dict, manifest_entry: dict | None,
-                site_base: str, cover_note: str = "", place: dict | None = None) -> str:
-    """One slide in one of four templates (#76): the cover, a section opener (a segment's first
-    slide), a proof (claim beside exhibit), or a concept/flow slide (title over content).
-
-    `place` says where the slide sits: {"where": "M2.1 · One pipeline, two layers",
-    "opener": "M2.2" or "", "total": 26}.
-    """
-    place = place or {}
-    total = place.get("total") or slide["number"]
-    classes = ["slide"]
-    if slide["cover"]:
-        classes.append("slide-cover")
-    elif "proof" in slide["classes"]:
-        classes.append("slide-proof")
-    if place.get("opener"):
-        classes.append("slide-opener")
-    hidden = "" if slide["number"] == 1 else " hidden"
-    media = ""
-    if manifest_entry:
-        media = (f' data-audio="{html.escape(manifest_entry["audio"], quote=True)}"'
-                 f' data-captions="{html.escape(manifest_entry["captions"], quote=True)}"'
-                 f' data-duration="{manifest_entry.get("duration", "")}"')
-    cover_meta = f'<p class="lede cover-meta">{cover_note}</p>' if slide["cover"] else ""
-    # Speaker notes, the approved narration (one sentence per line) and the repo pointers travel with
-    # the slide, so the player's panel can show them without a second request (#75).
-    notes = html.escape(slide["notes"]) if slide["notes"] else ""
-    cited = slide_sources(slide)
-    script = "".join(f"<li>{html.escape(s)}</li>" for s in sentences(slide.get("script_text", "")))
-    sources = "".join(
-        f'<li><a href="{html.escape(src["url"], quote=True)}" rel="noopener" data-kind="{src["kind"]}">'
-        f'<span class="source-kind">{src["kind"]}</span><code class="source-path">{html.escape(src["pointer"])}</code>'
-        f'<span class="source-open">Open at {src["commit"]}</span></a></li>'
-        for src in cited)
-    content = source_footer(exhibits(slide["html"], cited))
-    opener = (f'<p class="opener-number" aria-hidden="true">{html.escape(place["opener"])}</p>'
-              if place.get("opener") else "")
-    title = f'{opener}<h2 id="{slide["id"]}-title">{inline(slide["title"])}</h2>'
-    figures = re.findall(r'<figure class="exhibit.*?</figure>', content, re.S)
-    if "slide-proof" in classes and figures:
-        # Proof: the claim and its bullets on the left (~5/12), the exhibit on the right (~7/12).
-        claim = re.sub(r'<figure class="exhibit.*?</figure>', "", content, flags=re.S)
-        body = (f'<div class="slide-body proof-split">'
-                f'<div class="proof-claim">{title}<div class="slide-content">{claim}</div>'
-                f'{slide_cta(deck, slide, site_base)}</div>'
-                f'<div class="proof-exhibit">{"".join(figures)}</div></div>')
-    else:
-        body = (f'<div class="slide-body">{title}<div class="slide-content">{content}</div>'
-                f'{slide_cta(deck, slide, site_base)}{cover_meta}</div>')
-    return (f'<section class="{" ".join(classes)}" id="{slide["id"]}" data-number="{slide["number"]}"'
-            f' data-chapter="{html.escape(slide["chapter"], quote=True)}"'
-            f'{media}{hidden} aria-roledescription="slide" aria-labelledby="{slide["id"]}-title">'
-            f'{slide_meta(slide, total, place.get("where") or slide["kicker"])}'
-            f'{body}'
-            f'<div class="slide-notes-source" hidden>{notes}</div>'
-            # Templates, not hidden lists: their rows stay out of the rendered document, so they
-            # can never count towards the slide's type scale or its contrast audit.
-            f'<template class="slide-script-source">{script}</template>'
-            f'<template class="slide-sources-source">{sources}</template>'
-            f'</section>')
 
 
 PRE_RE = re.compile(r'<pre data-info="([^"]*)"><code>(.*?)</code></pre>', re.S)
@@ -664,9 +591,6 @@ PLAY_ICON = ('<svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true"
              '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>')
 CHEVRON = ('<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
            '<path d="{d}"/></svg>')
-PRESENT_ICON = ('<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
-                '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>')
-
 
 def spoken_times(deck: dict, manifest: dict) -> dict[str, list[float]]:
     """Each slide's narration sentences, with the second each starts at, read from its captions.
@@ -703,21 +627,6 @@ def spoken_times(deck: dict, manifest: dict) -> dict[str, list[float]]:
     return out
 
 
-def slide_place(deck: dict, slide: dict, units: list[dict]) -> dict:
-    """Where a slide sits, for its meta line (#76). A segment's first slide opens the section: it
-    carries the big section number and says "Section k of 3"; the rest of the segment names it."""
-    total = len(deck["slides"])
-    segments = [u for u in units if u["kind"] == "segment"]
-    n = slide["number"]
-    unit = next((u for u in units if u["first"] <= n <= u["last"]), None)
-    if slide["cover"] or not unit or unit["kind"] != "segment":
-        return {"total": total, "where": slide["kicker"]}
-    if n == unit["first"]:
-        return {"total": total, "opener": unit["id"],
-                "where": f"Module {int(deck['id'][1:])} · Section {segments.index(unit) + 1} of {len(segments)}"}
-    return {"total": total, "where": f"{unit['id']} · {unit['label']}"}
-
-
 def voice_label(deck_manifest: dict, provenance: dict, recorded: int, preview: int,
                 text_only: bool) -> str:
     """The voice disclosure, as a label in the control bar rather than a banner (#75). The wording
@@ -735,155 +644,141 @@ def voice_label(deck_manifest: dict, provenance: dict, recorded: int, preview: i
     return f"Release voice. {disclosure}".strip()
 
 
-def page(deck: dict, manifest: dict, provenance: dict, site_base: str,
-         text_only: bool = False, units: list[dict] | None = None,
-         unit_meta: dict[str, str] | None = None) -> str:
-    """Watch: the lesson player (#75).
+def learn_section(deck: dict, slide: dict, entry: dict | None, site_base: str, bare: bool = False) -> str:
+    """One section of the Learn page (#112): what was a slide, as a part of a page — its heading, its
+    figures, exhibits and points at full width, then its narration as text, with a Listen button.
 
-    The slide is the hero. Directly under it one dark bar owns every control — the caption line,
-    previous / play / next, the time, a timeline segmented by the module's units, speed, captions
-    and present — and below the stage a panel holds the transcript (following playback, click to
-    seek) and the sources the slide cites, beside an Up next card. The honesty label lives in the
-    bar's meta line instead of a banner.
+    The id stays `slide-N`, so every deep link into the module (search, the quiz's feedback, the
+    module page, "continue where you left off") still lands on it.
     """
+    cited = slide_sources(slide)
+    content = source_footer(exhibits(slide["html"], cited))
+    said = sentences(slide.get("script_text", ""))
+    media, listen = "", ""
+    if entry:
+        media = (f' data-audio="{html.escape(entry["audio"], quote=True)}"'
+                 f' data-captions="{html.escape(entry["captions"], quote=True)}"'
+                 f' data-duration="{entry.get("duration", "")}"')
+        secs = float(entry.get("duration", 0) or 0)
+        listen = (f'<button type="button" class="learn-listen" data-listen aria-label="Listen to this section">'
+                  f'{PLAY_ICON}<span>{int(secs // 60)}:{int(secs % 60):02d}</span></button>')
+    chip = '<span class="evidence-chip">Evidence</span>' if "proof" in slide["classes"] else ""
+    # A unit's opening part is headed by the unit itself (the cover by the page): no second title.
+    heading = "" if bare else (
+        f'<header class="learn-head">' + (f'<p class="learn-kicker">{chip}</p>' if chip else "")
+        + f'<h3 id="{slide["id"]}-title">{inline(slide["title"][:1].upper() + slide["title"][1:])}</h3>{listen}</header>')
+    if bare and listen:
+        heading = f'<header class="learn-head is-bare">{listen}</header>'
+    narration = ""
+    if said:
+        spans = " ".join(f'<span class="said" data-s="{i}">{html.escape(t)}</span>' for i, t in enumerate(said))
+        narration = f'<div class="learn-said"><p>{spans}</p></div>'
+    notes = html.escape(slide["notes"]) if slide["notes"] else ""
+    sources = "".join(
+        f'<li><a href="{html.escape(src["url"], quote=True)}" rel="noopener" data-kind="{src["kind"]}">'
+        f'<span class="source-kind">{src["kind"]}</span><code class="source-path">{html.escape(src["pointer"])}</code>'
+        f'<span class="source-open">Open at {src["commit"]}</span></a></li>'
+        for src in cited)
+    more = ""
+    if sources or notes:
+        more = (f'<details class="learn-more"><summary>Sources and speaker notes</summary>'
+                + (f'<ul class="source-list">{sources}</ul>' if sources else "")
+                + (f'<p class="drawer-notes">{notes}</p>' if notes else "")
+                + "</details>")
+    label = "" if bare else f' aria-labelledby="{slide["id"]}-title"'
+    return (f'<section class="learn-section{" is-proof" if chip else ""}" id="{slide["id"]}"'
+            f' data-number="{slide["number"]}"{media}{label}>'
+            f'{heading}<div class="learn-body">{content}{slide_cta(deck, slide, site_base)}</div>'
+            f'{narration}{more}</section>')
+
+
+def learn_page(deck: dict, manifest: dict, provenance: dict, site_base: str,
+               text_only: bool = False, units: list[dict] | None = None,
+               unit_meta: dict[str, str] | None = None) -> str:
+    """Learn (#112): the module as one page. No slides: each unit is a part of the page, each former
+    slide a section with its narration as text, and a mini-player that reads the page aloud, section
+    after section, highlighting the sentence it is on. The text-first copy is the same page, silent."""
     deck_manifest = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
     preview_count = sum(1 for e in deck_manifest.values()
                         if prov_by_audio.get(e.get("audio"), {}).get("basis") == "sentence-measured-preview")
-    total = round(sum(float(e.get("duration", 0) or 0) for e in deck_manifest.values()), 1)
     recorded = len(deck_manifest)
     label = voice_label(deck_manifest, provenance, recorded, preview_count, text_only)
     if text_only:
-        # The recordings exist but are not part of the published copy. The player must see no
-        # recordings at all, or it would offer a Play button that fetches files which are not there.
         deck_manifest = {}
-
-    if text_only:
-        cover_note = (f'<strong>{len(deck["slides"])} slides</strong>'
-                      f'<small>Narration is not published with this copy; every slide carries a '
-                      f'complete transcript.</small>')
-    else:
-        # The synthetic-voice disclosure rides the cover note too: say how a thing was produced,
-        # where a listener meets it.
-        disclosure = synthetic_disclosure(deck_manifest, provenance)
-        synthetic = f" {disclosure}" if disclosure else ""
-        cover_note = (f'<strong>{len(deck["slides"])} slides · {recorded} narrated</strong>'
-                      f'<small>{int(total // 60)}m {int(total % 60)}s of narration with captions and transcript.'
-                      f'{" Free preview voice — the release recording is pending." if preview_count else ""}'
-                      f'{synthetic}'
-                      f'</small>')
     units = units or []
-    sections = "\n".join(
-        slide_shell(deck, slide, deck_manifest.get(slide["id"]), site_base, cover_note,
-                    slide_place(deck, slide, units))
-        for slide in deck["slides"])
-
     unit_meta = unit_meta or {}
-    # The timeline: one segment per unit, as wide as its share of the deck. Each segment is a button
-    # that opens its unit's first slide; the player fills the ones behind and at the current slide.
-    segments = "".join(
-        f'<button type="button" class="tl-seg" style="flex-grow:{u["slides"]}" data-first="{u["first"]}"'
-        f' data-last="{u["last"]}" aria-label="{html.escape(SH.unit_name(u), quote=True)}, '
-        f'slides {u["first"]}–{u["last"]}"><span class="tl-fill"></span></button>'
-        for u in units)
-    unit_data = [{"id": u["id"], "first": u["first"], "last": u["last"], "kind": u["kind"],
-                  "label": u["title"] if u["kind"] == "segment" else u["label"],
-                  "name": SH.unit_name(u), "href": SH.unit_href(deck["id"], u),
-                  "meta": unit_meta.get(u["id"], "")} for u in units]
+    by_number = {sl["number"]: sl for sl in deck["slides"]}
+    segments = [u for u in units if u["kind"] == "segment"]
+    parts = []
+    for u in units:
+        span = [by_number[n] for n in range(u["first"], u["last"] + 1) if n in by_number]
+        secs = sum(float((deck_manifest.get(sl["id"]) or {}).get("duration", 0) or 0) for sl in span)
+        kicker = (f"Section {segments.index(u) + 1} of {len(segments)}" if u["kind"] == "segment"
+                  else f"Unit {units.index(u) + 1} of {len(units)}")
+        facts = [f"{len(span)} part{'s' if len(span) != 1 else ''}"]
+        if secs:
+            facts.append(f"{max(1, round(secs / 60))} min narrated")
+        if unit_meta.get(u["id"]):
+            facts.append(unit_meta[u["id"]])
+        listen = (f'<button type="button" class="learn-listen-unit" data-listen-unit>{PLAY_ICON}'
+                  f'<span>Listen to this unit</span></button>' if secs else "")
+        uid = f"{deck['id']}:{u['id']}"
+        sections = "".join(
+            learn_section(deck, sl, deck_manifest.get(sl["id"]), site_base,
+                          bare=sl["cover"] or (u["kind"] == "segment" and sl["number"] == u["first"]))
+            for sl in span)
+        # Read to its end, a teaching unit is recorded as read (#84); the lab and the check are
+        # completed on their own pages.
+        end = (f'<span class="read-end" data-read-unit="{html.escape(uid, quote=True)}" aria-hidden="true"></span>'
+               if u["kind"] not in ("lab", "quiz") else "")
+        parts.append(
+            f'<section class="learn-unit" id="unit-{html.escape(u["id"].lower().replace(".", "-"))}"'
+            f' data-unit="{html.escape(uid, quote=True)}" data-unit-kind="{u["kind"]}"'
+            f' data-first="{u["first"]}" data-last="{u["last"]}"'
+            f' data-unit-label="{html.escape(SH.unit_name(u), quote=True)}">'
+            f'<header class="learn-unit-head"><p class="page-kicker">{html.escape(kicker)}</p>'
+            f'<h2>{html.escape(SH.unit_name(u))}</h2>'
+            f'<p class="learn-unit-facts">{" · ".join(html.escape(f) for f in facts)}</p>{listen}</header>'
+            f'{sections}{end}</section>')
     number = int(deck["id"][1:])
+    short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
+    total = sum(float(e.get("duration", 0) or 0) for e in deck_manifest.values())
+    head_facts = [f"{len(units)} units", f"{len(deck['slides'])} parts"]
+    if total:
+        head_facts.append(f"{round(total / 60)} min narrated")
+    head = SH.page_head(f"Module {number} · Learn · " + " · ".join(head_facts), html.escape(short), "",
+                        f'<p class="learn-voice">{html.escape(label)}</p>')
+    player = "" if not deck_manifest else f"""<div class="learn-player" data-learn-player role="group" aria-label="Narration">
+  <button type="button" class="lp-icon" data-lp-prev aria-label="Previous part">{CHEVRON.format(d="M15 18l-6-6 6-6")}</button>
+  <button type="button" class="lp-play" data-lp-play aria-label="Play narration">{PLAY_ICON}</button>
+  <button type="button" class="lp-icon" data-lp-next aria-label="Next part">{CHEVRON.format(d="M9 6l6 6-6 6")}</button>
+  <p class="lp-now"><span class="lp-where" data-lp-where>Press play to listen from the start</span><span class="lp-time" data-lp-time></span></p>
+  <label class="sr-only" for="lp-speed">Narration speed</label>
+  <select class="lp-speed" id="lp-speed" data-lp-speed>
+    <option value="0.75">0.75×</option><option value="1" selected>1×</option>
+    <option value="1.25">1.25×</option><option value="1.5">1.5×</option>
+  </select>
+  <label class="lp-auto"><input type="checkbox" data-lp-auto checked> Continue</label>
+  <p class="sr-only" data-lp-status role="status" aria-live="polite"></p>
+</div>"""
     next_module = f"m{number + 1:02d}"
-    next_href = f"module-{next_module}.html" if next_module in DECK_IDS else "index.html"
-    return f"""<!doctype html>
-<html lang="en" class="js">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{html.escape(deck['label'])} — AI Product Studio</title>
-{SH.fonts(site_base)}
-</head>
-<body class="deck-page app-page" data-narration-manifest="{site_base}/narration.json"
-      data-narration-deck="{deck['id']}" data-site-base="{site_base}"
-      data-voice="{'preview' if preview_count else 'release'}"
-      data-units="{html.escape(json.dumps(unit_data), quote=True)}"
-      data-next-module="{next_href}"
-      data-deck-label="{html.escape(deck['label'], quote=True)}">
-<a class="skip-link" href="#slides">Skip to slides</a>
-<div class="app">
-{SH.sidebar(site_base, deck['id'])}
-<div class="app-main">
-{SH.topbar(site_base, SH.module_crumbs(site_base, deck, "Watch"), deck['id'], "watch")}
-<div class="player">
-<main id="slides" class="slides" tabindex="-1" aria-label="{html.escape(deck['label'])}">
-<h1 class="sr-only">{html.escape(deck['label'])}</h1>
-{sections}
-</main>
-<div class="player-bar" role="group" aria-label="Player">
-  <p class="player-caption" data-caption aria-live="off"></p>
-  <div class="player-controls">
-    <button type="button" class="pb-icon" data-nav="prev" aria-label="Previous slide">{CHEVRON.format(d="M15 18l-6-6 6-6")}</button>
-    <button type="button" class="pb-play" data-play aria-label="Play narration" disabled>{PLAY_ICON}</button>
-    <button type="button" class="pb-icon" data-nav="next" aria-label="Next slide">{CHEVRON.format(d="M9 6l6 6-6 6")}</button>
-    <span class="pb-time" data-time aria-hidden="true">1 / {len(deck['slides'])}</span>
-    <div class="player-timeline" role="group" aria-label="Module timeline: {len(deck['slides'])} slides in {len(units)} units">{segments}</div>
-    <label class="sr-only" for="pb-speed">Narration speed</label>
-    <select class="pb-speed" id="pb-speed" data-speed disabled>
-      <option value="0.75">0.75×</option><option value="1" selected>1×</option>
-      <option value="1.25">1.25×</option><option value="1.5">1.5×</option>
-    </select>
-    <button type="button" class="pb-cc" data-cc aria-pressed="true" aria-label="Captions" disabled>CC</button>
-    <button type="button" class="pb-icon" data-present aria-pressed="false" aria-label="Present full screen" title="Present (F)">{PRESENT_ICON}</button>
-  </div>
-  <div class="player-meta">
-    <p class="slide-status" role="status" aria-live="polite" aria-atomic="true"></p>
-    <p class="player-status" data-status role="status" aria-live="polite"></p>
-    <button type="button" class="pb-link" data-retry hidden>Retry captions</button>
-    <button type="button" class="pb-link" data-fig-replay hidden title="Replay the figure (.)">Replay figure</button>
-    <label class="pb-auto"><input type="checkbox" data-auto checked> Auto-next</label>
-    <p class="voice-label" data-voice-label>{html.escape(label)}</p>
-  </div>
+    body = f"""{head}
+<div class="learn doc-article" data-learn="{deck['id']}">
+{"".join(parts)}
+<p class="learn-foot"><a href="{site_base}/lesson-{deck['id']}.html">Read the full lesson →</a> ·
+  <a href="{site_base}/transcript-{deck['id']}.html">The module's transcript →</a> ·
+  <a href="{site_base}/{('module-' + next_module + '.html') if next_module in DECK_IDS else 'index.html'}">Next module →</a></p>
 </div>
-<div class="player-below">
-  <section class="player-panel" aria-label="This slide">
-    <div class="panel-tabs" role="tablist" aria-label="This slide">
-      <button type="button" role="tab" id="tab-transcript" aria-controls="panel-transcript" aria-selected="true" data-tab="transcript">Transcript</button>
-      <button type="button" role="tab" id="tab-sources" aria-controls="panel-sources" aria-selected="false" tabindex="-1" data-tab="sources">Sources on this slide</button>
-    </div>
-    <div class="panel-body" role="tabpanel" id="panel-transcript" aria-labelledby="tab-transcript" tabindex="0">
-      <ol class="transcript-lines" data-transcript-lines></ol>
-      <p class="panel-foot"><a href="{site_base}/transcript-{deck['id']}.html">The whole module's transcript →</a></p>
-    </div>
-    <div class="panel-body" role="tabpanel" id="panel-sources" aria-labelledby="tab-sources" tabindex="0" hidden>
-      <ul class="source-list" data-source-list></ul>
-      <p class="panel-empty" data-sources-empty hidden>This slide cites no repository file.</p>
-      <h3 class="notes-title">Speaker notes</h3>
-      <div class="drawer-notes" data-drawer-notes></div>
-    </div>
-  </section>
-  <aside class="up-next" aria-labelledby="up-next-title">
-    <h2 id="up-next-title">Up next</h2>
-    <a class="up-next-card" href="#" data-up-next>
-      <span class="up-kind" data-up-kind></span>
-      <span class="up-title" data-up-title></span>
-      <span class="up-meta" data-up-meta></span>
-    </a>
-    <p class="player-keys">Keys: <kbd>←</kbd> <kbd>→</kbd> slide · <kbd>Space</kbd> play · <kbd>T</kbd> transcript · <kbd>.</kbd> replay figure · <kbd>F</kbd> present</p>
-  </aside>
-</div>
-</div>
-</div>
-</div>
-<div class="outline-backdrop" data-outline-backdrop hidden></div>
-<noscript><style>.slide[hidden]{{display:block}}</style>
-<p class="no-script">JavaScript is off, so narration and slide navigation are disabled. Every slide is
-shown below in order and remains readable.</p></noscript>
-<script src="{site_base}/assets/progress.js" defer></script>
-<script src="{site_base}/assets/shell.js" defer></script>
-<script src="{site_base}/assets/narration-media.js" defer></script>
-<script src="{site_base}/assets/player.js" defer></script>
-<script src="{site_base}/assets/search.js" defer></script>
-</body>
-</html>
-"""
+{player}"""
+    unit_data = [{"id": u["id"], "first": u["first"], "last": u["last"], "kind": u["kind"],
+                  "name": SH.unit_name(u)} for u in units]
+    attrs = (f' data-learn-deck="{deck["id"]}" data-deck-label="{html.escape(deck["label"], quote=True)}"'
+             f' data-units="{html.escape(json.dumps(unit_data), quote=True)}"')
+    return SH.document(f"{deck['label']} — AI Product Studio", deck["label"], body, site_base,
+                       "doc-page learn-page", crumbs=SH.module_crumbs(site_base, deck, "Learn"),
+                       deck_id=deck["id"], current="watch", mode="watch",
+                       scripts=("narration-media.js", "learn.js"), body_attrs=attrs)
 
 
 def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: str,
@@ -1207,8 +1102,8 @@ def main(argv=None) -> int:
             raise SystemExit(f"knowledge check: {error}")
         meta = {"lab": f"{SP.lab_time(deck['id'])} hands-on", "quiz": f"{questions} questions"}
         (target / f"{deck['id']}.html").write_text(
-            page(deck, manifest, provenance, args.site_base, text_only=args.no_narration,
-                 units=units_by_deck[deck["id"]], unit_meta=meta),
+            learn_page(deck, manifest, provenance, args.site_base, text_only=args.no_narration,
+                       units=units_by_deck[deck["id"]], unit_meta=meta),
             encoding="utf-8")
         (target / f"transcript-{deck['id']}.html").write_text(
             transcript_page(deck, manifest, provenance, args.site_base, text_only=args.no_narration),

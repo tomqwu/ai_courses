@@ -88,7 +88,7 @@ course/learner-site/assets/audio/<edition>/<deck>/slide-N.{mp3,vtt}   ← genera
 course/learner-site/                     ← the learner experience
   build_site.py                          ← slides.md + manifest → static site
   check_player.py                        ← headless browser check (no npm install)
-  assets/player.js · narration-media.js · player.css
+  assets/learn.js · narration-media.js · player.css
   index.html (generated, gitignored) · mNN.html (generated, gitignored)
 ```
 

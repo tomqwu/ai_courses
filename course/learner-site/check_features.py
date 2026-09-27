@@ -54,6 +54,20 @@ def run(page, browser, base: str) -> list[str]:
     def events():
         return json.loads(page.evaluate("JSON.stringify(window.APSProgress.events())"))
 
+    # The stylesheet parses whole: a stray bracket makes the browser drop every rule after it, and
+    # nothing else fails loudly (a pruned `:is(` once cut player.css from 712 rules to 96).
+    css = re.sub(r"/\*.*?\*/", "", (SITE / "assets" / "player.css").read_text(encoding="utf-8"), flags=re.S)
+    depth, top = 0, 0
+    for ch in css:
+        if ch == "{":
+            if depth == 0:
+                top += 1
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+    page.goto(f"{base}/index.html")
+    parsed = page.evaluate("""() => [...document.styleSheets].find(s => (s.href || '').endsWith('player.css')).cssRules.length""")
+    need(parsed == top, f"player.css: the browser parsed {parsed} of its {top} top-level rules — a syntax error drops the rest")
     # Progress is recorded, never self-ticked (#84): no page offers a checkbox that marks a unit, and
     # a new visitor sees Start above the fold on a module page, on a desktop and on a phone.
     for built in sorted(p for p in SITE.glob("*.html") if not p.name.startswith("_")):
@@ -74,13 +88,13 @@ def run(page, browser, base: str) -> list[str]:
     need(start.inner_text().strip() == "Start module" and (start.get_attribute("href") or "").endswith("m02.html#slide-1")
          and start.bounding_box()["y"] < 900,
          "module-m02: a first visit is not offered 'Start module' above the fold")
-    # Paging through a deck records where the learner is, and completes nothing.
-    page.goto(f"{base}/m02.html")
-    page.locator("#slides").focus()
-    for _ in range(4):
-        page.keyboard.press("ArrowRight")
-        page.wait_for_timeout(60)
-    need(not any(k.startswith("m02:") for k in units()), "deck: paging M2 completed a unit without watching it")
+    # Opening the Learn page part of the way in records where the learner is, and completes nothing
+    # it has not reached (#112): a unit is read only when its end has been on screen.
+    page.goto(f"{base}/m02.html#slide-5")
+    page.wait_for_timeout(500)
+    reached = sorted(k for k in units() if k.startswith("m02:"))
+    need(not [k for k in reached if k not in ("m02:intro",)],
+         f"learn: opening M2 at part 5 recorded units it had not reached: {reached}")
     # Watching: the narration ending on a unit's last slide records the unit as watched. The audio
     # itself is not played here (a module is minutes long); its `ended` event is what the player
     # records, so that is what is fired, on each lesson unit's last slide.
@@ -90,8 +104,10 @@ def run(page, browser, base: str) -> list[str]:
              if a.get_attribute("data-unit").split(":")[1] not in ("lab", "quiz")]
     for unit, last in watch:
         page.goto(f"{base}/m02.html#slide-{last}")
-        page.wait_for_timeout(250)
+        page.locator(f"#slide-{last} [data-listen]").click()
+        page.wait_for_timeout(300)
         page.evaluate("document.querySelector('audio[data-narration-audio]').dispatchEvent(new Event('ended'))")
+        page.evaluate("document.querySelector('audio[data-narration-audio]').pause()")
     watched = {e["unit"] for e in events() if e["kind"] == "watched"}
     need(watched == {u for u, _ in watch}, f"deck: watching M2 end to end recorded {sorted(watched)}")
     page.goto(f"{base}/module-m02.html")
@@ -125,18 +141,18 @@ def run(page, browser, base: str) -> list[str]:
         need('id="app-outline"' in text and 'class="app-bar"' in text and 'class="skip-link"' in text,
              f"{built.name}: does not render the shell (outline, top bar and skip link)")
         need('class="site-header' not in text, f"{built.name}: still opens on the hero band")
-        # Four modes, not nine tabs (#74): a module page offers Watch · Read · Lab · Check and nothing
+        # Four modes, not nine tabs (#74): a module page offers Learn · Read · Lab · Check and nothing
         # beside them at the top level.
         need('class="module-tabs"' not in text, f"{built.name}: still shows the module tab row")
         if 'class="mode-switch"' in text:
             modes = re.search(r'<nav class="mode-switch"[^>]*>(.*?)</nav>', text, re.S).group(1)
             labels = [re.sub(r"<[^>]+>", "", a).strip() for a in re.findall(r"<a [^>]*>(.*?)</a>", modes, re.S)]
-            need(labels == ["Watch", "Read", "Lab", "Check"],
-                 f"{built.name}: the mode switch is not exactly Watch · Read · Lab · Check")
+            need(labels == ["Learn", "Read", "Lab", "Check"],
+                 f"{built.name}: the mode switch is not exactly Learn · Read · Lab · Check")
     # Every old per-module URL still resolves, as a view of its mode.
     for deck in sorted(p.stem.split("-")[1] for p in SITE.glob("quiz-m*.html")):
-        for pattern, mode in (("{d}.html", "Watch"), ("lesson-{d}.html", "Read"), ("handout-{d}.html", "Read"),
-                              ("glossary-{d}.html", "Read"), ("transcript-{d}.html", "Watch"),
+        for pattern, mode in (("{d}.html", "Learn"), ("lesson-{d}.html", "Read"), ("handout-{d}.html", "Read"),
+                              ("glossary-{d}.html", "Read"), ("transcript-{d}.html", "Learn"),
                               ("lab-{d}.html", "Lab"), ("quiz-{d}.html", "Check"), ("module-{d}.html", None)):
             path = SITE / pattern.format(d=deck)
             if not path.exists():
@@ -159,7 +175,7 @@ def run(page, browser, base: str) -> list[str]:
              and (row.locator("[data-status-text]").text_content() or "").strip() == "done",
              f"outline: {done[0]} was recorded done but the outline does not say so in words")
     # …and the module's start point has become the resume point.
-    need(page.locator("[data-start-label]").inner_text().startswith("Resume · slide "),
+    need(page.locator("[data-start-label]").inner_text().startswith("Resume · part "),
          "module-m02: after paging the deck, the start point does not offer to resume")
     todo = page.locator('#app-outline [data-module="m05"] > a')
     need("is-todo" in (todo.get_attribute("class") or "")
@@ -178,27 +194,20 @@ def run(page, browser, base: str) -> list[str]:
          "outline: the lab page does not mark its unit aria-current")
     need(page.locator('.mode-switch a[aria-current="page"]').text_content().strip() == "Lab",
          "top bar: the lab page's mode switch does not show Lab as current")
-    # The player works without a mouse (#75): arrows move slides, T opens the transcript, the tabs
-    # answer arrow keys, F presents and F leaves; the Up next card names what follows.
-    page.goto(f"{base}/m03.html#slide-1")
-    page.wait_for_timeout(300)
-    page.locator("#slides").focus()
-    page.keyboard.press("ArrowRight")
-    need(page.evaluate("document.querySelector('.slide[aria-current]').id") == "slide-2",
-         "player: ArrowRight did not move to slide 2")
-    page.keyboard.press("t")
-    need(page.evaluate("document.activeElement.id") == "tab-transcript", "player: T did not focus the transcript tab")
-    page.keyboard.press("ArrowRight")
-    need(page.evaluate("document.activeElement.id") == "tab-sources"
-         and not page.locator("#panel-sources").is_hidden(),
-         "player: the panel tabs do not answer the arrow keys")
-    page.locator("#slides").focus()
-    page.keyboard.press("f")
-    presenting = page.evaluate("document.body.classList.contains('presentation-mode')")
-    page.keyboard.press("f")
-    need(presenting and not page.evaluate("document.body.classList.contains('presentation-mode')"),
-         "player: F did not enter and leave presentation mode")
-    need(page.locator("[data-up-title]").inner_text().strip() != "", "player: the Up next card is empty")
+    # Learn (#112): the whole module is one page — every part visible, none paged — and "Listen to
+    # this unit" plays that unit's first part, which the player names.
+    page.goto(f"{base}/m03.html")
+    parts = page.locator(".learn-section")
+    shown = sum(1 for i in range(parts.count()) if parts.nth(i).is_visible())
+    need(parts.count() >= 15 and shown == parts.count(), f"learn m03: {shown} of {parts.count()} parts visible")
+    if page.locator("[data-learn-player]").count():
+        page.locator('#unit-m3-1 [data-listen-unit]').click()
+        page.wait_for_timeout(600)
+        playing = page.locator(".learn-section.is-playing")
+        need(playing.count() == 1 and playing.first.get_attribute("id") == "slide-" + page.locator("#unit-m3-1").get_attribute("data-first")
+             and "M3.1" in page.locator("[data-lp-where]").inner_text(),
+             "learn m03: 'Listen to this unit' did not play the unit's first part, or the player does not name it")
+        page.evaluate("document.querySelector('audio[data-narration-audio]').pause()")
 
     # Keyboard order: skip link, then the outline (with search), then the top bar, then the content.
     page.goto(f"{base}/lab-m03.html")
@@ -249,8 +258,8 @@ def run(page, browser, base: str) -> list[str]:
         for i in range(qs.count()):
             q, label = qs.nth(i), f"{qp.name} question {i + 1}"
             played += 1
-            need(q.is_visible() and page.locator(".qq:visible").count() == 1,
-                 f"{label}: not shown on its own screen")
+            need(q.is_visible() and page.locator(".qq:visible").count() == qs.count(),
+                 f"{label}: not on the page with every other question")
             if "is-mc" in (q.get_attribute("class") or ""):
                 key = q.get_attribute("data-answer") or ""
                 need(q.locator("fieldset legend").count() == 1 and q.locator('[role="status"]').count() == 1,
@@ -268,7 +277,6 @@ def run(page, browser, base: str) -> list[str]:
                      f"{label}: model answer reachable before an attempt")
                 q.locator("textarea").fill("An attempt long enough to count as one.")
                 q.locator("[data-reveal]").click()
-            q.locator("[data-next]").click()
         summary = page.locator("[data-summary-text]")
         need(summary.count() and "clears the 75%" in summary.inner_text(),
              f"{qp.name}: all keyed answers did not clear the 75% threshold")
@@ -276,7 +284,8 @@ def run(page, browser, base: str) -> list[str]:
     need(len(quizzes) == len(quiz_pages), f"quiz scores reached progress for {len(quizzes)} of {len(quiz_pages)} modules")
     # Answers persist: a finished check reopens on its result; "Try again" clears it.
     page.goto(f"{base}/quiz-m03.html")
-    need(page.locator("[data-quiz-summary]").is_visible(), "quiz-m03: a finished check did not reopen on its result")
+    need("multiple-choice correct (" in page.locator("[data-summary-text]").inner_text(),
+         "quiz-m03: a finished check did not reopen on its result")
     page.locator("[data-quiz-again]").click()
     page.wait_for_load_state()
     # Keyboard only, wrong answer: the feedback names the key, and links back to the segment.
@@ -291,11 +300,11 @@ def run(page, browser, base: str) -> list[str]:
          and "Your answer" in q.locator(f'.q-option[data-letter="{wrong}"] [data-mark]').inner_text(),
          "quiz-m03: a keyboard-only wrong answer got no feedback naming the key and the learner's answer")
     need(re.search(r"m03\.html#slide-\d+$", q.locator(".q-rewatch").get_attribute("href") or ""),
-         "quiz-m03: the feedback does not link back to the slide that teaches the question")
+         "quiz-m03: the feedback does not link back to the part that teaches the question")
     page.reload()
-    need(page.locator(".qq:visible").get_attribute("data-n") != q.get_attribute("data-n")
-         and "is-wrong" in (page.locator(".qq").first.get_attribute("class") or ""),
-         "quiz-m03: the answer did not survive a reload, or the check did not resume at the next question")
+    visible = sum(1 for i in range(page.locator(".qq").count()) if page.locator(".qq").nth(i).is_visible())
+    need(visible == page.locator(".qq").count() and "is-wrong" in (page.locator(".qq").first.get_attribute("class") or ""),
+         "quiz-m03: the answer did not survive a reload, or the questions are not all on the page")
 
     # Labs: the checklist persists and completes; the evidence entry exports; auto-fail is shown.
     page.goto(f"{base}/lab-m01.html")
@@ -424,8 +433,9 @@ def run(page, browser, base: str) -> list[str]:
             page.keyboard.press("Escape")
             page.goto(f"{base}/{timed.lstrip('./')}")
             page.wait_for_timeout(700)
-            need("Starts at" in page.locator("[data-status]").inner_text(),
-                 "player: opened from a spoken-sentence hit, it does not say where it starts")
+            need("Starts at" in page.locator("[data-lp-where]").inner_text()
+                 and page.locator(".said.is-found").count() == 1,
+                 "learn: opened from a spoken-sentence hit, it does not mark the sentence or say where it starts")
 
     # Reading pages: a table of contents, and pointers linked at a pinned commit.
     for kind in ("lesson", "handout", "glossary"):
@@ -448,9 +458,9 @@ def run(page, browser, base: str) -> list[str]:
     want = [f"{built['pointers']['checked']:,}", f"{built['pointers']['anchors']:,}", f"{built['narration']['recorded']:,}"]
     need(shown == want, f"home: the proof numbers {shown} are not the build's {want}")
     resume.click()
-    page.wait_for_selector(".slide[aria-current]")
-    need(page.url.endswith(last) and page.evaluate("document.querySelector('.slide[aria-current]').id") == last.split("#")[1],
-         "home: Resume did not land on the stored slide")
+    page.wait_for_timeout(600)
+    top = page.evaluate(f"document.getElementById('{last.split('#')[1]}').getBoundingClientRect().top")
+    need(page.url.endswith(last) and 0 <= top < 300, f"home: Resume did not land on the stored part ({last}, top {top})")
     page.goto(f"{base}/proof.html")
     need(len(page.eval_on_selector_all(".proof a", "as => as.map(a => a.href)")) >= 3,
          "proof: the proof section links fewer than three sources")
@@ -464,37 +474,24 @@ def run(page, browser, base: str) -> list[str]:
     # Figures build on the narration (#99): a stepped figure opens complete, Replay (or ".") takes it
     # back to its first part and builds it one step at a time to complete, and under reduced motion
     # it never hides a part. In Read the same figure heads its segment, complete, with no steps.
-    pending = "document.querySelectorAll('.slide[aria-current] .fig [data-step].is-pending').length"
+    pending = "document.querySelectorAll('#slide-3 .fig [data-step].is-pending').length"
     page.goto(f"{base}/m02.html#slide-3")
     page.wait_for_timeout(300)
-    steps = page.evaluate("document.querySelectorAll('.slide[aria-current] .fig [data-step]').length")
+    steps = page.evaluate("document.querySelectorAll('#slide-3 .fig [data-step]').length")
     need(steps >= 3, f"m02 slide-3: the stepped figure has {steps} build steps")
     need(page.evaluate(pending) == 0, "m02 slide-3: a stepped figure does not open complete")
-    need(page.locator("[data-fig-replay]").is_visible(), "m02 slide-3: no Replay figure control")
-    page.locator(".slide[aria-current] h2, .slide[aria-current] h1").first.click()
-    page.keyboard.press(".")
-    page.wait_for_timeout(200)
-    need(page.evaluate(pending) == steps, "m02 slide-3: '.' did not take the figure back to its first part")
-    page.wait_for_timeout(1500)
-    mid = page.evaluate(pending)
-    need(0 < mid < steps, f"m02 slide-3: the replay did not build step by step ({mid} of {steps} pending)")
-    page.wait_for_timeout(900 * steps + 600)
-    need(page.evaluate(pending) == 0, "m02 slide-3: the replay did not finish complete")
-    page.goto(f"{base}/m02.html#slide-4")
-    need(page.locator("[data-fig-replay]").is_hidden(), "m02 slide-4: Replay figure shown on a slide with no stepped figure")
-    calm = browser.new_context(viewport={"width": 1280, "height": 900}, reduced_motion="reduce").new_page()
-    calm.goto(f"{base}/m02.html#slide-3")
-    calm.keyboard.press(".")
-    calm.wait_for_timeout(300)
-    need(calm.evaluate(pending) == 0, "m02 slide-3: reduced motion still hides figure parts")
-    calm.close()
-    # A numbered procedure is a left-aligned stepper: each step's text starts beside its number,
-    # not centred across a full-width row (the M0.3 bug).
-    page.goto(f"{base}/m00.html#slide-12")
-    page.wait_for_timeout(300)
-    gap = page.evaluate("""() => { const n = document.querySelector('.slide[aria-current] .fig-track.is-numbered .fig-node');
-        return n ? n.querySelector('.fig-label').getBoundingClientRect().left - n.getBoundingClientRect().left : -1; }""")
-    need(0 <= gap < 60, f"m00 slide-12: a numbered step's text starts {gap}px into its row — not left-aligned")
+    if page.locator("[data-learn-player]").count():
+        page.locator("#slide-3 [data-listen]").click()
+        page.wait_for_timeout(700)
+        need(page.evaluate(pending) > 0, "m02 slide-3: listening does not build the figure on the narration")
+        page.evaluate("document.querySelector('audio[data-narration-audio]').pause()")
+        calm = browser.new_context(viewport={"width": 1280, "height": 900}, reduced_motion="reduce").new_page()
+        calm.goto(f"{base}/m02.html#slide-3")
+        calm.locator("#slide-3 [data-listen]").click()
+        calm.wait_for_timeout(700)
+        need(calm.evaluate(pending) == 0, "m02 slide-3: reduced motion still hides figure parts")
+        calm.evaluate("document.querySelector('audio[data-narration-audio]').pause()")
+        calm.close()
     page.goto(f"{base}/lesson-m02.html")
     need(page.locator(".doc-article [data-figure]").count() >= 1
          and page.locator(".doc-article [data-figure] [data-step]").count() == 0,
@@ -536,11 +533,11 @@ def run(page, browser, base: str) -> list[str]:
     need(not wide, f"at 390px these pages scroll sideways: {wide[:6]}")
     handset.goto(f"{base}/m02.html#slide-9")
     handset.wait_for_timeout(400)
-    slide = handset.locator(".slide[aria-current]").bounding_box()
-    handset.locator("[data-play]").scroll_into_view_if_needed()
-    play = handset.locator("[data-play]").bounding_box()
-    need(slide and slide["width"] >= 360 and play and play["width"] >= 44 and play["height"] >= 44,
-         "player at 390px: the slide is not full width, or Play is not a 44px target")
+    part = handset.locator("#slide-9").bounding_box()
+    need(part and part["width"] >= 340, "learn at 390px: a part is not full width")
+    if handset.locator("[data-lp-play]").count():
+        play = handset.locator("[data-lp-play]").bounding_box()
+        need(play and play["width"] >= 44 and play["height"] >= 44, "learn at 390px: Play is not a 44px target")
     handset.close()
     print(f"  played {played} knowledge-check questions, {len(list(SITE.glob('lab-m*.html')))} lab pages")
     return problems

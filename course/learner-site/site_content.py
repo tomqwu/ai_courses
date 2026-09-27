@@ -1,6 +1,6 @@
 """The course text on the site: lessons, handouts, glossaries, labs and knowledge checks.
 
-The decks are one slide at a time; this module renders the artifacts *underneath* them — the
+The Learn pages hold each module's parts; this module renders the artifacts *underneath* them — the
 lesson text the audit called "genuine method", the printable handout, the glossary, the lab with
 its acceptance checklist, and the quiz as an interactive knowledge check — so a learner can read,
 search and work without leaving the site.

@@ -1,4 +1,4 @@
-/* Check — the module's knowledge check, one question at a time (#78).
+/* Check — the module's knowledge check, every question on one page (#78, #112).
  *
  * Multiple choice: pick a card, check it, and the cards say which is the correct answer and which
  * was yours — in words as well as colour — with the key's explanation and a Rewatch link to the
@@ -18,10 +18,6 @@
   var state = {};   // n → { answered, correct: bool|null, chosen, text }
   var summary = root.querySelector('[data-quiz-summary]');
   var scoreEl = root.querySelector('[data-quiz-score]');
-  var countEl = root.querySelector('[data-q-count]');
-  var objectiveEl = root.querySelector('[data-q-objective]');
-  var dots = Array.prototype.slice.call(root.querySelectorAll('.q-dots li'));
-  var current = 0;
 
   function mcCount() { return questions.filter(function (q) { return q.classList.contains('is-mc'); }).length; }
 
@@ -36,40 +32,19 @@
     return { answered: answered, correct: correct, graded: graded };
   }
 
-  function paintDots() {
-    dots.forEach(function (d, i) {
-      var s = state[questions[i].getAttribute('data-n')];
-      d.className = (i === current ? 'is-current ' : '') + (!s || !s.answered ? '' : s.correct === false ? 'is-wrong' : 'is-done');
-    });
-  }
-
-  function show(i, focus) {
-    current = Math.max(0, Math.min(total - 1, i));
-    questions.forEach(function (q, n) { q.hidden = n !== current; });
-    if (summary) summary.hidden = true;
-    var q = questions[current];
-    countEl.textContent = 'Question ' + (current + 1) + ' of ' + total;
-    var objective = q.getAttribute('data-objective');
-    objectiveEl.textContent = objective ? 'Objective: ' + objective : '';
-    paintDots();
-    if (focus) {
-      var stem = q.querySelector('.q-stem');
-      stem.setAttribute('tabindex', '-1');
-      stem.focus({ preventScroll: true });
-      var top = root.getBoundingClientRect().top + window.scrollY - 80;
-      if (window.scrollY > top) window.scrollTo({ top: top });
-    }
-  }
-
+  // The result at the end of the page: a count while questions are open, the score once all are in.
   function finish() {
     var t = tally();
     var mc = mcCount();
     var pct = mc ? Math.round(t.correct / mc * 100) : 0;
-    questions.forEach(function (q) { q.hidden = true; });
-    countEl.textContent = 'Result';
-    objectiveEl.textContent = '';
-    summary.hidden = false;
-    summary.querySelector('[data-summary-text]').textContent =
+    var text = summary.querySelector('[data-summary-text]');
+    if (t.answered < total) {
+      text.textContent = t.answered + ' of ' + total + ' answered · ' + t.correct + ' of ' + t.graded +
+        ' multiple-choice correct so far. Answer every question above for your result.';
+      summary.querySelector('[data-revisit]').hidden = true;
+      return false;
+    }
+    text.textContent =
       t.correct + ' of ' + mc + ' multiple-choice correct (' + pct + '%). ' +
       (pct >= 75 ? 'That clears the 75% certificate threshold for this module.'
                  : 'The certificate threshold is 75% — revisit the objectives below and try again.');
@@ -82,21 +57,19 @@
       var li = document.createElement('li');
       var href = q.getAttribute('data-rewatch');
       var label = 'Question ' + (i + 1) + ' — ' + (q.getAttribute('data-objective') || 'its objective');
-      if (href) { var a = document.createElement('a'); a.href = href; a.textContent = label + ' · rewatch'; li.append(a); }
+      if (href) { var a = document.createElement('a'); a.href = href; a.textContent = label + ' · revisit'; li.append(a); }
       else li.textContent = label;
       list.append(li);
     });
     summary.querySelector('[data-revisit]').hidden = !list.children.length;
     if (P) P.setQuiz(deck, t.correct, mc);
-    paintDots();
-    var h = summary.querySelector('h2');
-    if (h) h.focus({ preventScroll: true });
+    return true;
   }
 
   function update() {
     var t = tally();
     if (scoreEl) scoreEl.textContent = t.correct + ' / ' + t.graded + ' multiple-choice correct · ' + t.answered + ' of ' + total + ' answered';
-    paintDots();
+    finish();
   }
 
   function save(n, record) {
@@ -110,10 +83,6 @@
     var key = q.getAttribute('data-answer');
     var explain = q.querySelector('.q-explain');
     var feedback = q.querySelector('[data-feedback]');
-    var next = q.querySelector('[data-next]');
-    var prev = q.querySelector('[data-prev]');
-    next.addEventListener('click', function () { if (index === total - 1) finish(); else show(index + 1, true); });
-    prev.addEventListener('click', function () { show(index - 1, true); });
 
     if (q.classList.contains('is-mc')) {
       var options = Array.prototype.slice.call(q.querySelectorAll('.q-option'));
@@ -140,7 +109,6 @@
         check.disabled = true;
         check.hidden = true;
         explain.hidden = false;
-        next.disabled = false;
         if (announce) feedback.textContent = correct ? 'Correct.' : 'Not quite — the keyed answer is ' + key.toUpperCase() + '.';
         else feedback.textContent = correct ? 'Answered: correct.' : 'Answered — the keyed answer is ' + key.toUpperCase() + '.';
       };
@@ -159,7 +127,6 @@
         reveal.disabled = true;
         reveal.hidden = true;
         area.readOnly = true;
-        next.disabled = false;
         q.classList.add('is-revealed');
       };
       reveal.addEventListener('click', function () {
@@ -171,16 +138,13 @@
     }
   });
 
-  // Answers already given in this browser come back, and the check resumes at the first open question.
+  // Answers already given in this browser come back.
   var saved = P && P.quizAnswers ? P.quizAnswers(deck) : {};
-  var firstOpen = -1;
-  questions.forEach(function (q, i) {
+  questions.forEach(function (q) {
     var s = saved[q.getAttribute('data-n')];
     if (s && s.answered && q._restore) { state[q.getAttribute('data-n')] = s; q._restore(s); }
-    else if (firstOpen < 0) firstOpen = i;
   });
   update();
-  if (firstOpen < 0 && total) finish(); else show(Math.max(0, firstOpen), false);
 
   var again = root.querySelector('[data-quiz-again]');
   if (again) again.addEventListener('click', function () {

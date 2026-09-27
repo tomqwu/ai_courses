@@ -3,7 +3,7 @@
  *
  * Open it with ⌘K / Ctrl+K or "/", or any search button. It is a modal dialog (the rest of the page is
  * inert while it is open); ↑ ↓ move through the results, ↵ opens one, Esc closes. Results are grouped
- * by kind — Slides, Glossary, Lesson text, Labs — with the group holding the best match first, and the
+ * by kind — Learn, Glossary, Lesson text, Labs — with the group holding the best match first, and the
  * matched words are highlighted. A slide found by a sentence of its narration opens the player at
  * the moment that sentence is spoken, when the copy publishes its captions.
  *
@@ -16,7 +16,7 @@
   var base = (document.body.getAttribute('data-site-base') || '.').replace(/\/$/, '');
   var index = null, loading = null;
   var GROUPS = [
-    { key: 'slides', label: 'Slides', kinds: ['slide'] },
+    { key: 'slides', label: 'Learn', kinds: ['slide'] },
     { key: 'glossary', label: 'Glossary', kinds: ['term'] },
     { key: 'lessons', label: 'Lesson text', kinds: ['lesson', 'lesson-heading', 'handout', 'handout-heading'] },
     { key: 'labs', label: 'Labs', kinds: ['lab', 'lab-heading'] },
@@ -32,7 +32,7 @@
     '<label class="search-field"><span class="search-field-label">Search</span>' +
     '<input id="aps-search-input" type="search" autocomplete="off" spellcheck="false" role="combobox"' +
     ' aria-expanded="false" aria-controls="aps-search-results" aria-autocomplete="list"' +
-    ' placeholder="Slides, narration, lessons, labs, terms…"></label>' +
+    ' placeholder="Parts, narration, lessons, labs, terms…"></label>' +
     '<button type="button" class="search-esc" data-search-close aria-label="Close search">esc</button></form>' +
     '<p class="search-hint" data-search-hint>Type at least two characters. Results open the slide, section, step or term directly.</p>' +
     '<div class="search-results" id="aps-search-results" data-search-results role="listbox" aria-label="Results"></div>' +
@@ -159,7 +159,7 @@
 
   function where(it) {
     var mod = it.d ? 'M' + parseInt(it.d.slice(1), 10) : 'Course';
-    if (it.k === 'slide') return mod + ' · slide ' + it.n;
+    if (it.k === 'slide') return mod + ' · part ' + it.n;
     if (it.k === 'term') return mod + ' glossary';
     return mod + ' · ' + (it.m || '');
   }
