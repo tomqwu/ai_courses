@@ -128,6 +128,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write
+      pages: read
     concurrency:
       group: pages-deploy
       cancel-in-progress: false
@@ -153,6 +154,19 @@ jobs:
           GIT_COMMITTER_NAME: github-actions[bot]
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
         run: python3 course/publish_site.py --skip-verify
+
+      # A push to gh-pages is only a deploy if Pages serves gh-pages. It did not until #88 — Pages
+      # built main's README — and every deploy went green while nothing read what it published.
+      - name: Pages serves the branch this job publishes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.source.branch')
+          echo "GitHub Pages serves: ${branch}"
+          if [ "${branch}" != "gh-pages" ]; then
+            echo "::error::GitHub Pages serves '${branch}', not gh-pages, so this deploy is not what the site shows. Settings → Pages → Deploy from a branch → gh-pages / (root). See #88."
+            exit 1
+          fi
 
       - name: Where it went
         run: echo "https://tomqwu.github.io/ai_courses/ (published from ${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
