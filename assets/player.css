@@ -615,6 +615,12 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
    page tokens, so the same figure reads on a slide, in Read and on the module page. Cobalt marks a seam — "act here" — and is always
    labelled too; ink is the core. Two sizes only: the label and the note. */
 .fig { margin: 0.6em 0; font-size: 0.95em; }
+/* On a slide a figure is sized on the slide's own scale (cqw), like every other line: inheriting the
+   page's px size made it the one thing that did not shrink with the frame, so it clipped on a laptop. */
+.slide .fig { font-size: var(--t-small); }
+.module-hero .fig { font-size: var(--d-5); }
+/* a numbered procedure is a list, read like the slide's bullets: the body size */
+.slide .fig:has(.fig-track.is-numbered) { font-size: var(--t-body); }
 .fig .fig-label { display: block; color: var(--c-ink-strong, var(--ink-strong)); font-weight: 650; line-height: 1.25; }
 .fig .fig-note { display: block; margin-top: 0.15em; color: var(--c-ink-soft, var(--ink-soft));
   font-weight: 400; font-size: 0.78em; line-height: 1.35; }
@@ -644,7 +650,30 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 @keyframes fig-flow { from { stroke-dashoffset: 8; } to { stroke-dashoffset: 0; } }
 
 /* flow: cards in a row, wrapping; a loop draws its return path under the row */
-.fig-track { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.45em 0.35em; }
+/* One row: cards shrink and their text wraps, so a flow never breaks onto a second line that starts
+   (or a first line that ends) with a dangling arrow. A phone turns the row into a column. */
+.fig-track { display: flex; flex-wrap: nowrap; align-items: stretch; gap: 0.35em; }
+.fig-track > .fig-node { flex: 1 1 auto; }
+/* on a slide the row is fixed and measured, so a long label may break anywhere; in Read the row
+   wraps instead and words stay whole */
+.slide .fig-node .fig-label, .slide .fig-box .fig-label { overflow-wrap: anywhere; }
+/* Off a slide (Read, the module page) there is no fixed frame: a flow of five or more steps reads top
+   to bottom, like on a phone, rather than wrapping into rows that end on a dangling arrow. */
+.fig-track.is-long { flex-direction: column; }
+.fig-track.is-long > .fig-link { transform: rotate(90deg); width: 1.4em; margin: 0.1em auto; }
+.fig-track.is-long + .fig-loop { height: auto; margin: 0.4em 0 0; border: 0; text-align: center; }
+.fig-track.is-long + .fig-loop::before { display: none; }
+.fig-track.is-long + .fig-loop .fig-loop-label { position: static; transform: none; padding: 0; }
+.fig-track.is-long + .fig-loop .fig-loop-label::before { content: "\2191  "; }
+.slide .fig-track.is-long { flex-direction: row; }
+.slide .fig-track.is-long > .fig-link { transform: none; width: 2.2em; margin: 0; }
+.slide .fig-track.is-long + .fig-loop { height: 1.1em; margin: 0.1em 1.4em 0.4em; border: 2px solid var(--accent);
+  border-top: 0; text-align: left; }
+.slide .fig-track.is-long + .fig-loop::before { display: block; }
+.slide .fig-track.is-long + .fig-loop .fig-loop-label { position: absolute; transform: translateX(-50%); padding: 0 0.5em; }
+.slide .fig-track.is-long + .fig-loop .fig-loop-label::before { content: none; }
+/* room above the row for the tags that sit on a card's top border */
+.fig-track:has(.fig-flag) { padding-top: 0.6em; }
 .fig-node, .fig-box { position: relative; display: flex; flex-direction: column; justify-content: center; min-width: 0;
   background: var(--surface); border: 2px solid var(--c-ink-strong, var(--ink-strong)); border-radius: 0.6em;
   padding: 0.45em 0.85em; }
@@ -654,16 +683,27 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-track.is-numbered { counter-reset: fig-step; }
 .fig-number { display: inline-grid; place-items: center; width: 1.6em; height: 1.6em; margin-bottom: 0.25em;
   border-radius: 50%; background: var(--c-ink-strong, var(--ink-strong)); color: var(--white); font-size: 0.78em; font-weight: 700; }
-.fig-loop { display: block; width: 100%; height: 0.9em; margin-top: 0.15em; fill: none;
-  stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; opacity: 0.7; }
-/* a numbered procedure reads top to bottom, not across */
-.fig-track.is-numbered { flex-direction: column; flex-wrap: nowrap; gap: 0.2em; }
-.fig-track.is-numbered .fig-node { flex-direction: row; align-items: baseline; gap: 0.55em;
-  padding: 0.25em 0.6em; border-width: 1px; border-color: var(--c-rule, var(--line)); }
+.fig-loop { position: relative; height: 1.1em; margin: 0.1em 1.4em 0.4em; border: 2px solid var(--accent);
+  border-top: 0; border-radius: 0 0 0.7em 0.7em; }
+.fig-loop::before { content: ""; position: absolute; left: -0.42em; top: -0.35em; border: 0.38em solid transparent;
+  border-bottom: 0.5em solid var(--accent); border-top: 0; }
+.fig-loop-label { position: absolute; left: 50%; bottom: -0.55em; transform: translateX(-50%); padding: 0 0.5em;
+  background: var(--surface); color: var(--accent-deep); font-size: 0.78em; font-weight: 650; line-height: 1; }
+/* a numbered procedure reads top to bottom: a stepper — number, label, note — left-aligned,
+   one rule between steps, a spine joining the numbers. No full-width boxes. */
+.fig-track.is-numbered { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 0; }
+.fig-track.is-numbered .fig-node { position: relative; flex-direction: row; align-items: center;
+  justify-content: flex-start; gap: 0.6em; padding: 0.3em 0; background: none; border: 0;
+  border-bottom: 1px solid var(--c-rule, var(--line)); border-radius: 0; }
+.fig-track.is-numbered .fig-node:last-child { border-bottom: 0; }
+.fig-track.is-numbered .fig-node::before { content: ""; position: absolute; left: 0.8em; top: 0;
+  bottom: 0; width: 2px; background: var(--c-rule, var(--line)); transform: translateX(-50%); }
+.fig-track.is-numbered .fig-node:first-child::before { top: 50%; }
+.fig-track.is-numbered .fig-node:last-child::before { bottom: 50%; }
 .fig-track.is-numbered .fig-node .fig-label { display: inline; }
 .fig-track.is-numbered .fig-node .fig-note { display: inline; margin: 0; }
 .fig-track.is-numbered .fig-link { display: none; }
-.fig-track.is-numbered .fig-number { flex: none; margin: 0; align-self: center; }
+.fig-track.is-numbered .fig-number { position: relative; flex: none; margin: 0; }
 
 /* architecture: layered bands, each a heading over a row of boxes */
 .fig-bands { display: grid; gap: 0.4em; }
@@ -673,6 +713,9 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 .fig-band-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 0.6em; }
 .fig-band-head .fig-note { margin: 0; }
 .fig-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.6em 0.4em; margin-top: 0.4em; }
+/* boxes that are not a sequence share a row evenly instead of wrapping one onto a line alone */
+.fig-layer:not(.is-chain) > .fig-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(8em, 100%), 1fr)); }
+.fig-layer.is-chain > .fig-row { flex-wrap: nowrap; }
 .fig-band-head:empty + .fig-row, .fig-layer > .fig-row:first-child { margin-top: 0; }
 .fig-row .fig-box { flex: 1 1 auto; padding: 0.4em 0.6em; border-width: 1.5px; }
 .fig-row .fig-link { width: 1.6em; }
@@ -689,6 +732,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   stroke-linejoin: round; }
 .is-good .fig-tone { stroke: var(--done); }
 .is-bad .fig-tone { stroke: var(--proof-ink); }
+.fig-column-note { margin: 0.1em 0 0; }
 .fig-items { margin: 0.3em 0 0; padding-left: 1.1em; color: var(--c-ink, var(--ink)); line-height: 1.35; }
 .fig-items li { margin: 0.1em 0; }
 .fig-compare.is-from-list .fig-items { list-style: none; padding: 0; color: var(--c-ink-soft, var(--ink-soft));
@@ -771,7 +815,23 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   body .fig-track { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
   body .fig-track > .fig-link { transform: rotate(90deg); width: 1.4em; margin: 0.1em auto; }
   body .fig-columns { grid-template-columns: 1fr; }
-  body .fig-layer:not(.is-chain) > .fig-row { flex-direction: column; }
+  body .fig-layer:not(.is-chain) > .fig-row { grid-template-columns: 1fr; }
+  body .fig-layer.is-chain > .fig-row { flex-direction: column; flex-wrap: nowrap; }
+  body .fig-layer.is-chain > .fig-row > .fig-link { transform: rotate(90deg); margin: 0 auto; }
+  /* a column has no row to return under: the loop becomes a line that says where it goes */
+  body .fig-loop { height: auto; margin: 0.4em 0 0; border: 0; text-align: center; }
+  body .fig-loop::before { display: none; }
+  body .fig-loop-label { position: static; transform: none; padding: 0; }
+  body .fig-loop-label::before { content: "\2191  "; }
+  body .slide .fig-track.is-long { flex-direction: column; }
+  body .slide .fig-track.is-long > .fig-link { transform: rotate(90deg); width: 1.4em; margin: 0.1em auto; }
+  body .slide .fig-track.is-long + .fig-loop { height: auto; margin: 0.4em 0 0; border: 0; text-align: center; }
+  body .slide .fig-track.is-long + .fig-loop::before { display: none; }
+  body .slide .fig-track.is-long + .fig-loop .fig-loop-label { position: static; transform: none; padding: 0; }
+  body .slide .fig-track.is-long + .fig-loop .fig-loop-label::before { content: "\2191  "; }
+  /* a numbered step with a note: the note goes under the label, not squeezed beside it */
+  body .fig-track.is-numbered .fig-node { display: grid; grid-template-columns: auto 1fr; column-gap: 0.6em; }
+  body .fig-track.is-numbered .fig-number { grid-row: span 2; align-self: start; margin-top: 0.1em; }
   body .fig-row .fig-box { flex: 0 1 auto; }
 }
 
