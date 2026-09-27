@@ -72,12 +72,16 @@ def _part(value: str) -> dict:
 
 
 def _flags(text: str) -> tuple[str, set]:
-    """Split a trailing `(seam, hl)` off `text` — only when every word in it is a flag."""
-    m = re.search(r"\s*\(([a-z ,]+)\)$", text)
-    words = set(re.split(r"[ ,]+", m.group(1).strip())) if m else set()
-    if m and words <= FLAGS:
-        return text[:m.start()].strip(), words
-    return text, set()
+    """Split trailing `(seam, hl)` groups off `text` — only groups whose every word is a flag, so
+    `Core (pure) (hl)` keeps `(pure)` and `x (chain) (hl)` loses both."""
+    flags: set = set()
+    while True:
+        m = re.search(r"\s*\(([a-z ,]+)\)$", text)
+        words = set(re.split(r"[ ,]+", m.group(1).strip())) if m else set()
+        if not (m and words <= FLAGS):
+            return text, flags
+        flags |= words
+        text = text[:m.start()].strip()
 
 
 def parse(text: str) -> dict:
@@ -217,9 +221,10 @@ def _flow(fig: dict, sentences, inline) -> str:
             nodes.append(LINK)
         number = f'<span class="fig-number">{i + 1}</span>' if fig.get("numbered") else ""
         nodes.append(f'<div class="{_classes("fig-node", part)}"{_step(part, sentences)}>{number}{_body(part, inline)}</div>')
-    loop = ('<svg class="fig-loop" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true" focusable="false">'
-            '<path d="M97 1v5H3V1"/></svg>') if fig["loop"] else ""
-    layout = " is-numbered" if fig.get("numbered") else ""
+    # A loop's return path: a drawn line back under the row, ending in an arrowhead at the start.
+    loop = '<div class="fig-loop" aria-hidden="true"><span class="fig-loop-label">back to the start</span></div>' \
+        if fig["loop"] else ""
+    layout = " is-numbered" if fig.get("numbered") else " is-long" if len(fig["items"]) > 4 else ""
     return f'<div class="fig-track{layout}">{"".join(nodes)}</div>{loop}'
 
 
@@ -247,8 +252,8 @@ def _compare(fig: dict, sentences, inline) -> str:
                         + "</li>" for item in col["children"])
         cols.append(f'<div class="{_classes("fig-column", col)}"{_step(col, sentences)}>'
                     f'<p class="fig-column-head">{tone}<span class="fig-label">{inline(col["label"])}</span></p>'
+                    + (f'<p class="fig-note fig-column-note">{inline(col["note"])}</p>' if col["note"] else "")
                     + (f'<ul class="fig-items">{items}</ul>' if items else "")
-                    + (f'<p class="fig-note">{inline(col["note"])}</p>' if col["note"] else "")
                     + "</div>")
     return f'<div class="fig-columns" style="--cols:{max(1, len(cols))}">{"".join(cols)}</div>'
 

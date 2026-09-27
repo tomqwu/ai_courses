@@ -476,6 +476,13 @@ def run(page, browser, base: str) -> list[str]:
     calm.wait_for_timeout(300)
     need(calm.evaluate(pending) == 0, "m02 slide-3: reduced motion still hides figure parts")
     calm.close()
+    # A numbered procedure is a left-aligned stepper: each step's text starts beside its number,
+    # not centred across a full-width row (the M0.3 bug).
+    page.goto(f"{base}/m00.html#slide-12")
+    page.wait_for_timeout(300)
+    gap = page.evaluate("""() => { const n = document.querySelector('.slide[aria-current] .fig-track.is-numbered .fig-node');
+        return n ? n.querySelector('.fig-label').getBoundingClientRect().left - n.getBoundingClientRect().left : -1; }""")
+    need(0 <= gap < 60, f"m00 slide-12: a numbered step's text starts {gap}px into its row — not left-aligned")
     page.goto(f"{base}/lesson-m02.html")
     need(page.locator(".doc-article [data-figure]").count() >= 1
          and page.locator(".doc-article [data-figure] [data-step]").count() == 0,

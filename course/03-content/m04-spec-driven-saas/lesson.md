@@ -12,10 +12,10 @@ image: signupflow-onboarding.png
 frame: browser
 crop: 62
 title: The product these spec folders built: SignUpFlow's first-run checklist, captured at the pinned commit.
-callout: 29,14 — progress: 0 of 4, in any order
-callout: 29,22 — invite the people you schedule
-callout: 29,38 — generate a schedule: the solver builds the roster
-callout: 29,46 — publish it to volunteers
+callout: 27.5,14 — progress: 0 of 4, in any order
+callout: 27.5,22 — invite the people you schedule
+callout: 27.5,38 — generate a schedule: the solver builds the roster
+callout: 27.5,46 — publish it to volunteers
 ```
 
 Module 1 gave you the operating system — constitution, agent rules, templates, one mini-loop. This module runs that loop at production scale on a real SaaS. SignUpFlow is a multi-tenant volunteer-scheduling product (FastAPI + SQLAlchemy 2.0 + JWT) whose features are technically ordinary — CRUD plus a greedy heuristic solver. What the repo demonstrates is a governance system for building with AI agents: 17 spec folders under `specs/`, each a complete, self-contained instruction set. The archetype lesson holds: **agents don't lower the bar for process — they raise it.** When code appears in minutes, the bottleneck moves to specification, verification, and honesty about what was validated.

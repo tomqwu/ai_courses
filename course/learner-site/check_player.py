@@ -252,12 +252,12 @@ var CASES = __CASES__;
 var results = [], i = 0, f = null;
 function next() {
   if (i >= CASES.length) { document.getElementById("out").textContent = JSON.stringify(results); return; }
-  var c = CASES[i++], deck = c[0], n = c[1], audit = c[2];
+  var c = CASES[i++], deck = c[0], n = c[1], audit = c[2], w = c[3], h = c[4];
   try { localStorage.clear(); } catch (e) {}   // the player resumes from localStorage and that
                                                 // beats the deep link — start each case clean
   if (f) document.body.removeChild(f);
   f = document.createElement("iframe");
-  f.style.cssText = "width:1600px;height:1000px;border:0";
+  f.style.cssText = "width:" + w + "px;height:" + h + "px;border:0";
   f.src = "/" + deck + ".html?g=" + n + "#slide-" + n;
   f.done = false;
   f.onload = function () {
@@ -265,7 +265,7 @@ function next() {
     f.done = true;
     setTimeout(function () {
       try {
-        var d = f.contentDocument, out = { deck: deck, slide: n };
+        var d = f.contentDocument, out = { deck: deck, slide: n, w: w };
         var slide = d.querySelector(".slide:not([hidden])");
         if (!slide) { out.error = "no visible slide"; results.push(out); next(); return; }
         var sb = slide.getBoundingClientRect();
@@ -282,7 +282,7 @@ function next() {
         Array.prototype.forEach.call(slide.querySelectorAll(".diagram"), function (dg) {
           var r = dg.getBoundingClientRect();
           out.diagrams.push({ kind: (dg.className.match(/fig-[a-z]+/) || [dg.className])[0],
-            h: Math.round(r.height),
+            h: Math.round(r.height), wide: dg.scrollWidth - dg.clientWidth,
             insideFrame: r.bottom <= sb.bottom + 1 && r.right <= sb.right + 1 });
         });
         results.push(out);
@@ -532,6 +532,9 @@ def check_pages(browser: str, port: int) -> list[str]:
 FIT_WARNINGS: list[str] = []
 
 
+GEOMETRY_SIZES = ((1600, 1000), (1280, 800))
+
+
 def check_diagram_geometry(browser: str, port: int) -> list[str]:
     """A declared diagram must fit its slide frame, and no slide's content may need scrolling.
 
@@ -548,8 +551,13 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
             # Every slide is opened and measured: a bullet slide scrolls inside the frame as
             # silently as an exhibit does (#70). Diagrams and code exhibits carry the substance,
             # so those also get the contrast audit at their real layout.
-            audit = bool(slide.get("diagram") or "<pre" in slide.get("html", ""))
-            cases.append([deck_id, slide["number"], audit])
+            audit = bool(slide.get("diagram") or "<pre" in slide.get("html", "")
+                         or "data-figure" in slide.get("html", ""))
+            # Fit is measured at two desktop sizes: the frame's type scales with it, but borders,
+            # the cover's facts and the narration bar do not, so a slide that just fits a large
+            # screen clips on a 1280x800 laptop. Contrast does not change with size: audit once.
+            for w, h in GEOMETRY_SIZES:
+                cases.append([deck_id, slide["number"], audit and w == GEOMETRY_SIZES[0][0], w, h])
     if not cases:
         return []
     page = SITE_ROOT / DIAGRAM_PROBE_PAGE
@@ -574,28 +582,32 @@ def check_diagram_geometry(browser: str, port: int) -> list[str]:
         results = json.loads(raw)
     except ValueError:
         return ["diagram geometry: unreadable probe output"]
-    by_case = {(r.get("deck"), r.get("slide")): r for r in results}
+    by_case = {(r.get("deck"), r.get("slide"), r.get("w")): r for r in results}
     problems: list[str] = []
-    for deck_id, n, _audit in cases:
-        r = by_case.get((deck_id, n))
+    for deck_id, n, _audit, w, h in cases:
+        r = by_case.get((deck_id, n, w))
+        at = "" if w == GEOMETRY_SIZES[0][0] else f" at {w}x{h}"
         if not r or r.get("error"):
-            problems.append(f"{deck_id} slide-{n}: geometry probe failed "
+            problems.append(f"{deck_id} slide-{n}{at}: geometry probe failed "
                             f"({(r or {}).get('error', 'missing')})")
             continue
         if r.get("visibleId") != f"slide-{n}":
-            problems.append(f"{deck_id} slide-{n}: probe measured {r.get('visibleId')}, "
+            problems.append(f"{deck_id} slide-{n}{at}: probe measured {r.get('visibleId')}, "
                             f"not the requested slide")
         for d in r.get("diagrams", []):
             if not d.get("insideFrame") or r.get("overflowing"):
-                problems.append(f"{deck_id} slide-{n}: {d.get('kind')} does not fit the slide "
+                problems.append(f"{deck_id} slide-{n}{at}: {d.get('kind')} does not fit the slide "
                                 f"frame ({d.get('h')}px tall — the frame clips it)")
+            if (d.get("wide") or 0) > 1:
+                problems.append(f"{deck_id} slide-{n}{at}: {d.get('kind')} is {d['wide']}px wider than "
+                                f"its box — a row of parts runs off the side")
         # A code exhibit with no diagram was measured and then never reported: the overflow flag
         # only surfaced inside the diagram loop. A clipped exhibit is the same silent failure.
         if r.get("overflowing") and not r.get("diagrams"):
-            problems.append(f"{deck_id} slide-{n}: the slide overflows its frame, so the code "
+            problems.append(f"{deck_id} slide-{n}{at}: the slide overflows its frame, so the code "
                             f"exhibit or the text under it is clipped")
         if (r.get("contentOverflow") or 0) > 2:
-            FIT_WARNINGS.append(f"{deck_id} slide-{n}: the content needs {r['contentOverflow']}px of "
+            FIT_WARNINGS.append(f"{deck_id} slide-{n}{at}: the content needs {r['contentOverflow']}px of "
                                 f"scrolling — a recorded slide cannot scroll, so that part is never seen")
         bad = (r.get("contrast") or {}).get("failures") or []
         for b in sorted(bad, key=lambda x: x["ratio"])[:3]:
