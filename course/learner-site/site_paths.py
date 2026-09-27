@@ -25,6 +25,7 @@ import html
 import re
 from pathlib import Path
 
+import figures as FIG
 import site_shell as SH
 
 COURSE_DIR = Path(__file__).resolve().parents[1]
@@ -164,7 +165,8 @@ def lab_prereq(deck_id: str) -> str:
 
 def cover_facts(deck: dict) -> dict:
     """Promise and lesson length, read from the cover slide's body (not the YAML front matter)."""
-    body = deck["slides"][0].get("html", "")
+    # The cover's figure (#99) is the module's picture, not its promise: its words stay out of it.
+    body = FIG.FIGURE_HTML.sub("", deck["slides"][0].get("html", ""))
     text = re.sub(r"<[^>]+>", " ", body)
     text = html.unescape(re.sub(r"\s+", " ", text))
     promise = re.search(r"Promise:\s*(.+?)\s*(?:Duration:|$)", text)

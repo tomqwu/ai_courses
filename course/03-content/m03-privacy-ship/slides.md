@@ -7,11 +7,17 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 
 ## M3 — Privacy, Testing, Shipping
 
-- From "works" to "trustworthy and shippable"
-- ~75 minutes of lesson, ~3 hour lab
-- Fail-closed privacy, tiered testing, verified shipping
-- Case study: ListenToMe, in Swift
-- Lab: harden TinyCopilot, then red-team it
+From "works" to "trustworthy and shippable" · ~75 min + ~3 h lab · case study: ListenToMe.
+
+```figure
+kind: flow
+alt: Module 2's working TinyCopilot core passes through three moves — fail-closed privacy, tiered testing, verified shipping — to a verified download.
+step: a core that runs — TinyCopilot, from Module 2 @ Module 2 gave you
+step: fail-closed privacy (seam) @ You engineer a local-only mode
+step: tiered testing @ You engineer a local-only mode
+step: verified shipping @ You engineer a local-only mode
+step: a verified download (hl) @ You engineer a local-only mode
+```
 
 <!-- NOTES: Welcome to Module 3. Module 2 gave you a TinyCopilot core that runs; today we make it trustworthy and sellable. Three moves: engineer a local-only mode that fails closed, test in tiers so each risk sits in the tier that can actually observe it, and ship against a Definition of Done that ends at a verified download. Say plainly that the case study is ListenToMe and every claim has a file pointer you can open. Timing: one minute. Transition: the objectives. -->
 
@@ -31,16 +37,19 @@ title: M3 — The On-Device AI App: Privacy, Testing, Shipping
 
 ## M3.1 — Privacy is a mode, not a slogan
 
-| Mode in Settings | Where the data goes |
-|---|---|
-| Local only | Downloaded local models; metadata verified every request |
-| Apple Intelligence | Runs entirely on this device |
-| Cloud | Transcript, notes, summary, references to Ollama Cloud |
-| AI off | No AI; capture, transcription, saving still work |
-
-- Privacy is an enum the user picks
-- Adding a key never switches modes
-- Opting in to cloud is deliberate
+```figure
+kind: architecture
+alt: Privacy as an enum the user picks — four modes, each naming where the data goes — with the boundary rule that adding a key never switches modes.
+source: ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-10
+layer: AI processing mode — an enum the user picks in Settings @ ListenToMe exposes an enum
+  box: Local only — local models; metadata verified every request
+  box: Apple Intelligence — runs entirely on this device
+  box: Cloud (seam) — transcript, notes, summary go to Ollama Cloud
+  box: AI off — capture, transcription, saving still work
+layer: The boundary rule (hl) @ Then the boundary rule
+  box: adding a key stores it and changes nothing about routing
+  box: opting in to cloud is deliberate, never a side effect @ Opting in to cloud
+```
 
 `ListenToMe/README.md:199-207`
 
@@ -204,11 +213,16 @@ public static func roleDefaults(from models: [String],
 
 ## M3.2 — Testing is tier assignment
 
-| Tier | Runs where | What only it can observe |
-|---|---|---|
-| Unit | CI, mocked transport | Your logic |
-| Contract | Your machine, real daemon, outside CI | The seam a mock only assumes |
-| Human smoke | A GUI session, manual grants | Mic, system audio, permissions |
+```figure
+kind: architecture
+alt: Three test tiers stacked by cost — unit tests in CI see your logic, a contract test on your machine sees the real seam, a human smoke test sees audio and permissions.
+layer: Human smoke — a GUI session, manual grants @ A human smoke test covers
+  box: observes: mic, system audio, permissions
+layer: Contract — your machine, real daemon, outside CI @ A contract test against
+  box: observes: the seam a mock only assumes
+layer: Unit — CI, mocked transport @ Unit tests with a mocked
+  box: observes: your logic
+```
 
 - Name the cheapest tier that can observe the risk
 - Pretending CI covers the top tier makes your README lie
@@ -337,11 +351,16 @@ func testRealOllamaStreamingProducesContent() async throws {
 
 ## M3.3 — Done is merged; published is proven
 
-- Done: merged to `main`, checks green, docs updated
-- Publishing is a separate, batched release train
-- Candidate: built and checked locally
-- Verified: installed-app acceptance on affected paths
-- Published: downloaded again, checksum matched, tag pinned
+```figure
+kind: flow
+alt: Done is merged to main; publication is a separate release train with three rungs — candidate, verified, published — and you claim only the rung your evidence supports.
+source: ListenToMe/AGENTS.md:20-45
+step: Done — merged to main, checks green, docs updated @ A change is done
+step: Release train (seam) — batched, at most one a day @ Publication is a separate
+step: Candidate — built and checked locally @ A candidate is built
+step: Verified — installed-app acceptance @ Verified adds
+step: Published (hl) — downloaded again, checksum matched, tag pinned @ And published means
+```
 
 <!-- NOTES: ListenToMe's AGENTS.md separates two words most projects blur. Done means merged to main with the three required checks green, tests passing and every affected doc updated. Publication is a separate, batched release train: at most one macOS release a day, never one per merged pull request. The honest status of finished work is "merged to main, riding the next release train". Then the ladder: candidate is built and checked locally, verified adds installed-app acceptance, and published means downloaded again, checksum matched, tag on the exact commit. Claim only the rung your evidence supports. Timing: three minutes. Transition: the top rung in practice. -->
 
