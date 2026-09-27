@@ -64,12 +64,18 @@ def _part(value: str) -> dict:
     note = ""
     if " — " in value:
         value, note = value.split(" — ", 1)
-    label, flags = value.strip(), set()
-    m = re.search(r"\s*\(([a-z ,]+)\)$", label)
-    if m and set(re.split(r"[ ,]+", m.group(1).strip())) <= FLAGS:
-        flags = set(re.split(r"[ ,]+", m.group(1).strip()))
-        label = label[:m.start()].strip()
-    return {"label": label, "note": note.strip(), "flags": flags, "at": at.strip(), "children": []}
+    label, flags = _flags(value.strip())
+    note, more = _flags(note.strip())       # flags may also close the note: `API — real JWT (hl)`
+    return {"label": label, "note": note, "flags": flags | more, "at": at.strip(), "children": []}
+
+
+def _flags(text: str) -> tuple[str, set]:
+    """Split a trailing `(seam, hl)` off `text` — only when every word in it is a flag."""
+    m = re.search(r"\s*\(([a-z ,]+)\)$", text)
+    words = set(re.split(r"[ ,]+", m.group(1).strip())) if m else set()
+    if m and words <= FLAGS:
+        return text[:m.start()].strip(), words
+    return text, set()
 
 
 def parse(text: str) -> dict:

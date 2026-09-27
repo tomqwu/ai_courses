@@ -57,6 +57,10 @@ class Parse(unittest.TestCase):
         self.assertEqual(part["label"], "Core (pure)")
         self.assertEqual(part["flags"], set())
 
+    def test_flags_may_close_the_note(self):
+        part = F.parse("kind: flow\nalt: flags written after the note\nstep: API — real JWT (hl)\n")["items"][0]
+        self.assertEqual((part["label"], part["note"], part["flags"]), ("API", "real JWT", {"hl"}))
+
     def test_screenshot_callouts(self):
         fig = F.parse("kind: screenshot\nalt: The dashboard with three callouts marked.\n"
                       "image: dash.png\nframe: browser\ncallout: 12,30 — Gaps first\n")

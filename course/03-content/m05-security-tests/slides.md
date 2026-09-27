@@ -11,6 +11,19 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 **Duration:** ~75 min lesson + ~3 h Lab M5.
 **Case study:** SignUpFlow · `api/dependencies.py`, `docs/playbooks/coverage.json`
 
+```figure
+kind: architecture
+alt: Many tenants share one database; the module ends with two artifacts — negative-path tests proving isolation and a playbook manifest that admits what is not yet proven.
+source: SignUpFlow/api/dependencies.py · SignUpFlow/docs/playbooks/coverage.json
+layer: One database, many tenants @ Your case study is SignUpFlow
+  box: a church org
+  box: a basketball league org
+  box: org_id on every query (seam)
+layer: What you will hold (hl) @ By the end you will hold
+  box: negative-path tests — isolation, proven
+  box: a playbook manifest — admits what is not yet proven
+```
+
 <!-- NOTES: Welcome to Module 5, the security and acceptance gate of the SaaS track. Two questions drive everything today. First: can one tenant ever see another tenant's data? Second: how do you prove the whole product works operationally, not just functionally? SignUpFlow is the case study — a multi-tenant volunteer-scheduling API where churches and basketball leagues share one database. The promise is a pair of artifacts: negative-path tests that prove isolation, plus a playbook manifest that admits what is not proven. Timing: M5.1 about 25 minutes, M5.2 about 25, M5.3 about 25, then the three-hour lab. Transition: here is exactly what you will be able to do. -->
 
 ---
@@ -30,11 +43,19 @@ title: M5 — Multi-Tenant Security & the Acceptance Gate
 
 ## M5.1 — The rule lives in `AGENTS.md`
 
-- "Every database query MUST filter by `org_id`."
-- "A missing `org_id` filter is a cross-tenant data leak."
-- "Treat it as a P0 bug."
+```figure
+kind: compare
+alt: A rule an agent can check — every query filters by org_id, a missing filter is a P0 leak — against a vibe no one can verify.
+source: SignUpFlow/AGENTS.md:57,61
+column: A check (good) @ Every database query must filter
+  item: every database query MUST filter by `org_id`
+  item: a missing filter is a cross-tenant leak
+  item: treat it as a P0 bug
+column: A vibe (bad) @ And the wording matters
+  item: "be careful with multi-tenancy"
+```
+
 - Baseline every agent reads before writing a query.
-- Verifiable rule, not a vibe.
 
 `SignUpFlow/AGENTS.md:57,61`
 
@@ -133,10 +154,21 @@ def get_person_in_actor_org(person_id: str, actor: Person,
 
 ## M5.2 — Two vocabularies, one array
 
-- **Permission roles:** exactly one of `admin`/`volunteer`.
-- **Qualifications:** `usher`, `coach`, `worship_leader`, `sound`.
-- Same `roles` JSON array — different jobs.
-- Qualifications never decide authority.
+```figure
+kind: architecture
+alt: One roles array holds two unrelated vocabularies — permission roles that decide what an account may do, and qualifications the solver uses to fill slots.
+source: SignUpFlow/api/roles.py:8
+layer: Permission roles — what an account may do; exactly one @ Permission roles describe
+  box: admin
+  box: volunteer
+layer: Qualifications — what a person can do; the solver fills slots @ Qualifications describe
+  box: usher
+  box: coach
+  box: worship_leader
+  box: sound
+```
+
+- Same `roles` array — they never share meaning.
 - A qualification never grants admin authority.
 
 `SignUpFlow/api/roles.py:8` · `docs/playbooks/church.md:26`
@@ -237,10 +269,21 @@ administrator classification.
 
 ## M5.3 — Seven tiers, separate processes
 
-- Unit: mocked auth · API: real JWT, real HTTP
-- CLI: YAML in, JSON out · Integration: real DB
-- Web: cookies and HTMX · Contract: OpenAPI snapshots
-- Browser: Playwright on a disposable live app
+```figure
+kind: architecture
+alt: SignUpFlow's seven test tiers, each proving what the others cannot; the browser tier runs in its own process because its event loop differs.
+source: SignUpFlow/docs/TESTING.md:38-46
+layer: In-process tiers
+  box: Unit — mocked auth @ Unit tests are fast
+  box: API — real JWT, real HTTP (hl) @ The API and security tier
+  box: CLI — YAML in, JSON out @ The CLI tier
+  box: Integration — a real DB @ Integration uses a real database
+  box: Web — cookies and HTMX @ Web covers cookies
+  box: Contract — OpenAPI snapshots @ Web covers cookies
+layer: A separate process (seam) @ They run in separate processes
+  box: Browser — Playwright on a disposable live app
+```
+
 - Do not combine API and browser tiers in one process.
 
 `SignUpFlow/docs/TESTING.md:38-46,49-50` · `make test-all`
