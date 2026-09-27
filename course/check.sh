@@ -26,6 +26,7 @@ step() {
 
 step "unit tests — caption engine" "$PYTHON" 06-production/narration/test_captions.py
 step "unit tests — TTS providers" "$PYTHON" 06-production/narration/test_providers.py
+step "unit tests — figures"         "$PYTHON" learner-site/test_figures.py
 step "narration scripts"          "$PYTHON" 06-production/narration/validate_narration.py --scripts-only
 step "narration media"            "$PYTHON" 06-production/narration/validate_narration.py
 step "learner site build"         "$PYTHON" learner-site/build_site.py --check
