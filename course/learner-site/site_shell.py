@@ -26,6 +26,17 @@ _CTX: dict = {"modules": [], "tracks": []}
 # The four modes of a module (#74 folds the other tabs into them). Learn is the module as a narrated
 # page (#112; the key stays "watch" so links and stored state keep resolving), Read the lesson text,
 # Lab the exercise, Check the knowledge check.
+# The edition being written (#121): "en" at the site root, "zh" in `zh/`. Set by build_site per
+# edition; `T()` picks a template's own wording for it where a sentence carries markup.
+LANG = "en"
+# Whether the Chinese edition is built, so the language switch has somewhere to go.
+EDITIONS = ("en",)
+
+
+def T(en: str, zh: str) -> str:
+    return zh if LANG == "zh" else en
+
+
 MODES = (("watch", "Learn", "{d}.html"), ("read", "Read", "lesson-{d}.html"),
          ("lab", "Lab", "lab-{d}.html"), ("check", "Check", "quiz-{d}.html"))
 # The modes' icons: shown only in the phone's bottom tab bar (#81), where the label alone is small.
@@ -75,8 +86,16 @@ def short_label(deck: dict) -> str:
     return re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
 
 
+OUTLINE_NAMES_ZH = {
+    "m00": "导览", "m01": "操作系统", "m02": "端侧：架构", "m03": "端侧：隐私与发布",
+    "m04": "规格驱动 SaaS", "m05": "多租户安全", "m06": "专业知识产品", "m07": "变现",
+    "m08": "发布与毕业项目", "m09": "用 GitHub Pages 发布",
+}
+
+
 def outline_name(deck: dict) -> str:
-    return OUTLINE_NAMES.get(deck["id"]) or short_label(deck).split(":")[0].strip()
+    names = OUTLINE_NAMES_ZH if LANG == "zh" else OUTLINE_NAMES
+    return names.get(deck["id"]) or short_label(deck).split(":")[0].strip()
 
 
 def unit_href(deck_id: str, unit: dict) -> str:
@@ -93,8 +112,8 @@ def unit_name(unit: dict) -> str:
     if unit["kind"] == "segment":
         return f"{unit['id']} {unit['label']}"
     if unit["kind"] == "lab":
-        return f"Lab M{int(unit['deck'][1:])}"
-    return unit["title"]
+        return T(f"Lab M{int(unit['deck'][1:])}", f"实验 M{int(unit['deck'][1:])}")
+    return T(unit["title"], {"Introduction": "导论", "Knowledge check": "知识测验", "Summary": "总结"}.get(unit["title"], unit["title"]))
 
 
 def configure(decks: list[dict], units_by_deck: dict[str, list[dict]], tracks: list[dict]) -> None:
@@ -235,12 +254,24 @@ def topbar(site_base: str, crumbs: list[tuple[str, str | None]], deck_id: str | 
             f' aria-expanded="false">{MENU_ICON}<span>Outline</span></button>'
             f'<nav class="app-crumbs" aria-label="Breadcrumb">{trail}</nav>'
             f'{title}{modes}'
-            f'<div class="lang-switch" role="group" aria-label="Language · 语言">'
-            f'<button type="button" data-lang="en" aria-pressed="true">EN</button>'
-            f'<button type="button" data-lang="zh" lang="zh-Hans" aria-pressed="false">中文</button></div>'
+            f'{lang_switch(site_base)}'
             f'<button type="button" class="app-bar-search" data-search-open'
             f' aria-label="Search the course" title="Search the course (⌘K or /)">{SEARCH_ICON}</button>'
             f'</header>')
+
+
+def lang_switch(site_base: str) -> str:
+    """EN | 中文 (#116, #121): the same page in the other edition. The build points each link at the
+    other edition's home; locale.js points it at this very page (and part) once the page loads."""
+    if "zh" not in EDITIONS:
+        return ""
+    en_home = f"{site_base}/index.html"
+    zh_home = "index.html" if LANG == "zh" else f"{site_base}/zh/index.html"
+    here = ' aria-current="true"'
+    return (f'<nav class="lang-switch" aria-label="Language · 语言">'
+            f'<a href="{en_home}" data-lang="en" hreflang="en" lang="en"{here if LANG == "en" else ""}>EN</a>'
+            f'<a href="{zh_home}" data-lang="zh" hreflang="zh-Hans" lang="zh-Hans"{here if LANG == "zh" else ""}>中文</a>'
+            f'</nav>')
 
 
 def module_crumbs(site_base: str, deck: dict, here: str | None) -> list[tuple[str, str | None]]:
@@ -272,19 +303,22 @@ def document(title: str, description: str, content: str, site_base: str, body_cl
              scripts: tuple[str, ...] = (), body_attrs: str = "") -> str:
     """A whole page in the shell. `content` is everything inside <main>, page head included."""
     tags = "".join(f'<script src="{site_base}/assets/{s}" defer></script>'
-                   for s in ("progress.js", "shell.js", "search.js", "figures.js", "terms-zh.js") + tuple(scripts))
+                   for s in ("progress.js", "shell.js", "search.js", "figures.js") + tuple(scripts))
     deck_attr = f' data-deck="{deck_id}"' if deck_id else ""
+    # Page links in the Chinese edition stay in `zh/`; assets and recordings are one level up.
+    page_base = "." if LANG == "zh" else site_base
+    ui = f'<script src="{site_base}/assets/ui-zh.js"></script>\n' if LANG == "zh" else ""
     return f"""<!doctype html>
-<html lang="en">
+<html lang="{'zh-Hans' if LANG == 'zh' else 'en'}"{' class="is-zh"' if LANG == 'zh' else ''} data-editions="{' '.join(EDITIONS)}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description)}">
 {fonts(site_base)}
-<script src="{site_base}/assets/locale.js"></script>
+{ui}<script src="{site_base}/assets/locale.js"></script>
 </head>
-<body class="app-page {body_class}" data-site-base="{site_base}"{deck_attr}{body_attrs}>
+<body class="app-page {body_class}" data-site-base="{site_base}" data-page-base="{page_base}" data-lang="{LANG}"{deck_attr}{body_attrs}>
 <a class="skip-link" href="#content">Skip to content</a>
 <div class="app">
 {sidebar(site_base, deck_id, current)}

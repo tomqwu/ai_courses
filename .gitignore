@@ -23,7 +23,8 @@ course/learner-site/*.html
 course/learner-site/narration.json
 course/learner-site/figures/
 course/learner-site/assets/audio/
-course/learner-site/assets/terms-zh.js
+course/learner-site/assets/ui-zh.js
+course/learner-site/zh/
 
 # Design-review screenshots (regenerate, don't commit)
 course/learner-site/_review/

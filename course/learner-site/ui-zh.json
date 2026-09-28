@@ -1,0 +1,406 @@
+{
+ "_about": "The Chinese edition's own words for the site (#116, #121): exact labels, then labels that carry a number. Used by the build for every zh/ page and by locale.js for labels scripts write later. A run of labels joined by \" · \" or \" — \" is changed piece by piece. `english_ok`: English a Chinese page shows on purpose — a terminal's or an app's own words the learner must recognise, a product name, a string a test matches — which the untranslated-English check accepts.",
+ "exact": {
+  "Learn": "学习",
+  "Read": "阅读",
+  "Lab": "实验",
+  "Check": "测验",
+  "Lesson": "课文",
+  "Handout": "讲义",
+  "Glossary": "术语表",
+  "Course": "课程",
+  "Home": "首页",
+  "Modules": "模块",
+  "Outline": "目录",
+  "Search the course": "搜索课程",
+  "Your path": "你的路线",
+  "Change path": "更换路线",
+  "Paths": "学习路线",
+  "On this page": "本页内容",
+  "Overview": "概览",
+  "Objective": "目标",
+  "Action step": "行动步骤",
+  "Introduction": "导论",
+  "Summary": "总结",
+  "Recap": "回顾",
+  "Discussion prompt": "讨论题",
+  "Knowledge check": "知识测验",
+  "By the end you can…": "学完后你能够…",
+  "Terms people get wrong": "常被误解的术语",
+  "Curated resources": "精选资源",
+  "Sources and speaker notes": "来源与讲者备注",
+  "Transcript": "文字稿",
+  "Listen to this unit": "收听本单元",
+  "Listen to this section": "收听本节",
+  "Play narration": "播放讲解",
+  "Pause narration": "暂停讲解",
+  "Pause this section": "暂停本节",
+  "Narration": "讲解",
+  "Narration speed": "讲解语速",
+  "Check answer": "核对答案",
+  "Reveal the model answer": "查看参考答案",
+  "Your answer": "你的答案",
+  "Correct answer": "正确答案",
+  "Correct answer · yours": "正确答案 · 你的选择",
+  "Try again": "重新作答",
+  "Write": "作答",
+  "Before you start": "开始之前",
+  "You're done when…": "完成标准…",
+  "Three gotchas": "三个易错点",
+  "Evidence": "证据",
+  "Evidence to record": "需记录的证据",
+  "Copy": "复制",
+  "Copied": "已复制",
+  "Copy evidence entry": "复制证据条目",
+  "Download .md": "下载 .md",
+  "Project": "项目",
+  "Date": "日期",
+  "Environment": "环境",
+  "Level": "等级",
+  "Continue": "继续",
+  "Resume": "继续学习",
+  "Start": "开始",
+  "Start module": "开始本模块",
+  "Done": "已完成",
+  "to do": "待完成",
+  "Unit": "单元",
+  "Skip to content": "跳到正文",
+  "Search": "搜索",
+  "move": "移动",
+  "open": "打开",
+  "anywhere": "随处可用",
+  "Searches the Learn pages, narration, lessons, labs and the glossary": "搜索学习页、讲解、课文、实验和术语表",
+  "Type at least two characters. Results open the part, section, step or term directly.": "至少输入两个字符。结果直接打开对应的部分、章节、步骤或术语。",
+  "On the page": "页面上",
+  "In the notes": "备注中",
+  "Exhibit": "展示代码",
+  "open the Learn page →": "打开学习页 →",
+  "Your evidence log": "你的证据日志",
+  "Copy the whole log": "复制整份日志",
+  "Download evidence-log.md": "下载 evidence-log.md",
+  "no entry yet": "尚无条目",
+  "Master glossary": "总术语表",
+  "pass/fail": "通过/不通过",
+  "Pass gate": "通过关卡",
+  "Acceptance checklist (all must be true)": "验收清单（必须全部满足）",
+  "Write and export the evidence entry": "撰写并导出证据条目",
+  "Commands, one per line, with results": "命令（每行一条）及结果",
+  "Revision (git rev-parse HEAD)": "版本（git rev-parse HEAD）",
+  "Limitations / not verified, one per line": "局限 / 未验证（每行一条）",
+  "Evidence entry (Markdown)": "证据条目（Markdown）",
+  "Back to the module →": "返回模块 →",
+  "Read →": "阅读 →",
+  "Read the transcript": "阅读文字稿",
+  "Exercise": "练习",
+  "full module": "完整模块",
+  "This module belongs to one path.": "本模块属于一条路线。",
+  "Every unit of this module is in the path.": "本模块的每个单元都在这条路线中。",
+  "Browse all modules →": "浏览全部模块 →",
+  "Open this path →": "打开这条路线 →",
+  "Export progress": "导出进度",
+  "Import": "导入",
+  "Reset": "重置",
+  "Your progress lives in this browser.": "你的进度保存在此浏览器中。",
+  "How each number is checked": "每个数字如何核验",
+  "Read this segment instead": "改为阅读这一段",
+  "Press play to listen from the start": "按播放键从头收听",
+  "Lab checks": "实验检查",
+  "lab": "实验",
+  "knowledge check": "知识测验",
+  "Why": "解析",
+  "Model answer": "参考答案",
+  "Your result": "你的结果",
+  "Objectives to revisit": "需要复习的目标",
+  "Checklist →": "清单 →",
+  "Lab complete.": "实验已完成。",
+  "Every item is checked.": "每一项都已勾选。",
+  "Steps": "步骤",
+  "Acceptance": "验收",
+  "Deck": "讲稿",
+  "Proof": "证明",
+  "Module mode": "模块模式",
+  "Breadcrumb": "导航路径",
+  "Language · 语言": "Language · 语言",
+  "Previous part": "上一部分",
+  "Next part": "下一部分",
+  "Search the course (⌘K or /)": "搜索课程（⌘K 或 /）",
+  "Close the outline": "关闭目录",
+  "Jump to letter": "按字母跳转",
+  "Connections": "连接",
+  "Read the full lesson →": "阅读完整课文 →",
+  "The module's transcript →": "本模块的文字稿 →",
+  "Next module →": "下一个模块 →",
+  "Checklist": "清单",
+  "seam": "接缝",
+  "in focus": "重点",
+  "holds": "成立",
+  "breaks": "不成立",
+  "Choose": "选择",
+  "The full studio course": "完整工作室课程",
+  "Learning paths": "学习路线",
+  "Close": "关闭",
+  "Take it →": "去作答 →",
+  "Correct.": "正确。",
+  "Answered: correct.": "已作答：正确。",
+  "Model answer shown. Compare it with what you wrote.": "已显示参考答案。对照你写的答案。",
+  "Model answer shown.": "已显示参考答案。",
+  "Copied to clipboard": "已复制到剪贴板",
+  "Select and copy": "请选中后复制",
+  "Exported.": "已导出。",
+  "Fill in the project, commands, environment and revision first — only a filled-in entry counts.": "先填写项目、命令、环境和版本——只有填写完整的条目才算数。",
+  "Audio could not load. Press Play to try again.": "音频无法加载。按播放键重试。",
+  "Captions could not load; the narration still plays.": "字幕无法加载；讲解仍会播放。",
+  "End of the module.": "本模块结束。",
+  "Playback was paused by your browser. Press Play to continue.": "浏览器暂停了播放。按播放键继续。",
+  "Lesson text": "课文",
+  "Labs": "实验",
+  "Units, checks and pages": "单元、测验与页面",
+  "That clears the 75% certificate threshold for this module.": "已达到本模块 75% 的证书门槛。",
+  "The certificate threshold is 75% — revisit the objectives below and try again.": "证书门槛是 75%——复习下面的目标后再试一次。",
+  "Answer every question above for your result.": "回答上面的每道题即可看到结果。",
+  "done": "已完成",
+  "in progress": "进行中",
+  "not started": "未开始",
+  "passed": "已通过",
+  "No results": "没有结果",
+  "Close search": "关闭搜索",
+  "one page": "一页",
+  "competitor rows": "竞品行数",
+  "latest macos tag": "最新 macOS 标签",
+  "gap review verdict": "差距评审结论",
+  "agents md lines": "AGENTS.md 行数",
+  "constitution lines": "宪章行数",
+  "spec folders": "规格文件夹数",
+  "has tasks": "含任务文件",
+  "validation status": "验证状态",
+  "test functions": "测试函数数",
+  "slide counts": "部分数量",
+  "site version": "站点版本",
+  "self audit findings": "自查发现数",
+  "claude md lines": "CLAUDE.md 行数",
+  "copilot lines": "Copilot 说明行数",
+  "competition updated": "竞品分析更新日期",
+  "core swift files": "核心 Swift 文件数",
+  "core swift lines": "核心 Swift 行数",
+  "coverage floor": "覆盖率底线",
+  "coverage badge": "覆盖率徽章",
+  "listentome": "ListenToMe",
+  "signupflow": "SignUpFlow",
+  "ai qe": "ai_qe",
+  "spec 014 has tasks": "规格 014 含任务文件",
+  "current pdf editions": "当前 PDF 版次",
+  "health score line": "健康分输出行"
+ },
+ "patterns": [
+  [
+   "^Unit (\\d+) of (\\d+)$",
+   "第 $1 单元 · 共 $2 单元"
+  ],
+  [
+   "^Section (\\d+) of (\\d+)$",
+   "第 $1 节 · 共 $2 节"
+  ],
+  [
+   "^Question (\\d+) of (\\d+)$",
+   "第 $1 题 · 共 $2 题"
+  ],
+  [
+   "^Mark step (\\d+) done$",
+   "标记第 $1 步完成"
+  ],
+  [
+   "^Resume · part (\\d+)$",
+   "继续 · 第 $1 部分"
+  ],
+  [
+   "^(\\d+) of (\\d+) modules complete$",
+   "已完成 $1 / $2 个模块"
+  ],
+  [
+   "^(\\d+) of (\\d+) checklist items$",
+   "清单 $1 / $2 项"
+  ],
+  [
+   "^(\\d+) of (\\d+) units$",
+   "第 $1 / $2 单元"
+  ],
+  [
+   "^Module (\\d+)$",
+   "模块 $1"
+  ],
+  [
+   "^(\\d+) units?$",
+   "$1 个单元"
+  ],
+  [
+   "^(\\d+) parts?$",
+   "$1 个部分"
+  ],
+  [
+   "^(\\d+) steps?$",
+   "$1 个步骤"
+  ],
+  [
+   "^(\\d+) terms$",
+   "$1 个术语"
+  ],
+  [
+   "^(\\d+) shared across modules$",
+   "$1 个跨模块共用"
+  ],
+  [
+   "^(\\d+) questions$",
+   "$1 道题"
+  ],
+  [
+   "^([\\d.]+) min narrated$",
+   "讲解 $1 分钟"
+  ],
+  [
+   "^([\\d.]+) min$",
+   "$1 分钟"
+  ],
+  [
+   "^(\\d+) sec$",
+   "$1 秒"
+  ],
+  [
+   "^(\\d+) checks decide the grade$",
+   "$1 项检查决定成绩"
+  ],
+  [
+   "^(\\d+) multiple choice \\+ (\\d+) short answer$",
+   "$1 道选择题 + $2 道简答题"
+  ],
+  [
+   "^Objective: (.+)$",
+   "目标：$1"
+  ],
+  [
+   "^Open at (\\w+)$",
+   "在 $1 打开"
+  ],
+  [
+   "^Question (\\d+) of (\\d+): choose one answer$",
+   "第 $1 题 · 共 $2 题：选择一个答案"
+  ],
+  [
+   "^Step (\\d+) of (\\d+)$",
+   "第 $1 步 · 共 $2 步"
+  ],
+  [
+   "^Module (\\d+) · no entry yet$",
+   "模块 $1 · 尚无条目"
+  ],
+  [
+   "^(\\d+) of (\\d+) checked$",
+   "已勾选 $1 / $2"
+  ],
+  [
+   "^Mark step (\\d+) done$",
+   "标记第 $1 步完成"
+  ],
+  [
+   "^Question (\\d+)$",
+   "第 $1 题"
+  ],
+  [
+   "^Not quite — the keyed answer is ([A-D])\\.$",
+   "不对——正确答案是 $1。"
+  ],
+  [
+   "^Answered — the keyed answer is ([A-D])\\.$",
+   "已作答——正确答案是 $1。"
+  ],
+  [
+   "^(\\d+) of (\\d+) answered · (\\d+) of (\\d+) multiple-choice correct so far\\. Answer every question above for your result\\.$",
+   "已作答 $1 / $2 · 目前选择题答对 $3 / $4。回答上面的每道题即可看到结果。"
+  ],
+  [
+   "^(\\d+) of (\\d+) multiple-choice correct \\((\\d+)%\\)\\. That clears the 75% certificate threshold for this module\\.$",
+   "选择题答对 $1 / $2（$3%）。已达到本模块 75% 的证书门槛。"
+  ],
+  [
+   "^(\\d+) of (\\d+) multiple-choice correct \\((\\d+)%\\)\\. The certificate threshold is 75% — revisit the objectives below and try again\\.$",
+   "选择题答对 $1 / $2（$3%）。证书门槛是 75%——复习下面的目标后再试一次。"
+  ],
+  [
+   "^(\\d+) / (\\d+) multiple-choice correct · (\\d+) of (\\d+) answered$",
+   "选择题答对 $1 / $2 · 已作答 $3 / $4"
+  ],
+  [
+   "^Question (\\d+) — (.+) · revisit$",
+   "第 $1 题 — $2 · 复习"
+  ],
+  [
+   "^Question (\\d+) — (.+)$",
+   "第 $1 题 — $2"
+  ],
+  [
+   "^Part (\\d+) of (\\d+)$",
+   "第 $1 部分 · 共 $2 部分"
+  ],
+  [
+   "^(\\d+) of (\\d+) parts$",
+   "第 $1 / $2 部分"
+  ],
+  [
+   "^Next in Module (\\d+)$",
+   "模块 $1 的下一步"
+  ],
+  [
+   "^(\\d+) parts$",
+   "$1 个部分"
+  ],
+  [
+   "^(\\d+) questions$",
+   "$1 道题"
+  ],
+  [
+   "^(\\d+) of (\\d+) units$",
+   "$1 / $2 个单元"
+  ],
+  [
+   "^(\\d+) of (\\d+)$",
+   "$1 / $2"
+  ],
+  [
+   "^knowledge check (\\d+)/(\\d+)$",
+   "知识测验 $1/$2"
+  ],
+  [
+   "^(\\d+) of (\\d+) labs have an entry$",
+   "$2 个实验中有 $1 个已有条目"
+  ],
+  [
+   "^entry written$",
+   "已写条目"
+  ],
+  [
+   "^(\\d+) of (\\d+) checklist items$",
+   "清单 $1 / $2 项"
+  ],
+  [
+   "^Where you stopped: (.+)\\.$",
+   "上次停在：$1。"
+  ],
+  [
+   "^Starts at ([\\d:]+), where the match is spoken · press Play$",
+   "从 $1 开始，也就是说到匹配内容的地方 · 按播放键"
+  ],
+  [
+   "^part (\\d+)$",
+   "第 $1 部分"
+  ]
+ ],
+ "english_ok": [
+  "nothing to commit, working tree clean",
+  "Login with a web browser",
+  "ML Kit GenAI Prompt API",
+  "flash, mini, nano, lite, small, fast",
+  "pro, reason, think, coder, code, ultra, max, large",
+  "we cannot use your laptop",
+  "NEEDS CLARIFICATION: auth method not specified",
+  "the read operation timed out"
+ ]
+}

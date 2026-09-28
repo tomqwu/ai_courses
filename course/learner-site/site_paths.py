@@ -34,9 +34,9 @@ COURSE_DIR = Path(__file__).resolve().parents[1]
 
 NUM = re.compile(r"^[mM](\d+)$")
 SEGMENT = re.compile(r"^M\d+\.\d+$")
-LAB = re.compile(r"^Lab\s+M\d+")
-QUIZ = re.compile(r"^Quiz\s+M\d+")
-SUMMARY = re.compile(r"^(Recap|Summary|Discussion)", re.I)
+LAB = re.compile(r"^(?:Lab|实验)\s*M\d+")
+QUIZ = re.compile(r"^(?:Quiz|测验)\s*M\d+")
+SUMMARY = re.compile(r"^(Recap|Summary|Discussion|回顾|总结|讨论)", re.I)
 
 KIND_LABEL = {
     "intro": "Introduction",
@@ -45,6 +45,7 @@ KIND_LABEL = {
     "quiz": "Knowledge check",
     "summary": "Summary",
 }
+KIND_LABEL_ZH = {"intro": "导论", "segment": "课文", "lab": "练习", "quiz": "知识测验", "summary": "总结"}
 
 
 def module_units(deck: dict) -> list[dict]:
@@ -75,7 +76,7 @@ def module_units(deck: dict) -> list[dict]:
             kind, uid, label = "intro", "intro", "Introduction"
         elif LAB.match(title) or LAB.match(kicker):
             kind, uid = "lab", "lab"
-            label = re.sub(r"^Lab\s+M\d+\s*(—\s*)?", "", title).strip() or "Lab"
+            label = re.sub(r"^(?:Lab|实验)\s*M\d+\s*(—\s*)?", "", title).strip() or "Lab"
         elif QUIZ.match(title):
             kind, uid, label = "quiz", "quiz", "Knowledge check"
         elif SUMMARY.match(title) or (current and current["kind"] == "summary"):
@@ -113,14 +114,17 @@ LAB_TIME_FALLBACK = {
     "m01": "~2 hours", "m02": "~3 hours", "m04": "90–120 minutes",
     "m05": "~3 hours", "m06": "~2.5 hours",
 }
-LAB_TIME_RE = re.compile(r"\*\*Time:\*\*\s*([^·|\n]+?)\s*(?=·|\||$)", re.M)
-LAB_TIME_RE2 = re.compile(r"(?:^|[·>])\s*Time:\s*([^·|\n]+?)\s*(?=·|\||$)", re.M)
-PREREQ_RE = re.compile(r"Prerequisites?:?\*{0,2}\s*([^·|\n]+?)\s*(?=\s*·|\s*\*\*|\s*\||$)", re.M)
+LAB_TIME_RE = re.compile(r"\*\*(?:Time|时间)[:：]\*\*\s*([^·|\n]+?)\s*(?=·|\||$)", re.M)
+LAB_TIME_RE2 = re.compile(r"(?:^|[·>])\s*(?:Time:|时间：)\s*([^·|\n]+?)\s*(?=·|\||$)", re.M)
+PREREQ_RE = re.compile(r"(?:Prerequisites?:?|前置条件：?)\*{0,2}\s*([^·|\n]+?)\s*(?=\s*·|\s*\*\*|\s*\||$)", re.M)
 NOT_STATED = "not stated in the module source"
+NOT_STATED_ZH = "模块源文件中未说明"
+LAB_TIME_FALLBACK_ZH = {"m01": "约 2 小时", "m02": "约 3 小时", "m04": "90–120 分钟", "m05": "约 3 小时", "m06": "约 2.5 小时"}
 
 
 def _lab_file(deck_id: str) -> Path | None:
-    matches = sorted(COURSE_DIR.glob(f"03-content/{deck_id}-*/lab.md"))
+    # the edition's own lab: the Chinese edition quotes its Chinese source (#121)
+    matches = sorted(COURSE_DIR.glob(f"03-content/{deck_id}-*/{'zh/' if SH.LANG == 'zh' else ''}lab.md"))
     return matches[0] if matches else None
 
 
@@ -134,6 +138,8 @@ def lab_time(deck_id: str) -> str:
                 value = match.group(1).strip().strip("*").strip()
                 if value:
                     return value
+    if SH.LANG == "zh":
+        return LAB_TIME_FALLBACK_ZH.get(deck_id, NOT_STATED_ZH)
     return LAB_TIME_FALLBACK.get(deck_id, NOT_STATED)
 
 
@@ -150,7 +156,7 @@ def _clean_prereq(value: str) -> str:
         value = value[:value.rindex("(")].strip().rstrip(";,:")
     value = value.rstrip(" .;:")
     if not value or value.lower() in {"none", "n/a", "no prerequisites"}:
-        return "None stated"
+        return SH.T("None stated", "未说明")
     return value[:1].upper() + value[1:]
 
 
@@ -160,7 +166,7 @@ def lab_prereq(deck_id: str) -> str:
         match = PREREQ_RE.search(path.read_text(encoding="utf-8"))
         if match:
             return _clean_prereq(match.group(1))
-    return NOT_STATED
+    return SH.T(NOT_STATED, NOT_STATED_ZH)
 
 
 def cover_facts(deck: dict) -> dict:
@@ -169,8 +175,8 @@ def cover_facts(deck: dict) -> dict:
     body = FIG.FIGURE_HTML.sub("", deck["slides"][0].get("html", ""))
     text = re.sub(r"<[^>]+>", " ", body)
     text = html.unescape(re.sub(r"\s+", " ", text))
-    promise = re.search(r"Promise:\s*(.+?)\s*(?:Duration:|$)", text)
-    duration = re.search(r"Duration:\s*(.+?)\s*$", text)
+    promise = re.search(r"(?:Promise:|承诺：)\s*(.+?)\s*(?:Duration:|时长：|$)", text)
+    duration = re.search(r"(?:Duration:|时长：)\s*(.+?)\s*$", text)
     return {"promise": promise.group(1).strip() if promise else "",
             "lesson_length": duration.group(1).strip() if duration else ""}
 
@@ -329,6 +335,65 @@ TRACKS = [
 
 TRACK_BY_SLUG = {t["slug"]: t for t in TRACKS}
 
+# The Chinese edition's words for each path (#121). Structure, modules and counts are the English
+# entry's; only what a learner reads changes.
+TRACKS_ZH = {
+    "aps": {
+        "title": "完整工作室课程", "medium": "全部三类", "kicker": "全部三类产品",
+        "promise": "构建、发布并销售全部三类 AI 产品——最后完成一个评分的毕业项目、一套发布节奏和一个站得住的定价。",
+        "price": "自学 $399 · 训练营 $1,490", "level": "入门到中级", "role": "创始人 · 产品工程师",
+    },
+    "on-device-app": {
+        "title": "端侧 AI 应用", "medium": "应用", "kicker": "类型 1 · 带应用的 AI",
+        "promise": "发布一个本地优先的 AI 应用，它的隐私承诺由代码强制执行，并由测试证明。",
+        "slice_notes": {"m07": "全部三个分段 · 实验 M7 第 1–5 步 · 测验 M7", "m08": "仅分段 M8.1–M8.2"},
+        "excluded": ["M4 · M5——规格驱动 SaaS 路线", "M6——专业知识路线", "M8.3 毕业项目、实验 M8 和测验 M8"],
+        "price": "$199", "level": "入门到中级", "role": "iOS / macOS 工程师 · 独立开发者",
+        "subject": "本地优先 AI · 隐私工程",
+    },
+    "spec-driven-saas": {
+        "title": "规格驱动 AI SaaS", "medium": "Web", "kicker": "类型 2 · 带 Web 的 AI",
+        "promise": "一个经得起陌生人测试的规格文件夹，以及经得起多疑审计者的验收证据。",
+        "slice_notes": {"m07": "分段 M7.1–M7.3 · 无实验、无测验", "m08": "仅分段 M8.1–M8.2"},
+        "excluded": ["M2 · M3——端侧路线", "M6——专业知识路线", "M8.3 毕业项目、实验 M7/M8 和测验 M7/M8"],
+        "price": "$199", "level": "中级", "role": "后端工程师 · SaaS 构建者",
+        "subject": "多租户安全 · 验收证据",
+    },
+    "expertise-product": {
+        "title": "把专业知识做成产品", "medium": "内容", "kicker": "类型 3 · 带内容的 AI",
+        "promise": "每个公开的主张都带有日期、样本、方法、单位和层级——漏斗卖的是一项测量，而不是一个承诺。",
+        "slice_notes": {"m07": "分段 M7.1–M7.3 · 实验 M7 仅限类型 3 的报价 · 测验 M7",
+                        "m08": "M8.1–M8.3 · 毕业项目仅限类型 3 一行 · 测验 M8"},
+        "excluded": ["M2 · M3——端侧路线", "M4 · M5——规格驱动 SaaS 路线", "类型 1 / 类型 2 的毕业项目和实验行"],
+        "price": "$199", "level": "中级", "role": "顾问 · 领域专家 · 教育者",
+        "subject": "证据产品 · 学习与销售内容",
+        "counts_source": "由 bundle-map.md 的各行推算（那里没有给出全课程总数）",
+    },
+    "github-pages": {
+        "title": "用 GitHub Pages 发布网站", "medium": "网站", "kicker": "免费 · 终端新手从这里开始",
+        "promise": "从什么都没安装，到一个公开的产品目录：Git、GitHub CLI、文件夹、克隆和发布，Windows 和 macOS 都适用。",
+        "excluded": ["付费课程 M0–M8——本路线免费且独立"],
+        "price": "免费", "level": "入门", "role": "终端新手 · 小企业主",
+        "subject": "Git · GitHub CLI · GitHub Pages", "counts_source": "模块本身",
+    },
+}
+
+
+def tracks() -> list[dict]:
+    """The paths, in the words of the edition being written."""
+    if SH.LANG != "zh":
+        return TRACKS
+    out = []
+    for t in TRACKS:
+        zh = TRACKS_ZH.get(t["slug"], {})
+        loc = {**t, **{k: v for k, v in zh.items() if k not in ("slice_notes", "excluded")}}
+        if zh.get("slice_notes"):
+            loc["slice"] = {m: {**v, "note": zh["slice_notes"].get(m, v["note"])} for m, v in t["slice"].items()}
+        if zh.get("excluded") and t.get("excluded"):
+            loc["excluded"] = [(label, a, b) for label, (_, a, b) in zip(zh["excluded"], t["excluded"])]
+        out.append(loc)
+    return out
+
 
 def slice_spec(track: dict, deck_id: str) -> dict:
     spec = (track.get("slice") or {}).get(deck_id) or {}
@@ -399,8 +464,8 @@ def unit_seconds(units_by_deck: dict[str, list[dict]], manifest: dict) -> dict[s
 def fmt_minutes(seconds_value: float) -> str:
     minutes = seconds_value / 60.0
     if minutes < 1:
-        return f"{seconds_value:.0f} sec"
-    return f"{minutes:.1f} min".replace(".0 min", " min")
+        return SH.T(f"{seconds_value:.0f} sec", f"{seconds_value:.0f} 秒")
+    return SH.T(f"{minutes:.1f} min".replace(".0 min", " min"), f"{minutes:.1f} 分钟".replace(".0 分钟", " 分钟"))
 
 
 # ---------------------------------------------------------------- pages
@@ -427,29 +492,29 @@ def path_cards_html(tracks: list[dict], units_by_deck: dict[str, list[dict]],
         minutes = track_minutes(track, units_by_deck, seconds)
         live = bool(track["page"]) and track["status"] == "built"
         if live:
-            status = '<span class="voice-chip is-release">path page</span>'
-            href, target = f"{site_base}/{track['page']}", "Open this path"
+            status = f'<span class="voice-chip is-release">{SH.T("path page", "路线页面")}</span>'
+            href, target = f"{site_base}/{track['page']}", SH.T("Open this path", "打开这条路线")
         elif track["status"] == "full":
             # The full course is not a page that failed to build — it is the module index itself.
-            status = '<span class="voice-chip is-release">all nine modules</span>'
-            href, target = f"{site_base}/index.html", "Browse all modules"
+            status = f'<span class="voice-chip is-release">{SH.T("all nine modules", "全部九个模块")}</span>'
+            href, target = f"{site_base}/index.html", SH.T("Browse all modules", "浏览全部模块")
         else:
-            status = '<span class="voice-chip is-text">page not built yet</span>'
-            href, target = f"{site_base}/index.html", "Browse the modules"
+            status = f'<span class="voice-chip is-text">{SH.T("page not built yet", "页面尚未构建")}</span>'
+            href, target = f"{site_base}/index.html", SH.T("Browse the modules", "浏览模块")
         modules = len(track["core"]) + len(track.get("slice") or {})
         unit_ids = ",".join(f"{u['deck']}:{u['id']}" for u in units)
         cards.append(f"""<article class="path-card">
   <div class="path-head">
     <p class="path-kicker">{html.escape(track['kicker'])}</p>
     <h3><a href="{href}">{html.escape(track['title'])}</a></h3>
-    <p class="path-meta">{modules} module{"" if modules == 1 else "s"} · {len(units)} units · {fmt_minutes(minutes)} of narration</p>
+    <p class="path-meta">{SH.T(f'{modules} module{"" if modules == 1 else "s"} · {len(units)} units · {fmt_minutes(minutes)} of narration', f"{modules} 个模块 · {len(units)} 个单元 · 讲解 {fmt_minutes(minutes)}")}</p>
     <p class="card-progress"><span class="card-bar" data-ring-units="{unit_ids}" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
       <span class="card-count" data-ring-text></span></p>
   </div>
   <div class="path-body">
     <p class="path-promise">{html.escape(track['promise'])}</p>
-    {_at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
-                   ("Role", track["role"]), ("Price", track["price"])])}
+    {_at_a_glance([(SH.T("You build", "你将构建"), track["medium"]), (SH.T("Level", "难度"), track["level"]),
+                   (SH.T("Role", "角色"), track["role"]), (SH.T("Price", "价格"), track["price"])])}
     <p class="path-status">{status}</p>
     <a class="btn-primary" href="{href}">{target} →</a>
   </div>
@@ -463,29 +528,23 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
 
     total_units = sum(len(u) for u in units_by_deck.values())
     head = SH.page_head(
-        "Learning paths", "Four ways into the same method.",
-        """The three products this course is built from are three <em>types</em> of AI
+        "Learning paths", SH.T("Four ways into the same method.", "进入同一套方法的四条路线。"),
+        SH.T("""The three products this course is built from are three <em>types</em> of AI
       product — an <strong>app</strong>, a <strong>web service</strong>, and a
       <strong>content product</strong> like a learning site, a presentation or a sales pitch. Each
       track path teaches one of those types end to end; the full studio course teaches all three. The
       method is identical in every path — same lessons, labs and quizzes, nothing rewritten or watered
       down — and each path states exactly what it leaves out.""",
+             """本课程所依托的三个产品，是 AI 产品的三种<em>类型</em>：一个<strong>应用</strong>、一个
+      <strong>Web 服务</strong>，以及一个<strong>内容产品</strong>（比如学习网站、演示或销售文案）。每条专项路线
+      完整地教其中一种类型；完整工作室课程三种都教。每条路线的方法完全相同——同样的课文、实验和测验，
+      没有改写或删减——并且每条路线都写明它不包含什么。"""),
         f"""<ul class="site-facts">
-      <li>{len(tracks)} paths</li>
-      <li>{len(units_by_deck)} modules · {total_units} units</li>
-      <li>Measured durations</li>
+      <li>{SH.T(f"{len(tracks)} paths", f"{len(tracks)} 条路线")}</li>
+      <li>{SH.T(f"{len(units_by_deck)} modules · {total_units} units", f"{len(units_by_deck)} 个模块 · {total_units} 个单元")}</li>
+      <li>{SH.T("Measured durations", "时长均为实测")}</li>
     </ul>""")
-    body = f"""{head}
-  <div class="section-heading">
-    <h2>Choose by what you want to build</h2>
-    <span class="section-note">A unit is one lesson segment, a lab, or a knowledge check — the level
-      at which you actually sit down and learn something.</span>
-  </div>
-  <div class="path-grid">
-{chr(10).join(cards)}
-  </div>
-  <section class="how-to">
-    <h2>What a unit is</h2>
+    unit_grammar = SH.T("""<h2>What a unit is</h2>
     <p>Every module in this course is built the same way, and the path pages show it:</p>
     <ol class="unit-grammar">
       <li><strong>Introduction</strong> — the cover and the module's objectives</li>
@@ -496,11 +555,32 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
     </ol>
     <p class="index-footnote">Every duration on these pages is measured from the recorded narration,
       not estimated. Lab times are quoted from each module's own source, because a lab is hours of
-      hands-on work and its narration is a single part.</p>
+      hands-on work and its narration is a single part.</p>""", """<h2>什么是单元</h2>
+    <p>本课程的每个模块都按同样的方式构建，路线页面也这样呈现：</p>
+    <ol class="unit-grammar">
+      <li><strong>导论</strong>——封面和本模块的目标</li>
+      <li><strong>课文</strong>——三个教学分段，全课程共 27 个</li>
+      <li><strong>练习</strong>——每个模块一个动手实验</li>
+      <li><strong>知识测验</strong>——每个模块八道题，全课程共 72 道</li>
+      <li><strong>总结</strong>——回顾和讨论题</li>
+    </ol>
+    <p class="index-footnote">这些页面上的每个时长都来自录制讲解的实测，而非估算。实验时间引自各模块自己的
+      源文件，因为一个实验要数小时的动手操作，而它的讲解只有一个部分。</p>""")
+    body = f"""{head}
+  <div class="section-heading">
+    <h2>{SH.T("Choose by what you want to build", "按你想构建的东西选择")}</h2>
+    <span class="section-note">{SH.T("A unit is one lesson segment, a lab, or a knowledge check — the level at which you actually sit down and learn something.", "一个单元是一个课程分段、一个实验或一次知识测验——也就是你真正坐下来学一样东西的粒度。")}</span>
+  </div>
+  <div class="path-grid">
+{cards}
+  </div>
+  <section class="how-to">
+    {unit_grammar}
   </section>"""
-    return SH.document("Learning paths — AI Product Studio",
-                       "Four learning paths through one AI product course: the full studio course and "
-                       "three single-archetype tracks.", body, site_base, "paths",
+    return SH.document(SH.T("Learning paths — AI Product Studio", "学习路线 — AI Product Studio"),
+                       SH.T("Four learning paths through one AI product course: the full studio course and "
+                            "three single-archetype tracks.", "同一门 AI 产品课程的四条学习路线：完整工作室课程，以及三条单一类型的专项路线。"),
+                       body, site_base, "paths",
                        crumbs=[("Course", f"{site_base}/index.html"), ("Learning paths", None)])
 
 
@@ -535,27 +615,28 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
         "quizzes": sum(1 for u in included if u["kind"] == "quiz"),
         "questions": 8 * sum(1 for u in included if u["kind"] == "quiz"),
     }
-    labels = (("Teaching segments", "segments"), ("Full labs", "labs"),
-              ("Quizzes", "quizzes"), ("Quiz questions", "questions"))
+    labels = ((SH.T("Teaching segments", "教学分段"), "segments"), (SH.T("Full labs", "完整实验"), "labs"),
+              (SH.T("Quizzes", "测验"), "quizzes"), (SH.T("Quiz questions", "测验题"), "questions"))
 
     def cell(key: str) -> str:
         got = derived[key]
         if measured and key in measured:
-            return f"{got} of {measured[key][1]}"
-        return f"{got} <span class=\"derived-mark\">derived</span>"
+            return SH.T(f"{got} of {measured[key][1]}", f"{got} / {measured[key][1]}")
+        return f"{got} <span class=\"derived-mark\">{SH.T('derived', '推算')}</span>"
 
     rows = "".join(f'<tr><th scope="row">{label}</th><td>{cell(key)}</td></tr>'
                    for label, key in labels)
     source = track.get("counts_source", "the bundle map")
-    note = (f'Counted from {html.escape(source)}.'
+    note = (SH.T(f'Counted from {html.escape(source)}.', f'统计自 {html.escape(source)}。')
             if measured else
-            f'{html.escape(source)} — so these are counted from the rows, not quoted from a total.')
+            SH.T(f'{html.escape(source)} — so these are counted from the rows, not quoted from a total.',
+                 f'{html.escape(source)}——所以这些数字是逐行统计的，而不是引用某个总数。'))
     counts = f"""<section class="path-section">
-    <h2>What this path includes</h2>
+    <h2>{SH.T("What this path includes", "这条路线包含什么")}</h2>
     <p class="section-note">{note}</p>
     <table class="counts-table">
-      <caption>This path compared with the full studio course</caption>
-      <thead><tr><th scope="col">Item</th><th scope="col">In this path</th></tr></thead>
+      <caption>{SH.T("This path compared with the full studio course", "这条路线与完整工作室课程的对比")}</caption>
+      <thead><tr><th scope="col">{SH.T("Item", "项目")}</th><th scope="col">{SH.T("In this path", "本路线")}</th></tr></thead>
       <tbody>{rows}</tbody>
     </table>
   </section>"""
@@ -564,28 +645,37 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
     if track.get("excluded"):
         items = "".join(f"<li>{html.escape(label)}</li>" for label, _a, _b in track["excluded"])
         excluded = f"""<section class="path-section">
-    <h2>Not in this path</h2>
-    <p class="section-note">Stated plainly rather than discovered at checkout.</p>
+    <h2>{SH.T("Not in this path", "不在这条路线中")}</h2>
+    <p class="section-note">{SH.T("Stated plainly rather than discovered at checkout.", "直接写明，而不是等到结账时才发现。")}</p>
     <ul class="excluded-list">{items}</ul>
   </section>"""
 
     head = SH.page_head(
-        f"Learning path · {_plural(len(track['core']) + len(track.get('slice') or {}), 'module')} · {len(units)} units",
+        SH.T(f"Learning path · {_plural(len(track['core']) + len(track.get('slice') or {}), 'module')} · {len(units)} units",
+             f"学习路线 · {len(track['core']) + len(track.get('slice') or {})} 个模块 · {len(units)} 个单元"),
         html.escape(track["title"]), html.escape(track["promise"]),
-        _at_a_glance([("You build", track["medium"]), ("Level", track["level"]),
-                      ("Role", track["role"]),
-                      ("Subject", track.get("subject", "AI product engineering")),
-                      ("Duration", f"{fmt_minutes(minutes)} of narration + lab time"),
-                      ("Price", track["price"])]))
+        _at_a_glance([(SH.T("You build", "你将构建"), track["medium"]), (SH.T("Level", "难度"), track["level"]),
+                      (SH.T("Role", "角色"), track["role"]),
+                      (SH.T("Subject", "主题"), track.get("subject", SH.T("AI product engineering", "AI 产品工程"))),
+                      (SH.T("Duration", "时长"), SH.T(f"{fmt_minutes(minutes)} of narration + lab time", f"讲解 {fmt_minutes(minutes)} + 实验时间")),
+                      (SH.T("Price", "价格"), track["price"])]))
+    scope_note = SH.T("""<h2>The honest scope note</h2>
+    <p>This path is not a separate course. It sequences and frames the parent course's modules for one
+      archetype and reuses its lesson, lab and quiz artifacts — nothing is rewritten, reordered or
+      watered down, and the slice of M7/M8 is scoped rather than summarised.</p>
+    <p class="index-footnote">Durations are measured from the recorded narration. Lab times are quoted
+      from each module's source. Nothing on this page is an estimate presented as a measurement.</p>""", """<h2>坦率的范围说明</h2>
+    <p>这条路线不是一门独立的课程。它为一种产品类型编排并组织母课程的模块，复用其课文、实验和测验——
+      没有改写、重排或删减，M7/M8 的切片是限定范围，而不是概括。</p>
+    <p class="index-footnote">时长来自录制讲解的实测。实验时间引自各模块的源文件。本页没有任何把估算当作实测的数字。</p>""")
     body = f"""{head}
   <section class="path-section">
-    <h2>Prerequisites</h2>
-    <p>{html.escape(track.get('prereq') or 'None. Module 0 assumes no prior setup beyond a machine that can run Python.')}</p>
+    <h2>{SH.T("Prerequisites", "前置条件")}</h2>
+    <p>{html.escape(track.get('prereq') or SH.T('None. Module 0 assumes no prior setup beyond a machine that can run Python.', '无。模块 0 只要求一台能运行 Python 的电脑，无需其他准备。'))}</p>
   </section>
   <div class="section-heading">
-    <h2>Modules in this path</h2>
-    <span class="section-note">In order. A slice module contributes only the named segments — the rest
-      belongs to another path.</span>
+    <h2>{SH.T("Modules in this path", "这条路线的模块")}</h2>
+    <span class="section-note">{SH.T("In order. A slice module contributes only the named segments — the rest belongs to another path.", "按顺序排列。切片模块只贡献列出的分段——其余部分属于其他路线。")}</span>
   </div>
   <div class="module-list">
 {chr(10).join(cards)}
@@ -593,14 +683,9 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
 {counts}
 {excluded}
   <section class="path-section">
-    <h2>The honest scope note</h2>
-    <p>This path is not a separate course. It sequences and frames the parent course's modules for one
-      archetype and reuses its lesson, lab and quiz artifacts — nothing is rewritten, reordered or
-      watered down, and the slice of M7/M8 is scoped rather than summarised.</p>
-    <p class="index-footnote">Durations are measured from the recorded narration. Lab times are quoted
-      from each module's source. Nothing on this page is an estimate presented as a measurement.</p>
+    {scope_note}
   </section>"""
-    return SH.document(f"{track['title']} — learning path — AI Product Studio", track["promise"], body,
+    return SH.document(SH.T(f"{track['title']} — learning path — AI Product Studio", f"{track['title']} — 学习路线 — AI Product Studio"), track["promise"], body,
                        site_base, "path-page",
                        crumbs=[("Course", f"{site_base}/index.html"),
                                ("Learning paths", f"{site_base}/paths.html"), (track["title"], None)],
@@ -621,8 +706,8 @@ def _module_row(deck: dict, units: list[dict], minutes: float, site_base: str,
     facts = cover_facts(deck)
     short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
     number = int(NUM.match(deck["id"]).group(1))
-    chip = ('<span class="inclusion-chip is-full">full module</span>' if inclusion == "full"
-            else '<span class="inclusion-chip is-slice">slice</span>')
+    chip = (f'<span class="inclusion-chip is-full">{SH.T("full module", "完整模块")}</span>' if inclusion == "full"
+            else f'<span class="inclusion-chip is-slice">{SH.T("slice", "切片")}</span>')
 
     rows = []
     for unit in units:
@@ -630,24 +715,25 @@ def _module_row(deck: dict, units: list[dict], minutes: float, site_base: str,
         kind = f'<span class="unit-kind">{html.escape(KIND_LABEL[unit["kind"]])}</span>'
         if unit["id"] in exclude:
             rows.append(f'<li class="is-excluded">{label}{kind}'
-                        f'<span class="unit-mark">not in this path</span></li>')
+                        f'<span class="unit-mark">{SH.T("not in this path", "不在本路线")}</span></li>')
         elif unit["id"] in partial:
             rows.append(f'<li>{label}{kind}'
-                        f'<span class="unit-mark is-partial">part only</span></li>')
+                        f'<span class="unit-mark is-partial">{SH.T("part only", "仅部分")}</span></li>')
         else:
             rows.append(f'<li>{label}{kind}</li>')
 
     included = len(units) - len(exclude)
-    count = (f"{included} of {len(units)} units" if exclude else f"{len(units)} units")
+    count = (SH.T(f"{included} of {len(units)} units", f"{included} / {len(units)} 个单元") if exclude
+             else SH.T(f"{len(units)} units", f"{len(units)} 个单元"))
     note = f'<p class="slice-note">{html.escape(spec["note"])}</p>' if spec.get("note") else ""
     href = (f"{site_base}/module-{deck['id']}.html" if deck["id"] in built_modules
             else f"{site_base}/{deck['id']}.html")
     return f"""<article class="module-row">
   <div class="module-head">
-    <p class="module-number">Module {number} {chip}</p>
+    <p class="module-number">{SH.T(f"Module {number}", f"模块 {number}")} {chip}</p>
     <h3><a href="{href}">{html.escape(short)}</a></h3>
     <p class="module-promise">{html.escape(facts['promise'])}</p>
-    <p class="module-meta">{count} · {fmt_minutes(minutes)} of narration</p>
+    <p class="module-meta">{count} · {SH.T(f"{fmt_minutes(minutes)} of narration", f"讲解 {fmt_minutes(minutes)}")}</p>
     {note}
   </div>
   <ol class="module-units">{"".join(rows)}</ol>
@@ -668,24 +754,25 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     objectives_html = "".join(f"<li>{item}</li>" for item in objectives(deck))
     total = sum(seconds.get(f"{deck['id']}:{u['id']}", 0) for u in units)
 
-    mediums = " · ".join(entry["track"]["medium"] for entry in tracks_for) or "All three types"
+    mediums = " · ".join(entry["track"]["medium"] for entry in tracks_for) or SH.T("All three types", "全部三类")
     path_rows = []
     for entry in tracks_for:
         track, inclusion, spec = entry["track"], entry["inclusion"], entry["spec"]
         excluded = spec.get("exclude") or []
         partial = spec.get("partial") or []
         if inclusion == "full":
-            chip = '<span class="inclusion-chip is-full">full module</span>'
-            note = "Every unit of this module is in the path."
+            chip = f'<span class="inclusion-chip is-full">{SH.T("full module", "完整模块")}</span>'
+            note = SH.T("Every unit of this module is in the path.", "本模块的每个单元都在这条路线中。")
         else:
-            chip = '<span class="inclusion-chip is-slice">slice</span>'
+            chip = f'<span class="inclusion-chip is-slice">{SH.T("slice", "切片")}</span>'
             bits = []
+            sep = SH.T(", ", "、")
             if excluded:
-                bits.append("not in this path: " + ", ".join(
-                    html.escape(u["title"]) for u in units if u["id"] in excluded))
+                bits.append(SH.T("not in this path: ", "不在本路线：") + sep.join(
+                    html.escape(SH.unit_name(u)) for u in units if u["id"] in excluded))
             if partial:
-                bits.append("part only: " + ", ".join(
-                    html.escape(u["title"]) for u in units if u["id"] in partial))
+                bits.append(SH.T("part only: ", "仅部分：") + sep.join(
+                    html.escape(SH.unit_name(u)) for u in units if u["id"] in partial))
             note = html.escape(spec.get("note", "")) + (" — " + "; ".join(bits) if bits else "")
         href = f"{site_base}/{track['page']}" if track.get("page") else f"{site_base}/index.html"
         path_rows.append(f"""<li class="path-line">
@@ -695,8 +782,8 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
   <span class="path-line-note">{note}</span>
 </li>""")
     paths_section = f"""<section class="path-section">
-    <h2>Paths through this module</h2>
-    <p class="section-note">{"Shared by " + str(len(tracks_for)) + " of the paths." if len(tracks_for) > 1 else "This module belongs to one path."}</p>
+    <h2>{SH.T("Paths through this module", "经过本模块的路线")}</h2>
+    <p class="section-note">{SH.T(f"Shared by {len(tracks_for)} of the paths.", f"{len(tracks_for)} 条路线共用。") if len(tracks_for) > 1 else SH.T("This module belongs to one path.", "本模块属于一条路线。")}</p>
     <ul class="module-paths">{"".join(path_rows)}</ul>
   </section>""" if tracks_for else ""
 
@@ -707,17 +794,19 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
             # the duration only: a source's "~30 minutes including downloads (…)" is a sentence,
             # and a unit row is one line
             quoted = lab_time(deck["id"])
-            duration = re.match(r"~?\s*[\d.]+(?:\s*[–-]\s*[\d.]+)?\s*(?:minutes?|mins?|hours?)\b", quoted)
-            time_text = f'{fmt_minutes(seconds_value)} narrated · {duration.group(0) if duration else quoted} hands-on'
+            duration = re.match(r"(?:~|约)?\s*[\d.]+(?:\s*[–-]\s*[\d.]+)?\s*(?:minutes?\b|mins?\b|hours?\b|小时|分钟)", quoted)
+            said = duration.group(0) if duration else quoted
+            time_text = SH.T(f'{fmt_minutes(seconds_value)} narrated · {said} hands-on',
+                             f'讲解 {fmt_minutes(seconds_value)} · 动手 {said}')
         else:
             time_text = fmt_minutes(seconds_value)
         extra = ""
         if unit["kind"] == "lab":
-            extra = f'<a class="unit-open" href="{site_base}/lab-{deck["id"]}.html">Checklist →</a>'
+            extra = f'<a class="unit-open" href="{site_base}/lab-{deck["id"]}.html">{SH.T("Checklist →", "清单 →")}</a>'
         elif unit["kind"] == "quiz":
-            extra = f'<a class="unit-open" href="{site_base}/quiz-{deck["id"]}.html">Take it →</a>'
+            extra = f'<a class="unit-open" href="{site_base}/quiz-{deck["id"]}.html">{SH.T("Take it →", "去作答 →")}</a>'
         elif unit["kind"] == "segment":
-            extra = f'<a class="unit-open" href="{site_base}/lesson-{deck["id"]}.html">Read →</a>'
+            extra = f'<a class="unit-open" href="{site_base}/lesson-{deck["id"]}.html">{SH.T("Read →", "阅读 →")}</a>'
         # A unit row is a link with its recorded status (#84) — never a checkbox. shell.js colours it
         # from the progress store, which only records what the learner did.
         uid = f"{deck['id']}:{html.escape(unit['id'])}"
@@ -736,16 +825,17 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
         path_link = (f'<a href="{site_base}/{tracks_for[0]["track"]["page"]}">'
                      f'{html.escape(tracks_for[0]["track"]["title"])}</a>')
     else:
-        path_link = f'<a href="{site_base}/paths.html">the learning paths</a>'
+        path_link = f'<a href="{site_base}/paths.html">{SH.T("the learning paths", "学习路线")}</a>'
 
     head = SH.page_head(
-        f"Module {number} · {len(units)} units · {fmt_minutes(total)} of narration", html.escape(short),
+        SH.T(f"Module {number} · {len(units)} units · {fmt_minutes(total)} of narration",
+             f"模块 {number} · {len(units)} 个单元 · 讲解 {fmt_minutes(total)}"), html.escape(short),
         html.escape(facts["promise"]),
-        _at_a_glance([("Paths", mediums),
-                      ("Level", tracks_for[0]["track"]["level"] if tracks_for
-                       else "Beginner to intermediate"),
-                      ("Lesson", facts["lesson_length"]),
-                      ("Lab", lab_time(deck["id"]))])
+        _at_a_glance([(SH.T("Paths", "路线"), mediums),
+                      (SH.T("Level", "难度"), tracks_for[0]["track"]["level"] if tracks_for
+                       else SH.T("Beginner to intermediate", "入门到中级")),
+                      (SH.T("Lesson", "课文"), facts["lesson_length"]),
+                      (SH.T("Lab", "实验"), lab_time(deck["id"]))])
 )
     # The module's landing point (#74): where to begin, or where the learner stopped. The build writes
     # "Start"; shell.js turns it into "Resume · slide N" from the stored position in this deck.
@@ -753,46 +843,49 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     start = f"""<section class="module-start" data-module-start="{deck['id']}" aria-label="Start this module">
     <a class="btn-start" href="{site_base}/{first_unit['href'] if first_unit else deck['id'] + '.html'}" data-start-link>
       <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/></svg>
-      <span data-start-label>Start module</span></a>
-    <p class="module-start-note" data-start-note>{html.escape(f"Begins with the {KIND_LABEL[first_unit['kind']].lower()}, then {len(units) - 1} more units." if first_unit else "")}</p>
-    <p class="module-next" data-module-next hidden>Next: <a href="#" data-module-next-link></a></p>
+      <span data-start-label>{SH.T("Start module", "开始本模块")}</span></a>
+    <p class="module-start-note" data-start-note>{html.escape(SH.T(f"Begins with the {KIND_LABEL[first_unit['kind']].lower()}, then {len(units) - 1} more units.", f"从{KIND_LABEL_ZH[first_unit['kind']]}开始，之后还有 {len(units) - 1} 个单元。") if first_unit else "")}</p>
+    <p class="module-next" data-module-next hidden>{SH.T("Next:", "下一步：")} <a href="#" data-module-next-link></a></p>
   </section>"""
     # The module at a glance (#99): the cover slide's figure — the whole system or method, with this
     # module's part marked — so the page opens on a picture of what is taught, not a list.
     hero_section = (f'<section class="path-section module-hero" aria-label="The module at a glance">{hero}</section>'
                     if hero else "")
+    progress_note = SH.T(f"""Progress is recorded from what you do, never ticked by hand: a lesson unit
+      when its narration plays through its last part or you read it to the end; the
+      lab when its checklist is complete and its evidence entry is exported; the knowledge check at
+      75%. It is stored in this browser only — <a href="{site_base}/index.html">export or import</a> it
+      from the course home.""", f"""进度只根据你的实际操作记录，从不手动勾选：课文单元在讲解播放到最后一部分、或你读到结尾时记录；
+      实验在清单完成且证据条目导出时记录；知识测验在达到 75% 时记录。进度只保存在此浏览器中——可在课程首页
+      <a href="{site_base}/index.html">导出或导入</a>。""")
     body = f"""{head}
 {start}
 {hero_section}
   <section class="path-section">
-    <h2>Learning objectives</h2>
+    <h2>{SH.T("Learning objectives", "学习目标")}</h2>
     <ul class="objectives">{objectives_html}</ul>
   </section>
   <section class="path-section">
-    <h2>Prerequisites</h2>
+    <h2>{SH.T("Prerequisites", "前置条件")}</h2>
     <p>{html.escape(lab_prereq(deck['id']))}</p>
   </section>
 {paths_section}
   <div class="section-heading">
-    <h2>Units in this module</h2>
-    <span class="section-note">Work them in order. Each unit opens where it is taught — its first part, the lab or the knowledge check.</span>
+    <h2>{SH.T("Units in this module", "本模块的单元")}</h2>
+    <span class="section-note">{SH.T("Work them in order. Each unit opens where it is taught — its first part, the lab or the knowledge check.", "按顺序学习。每个单元都在它被讲授的地方打开——它的第一个部分、实验或知识测验。")}</span>
   </div>
   <div class="progress-wrap" data-module-progress="{deck['id']}" data-module-units="{",".join(f"{deck['id']}:{u['id']}" for u in units)}">
-    <p class="progress-line"><strong data-progress-count>0 of {len(units)}</strong> units recorded
+    <p class="progress-line">{SH.T(f'<strong data-progress-count>0 of {len(units)}</strong> units recorded', f'已记录 <strong data-progress-count>0 / {len(units)}</strong> 个单元')}
       <span class="progress-bar" role="progressbar" aria-label="Units recorded" aria-valuemin="0"
             aria-valuemax="{len(units)}" aria-valuenow="0"><span data-progress-fill></span></span></p>
-    <p class="progress-note">Progress is recorded from what you do, never ticked by hand: a lesson unit
-      when its narration plays through its last part or you read it to the end; the
-      lab when its checklist is complete and its evidence entry is exported; the knowledge check at
-      75%. It is stored in this browser only — <a href="{site_base}/index.html">export or import</a> it
-      from the course home.</p>
+    <p class="progress-note">{progress_note}</p>
   </div>
   <ol class="unit-list">
 {chr(10).join(rows)}
   </ol>
   <section class="path-section">
-    <a class="btn-quiet" href="{site_base}/transcript-{deck['id']}.html">Read the transcript</a>
-    <p class="index-footnote">Part of {path_link}. {'This is the text-first copy: narration and captions are not published here, so units are read and presented rather than played.' if text_only else 'Units carry narration, captions and a transcript.'}</p>
+    <a class="btn-quiet" href="{site_base}/transcript-{deck['id']}.html">{SH.T("Read the transcript", "阅读文字稿")}</a>
+    <p class="index-footnote">{SH.T(f"Part of {path_link}.", f"属于{path_link}。")} {SH.T('This is the text-first copy: narration and captions are not published here, so units are read and presented rather than played.', '这是纯文本版：此处不发布讲解音频和字幕，所以单元以阅读为主，而不是播放。') if text_only else SH.T('Units carry narration, captions and a transcript.', '单元带有讲解、字幕和文字稿。')}</p>
   </section>"""
     return SH.document(f"{short} — module — AI Product Studio", facts["promise"], body, site_base,
                        "module-page", crumbs=SH.module_crumbs(site_base, deck, None),

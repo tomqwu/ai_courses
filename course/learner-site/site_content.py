@@ -401,7 +401,7 @@ def parse_quiz(text: str, deck_id: str) -> dict:
         seg = SEGMENT.search(k["rationale"]) or (SEGMENT.search(q.get("head", "")) if q.get("head") else None)
         q["objective"] = q.get("segment") or (f"M{seg.group(1)}.{seg.group(2)}" if seg else "")
         # The objective in the key's own words ("M2.1 pipeline"), shown beside the question (#78).
-        said = re.search(r"Objective:\s*(.+?)\s*(?:—|\(|;|\)|$)", k["rationale"])
+        said = re.search(r"(?:Objective|目标)[:：]\s*(.+?)\s*(?:—|\(|;|\)|（|；|）|。|$)", k["rationale"])
         q["objective_text"] = said.group(1).strip().rstrip(".") if said else q["objective"]
         q["rationale_html"] = inline(k["rationale"])
         if q["type"] == "mc":
@@ -435,7 +435,7 @@ def parse_auto_fail(rubrics: str) -> dict | None:
     checklist says, and a learner should meet them before submitting, not in the grade.
     """
     lines = rubrics.splitlines()
-    start = next((i for i, l in enumerate(lines) if re.match(r"^##\s+Auto-fail", l, re.I)), None)
+    start = next((i for i, l in enumerate(lines) if re.match(r"^##\s+(?:Auto-fail|自动不通过)", l, re.I)), None)
     if start is None:
         return None
     end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
@@ -487,8 +487,8 @@ def parse_lab(text: str, deck_id: str) -> dict:
     evidence_md = ""
     steps_seen = False
     for sec_title, sec_body in sections:
-        is_check = bool(re.search(r"checklist", sec_title, re.I))
-        is_evidence = sec_title.lower().startswith("evidence")
+        is_check = bool(re.search(r"checklist|验收清单|检查清单", sec_title, re.I))
+        is_evidence = sec_title.lower().startswith(("evidence", "证据"))
         prefix = f"{deck_id}-lab" if is_check else None
         html_body, _, ids = render_document(sec_body, checklist_prefix=prefix, heading_offset=1)
         if is_check:
@@ -497,8 +497,8 @@ def parse_lab(text: str, deck_id: str) -> dict:
         if is_evidence:
             evidence_md = sec_body.strip()
         kind = "checklist" if is_check else ("evidence" if is_evidence else
-                                            ("stretch" if sec_title.lower().startswith("stretch") else
-                                             ("discussion" if sec_title.lower().startswith("discussion") else "body")))
+                                            ("stretch" if sec_title.lower().startswith(("stretch", "拓展")) else
+                                             ("discussion" if sec_title.lower().startswith(("discussion", "讨论")) else "body")))
         section = {"title": sec_title, "html": html_body, "kind": kind, "id": slug(sec_title or "lab")}
         # The workspace (#77) needs the steps one at a time. Labs write them two ways, and both are
         # read as written: `## Step N — Title (~time)` sections, or one `## Steps` section holding a
@@ -508,7 +508,7 @@ def parse_lab(text: str, deck_id: str) -> dict:
             section["steps"] = [{"title": one.group("title") or sec_title, "time": one.group("time") or "",
                                  "html": html_body, "id": section["id"]}]
             steps_seen = True
-        elif kind == "body" and re.fullmatch(r"steps?", sec_title.strip(), re.I):
+        elif kind == "body" and re.fullmatch(r"steps?|步骤", sec_title.strip(), re.I):
             section["steps"] = [{**item, "html": render_document(item["md"], heading_offset=1)[0],
                                  "id": f"step-{n}"} for n, item in enumerate(list_steps(sec_body), 1)]
             steps_seen = bool(section["steps"]) or steps_seen
@@ -523,7 +523,8 @@ def parse_lab(text: str, deck_id: str) -> dict:
             "evidence_md": evidence_md}
 
 
-STEP_SECTION = re.compile(r"^(?:#+\s*)?Step\s+\w+\s*(?:—|–|-|:)\s*(?P<title>.*?)\s*(?:\((?P<time>[^)]*)\))?\s*$", re.I)
+# The Chinese edition (#121) writes a step `## 第 1 步 — 标题 (~20 分钟)`.
+STEP_SECTION = re.compile(r"^(?:#+\s*)?(?:Step\s+\w+|第\s*\w+?\s*步)\s*(?:—|–|-|:|：)\s*(?P<title>.*?)\s*(?:[(（](?P<time>[^)）]*)[)）])?\s*$", re.I)
 LIST_ITEM = re.compile(r"^(\d+)\.\s+(.*)$")
 BOLD_ITEM = re.compile(r"^\*\*(\d+)\.\s+(.+?)\*\*\s*(.*)$")
 
@@ -559,16 +560,18 @@ def list_steps(text: str) -> list[dict]:
         first_line = lines[0][lead.end():].lstrip(" :—–-") if lead else lines[0]
         body = "\n".join([first_line] + [l[indent:] for l in rest]).strip()
         if lead:
-            title = lead.group(1).strip().rstrip(".:")
+            title = lead.group(1).strip().rstrip(".:。：")
         else:
             # The first sentence, not counting full stops inside code spans (`make lab-m2`).
             plain = re.sub(r"`[^`]*`", lambda m: m.group(0).replace(".", "\x00"), lines[0])
-            first = re.match(r"^(.+?[.!?])(?:\s|$)", plain)
-            title = (first.group(1) if first else plain).rstrip(".")
+            # (a Chinese sentence ends at 。！？ with no space after it)
+            first = re.match(r"^(.+?(?:[.!?](?=\s|$)|[。！？]))", plain)
+            title = (first.group(1) if first else plain).rstrip(".。")
             # A long first sentence is cut at its first colon, bracket or dash (outside code): the
             # list shows the step's name, and its body keeps every word.
-            if len(title) > 60:
-                cut = re.search(r"(?<=.{20})(?::\s|\s\(|\s—\s)", re.sub(r"`[^`]*`", lambda m: "x" * len(m.group(0)), title))
+            wide = sum(2 if ord(ch) > 0x2E80 else 1 for ch in title)   # a CJK character is two columns
+            if wide > 60:
+                cut = re.search(r"(?<=.{10})(?::\s|\s\(|\s—\s|：|（|——)", re.sub(r"`[^`]*`", lambda m: "x" * len(m.group(0)), title))
                 if cut:
                     title = title[:cut.start()]
             title = title.replace("\x00", ".")

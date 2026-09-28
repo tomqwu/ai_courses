@@ -18,7 +18,8 @@ segments, learning paths, playbooks, narration edits, and publishing.
 | `course/06-production/verify.py` | Package gate: artifacts, bands, pointers, anchors, exhibits, narration, site |
 | `course/06-production/pointer-anchors.json` | Line ranges pinned to the text they must contain |
 | `course/06-production/facts.json` | Case-study numbers the course quotes, re-derived by `check_facts.py` |
-| `course/06-production/terms-zh.json` | EN / 中文: every glossary term's Chinese name and one-line Chinese definition |
+| `course/03-content/mNN-slug/zh/`, `narration/scripts-zh/` | The Chinese edition's sources (built into `zh/`); rules in `course/01-design/zh-translation-guide.md` |
+| `course/06-production/terms-zh.json` | Every glossary term's Chinese name and one-line definition — the names the translation uses |
 | `course/learner-site/` | Site generator (`build_site.py`; every page in the `site_shell.py` frame) and browser checks (`check_player.py`, `check_features.py`) |
 | `course/05-tracks/`, `course/07-playbooks/` | Paid learning-path bundles; standalone playbooks |
 | `course/check.sh`, `.github/workflows/gate.yml` | The gate, locally and in CI |
@@ -44,8 +45,11 @@ Clone the case studies beside `course/` at the commits `gate.yml` pins before ru
   consistent, regenerate transcripts (`make -C course transcripts`), and add the slide to the
   re-recording list in the PR.
 - **Never skip, disable or loosen a check to get green.** Fix the content or the check's real bug.
-- **Every glossary term has its Chinese** in `terms-zh.json` (a name, not a translation of the course).
-  Add, rename or remove a term there when you do in a glossary; the gate names any mismatch.
+- **The Chinese edition moves with the English.** Change a module's English and carry the change into
+  its `zh/` sources (and `scripts-zh/`), then `python3 course/06-production/zh_edition.py stamp mNN`.
+  The gate fails a module whose English changed since its Chinese was stamped, whose Chinese does not
+  match part for part (same parts, exhibits, pointers, steps, questions, keys), or whose built pages
+  leave English untranslated. Every glossary term also needs its entry in `terms-zh.json`.
 - **Numbers that drift** (test counts, coverage, file sizes) live in `facts.json`; update the pin when
   the source changes, never the literal alone.
 

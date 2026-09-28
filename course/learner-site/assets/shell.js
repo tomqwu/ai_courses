@@ -152,7 +152,7 @@
   }
 
   function base() {
-    return (document.body.getAttribute('data-site-base') || '.').replace(/\/$/, '');
+    return (document.body.getAttribute('data-page-base') || document.body.getAttribute('data-site-base') || '.').replace(/\/$/, '');
   }
 
   function render() {
