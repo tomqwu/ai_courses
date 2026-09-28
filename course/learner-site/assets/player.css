@@ -326,6 +326,24 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   border: 1px solid transparent; border-radius: 10px; color: var(--ink-soft);
 }
 .app-bar-search:hover { background: var(--wash); color: var(--ink-strong); }
+/* EN / 中文 (#116): the course's language of help. English is the course; 中文 adds a key term's
+   Chinese name beside its first use in each part, Chinese in the glossaries, and Chinese controls. */
+.lang-switch { display: flex; flex: none; padding: 3px; border-radius: 10px; background: var(--wash); }
+.lang-switch button {
+  min-height: 38px; padding: 0 10px; border: 0; border-radius: 8px;
+  color: var(--ink-soft); font-size: var(--d-2); font-weight: 600; cursor: pointer;
+}
+.lang-switch button:hover { color: var(--ink-strong); }
+.app-bar .lang-switch button[aria-pressed="true"] {
+  background: var(--surface); color: var(--ink-strong);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ink-strong) 14%, transparent);
+}
+.is-zh .term-zh::after {
+  content: "（" attr(data-zh) "）"; color: var(--accent-deep); font-size: .92em; font-weight: 500;
+}
+.gl-zh, .gl-zh-def { display: none; }
+.is-zh .gl-zh { display: inline; margin-left: .4em; color: var(--accent-deep); font-weight: 600; }
+.is-zh .gl-zh-def { display: block; margin-top: 4px; color: var(--ink-soft); }
 
 .app-content { width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding: 32px 0 80px; }
 .page-head { margin: 0 0 28px; }
@@ -351,6 +369,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   :root { --bar-h: 56px; }
   .app-bar { gap: 4px; padding: 0 4px; }
   .app-bar .app-bar-menu { width: 44px; padding: 0; justify-content: center; border-color: transparent; }
+  .lang-switch button { min-height: 38px; padding: 0 7px; }
   .app-bar-title { display: flex; flex-direction: column; flex: 1; min-width: 0; margin: 0; line-height: 1.25; }
   .app-bar-title span { color: var(--ink-soft); font-size: var(--d-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .app-bar-title strong { color: var(--ink-strong); font-size: var(--d-4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -624,8 +643,11 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   .fig [data-step].is-pending { opacity: 1; transform: none; }
   .fig-link .fig-link-line { animation: none !important; stroke-dasharray: none; }
 }
-/* a phone: flows read top to bottom, connectors turn to point down, columns stack */
-@media (max-width: 480px) {
+/* a narrow figure — a phone, or a lesson column beside its table of contents on a small laptop:
+   flows read top to bottom, connectors turn to point down, columns stack. Measured on the figure,
+   not the window, because a 1000px window can hold a 450px lesson column. */
+.fig { container-type: inline-size; }
+@container (max-width: 520px) {
   body .fig-track { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
   body .fig-track > .fig-link { transform: rotate(90deg); width: 1.4em; margin: 0.1em auto; }
   body .fig-columns { grid-template-columns: 1fr; }

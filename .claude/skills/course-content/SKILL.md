@@ -79,6 +79,10 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
    `.github/workflows/gate.yml`.
 8. `course/06-production/verify.py` — add `"mNN"` to `FIGURE_MODULES`, so the gate holds the module
    to the hero and segment-opener rule.
+9. `course/06-production/terms-zh.json` — an entry for every term in the new glossary: `zh` (the
+   Chinese name, Chinese only), `def` (one Chinese sentence). Add `"scope": "module"` for a generic
+   word (commit, contract) so the site only names it in this module, `"inline": false` for a
+   contrast ("X vs. Y") or a file name. The site shows these in 中文 mode (#116).
 
 ## 3. Editing existing content
 
@@ -86,6 +90,7 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
   (lesson, slides, NOTES, video script, handout, glossary, quiz, solutions, rubrics) and across
   `course/`. If the number is pinned in `facts.json`, update the pin; if a range is anchored in
   `pointer-anchors.json`, update the key and its token together.
+- **Add, rename or drop a glossary term** in `terms-zh.json` too (the gate checks the two agree).
 - **Change spoken words** only in all three places: `scripts/mNN.json` (what is recorded), the
   slide's NOTES, and the `video-scripts.md` narration. Then `make -C course transcripts`, and list
   the slide for re-recording in the PR.

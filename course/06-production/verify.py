@@ -644,6 +644,39 @@ def check_learner_site() -> list[str]:
     return problems
 
 
+def check_terms_zh() -> list[str]:
+    """EN / 中文 (#116): every glossary term has a Chinese name and a one-line Chinese definition in
+    terms-zh.json, and the file names no term a glossary does not define (a renamed term leaves its
+    old entry behind otherwise). A name must be Chinese and must not simply repeat the English."""
+    import json                                                        # noqa: PLC0415
+    sys.path.insert(0, str(ROOT / "learner-site"))
+    import site_content as SC                                           # noqa: PLC0415
+    import site_locale as SL                                            # noqa: PLC0415
+    terms = SL.load()
+    defined = {}
+    for module in MODULES:
+        for t in SC.parse_glossary((CONTENT / module / "glossary.md").read_text(encoding="utf-8")):
+            defined.setdefault(t["term"], module)
+    problems = []
+    cjk = re.compile(r"[\u4e00-\u9fff]")
+    for term, module in sorted(defined.items()):
+        entry = terms.get(term)
+        if not entry:
+            problems.append(f"{module}/glossary.md: \"{term}\" has no entry in terms-zh.json")
+            continue
+        for key in ("zh", "def"):
+            if not cjk.search(entry.get(key, "")):
+                problems.append(f"terms-zh.json: \"{term}\" {key} is not Chinese")
+        if SL.stem(term).lower() in entry.get("zh", "").lower():
+            problems.append(f"terms-zh.json: \"{term}\" zh repeats the English; give only the Chinese")
+        if entry.get("scope") not in (None, "module"):
+            problems.append(f"terms-zh.json: \"{term}\" scope must be \"module\" or absent")
+    for term in sorted(set(terms) - set(defined)):
+        problems.append(f"terms-zh.json: \"{term}\" is in no glossary — remove it or restore the term")
+    check_terms_zh.summary = f"{len(defined)} terms, {sum(1 for t in defined if terms.get(t, {}).get('inline', True))} named inline"
+    return problems
+
+
 def check_anchors() -> tuple[int, list[str]]:
     """Every anchored pointer is still cited somewhere, and its range still contains its symbol."""
     import json                                                              # noqa: PLC0415
@@ -697,6 +730,7 @@ def main(argv: list[str]) -> int:
         ("Sales claims", check_sales_claims),
         ("Narration contract", check_narration),
         ("Learner site", check_learner_site),
+        ("EN / 中文 terms", check_terms_zh),
     ]
     failed = 0
     for title, fn in sections:

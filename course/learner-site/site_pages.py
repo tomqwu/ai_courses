@@ -12,6 +12,7 @@ import json
 import re
 
 import site_content as SC
+import site_locale as SL
 import site_shell as SH
 
 KIND_TITLES = {
@@ -58,6 +59,8 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str,
         rendered = reading_marks(rendered, deck["id"])
         if segment_figures:
             rendered = segment_heads(rendered, segment_figures)
+    if kind == "glossary":
+        rendered = SL.module_glossary(rendered, SL.load())
     toc = SC.toc_html(headings, 2, 3 if kind == "lesson" else 2)
     ledes = {
         "lesson": "The master text for the three segments — what the narration teaches, in full, with every repo pointer linked at the commit it was verified against.",
@@ -71,7 +74,7 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str,
     body_html = f"""{head}
 <div class="doc-main{' has-toc' if toc else ''}">
   {aside}
-  <article class="doc-article">
+  <article class="doc-article {kind}-doc">
 {rendered}
     <footer class="doc-footer">
       <p class="index-footnote">Source: <code>course/03-content/{html.escape(deck['source'].split('/')[1])}/{kind}.md</code>. Repo pointers link to the upstream file at the commit the course was verified against.</p>
@@ -167,12 +170,13 @@ def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict
         first = re.sub(r"[^a-z]", "", t["term"].lower()[:1]) or "#"
         by_letter.setdefault(first.upper(), []).append(t)
     letters = "".join(f'<a href="#g-{k}">{k}</a>' for k in sorted(by_letter))
+    zh = SL.load()
     sections = []
     for k in sorted(by_letter):
         rows = "".join(
-            f'<dt id="{SC.slug(t["term"])}">{SC.inline(t["term"])}'
+            f'<dt id="{SC.slug(t["term"])}">{SC.inline(t["term"])}{SL.name_html(zh.get(t["term"]))}'
             + "".join(f' <a class="term-module" href="{site_base}/glossary-{m}.html">M{int(m[1:])}</a>' for m in t["modules"])
-            + f'</dt><dd>{SC.inline(t["definition"])}</dd>'
+            + f'</dt><dd>{SC.inline(t["definition"])}{SL.def_html(zh.get(t["term"]))}</dd>'
             for t in by_letter[k])
         sections.append(f'<section class="glossary-letter" id="g-{k}"><h2>{k}</h2><dl>{rows}</dl></section>')
     shared = sum(1 for t in items if len(t["modules"]) > 1)
@@ -485,6 +489,7 @@ def search_index(records: list[dict], decks: list[dict], units_by_deck: dict,
         for unit in units_by_deck.get(deck["id"], []):
             out.append({"k": "unit", "d": deck["id"], "t": unit["title"] if unit["kind"] == "segment" else unit["label"],
                         "h": unit["href"], "m": short, "x": f"{unit['kind']} unit, slides {unit['first']}–{unit['last']}"})
+    zh = SL.load()
     for r in records:
         out.append({"k": r["kind"], "d": r["deck"], "t": r["title"], "h": r["href"], "m": r.get("module", ""),
                     "x": r["text"][:1500]})
@@ -493,5 +498,6 @@ def search_index(records: list[dict], decks: list[dict], units_by_deck: dict,
                         "h": f"{r['href']}#{h['id']}", "m": r["title"], "x": h.get("x", "")})
         for t in r.get("terms", []):
             out.append({"k": "term", "d": r["deck"], "t": t["term"], "h": f"{r['href']}#{SC.slug(t['term'])}",
-                        "m": r["title"], "x": t["definition"][:400]})
+                        "m": r["title"], "x": (t["definition"][:400] + (
+                            f' · {zh[t["term"]]["zh"]} — {zh[t["term"]]["def"]}' if t["term"] in zh else ""))})
     return json.dumps(out, ensure_ascii=False, separators=(",", ":"))

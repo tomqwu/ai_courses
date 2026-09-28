@@ -235,6 +235,9 @@ def topbar(site_base: str, crumbs: list[tuple[str, str | None]], deck_id: str | 
             f' aria-expanded="false">{MENU_ICON}<span>Outline</span></button>'
             f'<nav class="app-crumbs" aria-label="Breadcrumb">{trail}</nav>'
             f'{title}{modes}'
+            f'<div class="lang-switch" role="group" aria-label="Language · 语言">'
+            f'<button type="button" data-lang="en" aria-pressed="true">EN</button>'
+            f'<button type="button" data-lang="zh" lang="zh-Hans" aria-pressed="false">中文</button></div>'
             f'<button type="button" class="app-bar-search" data-search-open'
             f' aria-label="Search the course" title="Search the course (⌘K or /)">{SEARCH_ICON}</button>'
             f'</header>')
@@ -269,7 +272,8 @@ def document(title: str, description: str, content: str, site_base: str, body_cl
              scripts: tuple[str, ...] = (), body_attrs: str = "") -> str:
     """A whole page in the shell. `content` is everything inside <main>, page head included."""
     tags = "".join(f'<script src="{site_base}/assets/{s}" defer></script>'
-                   for s in ("progress.js", "shell.js", "search.js", "figures.js") + tuple(scripts))
+                   for s in ("progress.js", "shell.js", "search.js", "figures.js", "terms-zh.js") + tuple(scripts))
+    deck_attr = f' data-deck="{deck_id}"' if deck_id else ""
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -278,8 +282,9 @@ def document(title: str, description: str, content: str, site_base: str, body_cl
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description)}">
 {fonts(site_base)}
+<script src="{site_base}/assets/locale.js"></script>
 </head>
-<body class="app-page {body_class}" data-site-base="{site_base}"{body_attrs}>
+<body class="app-page {body_class}" data-site-base="{site_base}"{deck_attr}{body_attrs}>
 <a class="skip-link" href="#content">Skip to content</a>
 <div class="app">
 {sidebar(site_base, deck_id, current)}

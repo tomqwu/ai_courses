@@ -704,7 +704,11 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     for index, unit in enumerate(units, 1):
         seconds_value = seconds.get(f"{deck['id']}:{unit['id']}", 0)
         if unit["kind"] == "lab":
-            time_text = f'{fmt_minutes(seconds_value)} slide · {lab_time(deck["id"])} hands-on'
+            # the duration only: a source's "~30 minutes including downloads (…)" is a sentence,
+            # and a unit row is one line
+            quoted = lab_time(deck["id"])
+            duration = re.match(r"~?\s*[\d.]+(?:\s*[–-]\s*[\d.]+)?\s*(?:minutes?|mins?|hours?)\b", quoted)
+            time_text = f'{fmt_minutes(seconds_value)} narrated · {duration.group(0) if duration else quoted} hands-on'
         else:
             time_text = fmt_minutes(seconds_value)
         extra = ""
