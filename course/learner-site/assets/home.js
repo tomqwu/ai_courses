@@ -49,8 +49,8 @@
     set('[data-home-path]', pathTitle());
     set('[data-resume-where]', 'Module ' + mod.number + ' · ' + mod.title);
     set('[data-resume-unit]', unit.kind === 'segment' ? unit.id + ' — ' + unit.label : unit.name);
-    set('[data-resume-slide]', 'Slide ' + n + ' of ' + mod.slides + (info.title ? ' · ' + info.title : ''));
-    set('[data-resume-count]', n + ' of ' + mod.slides + ' slides');
+    set('[data-resume-slide]', 'Part ' + n + ' of ' + mod.slides + (info.title ? ' · ' + info.title : ''));
+    set('[data-resume-count]', n + ' of ' + mod.slides + ' parts');
     set('[data-thumb-kicker]', info.kicker || ('M' + mod.number));
     set('[data-thumb-title]', info.title || unit.name);
     var fill = root.querySelector('[data-resume-fill]');
@@ -70,7 +70,7 @@
     var lab = mod.units.filter(function (u) { return u.kind === 'lab'; })[0];
     var quiz = mod.units.filter(function (u) { return u.kind === 'quiz'; })[0];
     var items = [];
-    if (next) items.push([ 'Watch', next.name, (next.last - next.first + 1) + ' slides', base + '/' + next.href ]);
+    if (next) items.push([ 'Learn', next.name, (next.last - next.first + 1) + ' parts', base + '/' + next.href ]);
     if (lab) items.push([ 'Lab', lab.name, mod.lab + (s.units[deck + ':lab'] ? ' · done' : ''), base + '/' + lab.href ]);
     if (quiz) items.push([ 'Check', 'Knowledge check', mod.questions + ' questions' + (s.units[deck + ':quiz'] ? ' · passed' : ''), base + '/' + quiz.href ]);
     var list = root.querySelector('[data-next-list]');

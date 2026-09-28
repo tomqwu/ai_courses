@@ -496,7 +496,7 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
     </ol>
     <p class="index-footnote">Every duration on these pages is measured from the recorded narration,
       not estimated. Lab times are quoted from each module's own source, because a lab is hours of
-      hands-on work and its narration is a single slide.</p>
+      hands-on work and its narration is a single part.</p>
   </section>"""
     return SH.document("Learning paths — AI Product Studio",
                        "Four learning paths through one AI product course: the full studio course and "
@@ -775,14 +775,14 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
 {paths_section}
   <div class="section-heading">
     <h2>Units in this module</h2>
-    <span class="section-note">Work them in order. Each unit opens where it is taught — its first slide, the lab or the knowledge check.</span>
+    <span class="section-note">Work them in order. Each unit opens where it is taught — its first part, the lab or the knowledge check.</span>
   </div>
   <div class="progress-wrap" data-module-progress="{deck['id']}" data-module-units="{",".join(f"{deck['id']}:{u['id']}" for u in units)}">
     <p class="progress-line"><strong data-progress-count>0 of {len(units)}</strong> units recorded
       <span class="progress-bar" role="progressbar" aria-label="Units recorded" aria-valuemin="0"
             aria-valuemax="{len(units)}" aria-valuenow="0"><span data-progress-fill></span></span></p>
     <p class="progress-note">Progress is recorded from what you do, never ticked by hand: a lesson unit
-      when its narration plays through its last slide or you read its section to the end in Read; the
+      when its narration plays through its last part or you read it to the end; the
       lab when its checklist is complete and its evidence entry is exported; the knowledge check at
       75%. It is stored in this browser only — <a href="{site_base}/index.html">export or import</a> it
       from the course home.</p>

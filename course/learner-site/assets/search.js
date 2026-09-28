@@ -34,10 +34,10 @@
     ' aria-expanded="false" aria-controls="aps-search-results" aria-autocomplete="list"' +
     ' placeholder="Parts, narration, lessons, labs, terms…"></label>' +
     '<button type="button" class="search-esc" data-search-close aria-label="Close search">esc</button></form>' +
-    '<p class="search-hint" data-search-hint>Type at least two characters. Results open the slide, section, step or term directly.</p>' +
+    '<p class="search-hint" data-search-hint>Type at least two characters. Results open the part, section, step or term directly.</p>' +
     '<div class="search-results" id="aps-search-results" data-search-results role="listbox" aria-label="Results"></div>' +
     '<p class="search-keys"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>↵</kbd> open</span>' +
-    '<span><kbd>⌘K</kbd> anywhere</span><span>Searches slides, narration, lessons, labs and the glossary</span></p>';
+    '<span><kbd>⌘K</kbd> anywhere</span><span>Searches the Learn pages, narration, lessons, labs and the glossary</span></p>';
   document.body.appendChild(dialog);
   var input = dialog.querySelector('input');
   var results = dialog.querySelector('[data-search-results]');

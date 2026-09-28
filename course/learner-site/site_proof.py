@@ -124,7 +124,7 @@ def proof_card(proof: dict, site_base: str) -> str:
     cells = (
         (num(p.get("checked", 0)), "file pointers resolve at the pinned commits"),
         (num(p.get("anchors", 0)), "cited ranges pinned to the code they quote"),
-        (num(n.get("recorded", 0)), f"of {n.get('slides', 0)} slides recorded, captions matching the approved script"),
+        (num(n.get("recorded", 0)), f"of {n.get('slides', 0)} parts recorded, captions matching the approved script"),
     )
     items = "".join(f'<div class="proof-num"><span class="proof-value">{v}</span>'
                     f'<span class="proof-label">{html.escape(label)}</span></div>' for v, label in cells)

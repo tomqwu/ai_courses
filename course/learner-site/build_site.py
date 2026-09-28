@@ -296,15 +296,15 @@ def synthetic_disclosure(entries: dict, provenance: dict) -> str:
 
 
 def _slide_heading(deck: dict, slide: dict) -> str:
-    """Slide 1 is usually titled after the deck itself; do not say it twice.
+    """Part 1 is usually titled after the module itself; do not say it twice.
 
     Uses the unsplit heading: the transcript has no kicker column, so "M0.1 — Three archetypes"
     must survive here even though the slide chrome separates the two.
     """
     title = slide.get("full_title", slide["title"]).strip()
     if title.split("—")[-1].strip().casefold() == deck["label"].split("—")[-1].strip().casefold():
-        return f"Slide {slide['number']}"
-    return f"Slide {slide['number']} — {title}"
+        return f"Part {slide['number']}"
+    return f"Part {slide['number']} — {title}"
 
 
 def transcript_markdown(deck: dict, manifest: dict, provenance: dict) -> str:
@@ -326,7 +326,7 @@ def transcript_markdown(deck: dict, manifest: dict, provenance: dict) -> str:
     disclosure = synthetic_disclosure(entries, provenance)
     total = sum(float(e.get("duration", 0) or 0) for e in entries.values())
     out = [f"# {deck['label']}", "", "## Narration transcript", ""]
-    out.append(f"**{len(deck['slides'])} slides · {len(entries)} narrated · "
+    out.append(f"**{len(deck['slides'])} parts · {len(entries)} narrated · "
                f"{int(total // 60)}m {int(total % 60)}s of audio**")
     out.append("")
     if preview and preview == len(entries):
@@ -339,7 +339,7 @@ def transcript_markdown(deck: dict, manifest: dict, provenance: dict) -> str:
     elif voice:
         out.append(f"**Voice:** {voice}. {disclosure}".rstrip())
     out.append("")
-    out.append("The text below is what is spoken on each slide, in order. It is the same text as the "
+    out.append("The text below is what is spoken in each part, in order. It is the same text as the "
                "captions and the approved narration script, checked word for word by "
                "`course/06-production/narration/validate_narration.py`.")
     out.append("")
@@ -392,8 +392,8 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
         note = f'<p class="voice-badge" role="note">{disclosure} These are the approved words.</p>'
     else:
         note = ""
-    lede = (f'{len(deck["slides"])} slides · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s'
-            f' · <a href="{site_base}/{deck["id"]}.html">open the narrated deck →</a>')
+    lede = (f'{len(deck["slides"])} parts · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s'
+            f' · <a href="{site_base}/{deck["id"]}.html">open the Learn page →</a>')
     content = (SH.page_head(deck["module_tag"], f'{html.escape(deck["label"])} — transcript', lede, note)
                + "\n" + "\n".join(rows))
     return SH.document(f"{deck['label']} — transcript", f"The narration of {deck['label']}, slide by slide.",
@@ -580,7 +580,7 @@ def slide_sources(slide: dict) -> list[dict]:
             elif exhibit_lines and _holds(target, spec, exhibit_lines, V):
                 kind = "Exhibit"
             else:
-                kind = "On the slide"
+                kind = "On the page"
             out.append({"pointer": pointer, "url": url, "kind": kind, "target": target, "spec": spec,
                         "commit": SC.PINNED.get(rel.split("/", 1)[0], "main")})
     return out
@@ -835,7 +835,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
   <p class="card-kicker">Module {int(deck['id'][1:])}{shared} <span class="voice-chip is-release" data-quiz-badge="{deck['id']}" hidden></span></p>
   <h3><a href="{module_href}">{html.escape(short)}</a></h3>
   <p class="card-promise">{html.escape(promise)}</p>
-  <p class="card-meta">{len(deck['slides'])} slides · {len(units)} units · lab · knowledge check</p>
+  <p class="card-meta">{len(deck['slides'])} parts · {len(units)} units · lab · knowledge check</p>
   <p class="card-progress"><span class="card-bar" data-ring-units="{unit_ids}" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
     <span class="card-count" data-ring-text></span></p>
   <a class="card-action" href="{module_href}" data-card-action>Start</a>
@@ -843,41 +843,33 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
 
     all_recorded = sum(len((manifest.get("decks", {}).get(d, {}) or {}).get("slides", {})) for d in DECK_IDS)
     all_slides = sum(len(d["slides"]) for d in decks)
-    status = ("Every slide is narrated." if all_recorded >= all_slides else
-              f"{all_recorded} of {all_slides} slides narrated so far.")
+    status = ("Every part is narrated." if all_recorded >= all_slides else
+              f"{all_recorded} of {all_slides} parts narrated so far.")
     if text_only:
-        lede = ("Every module is a deck you can present, read or print, with a complete transcript for "
-                "every slide. Built from three production repositories, and verified with the same "
-                "evidence discipline it teaches.")
-        facts = ("      <li>9 modules · 233 slides</li>\n"
-                 f"      <li>{all_slides} slide transcripts</li>\n"
-                 "      <li>Present · read · print</li>\n"
+        facts = (f"      <li>{all_slides} narrated parts, as text</li>\n"
+                 "      <li>Read · search · print</li>\n"
                  "      <li>Design ported from ai_qe</li>")
         section_note = "Each card shows your recorded progress and one next step."
         first_howto = ('      <li><strong>Text-first copy:</strong> narration and captions are not '
-                       'published here, so the decks are read, presented and printed rather than '
-                       'played.</li>\n'
-                       '      <li>Every slide carries its transcript, and the\n'
+                       'published here, so each Learn page is read rather than played.</li>\n'
+                       '      <li>Every part shows its narration as text, and the\n'
                        f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
-                       'covers all nine modules in one file.</li>')
+                       'covers every module in one file.</li>')
         footnote = ("Speaker notes are the presenter's version; the narration script is the learner's. "
                     "The recordings exist but are not part of this published copy — the transcripts are "
                     "the complete approved narration either way.")
     else:
-        lede = ("Every module is narrated slide by slide, with captions, a readable transcript and a "
-                "deck you can present. Built from three production repositories, and verified with the "
-                "same evidence discipline it teaches.")
-        facts = ("      <li>9 modules · 233 slides</li>\n"
+        facts = (f"      <li>{all_slides} narrated parts</li>\n"
                  f"      <li>{int(grand_total // 60)} minutes of narration</li>\n"
-                 "      <li>Captions on every slide</li>\n"
+                 "      <li>Captions on every part</li>\n"
                  f"      <li>{status}</li>")
         section_note = "Each card shows your recorded progress and one next step."
-        first_howto = ('      <li>Narration never autoplays — press <strong>Play</strong> in the '
-                       'player bar under any slide.</li>\n'
-                       '      <li>Captions are on by default. The transcript sits under the slide and '
-                       'follows the narration, and the\n'
+        first_howto = ('      <li>Narration never autoplays — press ▶ on a part, <strong>Listen to this '
+                       'unit</strong>, or Play in the player bar.</li>\n'
+                       '      <li>Every part shows its narration as text and marks the sentence being '
+                       'spoken, and the\n'
                        f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
-                       'covers all nine modules in one file.</li>')
+                       'covers every module in one file.</li>')
         footnote = ("Speaker notes are the presenter's version; the narration is the learner's. "
                     "Recordings currently use a free preview voice and say so wherever they appear — the "
                     "released voice is recorded separately and the words do not change.")
@@ -1002,12 +994,12 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     <h2>How to use this site</h2>
     <ul>
 {first_howto}
-      <li><strong>Present</strong> goes full screen for a room; <strong>Read</strong> is the lesson as
-          one document; <strong>Sources on this slide</strong> opens every file a slide cites, with the
-          presenter notes.</li>
-      <li>Keyboard: <kbd>←</kbd> <kbd>→</kbd> slide, <kbd>Space</kbd> play, <kbd>T</kbd> transcript,
-          <kbd>F</kbd> present, <kbd>Home</kbd>/<kbd>End</kbd> first/last, <kbd>Esc</kbd> close.</li>
-      <li>Printing a deck prints one 16:9 slide per page.</li>
+      <li><strong>Learn</strong> is the narrated module on one page; <strong>Read</strong> is the lesson
+          as one document; <strong>Sources and speaker notes</strong> under a part opens every file it
+          cites, with the presenter notes.</li>
+      <li>Keyboard: <kbd>/</kbd> or <kbd>⌘K</kbd> search the course, <kbd>↑</kbd> <kbd>↓</kbd>
+          <kbd>↵</kbd> open a result, <kbd>Esc</kbd> close.</li>
+      <li><strong>EN | 中文</strong> in the top bar adds the Chinese name of each key term.</li>
     </ul>
   </section>
   <section class="tools" id="tools">
