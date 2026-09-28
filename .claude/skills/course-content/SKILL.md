@@ -80,9 +80,11 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
 8. `course/06-production/verify.py` — add `"mNN"` to `FIGURE_MODULES`, so the gate holds the module
    to the hero and segment-opener rule.
 9. `course/06-production/terms-zh.json` — an entry for every term in the new glossary: `zh` (the
-   Chinese name, Chinese only), `def` (one Chinese sentence). Add `"scope": "module"` for a generic
-   word (commit, contract) so the site only names it in this module, `"inline": false` for a
-   contrast ("X vs. Y") or a file name. The site shows these in 中文 mode (#116).
+   Chinese name, Chinese only), `def` (one Chinese sentence).
+10. **The Chinese edition** — translate the module into `zh/` (slides, lesson, handout, glossary, lab,
+   quiz, the rubric's auto-fail section) and `narration/scripts-zh/mNN.json`, following
+   `course/01-design/zh-translation-guide.md`; `python3 course/06-production/zh_edition.py check mNN`
+   until it passes, then `zh_edition.py stamp mNN`. The site is built in both editions (#121).
 
 ## 3. Editing existing content
 
@@ -91,6 +93,9 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
   `course/`. If the number is pinned in `facts.json`, update the pin; if a range is anchored in
   `pointer-anchors.json`, update the key and its token together.
 - **Add, rename or drop a glossary term** in `terms-zh.json` too (the gate checks the two agree).
+- **Carry every English change into the Chinese edition** (`zh/` beside the file, `scripts-zh/` for
+  narration), then `zh_edition.py stamp mNN`. The gate fails a module whose English changed since
+  its Chinese was stamped. Structure changes (a new part, step, question) must be made in both.
 - **Change spoken words** only in all three places: `scripts/mNN.json` (what is recorded), the
   slide's NOTES, and the `video-scripts.md` narration. Then `make -C course transcripts`, and list
   the slide for re-recording in the PR.

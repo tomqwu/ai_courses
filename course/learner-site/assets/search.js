@@ -13,7 +13,7 @@
  */
 (function () {
   'use strict';
-  var base = (document.body.getAttribute('data-site-base') || '.').replace(/\/$/, '');
+  var base = (document.body.getAttribute('data-page-base') || document.body.getAttribute('data-site-base') || '.').replace(/\/$/, '');
   var index = null, loading = null;
   var GROUPS = [
     { key: 'slides', label: 'Learn', kinds: ['slide'] },

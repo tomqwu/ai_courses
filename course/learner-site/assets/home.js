@@ -14,7 +14,7 @@
   if (!root || !P) return;
   var data = {};
   try { data = JSON.parse(root.getAttribute('data-home') || '{}'); } catch (e) { data = {}; }
-  var base = (document.body.getAttribute('data-site-base') || '.').replace(/\/$/, '');
+  var base = (document.body.getAttribute('data-page-base') || document.body.getAttribute('data-site-base') || '.').replace(/\/$/, '');
   var slideInfo = {};   // "m02.html#slide-9" → { kicker, title }
 
   function set(sel, text) { var el = root.querySelector(sel); if (el) el.textContent = text; }

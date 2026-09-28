@@ -123,7 +123,7 @@ def reset_progress(browser: str, port: int) -> None:
     page = SITE_ROOT / RESET_PAGE
     page.write_text(
         "<!doctype html><meta charset=utf-8><title>reset</title><p>reset</p><script>"
-        "try{Object.keys(localStorage).filter(k=>k.indexOf('aps:')===0)"
+        "try{Object.keys(localStorage).filter(k=>k.indexOf('aps:')===0||k==='aps-lang')"
         ".forEach(k=>localStorage.removeItem(k))}catch(e){}"
         "</script>", encoding="utf-8")
     try:
@@ -563,7 +563,7 @@ def check_learn(browser: str, port: int, deck_id: str, scripts: dict, narrated: 
     sections = dict(re.findall(r'<section class="learn-section[^"]*" id="(slide-\d+)"(.*?)</section>', dom, re.S))
     for sid, entry in slides.items():
         body = sections.get(sid, "")
-        said = [html_lib.unescape(t) for t in re.findall(r'<span class="said[^"]*" data-s="\d+">(.*?)</span>', body, re.S)]
+        said = [html_lib.unescape(t) for t in re.findall(r'<span class="said[^"]*" data-s="\d+"[^>]*>(.*?)</span>', body, re.S)]
         want = B.sentences(entry.get("text", ""))
         if said != want:
             problems.append(f"{deck_id} {sid}: the narration on the page is not the approved script "
@@ -636,7 +636,10 @@ def main(argv=None) -> int:
                   f"({len(scripts[deck_id]['slides'])} parts, {len(recorded)} narrated)")
             problems.extend(found)
         problems.extend(check_units())
-        problems.extend(check_learn_geometry(browser, port, [d for d in decks if d in scripts]))
+        # both editions (#121): Chinese text wraps differently, so it is measured too
+        measured = [d for d in decks if d in scripts]
+        measured += [f"zh/{d}" for d in measured if (SITE_ROOT / "zh" / f"{d}.html").exists()]
+        problems.extend(check_learn_geometry(browser, port, measured))
         problems.extend(check_pages(browser, port))
     finally:
         httpd.shutdown()

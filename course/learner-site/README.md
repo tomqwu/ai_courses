@@ -527,25 +527,30 @@ there to read.
 * **Deep links** keep working: `#slide-N` opens that part; `?t=` from a search hit marks the spoken
   sentence and Play starts there.
 
-## EN / 中文
+## EN / 中文 — two editions
 
-The course is taught in English. The top bar's **EN | 中文** switch (remembered in the browser) adds
-Chinese where it helps a learner rather than translating the course (#116):
+The site is built twice from the same templates (#121): the English edition at the root, and the
+Chinese edition in `zh/`, from each module's `zh/` sources and `narration/scripts-zh/`. The top bar's
+**EN | 中文** switch opens the same page, at the same part, in the other edition, and remembers the
+choice: an English page opened by a 中文 reader goes to its Chinese copy before it paints.
 
-* **Key terms, inline, on first use.** In each part of a Learn page, lesson section, lab step and
-  question, the first use of a glossary term shows its Chinese name beside it — "tenant isolation
-  （租户隔离）". The name is a CSS `::after` on a wrapper, so the words themselves never change: the
-  narration text, captions, search and the read-aloud voice all see the English as recorded.
-  Generic words (`"scope": "module"`) are only named in the modules whose glossary defines them.
-* **Glossaries** show each term's Chinese name and a one-line Chinese definition; search finds a term
-  by its Chinese name.
-* **The site's own controls** (modes, buttons, headings the site writes) read in Chinese; module and
-  unit titles, and all course text, stay as written.
+* **Chinese is Chinese.** Lessons, parts, labs, questions, glossaries, figures and the site's own
+  words are written in Chinese; a key term keeps its English in brackets on first use (租户隔离
+  （tenant isolation）), and code, commands, file names and pointers stay exactly as in the English.
+* **The recording is the English one.** Each Chinese narration sentence answers to one English
+  sentence; its `data-w` carries the English sentence's word count, so the caption timings still mark
+  the sentence being spoken.
+* **One set of assets.** Chinese pages load assets, figures and recordings from the root edition
+  (`../assets/…`); their page links stay in `zh/`. Progress is shared between editions.
+* **The site's own words**: sentences with markup are written in both languages in the templates
+  (`SH.T(en, zh)`); short labels come from `ui-zh.json`, used by the build and by `locale.js` for
+  labels scripts write later.
 
-Source: `course/06-production/terms-zh.json`. The build renders the glossaries' Chinese and writes
-`assets/terms-zh.js` (generated, not committed); `assets/locale.js` does the rest, loaded in `<head>`
-so the choice applies before first paint. `verify.py` holds every glossary term to an entry;
-`check_features.py` drives the switch.
+Checks: `zh_edition.py` holds each module's Chinese sources to its English part for part, and to the
+English it was stamped against; `verify.py` also fails any run of English left on a built Chinese
+page; `check_player.py` measures the Chinese Learn pages for clipping; `check_features.py` drives the
+switch, the redirect, the Chinese narration and Chinese search. Translation rules:
+`course/01-design/zh-translation-guide.md`.
 
 ## Accessibility
 

@@ -36,7 +36,7 @@ import site_locale as SL                                 # noqa: E402
 # kicker/title split ai_qe uses (`02 / Strategic target state`). Only an em dash splits: an en dash
 # inside "Stages 1–3" must stay part of the label.
 KICKER_RE = re.compile(
-    r"^(M\d+(?:\.\d+)?|Type\s+\d+|Lab\s+M\d+|Segment\s+M\d+(?:\.\d+)?|"
+    r"^(M\d+(?:\.\d+)?|Type\s+\d+|Lab\s+M\d+|实验\s*M\d+|Segment\s+M\d+(?:\.\d+)?|"
     r"Stages?\s+\d+\s*[–-]\s*\d+|Proof|Part\s+\d+|Step\s+\d+)\s+—\s+(.+)$")
 DECK_LABEL_RE = re.compile(r"^(M\d+)\s*—\s*(.+)$")
 
@@ -192,8 +192,30 @@ def split_kicker(title: str, fallback: str) -> tuple[str, str]:
 
 # ---------------------------------------------------------------- deck parsing
 
-def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
-    matches = sorted(COURSE_DIR.glob(f"03-content/{deck_id}-*/slides.md"))
+def load_zh_scripts() -> dict:
+    """The Chinese edition's narration (#121): per part, one Chinese sentence per English one."""
+    folder = COURSE_DIR / "06-production" / "narration" / "scripts-zh"
+    return {"decks": {d: read_json(folder / f"{d}.json") for d in DECK_IDS if (folder / f"{d}.json").is_file()}}
+
+
+def zh_ready() -> bool:
+    """Whether every module has its Chinese sources, so the Chinese edition can be built."""
+    return all(sorted(COURSE_DIR.glob(f"03-content/{d}-*/zh/slides.md")) for d in DECK_IDS) and \
+        len(load_zh_scripts()["decks"]) == len(DECK_IDS)
+
+
+def said_of(slide: dict) -> list[str]:
+    """A part's narration, one sentence per row: split from the English script, or as the Chinese
+    edition stores it (one Chinese sentence per English sentence)."""
+    return slide.get("said") or sentences(slide.get("script_text", ""))
+
+
+def parse_deck(deck_id: str, scripts: dict | None = None, lang: str = "en",
+               en_scripts: dict | None = None) -> dict:
+    """One module's parts. In the Chinese edition the slides come from `zh/slides.md` and the
+    narration from `scripts-zh/`; each sentence also carries its English sentence's word count, so
+    the English recording's caption timings still mark the sentence being spoken."""
+    matches = sorted(COURSE_DIR.glob(f"03-content/{deck_id}-*/{'zh/' if lang == 'zh' else ''}slides.md"))
     if not matches:
         raise SystemExit(f"{deck_id}: no slides.md found")
     source = matches[0]
@@ -217,10 +239,18 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
         content_body = re.sub(r"^#{1,4}\s+.*$", "", body, count=1, flags=re.MULTILINE).strip()
         # The approved narration is the source of truth for anything spoken; the deck Markdown is
         # the source of truth for what is displayed.
-        script_text = ((scripts or {}).get(deck_id, {}).get("slides", {})
-                       .get(f"slide-{index}", {}).get("text", "").strip())
-        # A figure's parts build in on the sentence of this narration their `at:` names.
-        said = sentences(script_text)
+        entry = (scripts or {}).get(deck_id, {}).get("slides", {}).get(f"slide-{index}", {})
+        if lang == "zh":
+            said = [s.strip() for s in entry.get("sentences", []) if s.strip()]
+            script_text = "".join(said)
+            english = ((en_scripts or {}).get(deck_id, {}).get("slides", {})
+                       .get(f"slide-{index}", {}).get("text", ""))
+            en_words = [len(t.split()) for t in sentences(english)]
+        else:
+            script_text = entry.get("text", "").strip()
+            # A figure's parts build in on the sentence of this narration their `at:` names.
+            said = sentences(script_text)
+            en_words = [len(t.split()) for t in said]
         d_match = DIAGRAM_AT.search(content_body)
         if d_match:
             head = content_body[:d_match.start()].strip()
@@ -233,7 +263,8 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
         if cover:
             # The opening slide is a title slide: the deck's own name, not a section label.
             deck_match = DECK_LABEL_RE.match(raw_title)
-            kicker = f"AI Product Studio · Module {int(deck_id[1:])} of {len(DECK_IDS)}"
+            kicker = (f"AI Product Studio · 模块 {int(deck_id[1:])} / {len(DECK_IDS)}" if lang == "zh"
+                      else f"AI Product Studio · Module {int(deck_id[1:])} of {len(DECK_IDS)}")
             title = deck_match.group(2).strip() if deck_match else raw_title
         else:
             kicker, title = split_kicker(raw_title, standing)
@@ -253,9 +284,12 @@ def parse_deck(deck_id: str, scripts: dict | None = None) -> dict:
             "notes": notes,
             "html": rendered,
             "script_text": script_text,
+            "said": said,
+            "en_words": en_words,
         })
     return {
         "id": deck_id,
+        "lang": lang,
         "label": label,
         "module_tag": standing,
         "source": str(source.relative_to(COURSE_DIR)),
@@ -289,9 +323,11 @@ def synthetic_disclosure(entries: dict, provenance: dict) -> str:
     synthetic = sum(1 for e in entries.values()
                     if prov.get(e.get("audio"), {}).get("basis") in GENERATED_BASES)
     if synthetic and synthetic == len(entries):
-        return "The narration is spoken by a synthesized voice, not a human recording."
+        return SH.T("The narration is spoken by a synthesized voice, not a human recording.",
+                    "讲解由合成语音朗读，不是真人录音。")
     if synthetic:
-        return f"{synthetic} of {len(entries)} recordings are spoken by a synthesized voice."
+        return SH.T(f"{synthetic} of {len(entries)} recordings are spoken by a synthesized voice.",
+                    f"{len(entries)} 段录音中有 {synthetic} 段由合成语音朗读。")
     return ""
 
 
@@ -303,8 +339,8 @@ def _slide_heading(deck: dict, slide: dict) -> str:
     """
     title = slide.get("full_title", slide["title"]).strip()
     if title.split("—")[-1].strip().casefold() == deck["label"].split("—")[-1].strip().casefold():
-        return f"Part {slide['number']}"
-    return f"Part {slide['number']} — {title}"
+        return SH.T(f"Part {slide['number']}", f"第 {slide['number']} 部分")
+    return SH.T(f"Part {slide['number']} — {title}", f"第 {slide['number']} 部分 — {title}")
 
 
 def transcript_markdown(deck: dict, manifest: dict, provenance: dict) -> str:
@@ -371,32 +407,43 @@ def transcript_page(deck: dict, manifest: dict, provenance: dict, site_base: str
     for slide in deck["slides"]:
         entry = entries.get(slide["id"])
         meta = (f'{slide["kicker"]} · {float(entry.get("duration", 0) or 0):.1f}s · '
-                f'{entry.get("caption_method", "")}' if entry else f'{slide["kicker"]} · not recorded')
+                f'{entry.get("caption_method", "")}' if entry else f'{slide["kicker"]} · {SH.T("not recorded", "未录制")}')
         rows.append(
             f'<section class="transcript-slide" id="{slide["id"]}">'
             f'<h2><a href="{site_base}/{deck["id"]}.html#{slide["id"]}">{_slide_heading(deck, slide)}</a></h2>'
             f'<p class="transcript-meta">{html.escape(meta)}</p>'
             f'<blockquote>{inline(slide["script_text"])}</blockquote></section>')
 
+    zh_audio = SH.T("", "音频是英文讲解；这里是逐句对应的中文。")
     if text_only:
-        note = ('<p class="voice-badge" role="note"><strong>Text-first copy.</strong> The narration '
-                'and captions are not published here. These are the approved words and are complete.</p>')
+        note = SH.T('<p class="voice-badge" role="note"><strong>Text-first copy.</strong> The narration '
+                    'and captions are not published here. These are the approved words and are complete.</p>',
+                    '<p class="voice-badge" role="note"><strong>纯文本版。</strong>此处不发布讲解音频和字幕。'
+                    '这些是审定的文字，内容完整。</p>')
     elif preview and preview == len(entries):
-        note = (f'<p class="voice-badge" role="note">Preview narration — a free local voice, not the '
-                f'finished release recording. {disclosure} These are the approved words and do not '
-                f'change when the release voice is recorded.</p>')
+        note = SH.T(f'<p class="voice-badge" role="note">Preview narration — a free local voice, not the '
+                    f'finished release recording. {disclosure} These are the approved words and do not '
+                    f'change when the release voice is recorded.</p>',
+                    f'<p class="voice-badge" role="note">预览讲解——免费的本地语音，不是正式发布的录音。{disclosure}'
+                    f'{zh_audio}这些是审定的文字，录制正式语音时也不会改变。</p>')
     elif preview:
-        note = (f'<p class="voice-badge" role="note">Mixed — {preview} of {len(entries)} recordings '
-                f'are preview audio. {disclosure} These are the approved words.</p>')
+        note = SH.T(f'<p class="voice-badge" role="note">Mixed — {preview} of {len(entries)} recordings '
+                    f'are preview audio. {disclosure} These are the approved words.</p>',
+                    f'<p class="voice-badge" role="note">混合——{len(entries)} 段录音中有 {preview} 段是预览音频。'
+                    f'{disclosure}{zh_audio}这些是审定的文字。</p>')
     elif disclosure:
-        note = f'<p class="voice-badge" role="note">{disclosure} These are the approved words.</p>'
+        note = SH.T(f'<p class="voice-badge" role="note">{disclosure} These are the approved words.</p>',
+                    f'<p class="voice-badge" role="note">{disclosure}{zh_audio}这些是审定的文字。</p>')
     else:
         note = ""
-    lede = (f'{len(deck["slides"])} parts · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s'
-            f' · <a href="{site_base}/{deck["id"]}.html">open the Learn page →</a>')
-    content = (SH.page_head(deck["module_tag"], f'{html.escape(deck["label"])} — transcript', lede, note)
+    lede = SH.T(f'{len(deck["slides"])} parts · {len(entries)} narrated · {int(total // 60)}m {int(total % 60)}s'
+                f' · <a href="{site_base}/{deck["id"]}.html">open the Learn page →</a>',
+                f'{len(deck["slides"])} 个部分 · {len(entries)} 个有讲解 · {int(total // 60)} 分 {int(total % 60)} 秒'
+                f' · <a href="{site_base}/{deck["id"]}.html">打开学习页 →</a>')
+    content = (SH.page_head(deck["module_tag"], f'{html.escape(deck["label"])} — {SH.T("transcript", "文字稿")}', lede, note)
                + "\n" + "\n".join(rows))
-    return SH.document(f"{deck['label']} — transcript", f"The narration of {deck['label']}, slide by slide.",
+    return SH.document(SH.T(f"{deck['label']} — transcript", f"{deck['label']} — 文字稿"),
+                       SH.T(f"The narration of {deck['label']}, slide by slide.", f"{deck['label']} 的讲解，逐部分呈现。"),
                        content, site_base, "transcript",
                        crumbs=SH.module_crumbs(site_base, deck, "Transcript"),
                        deck_id=deck["id"], current="transcript", mode="watch")
@@ -408,18 +455,20 @@ BRAND_MARK = SH.BRAND_MARK
 def slide_cta(deck: dict, slide: dict, site_base: str) -> str:
     """The unit's next step, on the slide that opens it: the lab checklist or the knowledge check."""
     title = slide.get("full_title", slide["title"])
-    if re.match(r"^Lab\s+M\d+", title) or re.match(r"^Lab\s+M\d+", slide["kicker"]):
+    lab, quiz = r"^(?:Lab|实验)\s*M\d+", r"^(?:Quiz|测验)\s*M\d+"
+    if re.match(lab, title) or re.match(lab, slide["kicker"]):
         return (f'<p class="slide-cta"><a href="{site_base}/lab-{deck["id"]}.html">'
-                f'Open the lab checklist →</a></p>')
-    if re.match(r"^Quiz\s+M\d+", title):
+                f'{SH.T("Open the lab checklist →", "打开实验清单 →")}</a></p>')
+    if re.match(quiz, title):
         return (f'<p class="slide-cta"><a href="{site_base}/quiz-{deck["id"]}.html">'
-                f'Take the knowledge check →</a></p>')
+                f'{SH.T("Take the knowledge check →", "去做知识测验 →")}</a></p>')
     return ""
 
 
 PRE_RE = re.compile(r'<pre data-info="([^"]*)"><code>(.*?)</code></pre>', re.S)
 KIND_NAMES = {"commands": "Commands", "output": "Output", "template": "Template",
               "illustrative": "Illustrative — not a copy of a file"}
+KIND_NAMES_ZH = {"commands": "命令", "output": "输出", "template": "模板", "illustrative": "示意——不是文件的副本"}
 FILE_ICON = ('<svg class="exhibit-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
              '<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/></svg>')
 
@@ -490,11 +539,11 @@ def exhibits(content: str, cited: list[dict]) -> str:
         if source:
             repo, _, path = source["pointer"].partition("/")
             file = f'{repo} / {path.split(":")[0].rsplit("/", 1)[-1]}'
-            span = source["spec"].replace("-", "–") if source["spec"] else "whole file"
+            span = source["spec"].replace("-", "–") if source["spec"] else SH.T("whole file", "整个文件")
             head = (f'{FILE_ICON}<span class="exhibit-file">{html.escape(file)}</span>'
                     f'<span class="exhibit-lines">{html.escape(span)} · {source["commit"]}</span>')
         elif declared:
-            head = f'<span class="exhibit-file">{KIND_NAMES[declared]}</span>'
+            head = f'<span class="exhibit-file">{SH.T(KIND_NAMES[declared], KIND_NAMES_ZH[declared])}</span>'
         else:
             head = '<span class="exhibit-file">Excerpt</span>'
         numbered = " is-numbered" if any(numbers) else ""
@@ -504,7 +553,7 @@ def exhibits(content: str, cited: list[dict]) -> str:
     return PRE_RE.sub(panel, content)
 
 
-SOURCE_LINE = re.compile(r"<p>((?:\s*<code>[^<]+</code>\s*(?:,|·|and|;)?\s*)+)</p>\s*$")
+SOURCE_LINE = re.compile(r"<p>((?:\s*<code>[^<]+</code>\s*(?:,|·|and|;|、|，|和|；)?\s*)+)</p>\s*$")
 
 
 def source_footer(content: str) -> str:
@@ -513,7 +562,7 @@ def source_footer(content: str) -> str:
     m = SOURCE_LINE.search(content)
     if not m:
         return content
-    return (content[:m.start()] + f'<p class="slide-source"><span class="source-chip">Source</span>'
+    return (content[:m.start()] + f'<p class="slide-source"><span class="source-chip">{SH.T("Source", "来源")}</span>'
             f'{m.group(1).strip()}</p>' + content[m.end():])
 
 
@@ -621,9 +670,9 @@ def spoken_times(deck: dict, manifest: dict) -> dict[str, list[float]]:
         at = [c.start + (c.end - c.start) * k / len(c.text.split())
               for c in cues for k in range(len(c.text.split()))]
         starts, w = [], 0
-        for sentence in sentences(slide["script_text"]):
+        for count in slide["en_words"]:
             starts.append(round(at[min(w, len(at) - 1)], 1) if at else 0.0)
-            w += len(sentence.split())
+            w += count
         out[slide["id"]] = starts
     return out
 
@@ -633,16 +682,21 @@ def voice_label(deck_manifest: dict, provenance: dict, recorded: int, preview: i
     """The voice disclosure, as a label in the control bar rather than a banner (#75). The wording
     still comes from each recording's provenance (#57), so it follows the release voice too."""
     disclosure = synthetic_disclosure(deck_manifest, provenance)
+    zh_audio = SH.T("", "讲解音频为英文，中文文字逐句对应。")
     if text_only:
-        return ("Text-first copy — the narration is not published here; the transcript below is "
-                "the complete approved narration.")
+        return SH.T("Text-first copy — the narration is not published here; the transcript below is "
+                    "the complete approved narration.",
+                    "纯文本版——此处不发布讲解音频；下面的文字就是完整的审定讲解。")
     if recorded == 0:
-        return "Not yet recorded — the transcript below is the approved narration."
+        return SH.T("Not yet recorded — the transcript below is the approved narration.",
+                    "尚未录制——下面的文字就是审定的讲解。")
     if preview and preview < recorded:
-        return f"Mixed voices — {preview} of {recorded} recordings are the preview voice. {disclosure}"
+        return SH.T(f"Mixed voices — {preview} of {recorded} recordings are the preview voice. {disclosure}",
+                    f"混合语音——{recorded} 段录音中有 {preview} 段是预览语音。{disclosure}{zh_audio}")
     if preview:
-        return f"Preview voice — a free local voice, not the release recording. {disclosure}"
-    return f"Release voice. {disclosure}".strip()
+        return SH.T(f"Preview voice — a free local voice, not the release recording. {disclosure}",
+                    f"预览语音——免费的本地语音，不是正式发布的录音。{disclosure}{zh_audio}")
+    return SH.T(f"Release voice. {disclosure}", f"正式语音。{disclosure}{zh_audio}").strip()
 
 
 def learn_section(deck: dict, slide: dict, entry: dict | None, site_base: str, bare: bool = False) -> str:
@@ -654,7 +708,8 @@ def learn_section(deck: dict, slide: dict, entry: dict | None, site_base: str, b
     """
     cited = slide_sources(slide)
     content = source_footer(exhibits(slide["html"], cited))
-    said = sentences(slide.get("script_text", ""))
+    said = said_of(slide)
+    counts = slide.get("en_words") or [len(t.split()) for t in said]
     media, listen = "", ""
     if entry:
         media = (f' data-audio="{html.escape(entry["audio"], quote=True)}"'
@@ -672,7 +727,10 @@ def learn_section(deck: dict, slide: dict, entry: dict | None, site_base: str, b
         heading = f'<header class="learn-head is-bare">{listen}</header>'
     narration = ""
     if said:
-        spans = " ".join(f'<span class="said" data-s="{i}">{html.escape(t)}</span>' for i, t in enumerate(said))
+        # data-w: the recorded (English) sentence's word count, which times the sentence from the
+        # captions in either edition
+        spans = " ".join(f'<span class="said" data-s="{i}" data-w="{counts[i] if i < len(counts) else len(t.split())}">'
+                         f'{html.escape(t)}</span>' for i, t in enumerate(said))
         narration = f'<div class="learn-said"><p>{spans}</p></div>'
     notes = html.escape(slide["notes"]) if slide["notes"] else ""
     sources = "".join(
@@ -795,24 +853,26 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     # With none configured the form is shown disabled and says so, rather than silently posting
     # into the void and telling a visitor their address was taken.
     configured = bool(subscribe_action)
-    capture_html = f"""  <section class="capture" id="stay">
-    <div class="capture-inner">
-      <h2>The 30-minute teardown, in three emails</h2>
+    teardown = SH.T("""<h2>The 30-minute teardown, in three emails</h2>
       <p>How three shipped products make their claims checkable: a privacy guarantee that fails
          closed, a SaaS built by agents under written rules, and an expertise site that cites itself.
-         One email a day for three days, then the checklist. No other mail.</p>
+         One email a day for three days, then the checklist. No other mail.</p>""", """<h2>30 分钟拆解，分三封邮件</h2>
+      <p>三个已发布的产品如何让自己的主张可被检查：一个失败即关闭的隐私保证、一个由智能体在书面规则下构建的
+         SaaS，以及一个自我引证的专业知识网站。连续三天每天一封，然后是检查清单。不会有其他邮件。</p>""")
+    capture_html = f"""  <section class="capture" id="stay">
+    <div class="capture-inner">
+      {teardown}
       <form class="capture-form" method="post" action="{html.escape(subscribe_action)}"{"" if configured else " data-unconfigured"}>
-        <label class="sr-only" for="aps-email">Your email address</label>
+        <label class="sr-only" for="aps-email">{SH.T("Your email address", "你的邮箱地址")}</label>
         <input id="aps-email" type="email" name="email" required autocomplete="email"
                placeholder="you@example.com" spellcheck="false"{"" if configured else " disabled"}>
-        <button class="btn-primary" type="submit"{"" if configured else " disabled"}>Send me the teardown</button>
+        <button class="btn-primary" type="submit"{"" if configured else " disabled"}>{SH.T("Send me the teardown", "把拆解发给我")}</button>
         <label class="capture-consent">
           <input type="checkbox" name="consent" value="yes" required{"" if configured else " disabled"}>
-          <span>Yes, email me the three-part teardown and occasional notes about the course. I can
-                unsubscribe from any email, and my address is not shared or sold.</span>
+          <span>{SH.T("Yes, email me the three-part teardown and occasional notes about the course. I can unsubscribe from any email, and my address is not shared or sold.", "是的，把三部分的拆解和偶尔的课程说明发给我。我可以在任何一封邮件中退订，我的地址不会被共享或出售。")}</span>
         </label>
       </form>
-      {"" if configured else '<p class="capture-note">No mailing provider is configured for this build, so the form is disabled. Build the site with <code>--subscribe-action &lt;form url&gt;</code> to turn it on.</p>'}
+      {"" if configured else SH.T('<p class="capture-note">No mailing provider is configured for this build, so the form is disabled. Build the site with <code>--subscribe-action &lt;form url&gt;</code> to turn it on.</p>', '<p class="capture-note">本次构建没有配置邮件服务商，所以表单已停用。用 <code>--subscribe-action &lt;form url&gt;</code> 构建网站即可启用。</p>')}
     </div>
   </section>"""
     prov_by_audio = {rec.get("audio"): rec for rec in provenance.get("recordings", [])}
@@ -826,16 +886,16 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
         # A plain light card (#84): it must never read as a slide or a video. Title, what the module
         # builds, its size, the learner's recorded progress, and one action — Start, or Resume.
         shared_n = (module_paths or {}).get(deck["id"], 0)
-        shared = f" · shared by {shared_n} paths" if shared_n > 1 else ""
+        shared = SH.T(f" · shared by {shared_n} paths", f" · {shared_n} 条路线共用") if shared_n > 1 else ""
         module_href = f"{site_base}/module-{deck['id']}.html"
         units = (units_by_deck or {}).get(deck["id"], [])
         unit_ids = ",".join(f"{deck['id']}:{u['id']}" for u in units)
         promise = SP.cover_facts(deck)["promise"]
         cards.append(f"""<article class="module-card" data-card-module="{deck['id']}">
-  <p class="card-kicker">Module {int(deck['id'][1:])}{shared} <span class="voice-chip is-release" data-quiz-badge="{deck['id']}" hidden></span></p>
+  <p class="card-kicker">{SH.T("Module", "模块")} {int(deck['id'][1:])}{shared} <span class="voice-chip is-release" data-quiz-badge="{deck['id']}" hidden></span></p>
   <h3><a href="{module_href}">{html.escape(short)}</a></h3>
   <p class="card-promise">{html.escape(promise)}</p>
-  <p class="card-meta">{len(deck['slides'])} parts · {len(units)} units · lab · knowledge check</p>
+  <p class="card-meta">{SH.T(f"{len(deck['slides'])} parts · {len(units)} units · lab · knowledge check", f"{len(deck['slides'])} 个部分 · {len(units)} 个单元 · 实验 · 知识测验")}</p>
   <p class="card-progress"><span class="card-bar" data-ring-units="{unit_ids}" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
     <span class="card-count" data-ring-text></span></p>
   <a class="card-action" href="{module_href}" data-card-action>Start</a>
@@ -843,56 +903,76 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
 
     all_recorded = sum(len((manifest.get("decks", {}).get(d, {}) or {}).get("slides", {})) for d in DECK_IDS)
     all_slides = sum(len(d["slides"]) for d in decks)
-    status = ("Every part is narrated." if all_recorded >= all_slides else
-              f"{all_recorded} of {all_slides} parts narrated so far.")
+    status = (SH.T("Every part is narrated.", "每个部分都有讲解。") if all_recorded >= all_slides else
+              SH.T(f"{all_recorded} of {all_slides} parts narrated so far.", f"目前已讲解 {all_recorded} / {all_slides} 个部分。"))
     if text_only:
-        facts = (f"      <li>{all_slides} narrated parts, as text</li>\n"
-                 "      <li>Read · search · print</li>\n"
-                 "      <li>Design ported from ai_qe</li>")
-        section_note = "Each card shows your recorded progress and one next step."
-        first_howto = ('      <li><strong>Text-first copy:</strong> narration and captions are not '
-                       'published here, so each Learn page is read rather than played.</li>\n'
-                       '      <li>Every part shows its narration as text, and the\n'
-                       f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
-                       'covers every module in one file.</li>')
-        footnote = ("Speaker notes are the presenter's version; the narration script is the learner's. "
-                    "The recordings exist but are not part of this published copy — the transcripts are "
-                    "the complete approved narration either way.")
+        facts = SH.T(f"      <li>{all_slides} narrated parts, as text</li>\n"
+                     "      <li>Read · search · print</li>\n"
+                     "      <li>Design ported from ai_qe</li>",
+                     f"      <li>{all_slides} 个讲解部分，以文字呈现</li>\n"
+                     "      <li>阅读 · 搜索 · 打印</li>\n"
+                     "      <li>设计沿用 ai_qe</li>")
+        section_note = SH.T("Each card shows your recorded progress and one next step.", "每张卡片显示你已记录的进度和下一步。")
+        first_howto = SH.T('      <li><strong>Text-first copy:</strong> narration and captions are not '
+                           'published here, so each Learn page is read rather than played.</li>\n'
+                           '      <li>Every part shows its narration as text, and the\n'
+                           f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
+                           'covers every module in one file.</li>',
+                           '      <li><strong>纯文本版：</strong>此处不发布讲解音频和字幕，所以每个学习页以阅读为主，而不是播放。</li>\n'
+                           '      <li>每个部分都以文字显示讲解，'
+                           f'<a href="{site_base}/transcripts/ALL.md">完整文字稿</a>（英文）把所有模块放在一个文件中。</li>')
+        footnote = SH.T("Speaker notes are the presenter's version; the narration script is the learner's. "
+                        "The recordings exist but are not part of this published copy — the transcripts are "
+                        "the complete approved narration either way.",
+                        "讲者备注是讲者的版本；讲解稿是学习者的版本。录音已经存在，但不包含在这份发布副本中——"
+                        "无论如何，文字稿就是完整的审定讲解。")
     else:
-        facts = (f"      <li>{all_slides} narrated parts</li>\n"
-                 f"      <li>{int(grand_total // 60)} minutes of narration</li>\n"
-                 "      <li>Captions on every part</li>\n"
-                 f"      <li>{status}</li>")
-        section_note = "Each card shows your recorded progress and one next step."
-        first_howto = ('      <li>Narration never autoplays — press ▶ on a part, <strong>Listen to this '
-                       'unit</strong>, or Play in the player bar.</li>\n'
-                       '      <li>Every part shows its narration as text and marks the sentence being '
-                       'spoken, and the\n'
-                       f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
-                       'covers every module in one file.</li>')
-        footnote = ("Speaker notes are the presenter's version; the narration is the learner's. "
-                    "Recordings currently use a free preview voice and say so wherever they appear — the "
-                    "released voice is recorded separately and the words do not change.")
+        facts = SH.T(f"      <li>{all_slides} narrated parts</li>\n"
+                     f"      <li>{int(grand_total // 60)} minutes of narration</li>\n"
+                     "      <li>Captions on every part</li>\n"
+                     f"      <li>{status}</li>",
+                     f"      <li>{all_slides} 个讲解部分</li>\n"
+                     f"      <li>讲解共 {int(grand_total // 60)} 分钟</li>\n"
+                     "      <li>讲解逐句对应文字</li>\n"
+                     f"      <li>{status}</li>")
+        section_note = SH.T("Each card shows your recorded progress and one next step.", "每张卡片显示你已记录的进度和下一步。")
+        first_howto = SH.T('      <li>Narration never autoplays — press ▶ on a part, <strong>Listen to this '
+                           'unit</strong>, or Play in the player bar.</li>\n'
+                           '      <li>Every part shows its narration as text and marks the sentence being '
+                           'spoken, and the\n'
+                           f'          <a href="{site_base}/transcripts/ALL.md">complete transcript</a> '
+                           'covers every module in one file.</li>',
+                           '      <li>讲解从不自动播放——点一个部分的 ▶、<strong>收听本单元</strong>，或播放栏里的播放键。'
+                           '讲解音频是英文，中文文字逐句对应，正在讲的句子会高亮。</li>\n'
+                           '      <li>每个部分都以文字显示讲解，'
+                           f'<a href="{site_base}/transcripts/ALL.md">完整文字稿</a>（英文）把所有模块放在一个文件中。</li>')
+        footnote = SH.T("Speaker notes are the presenter's version; the narration is the learner's. "
+                        "Recordings currently use a free preview voice and say so wherever they appear — the "
+                        "released voice is recorded separately and the words do not change.",
+                        "讲者备注是讲者的版本；讲解是学习者的版本。录音目前使用免费的预览语音，凡是出现的地方都会注明——"
+                        "正式语音会另行录制，文字不会改变。")
     head = SH.page_head(
-        "AI Product Studio · edition 2026.09 · nine modules",
-        "Ship AI products a skeptical engineer can audit.",
-        "Three production repositories — an on-device meeting copilot, a multi-tenant SaaS built with "
-        "AI agents under written rules, and an evidence-cited briefing site — taught as one method: "
-        "spec it, build it, validate it, prove it. Nine narrated modules, labs whose pass criteria are "
-        "objective, and a course that checks its own claims every time it is built.",
+        SH.T("AI Product Studio · edition 2026.09 · nine modules", "AI Product Studio · 2026.09 版 · 九个模块"),
+        SH.T("Ship AI products a skeptical engineer can audit.", "交付经得起多疑工程师审计的 AI 产品。"),
+        SH.T("Three production repositories — an on-device meeting copilot, a multi-tenant SaaS built with "
+             "AI agents under written rules, and an evidence-cited briefing site — taught as one method: "
+             "spec it, build it, validate it, prove it. Nine narrated modules, labs whose pass criteria are "
+             "objective, and a course that checks its own claims every time it is built.",
+             "三个生产级仓库——一个端侧会议助手、一个由 AI 智能体在书面规则下构建的多租户 SaaS，以及一个引证充分的"
+             "简报网站——按同一套方法来教：写规格、构建、验证、证明。九个带讲解的模块，通过标准客观的实验，"
+             "以及一门每次构建都会检查自身主张的课程。"),
         f"""<ul class="site-facts">
 {facts}
     </ul>
     <div class="hero-actions">
-      <a class="btn-hero" href="{site_base}/lab-m00.html">Start here: your first win in about 30 minutes →</a>
-      <a class="btn-hero-quiet" href="{site_base}/proof.html">See what this site proves about itself</a>
+      <a class="btn-hero" href="{site_base}/lab-m00.html">{SH.T("Start here: your first win in about 30 minutes →", "从这里开始：大约 30 分钟拿下第一个成果 →")}</a>
+      <a class="btn-hero-quiet" href="{site_base}/proof.html">{SH.T("See what this site proves about itself", "看看这个网站能证明自己什么")}</a>
     </div>""")
     home_json = html.escape(json.dumps(home_data or {}, separators=(",", ":")), quote=True)
     returning = f"""<div class="home-returning" data-continue data-home="{home_json}" hidden>
   <header class="page-head home-head">
-    <h1>Pick up where you left off</h1>
-    <p class="page-lede"><span data-home-path>The full studio course</span> · labs graded pass/fail against real
-      repositories · <a href="{site_base}/paths.html">Change path</a></p>
+    <h1>{SH.T("Pick up where you left off", "从上次停下的地方继续")}</h1>
+    <p class="page-lede"><span data-home-path>{SH.T("The full studio course", "完整工作室课程")}</span> · {SH.T("labs graded pass/fail against real repositories", "实验对照真实仓库，按通过/不通过评分")} · <a href="{site_base}/paths.html">{SH.T("Change path", "更换路线")}</a></p>
   </header>
   <section class="resume-card" aria-labelledby="resume-title">
     <div class="resume-thumb" aria-hidden="true">
@@ -922,33 +1002,13 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     {proof_html}
   </div>
   <div class="progress-tools">
-    <span>Your progress lives in this browser.</span>
-    <button type="button" data-progress-export title="Download your progress as JSON">Export progress</button>
-    <button type="button" data-progress-import title="Load a progress file">Import</button>
+    <span>{SH.T("Your progress lives in this browser.", "你的进度保存在此浏览器中。")}</span>
+    <button type="button" data-progress-export title="{SH.T("Download your progress as JSON", "把进度下载为 JSON")}">{SH.T("Export progress", "导出进度")}</button>
+    <button type="button" data-progress-import title="{SH.T("Load a progress file", "载入进度文件")}">{SH.T("Import", "导入")}</button>
     <button type="button" data-progress-reset>Reset</button>
   </div>
 </div>"""
-    content = f"""{returning}
-<div class="home-new" data-home-new>
-{head}
-{proof_html}
-</div>
-  <div class="section-heading">
-    <h2>Start with what you want to build</h2>
-    <span class="section-note">Each path teaches one product type end to end. Not sure what a
-      <a href="{site_base}/paths.html">path or a unit</a> is?</span>
-  </div>
-  <div class="path-grid">
-{path_cards}
-  </div>
-  <div class="section-heading">
-    <h2>All modules</h2>
-    <span class="section-note">{section_note}</span>
-  </div>
-  <div class="room-grid">
-{chr(10).join(cards)}
-  </div>
-  <section class="included" id="included">
+    included_html = SH.T(f"""  <section class="included" id="included">
     <div class="section-heading">
       <h2>What is included</h2>
       <span class="section-note">Stated the way the sales page states it — and the sales page is in the repository, so the two cannot drift.</span>
@@ -989,8 +1049,49 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       </article>
     </div>
     <p class="index-footnote">Prices are the decision record in <a href="https://github.com/tomqwu/ai_courses/blob/main/course/04-sales/pricing-and-platforms.md">pricing-and-platforms.md</a>, with the reasoning in both directions. Testimonials are not shown because none exist yet; the three repositories are the proof until the founding cohort finishes.</p>
-  </section>
-  <section class="how-to">
+  </section>""", f"""  <section class="included" id="included">
+    <div class="section-heading">
+      <h2>包含什么</h2>
+      <span class="section-note">与销售页的说法一致——而销售页就在仓库里，所以两者不会走样。</span>
+    </div>
+    <div class="included-grid">
+      <article class="included-card">
+        <h3>工作室 · 自学</h3>
+        <p class="included-price">$399</p>
+        <ul>
+          <li>全部 9 个模块：27 个带字幕和文字稿的讲解课程分段</li>
+          <li>8 个带客观验收清单的实验，外加毕业项目</li>
+          <li>9 次知识测验（72 道题），附解析和目标对照</li>
+          <li>TinyCopilot 和 mini-flow 实验起始代码，及其经过验证的测试运行</li>
+          <li>可搜索的课文、讲义和术语表</li>
+          <li>毕业项目评分标准和证据记录模板</li>
+        </ul>
+      </article>
+      <article class="included-card is-featured">
+        <h3>工作室直播 · 8 周训练营</h3>
+        <p class="included-price">$1,490 <small>创始学员 $990</small></p>
+        <ul>
+          <li>包含工作室版的全部内容</li>
+          <li>八次 90 分钟工作坊（我做 / 一起做 / 你做）</li>
+          <li>三个实验的讲师代码评审</li>
+          <li>毕业项目评审和演示日</li>
+          <li>训练营频道，以及创始学员的推荐语交换</li>
+        </ul>
+      </article>
+      <article class="included-card">
+        <h3>单条路线 · 自学</h3>
+        <p class="included-price">$199</p>
+        <ul>
+          <li>一种产品类型：端侧应用、规格驱动 SaaS 或专业知识产品</li>
+          <li>四个完整模块，外加变现与发布的切片</li>
+          <li>这些模块同样的实验、讲稿、测验和产物</li>
+          <li>每个路线页都在结账前写明不包含什么</li>
+        </ul>
+      </article>
+    </div>
+    <p class="index-footnote">价格见决策记录 <a href="https://github.com/tomqwu/ai_courses/blob/main/course/04-sales/pricing-and-platforms.md">pricing-and-platforms.md</a>，其中写明了两个方向的理由。这里没有展示推荐语，因为目前还没有；在创始训练营结束之前，三个仓库就是证明。</p>
+  </section>""")
+    howto_html = SH.T(f"""  <section class="how-to">
     <h2>How to use this site</h2>
     <ul>
 {first_howto}
@@ -999,11 +1100,21 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
           cites, with the presenter notes.</li>
       <li>Keyboard: <kbd>/</kbd> or <kbd>⌘K</kbd> search the course, <kbd>↑</kbd> <kbd>↓</kbd>
           <kbd>↵</kbd> open a result, <kbd>Esc</kbd> close.</li>
-      <li><strong>EN | 中文</strong> in the top bar adds the Chinese name of each key term.</li>
+      <li><strong>EN | 中文</strong> in the top bar opens this same page in the English or the Chinese edition.</li>
     </ul>
   </section>
-  <section class="tools" id="tools">
-    <div class="section-heading">
+  <section class="tools" id="tools">""", f"""  <section class="how-to">
+    <h2>如何使用本网站</h2>
+    <ul>
+{first_howto}
+      <li><strong>学习</strong>是一页完整的带讲解模块；<strong>阅读</strong>是整篇课文；部分下方的<strong>来源与讲者备注</strong>
+          会打开它引用的每个文件，并附讲者备注。</li>
+      <li>键盘：<kbd>/</kbd> 或 <kbd>⌘K</kbd> 搜索课程，<kbd>↑</kbd> <kbd>↓</kbd> <kbd>↵</kbd> 打开结果，<kbd>Esc</kbd> 关闭。</li>
+      <li>顶栏的 <strong>EN | 中文</strong> 在英文版和中文版之间切换同一页面。</li>
+    </ul>
+  </section>
+  <section class="tools" id="tools">""")
+    tools_html = SH.T(f"""    <div class="section-heading">
       <h2>Take the method without buying the course</h2>
       <span class="section-note">The three checkers this site runs on itself, free and self-contained.</span>
     </div>
@@ -1028,14 +1139,200 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       </article>
     </div>
     <p class="index-footnote">Standard library only, no install, nothing sent anywhere.
-      <a href="https://github.com/tomqwu/ai_courses/tree/main/aps-tools">Read them or copy the folder →</a></p>
+      <a href="https://github.com/tomqwu/ai_courses/tree/main/aps-tools">Read them or copy the folder →</a></p>""", f"""    <div class="section-heading">
+      <h2>不买课程也能拿走这套方法</h2>
+      <span class="section-note">本网站对自己运行的三个检查器，免费且自包含。</span>
+    </div>
+    <div class="tools-grid">
+      <article class="tools-card">
+        <h3>指针检查（Pointer lint）</h3>
+        <p>文档中的每个主张都带有路径，每个路径和行范围都仍然能解析——否则运行失败，并指出要修的文件和行。</p>
+        <code>python3 pointer_lint.py docs/</code>
+      </article>
+      <article class="tools-card">
+        <h3>事实漂移（Facts drift）</h3>
+        <p>从来源重新推导你当作事实陈述的数字，并指出仍在打印旧值的文档。固定下来的文件是数据，绝不是代码。</p>
+        <code>python3 facts_drift.py --facts facts.json --strict</code>
+      </article>
+      <article class="tools-card">
+        <h3>智能体规则审计（Agent rule audit）</h3>
+        <p>读取 <code>AGENTS.md</code>、<code>CLAUDE.md</code> 或一份宪章，把每条规则分为可检查、含糊、或命令式但未强制执行三类。</p>
+        <code>python3 agents_audit.py AGENTS.md</code>
+      </article>
+    </div>
+    <p class="index-footnote">只用标准库，无需安装，不向任何地方发送数据。
+      <a href="https://github.com/tomqwu/ai_courses/tree/main/aps-tools">阅读它们或复制整个文件夹 →</a></p>""")
+    paths_note = SH.T(f"""Each path teaches one product type end to end. Not sure what a
+      <a href="{site_base}/paths.html">path or a unit</a> is?""", f"""每条路线完整地教一种产品类型。不确定什么是<a href="{site_base}/paths.html">路线或单元</a>？""")
+    content = f"""{returning}
+<div class="home-new" data-home-new>
+{head}
+{proof_html}
+</div>
+  <div class="section-heading">
+    <h2>{SH.T("Start with what you want to build", "从你想构建的东西开始")}</h2>
+    <span class="section-note">{paths_note}</span>
+  </div>
+  <div class="path-grid">
+{path_cards}
+  </div>
+  <div class="section-heading">
+    <h2>{SH.T("All modules", "全部模块")}</h2>
+    <span class="section-note">{section_note}</span>
+  </div>
+  <div class="room-grid">
+{chr(10).join(cards)}
+  </div>
+{included_html}
+{howto_html}
+{tools_html}
   </section>
 {capture_html}
-  <p class="index-footnote">{footnote} Progress, quiz scores and lab checklists are stored in this browser only — export them from the strip above to move machines.</p>"""
-    return SH.document("AI Product Studio — narrated course",
-                       "Build, ship and sell three kinds of AI product. Nine narrated modules with "
-                       "captions and transcripts.", content, site_base, "index home-page",
+  <p class="index-footnote">{footnote} {SH.T("Progress, quiz scores and lab checklists are stored in this browser only — export them from the strip above to move machines.", "进度、测验成绩和实验清单只保存在此浏览器中——换电脑时，从上方的进度栏导出。")}</p>"""
+    return SH.document(SH.T("AI Product Studio — narrated course", "AI Product Studio — 带讲解的课程"),
+                       SH.T("Build, ship and sell three kinds of AI product. Nine narrated modules with "
+                            "captions and transcripts.", "构建、发布并销售三类 AI 产品。九个带讲解的模块，附字幕和文字稿。"),
+                       content, site_base, "index home-page",
                        crumbs=[("Home", None)], current="home", scripts=("home.js",))
+
+
+def write_edition(lang: str, decks: list[dict], target: Path, site_base: str, args, manifest: dict,
+                  provenance: dict) -> tuple[list[dict], dict]:
+    """Every page of one edition into `target`: English at the site root, Chinese (#121) in `zh/`.
+    The two editions are the same pages from the same templates; only the sources differ."""
+    SH.LANG = lang
+    FIG.ASSET_BASE = site_base
+    target.mkdir(parents=True, exist_ok=True)
+    import site_paths as SP                                                       # noqa: PLC0415
+    import site_content as SC                                                     # noqa: PLC0415
+    import site_pages as SPG                                                      # noqa: PLC0415
+    units_by_deck = {deck["id"]: SP.module_units(deck) for deck in decks}
+    figs_by_deck = {deck["id"]: FIG.deck_figures(deck, units_by_deck[deck["id"]]) for deck in decks}
+    # Every page carries the course outline (#73), so the shell learns the modules, their units and
+    # the paths once, before the first page is written.
+    SH.configure(decks, units_by_deck, SP.tracks())
+    for deck in decks:
+        folder = COURSE_DIR / deck["source"].rsplit("/", 1)[0]
+        try:
+            questions = len(SC.parse_quiz(SC.read(folder / "quiz.md"), deck["id"])["questions"])
+        except SC.QuizError as error:
+            raise SystemExit(f"knowledge check: {error}")
+        meta = {"lab": f"{SP.lab_time(deck['id'])} hands-on", "quiz": f"{questions} questions"}
+        (target / f"{deck['id']}.html").write_text(
+            learn_page(deck, manifest, provenance, site_base, text_only=args.no_narration,
+                       units=units_by_deck[deck["id"]], unit_meta=meta),
+            encoding="utf-8")
+        (target / f"transcript-{deck['id']}.html").write_text(
+            transcript_page(deck, manifest, provenance, site_base, text_only=args.no_narration),
+            encoding="utf-8")
+    # ── learning paths ────────────────────────────────────────────────────────────────────────────
+    # The Microsoft Learn hierarchy (path -> module -> unit) built on the content that already
+    # exists. Paths are built one at a time; `status` on each track decides what gets a real page,
+    # so a path that has not been built cannot link to a page that does not exist.
+    seconds = SP.unit_seconds(units_by_deck, manifest)
+
+    # ── the course text: lesson, handout, glossary, lab, knowledge check ──────────────────────────
+    # Parsed from the module Markdown; the quiz parser refuses a malformed item, so a question with
+    # zero or two keyed answers fails the build here rather than shipping.
+    records: list[dict] = []
+    terms_by_deck: dict[str, list[dict]] = {}
+    labs_for_log: list[dict] = []
+    for deck in decks:
+        folder = COURSE_DIR / deck["source"].rsplit("/", 1)[0]
+        for kind in ("lesson", "handout", "glossary"):
+            html_out, record = SPG.document_page(deck, kind, SC.read(folder / f"{kind}.md"),
+                                                 site_base, BRAND_MARK,
+                                                 figs_by_deck[deck["id"]]["segments"])
+            (target / f"{kind}-{deck['id']}.html").write_text(html_out, encoding="utf-8")
+            record["module"] = SPG.short_label(deck)
+            if kind == "glossary":
+                record["terms"] = SC.parse_glossary(SC.read(folder / "glossary.md"))
+                terms_by_deck[deck["id"]] = record["terms"]
+            records.append(record)
+        lab = SC.parse_lab(SC.read(folder / "lab.md"), deck["id"])
+        rubrics = folder / "lab-rubrics.md"
+        auto_fail = SC.parse_auto_fail(SC.read(rubrics)) if rubrics.is_file() else None
+        html_out, record = SPG.lab_page(deck, lab, site_base, BRAND_MARK, auto_fail)
+        (target / f"lab-{deck['id']}.html").write_text(html_out, encoding="utf-8")
+        labs_for_log.append({"deck": deck["id"], "title": lab["title"],
+                             "checks": lab["checklist_count"]})
+        record["module"] = SPG.short_label(deck)
+        records.append(record)
+        try:
+            quiz = SC.parse_quiz(SC.read(folder / "quiz.md"), deck["id"])
+        except SC.QuizError as error:
+            raise SystemExit(f"knowledge check: {error}")
+        html_out, record = SPG.quiz_page(deck, quiz, site_base, BRAND_MARK, units_by_deck[deck["id"]])
+        (target / f"quiz-{deck['id']}.html").write_text(html_out, encoding="utf-8")
+        record["module"] = SPG.short_label(deck)
+        records.append(record)
+    decks_by_id_for_glossary = {deck["id"]: deck for deck in decks}
+    (target / "glossary.html").write_text(
+        SPG.master_glossary_page(terms_by_deck, decks_by_id_for_glossary, site_base, BRAND_MARK),
+        encoding="utf-8")
+    (target / "evidence.html").write_text(SPG.evidence_page(labs_for_log, site_base),
+                                          encoding="utf-8")
+    # When each narration sentence is spoken, from the published captions: a search hit on a spoken
+    # sentence opens the player there (#80). A text-first copy publishes no captions, so no times.
+    times = {} if args.no_narration else {deck["id"]: spoken_times(deck, manifest) for deck in decks}
+    (target / "search.json").write_text(SPG.search_index(records, decks, units_by_deck, times), encoding="utf-8")
+    decks_by_id = {deck["id"]: deck for deck in decks}
+    built_tracks = [t for t in SP.tracks() if t["status"] == "built"]
+    built_modules = {d for t in built_tracks for d in list(t["core"]) + list(t.get("slice") or {})}
+    for deck_id in sorted(built_modules):
+        # Every path that includes the module, not a single owner: modules are shared, and a
+        # module page that named one path would misdescribe the other two.
+        tracks_for = SP.paths_for_module(deck_id, built_tracks)
+        (target / f"module-{deck_id}.html").write_text(
+            SP.module_page(decks_by_id[deck_id], units_by_deck[deck_id], seconds, site_base,
+                           BRAND_MARK, tracks_for, args.no_narration,
+                           hero=figs_by_deck[deck_id]["hero"]), encoding="utf-8")
+    (target / "paths.html").write_text(
+        SP.paths_page(SP.tracks(), units_by_deck, seconds, site_base, BRAND_MARK),
+        encoding="utf-8")
+    for track in built_tracks:
+        (target / track["page"]).write_text(
+            SP.path_page(track, decks_by_id, units_by_deck, seconds, site_base, BRAND_MARK,
+                         built_modules), encoding="utf-8")
+
+    # The landing page is the paths GUI now: the chooser is rendered from the same TRACKS data as
+    # the path pages, so the two cannot disagree about what exists.
+    path_cards = SP.path_cards_html(SP.tracks(), units_by_deck, seconds, site_base)
+    module_paths = {deck_id: len(SP.paths_for_module(deck_id, built_tracks))
+                    for deck_id in DECK_IDS}
+    import site_proof as SPR                                                      # noqa: PLC0415
+    proof = SPR.gather(decks, manifest)
+    (target / "proof.json").write_text(json.dumps(proof, indent=1, default=str), encoding="utf-8")
+    # What the home page needs to say where a learner is and what is next (#79): each module's units
+    # with their slides, where each starts in the lesson, the lab's time and the check's size.
+    anchors = {r["deck"]: r.get("read_anchors", {}) for r in records if r["kind"] == "lesson"}
+    questions = {r["deck"]: len(r.get("headings", [])) for r in records if r["kind"] == "quiz"}
+    home_data = {"modules": {deck["id"]: {
+        "number": int(deck["id"][1:]), "title": SH.short_label(deck), "slides": len(deck["slides"]),
+        "lab": SP.lab_time(deck["id"]), "questions": questions.get(deck["id"], 0),
+        "units": [{"id": u["id"], "kind": u["kind"], "name": SH.unit_name(u), "label": u["label"],
+                   "first": u["first"], "last": u["last"], "href": SH.unit_href(deck["id"], u),
+                   "read": anchors.get(deck["id"], {}).get(u["id"], "")}
+                  for u in units_by_deck[deck["id"]]]} for deck in decks}}
+    (target / "proof.html").write_text(
+        SH.document(SH.T("What this site proves — AI Product Studio", "这个网站证明了什么 — AI Product Studio"),
+                    SH.T("What the build measured about itself: pointers, facts, lab runs and narration.",
+                         "构建时对自身的测量：指针、事实、实验运行和讲解。"),
+                    SH.page_head("Proof", SH.T("How each number is checked", "每个数字如何核验"),
+                                 SH.T("The numbers on the home page, and the checks that measured them when "
+                                      "this site was built.", "首页上的数字，以及本网站构建时测量它们的检查。"))
+                    + SPR.proof_section(proof, site_base),
+                    site_base, "doc-page proof-page",
+                    crumbs=[("Course", f"{site_base}/index.html"), ("Proof", None)]),
+        encoding="utf-8")
+    (target / "index.html").write_text(
+        index_page(decks, manifest, provenance, site_base, text_only=args.no_narration,
+                   subscribe_action=args.subscribe_action,
+                   path_cards=path_cards, module_paths=module_paths, units_by_deck=units_by_deck,
+                   proof_html=SPR.proof_card(proof, site_base), home_data=home_data),
+        encoding="utf-8")
+
+    return records, terms_by_deck
 
 
 def main(argv=None) -> int:
@@ -1057,6 +1354,7 @@ def main(argv=None) -> int:
     manifest = load_manifest()
     provenance = read_json(PROVENANCE_PATH, None) or {"recordings": []}
     scripts = load_scripts()
+    FIG.ASSET_BASE = args.site_base          # figures are rendered while the decks are parsed
     decks = [parse_deck(deck_id, scripts["decks"]) for deck_id in DECK_IDS]
 
     if args.check:
@@ -1079,136 +1377,17 @@ def main(argv=None) -> int:
     player_manifest = {"decks": {}} if args.no_narration else manifest
     write_json(target / "narration.json", player_manifest)
 
-    import site_paths as SP                                                       # noqa: PLC0415
-    import site_content as SC                                                     # noqa: PLC0415
-    import site_pages as SPG                                                      # noqa: PLC0415
-    units_by_deck = {deck["id"]: SP.module_units(deck) for deck in decks}
-    figs_by_deck = {deck["id"]: FIG.deck_figures(deck, units_by_deck[deck["id"]]) for deck in decks}
-    # Every page carries the course outline (#73), so the shell learns the modules, their units and
-    # the paths once, before the first page is written.
-    SH.configure(decks, units_by_deck, SP.TRACKS)
-    for deck in decks:
-        folder = COURSE_DIR / deck["source"].rsplit("/", 1)[0]
-        try:
-            questions = len(SC.parse_quiz(SC.read(folder / "quiz.md"), deck["id"])["questions"])
-        except SC.QuizError as error:
-            raise SystemExit(f"knowledge check: {error}")
-        meta = {"lab": f"{SP.lab_time(deck['id'])} hands-on", "quiz": f"{questions} questions"}
-        (target / f"{deck['id']}.html").write_text(
-            learn_page(deck, manifest, provenance, args.site_base, text_only=args.no_narration,
-                       units=units_by_deck[deck["id"]], unit_meta=meta),
-            encoding="utf-8")
-        (target / f"transcript-{deck['id']}.html").write_text(
-            transcript_page(deck, manifest, provenance, args.site_base, text_only=args.no_narration),
-            encoding="utf-8")
-    # ── learning paths ────────────────────────────────────────────────────────────────────────────
-    # The Microsoft Learn hierarchy (path -> module -> unit) built on the content that already
-    # exists. Paths are built one at a time; `status` on each track decides what gets a real page,
-    # so a path that has not been built cannot link to a page that does not exist.
-    seconds = SP.unit_seconds(units_by_deck, manifest)
-
-    # ── the course text: lesson, handout, glossary, lab, knowledge check ──────────────────────────
-    # Parsed from the module Markdown; the quiz parser refuses a malformed item, so a question with
-    # zero or two keyed answers fails the build here rather than shipping.
-    records: list[dict] = []
-    terms_by_deck: dict[str, list[dict]] = {}
-    labs_for_log: list[dict] = []
-    for deck in decks:
-        folder = COURSE_DIR / deck["source"].rsplit("/", 1)[0]
-        for kind in ("lesson", "handout", "glossary"):
-            html_out, record = SPG.document_page(deck, kind, SC.read(folder / f"{kind}.md"),
-                                                 args.site_base, BRAND_MARK,
-                                                 figs_by_deck[deck["id"]]["segments"])
-            (target / f"{kind}-{deck['id']}.html").write_text(html_out, encoding="utf-8")
-            record["module"] = SPG.short_label(deck)
-            if kind == "glossary":
-                record["terms"] = SC.parse_glossary(SC.read(folder / "glossary.md"))
-                terms_by_deck[deck["id"]] = record["terms"]
-            records.append(record)
-        lab = SC.parse_lab(SC.read(folder / "lab.md"), deck["id"])
-        rubrics = folder / "lab-rubrics.md"
-        auto_fail = SC.parse_auto_fail(SC.read(rubrics)) if rubrics.is_file() else None
-        html_out, record = SPG.lab_page(deck, lab, args.site_base, BRAND_MARK, auto_fail)
-        (target / f"lab-{deck['id']}.html").write_text(html_out, encoding="utf-8")
-        labs_for_log.append({"deck": deck["id"], "title": lab["title"],
-                             "checks": lab["checklist_count"]})
-        record["module"] = SPG.short_label(deck)
-        records.append(record)
-        try:
-            quiz = SC.parse_quiz(SC.read(folder / "quiz.md"), deck["id"])
-        except SC.QuizError as error:
-            raise SystemExit(f"knowledge check: {error}")
-        html_out, record = SPG.quiz_page(deck, quiz, args.site_base, BRAND_MARK, units_by_deck[deck["id"]])
-        (target / f"quiz-{deck['id']}.html").write_text(html_out, encoding="utf-8")
-        record["module"] = SPG.short_label(deck)
-        records.append(record)
-    # EN / 中文 (#116): the terms locale.js names beside their first use, per module.
-    (target / "assets").mkdir(parents=True, exist_ok=True)
-    (target / "assets" / "terms-zh.js").write_text(SL.script(terms_by_deck, SL.load()), encoding="utf-8")
-    decks_by_id_for_glossary = {deck["id"]: deck for deck in decks}
-    (target / "glossary.html").write_text(
-        SPG.master_glossary_page(terms_by_deck, decks_by_id_for_glossary, args.site_base, BRAND_MARK),
-        encoding="utf-8")
-    (target / "evidence.html").write_text(SPG.evidence_page(labs_for_log, args.site_base),
-                                          encoding="utf-8")
-    # When each narration sentence is spoken, from the published captions: a search hit on a spoken
-    # sentence opens the player there (#80). A text-first copy publishes no captions, so no times.
-    times = {} if args.no_narration else {deck["id"]: spoken_times(deck, manifest) for deck in decks}
-    (target / "search.json").write_text(SPG.search_index(records, decks, units_by_deck, times), encoding="utf-8")
-    decks_by_id = {deck["id"]: deck for deck in decks}
-    built_tracks = [t for t in SP.TRACKS if t["status"] == "built"]
-    built_modules = {d for t in built_tracks for d in list(t["core"]) + list(t.get("slice") or {})}
-    for deck_id in sorted(built_modules):
-        # Every path that includes the module, not a single owner: modules are shared, and a
-        # module page that named one path would misdescribe the other two.
-        tracks_for = SP.paths_for_module(deck_id, built_tracks)
-        (target / f"module-{deck_id}.html").write_text(
-            SP.module_page(decks_by_id[deck_id], units_by_deck[deck_id], seconds, args.site_base,
-                           BRAND_MARK, tracks_for, args.no_narration,
-                           hero=figs_by_deck[deck_id]["hero"]), encoding="utf-8")
-    (target / "paths.html").write_text(
-        SP.paths_page(SP.TRACKS, units_by_deck, seconds, args.site_base, BRAND_MARK),
-        encoding="utf-8")
-    for track in built_tracks:
-        (target / track["page"]).write_text(
-            SP.path_page(track, decks_by_id, units_by_deck, seconds, args.site_base, BRAND_MARK,
-                         built_modules), encoding="utf-8")
-
-    # The landing page is the paths GUI now: the chooser is rendered from the same TRACKS data as
-    # the path pages, so the two cannot disagree about what exists.
-    path_cards = SP.path_cards_html(SP.TRACKS, units_by_deck, seconds, args.site_base)
-    module_paths = {deck_id: len(SP.paths_for_module(deck_id, built_tracks))
-                    for deck_id in DECK_IDS}
-    import site_proof as SPR                                                      # noqa: PLC0415
-    proof = SPR.gather(decks, manifest)
-    (target / "proof.json").write_text(json.dumps(proof, indent=1, default=str), encoding="utf-8")
-    # What the home page needs to say where a learner is and what is next (#79): each module's units
-    # with their slides, where each starts in the lesson, the lab's time and the check's size.
-    anchors = {r["deck"]: r.get("read_anchors", {}) for r in records if r["kind"] == "lesson"}
-    questions = {r["deck"]: len(r.get("headings", [])) for r in records if r["kind"] == "quiz"}
-    home_data = {"modules": {deck["id"]: {
-        "number": int(deck["id"][1:]), "title": SH.short_label(deck), "slides": len(deck["slides"]),
-        "lab": SP.lab_time(deck["id"]), "questions": questions.get(deck["id"], 0),
-        "units": [{"id": u["id"], "kind": u["kind"], "name": SH.unit_name(u), "label": u["label"],
-                   "first": u["first"], "last": u["last"], "href": SH.unit_href(deck["id"], u),
-                   "read": anchors.get(deck["id"], {}).get(u["id"], "")}
-                  for u in units_by_deck[deck["id"]]]} for deck in decks}}
-    (target / "proof.html").write_text(
-        SH.document("What this site proves — AI Product Studio",
-                    "What the build measured about itself: pointers, facts, lab runs and narration.",
-                    SH.page_head("Proof", "How each number is checked",
-                                 "The numbers on the home page, and the checks that measured them when "
-                                 "this site was built.")
-                    + SPR.proof_section(proof, args.site_base),
-                    args.site_base, "doc-page proof-page",
-                    crumbs=[("Course", f"{args.site_base}/index.html"), ("Proof", None)]),
-        encoding="utf-8")
-    (target / "index.html").write_text(
-        index_page(decks, manifest, provenance, args.site_base, text_only=args.no_narration,
-                   subscribe_action=args.subscribe_action,
-                   path_cards=path_cards, module_paths=module_paths, units_by_deck=units_by_deck,
-                   proof_html=SPR.proof_card(proof, args.site_base), home_data=home_data),
-        encoding="utf-8")
+    SH.EDITIONS = ("en", "zh") if zh_ready() else ("en",)
+    records, terms_by_deck = write_edition("en", decks, target, args.site_base, args, manifest, provenance)
+    # The Chinese edition (#121): the same pages from the Chinese sources, in `zh/`. Assets, figures
+    # and recordings are the English edition's, one level up; page links stay inside `zh/`.
+    if zh_ready():
+        zh_base = ".." if args.site_base == "." else args.site_base
+        FIG.ASSET_BASE = zh_base
+        zh_decks = [parse_deck(d, load_zh_scripts()["decks"], "zh", scripts["decks"]) for d in DECK_IDS]
+        write_edition("zh", zh_decks, target / "zh", zh_base, args, manifest, provenance)
+        SL.localize_edition(target / "zh", zh_base)
+    SH.LANG = "en"
 
     # The transcripts are committed as Markdown, so a check must prove the committed copies still
     # match what the scripts say rather than quietly regenerating them.

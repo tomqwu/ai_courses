@@ -677,6 +677,28 @@ def check_terms_zh() -> list[str]:
     return problems
 
 
+def check_zh_edition() -> list[str]:
+    """The Chinese edition (#121): every module's Chinese sources match its English ones part for
+    part (zh_edition.py), are stamped against the English they were translated from, and the built
+    Chinese pages read as Chinese — no run of English left outside code and quotations."""
+    sys.path.insert(0, str(ROOT / "06-production"))
+    sys.path.insert(0, str(ROOT / "learner-site"))
+    import zh_edition as Z                                                      # noqa: PLC0415
+    import site_locale as SL                                                    # noqa: PLC0415
+    problems = []
+    for deck_id in Z.modules():
+        problems += [f"{deck_id}: {p}" for p in Z.check_module(deck_id, required=True)]
+    built = sorted((ROOT / "learner-site" / "zh").glob("*.html"))
+    residue = 0
+    for page in built:
+        found = SL.english_residue(page.read_text(encoding="utf-8"))
+        residue += len(found)
+        problems += [f"zh/{page.name}: untranslated: {r!r}" for r in found[:3]]
+    check_zh_edition.summary = (f"{len(Z.modules())} modules, {len(built)} Chinese pages"
+                                + ("" if built else " — build the site to check them"))
+    return problems
+
+
 def check_anchors() -> tuple[int, list[str]]:
     """Every anchored pointer is still cited somewhere, and its range still contains its symbol."""
     import json                                                              # noqa: PLC0415
@@ -731,6 +753,7 @@ def main(argv: list[str]) -> int:
         ("Narration contract", check_narration),
         ("Learner site", check_learner_site),
         ("EN / 中文 terms", check_terms_zh),
+        ("Chinese edition", check_zh_edition),
     ]
     failed = 0
     for title, fn in sections:

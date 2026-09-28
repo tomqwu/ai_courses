@@ -352,12 +352,19 @@ def _scene(fig: dict, inline) -> str:
     svg = path.read_text(encoding="utf-8")
     svg = re.sub(r"^<\?xml[^>]*>\s*", "", svg)
     svg = svg.replace("<svg ", f'<svg role="img" aria-label="{html.escape(fig["alt"], quote=True)}" ', 1)
+    # the drawing's own <title> is the English alt; the figure's alt is the edition's (#121)
+    svg = re.sub(r"<title>.*?</title>", f"<title>{html.escape(fig['alt'])}</title>", svg, count=1, flags=re.S)
     caption = f'<figcaption class="fig-title">Illustration · {inline(fig["caption"])}</figcaption>' if fig["caption"] else \
         '<figcaption class="fig-title">Illustration</figcaption>'
     return f'<div class="fig-scene-art">{svg}</div>{caption}'
 
 
-def render(fig: dict, *, sentences: list[str] | None = None, inline=_esc, base: str = ".") -> str:
+# Where the site's figure images are, from the page being written: the root edition's own folder,
+# or one level up from the Chinese edition in `zh/` (#121). Set by build_site per edition.
+ASSET_BASE = "."
+
+
+def render(fig: dict, *, sentences: list[str] | None = None, inline=_esc, base: str | None = None) -> str:
     """The figure as HTML. With `sentences`, parts whose `at` opens a sentence get `data-step`."""
     kind = fig["kind"]
     if kind == "flow":
@@ -367,7 +374,7 @@ def render(fig: dict, *, sentences: list[str] | None = None, inline=_esc, base: 
     elif kind == "compare":
         inner = _compare(fig, sentences, inline)
     elif kind == "screenshot":
-        inner = _screenshot(fig, base, inline)
+        inner = _screenshot(fig, ASSET_BASE if base is None else base, inline)
     elif kind == "scene":
         inner = _scene(fig, inline)
     elif kind == "system":
