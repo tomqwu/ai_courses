@@ -606,6 +606,19 @@ def run(page, browser, base: str) -> list[str]:
             d.querySelectorAll('pre, code, script, style, textarea, kbd').forEach(e => e.remove());
             return d.body.textContent; }""", built.read_text(encoding="utf-8"))
         need("<article" not in text and "class=\"" not in text, f"{built.name}: markup shown as text")
+    # The four modes are large tabs under the title of every module page (owner: "people can barely
+    # see it"), and they stay in view: they stick under the top bar while the page scrolls.
+    for name in ("m05.html", "lesson-m05.html", "lab-m05.html", "quiz-m05.html"):
+        page.goto(f"{base}/{name}")
+        page.wait_for_timeout(200)
+        tabs = page.locator("main .mode-tabs")
+        need(tabs.count() == 1 and tabs.is_visible() and tabs.locator("a").count() == 4
+             and tabs.locator('a[aria-current="page"]').count() == 1,
+             f"{name}: the Learn · Read · Lab · Check tabs are not shown under the title")
+        page.mouse.wheel(0, 2500)
+        page.wait_for_timeout(300)
+        box = tabs.bounding_box()
+        need(box and 0 <= box["y"] <= 120, f"{name}: the mode tabs do not stay in view when scrolling ({box})")
     # A small laptop: no page scrolls sideways at 1024px either — a lesson column beside its table
     # of contents is narrower than a phone, and a flow figure once ran 115px past it.
     laptop = browser.new_context(viewport={"width": 1024, "height": 768}).new_page()

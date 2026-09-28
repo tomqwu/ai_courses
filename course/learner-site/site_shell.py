@@ -228,6 +228,39 @@ def sidebar(site_base: str, deck_id: str | None = None, current: str | None = No
             f'</nav>')
 
 
+MODE_HINTS = {
+    "watch": ("Narrated, part by part", "逐部分讲解"),
+    "read": ("The lesson as text", "课文全文"),
+    "lab": ("Hands-on, pass/fail", "动手实验，通过/不通过"),
+    "check": ("Test what you learned", "检验所学"),
+}
+
+
+def module_tabs(site_base: str, deck_id: str, mode: str | None) -> str:
+    """The module's four modes as large tabs under the page title, on every module page. They stick
+    under the top bar while the page scrolls. A phone shows the same modes as its bottom tab bar
+    instead (the top bar's copy), so these are hidden there."""
+    links = []
+    for key, label, pattern in MODES:
+        mark = ' aria-current="page"' if key == mode else ""
+        hint = T(*MODE_HINTS[key])
+        links.append(
+            f'<a href="{site_base}/{pattern.format(d=deck_id)}"{mark}>'
+            f'<svg class="icon tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{MODE_ICONS[key]}</svg>'
+            f'<span class="tab-text"><span class="tab-name">{label}</span><span class="tab-hint">{hint}</span></span></a>')
+    return f'<nav class="mode-tabs" aria-label="Module mode">{"".join(links)}</nav>'
+
+
+def with_tabs(content: str, tabs: str) -> str:
+    """The tabs go straight after the page title block, or first if a page has none."""
+    start = content.find('<header class="page-head')
+    end = content.find("</header>", start) if start >= 0 else -1
+    if end < 0:
+        return tabs + content
+    end += len("</header>")
+    return content[:end] + tabs + content[end:]
+
+
 def topbar(site_base: str, crumbs: list[tuple[str, str | None]], deck_id: str | None = None,
            mode: str | None = None) -> str:
     """Breadcrumb, the module's four modes (on module pages), and search."""
@@ -325,7 +358,7 @@ def document(title: str, description: str, content: str, site_base: str, body_cl
 <div class="app-main">
 {topbar(site_base, crumbs, deck_id, mode)}
 <main id="content" class="app-content" tabindex="-1">
-{content}
+{with_tabs(content, module_tabs(site_base, deck_id, mode)) if deck_id and mode else content}
 </main>
 </div>
 </div>
