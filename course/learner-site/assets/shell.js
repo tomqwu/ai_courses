@@ -142,7 +142,7 @@
       if (at && at.deck === box.getAttribute('data-module-start') && at.n > 1) {
         link.setAttribute('href', base() + '/' + s.last.href);
         label.textContent = 'Resume · part ' + at.n;
-        if (note) note.textContent = 'Where you stopped: ' + (s.last.label || 'slide ' + at.n) + '.';
+        if (note) note.textContent = 'Where you stopped: ' + (s.last.label || 'part ' + at.n) + '.';
       } else {
         link.setAttribute('href', link.getAttribute('data-start-href'));
         label.textContent = 'Start module';

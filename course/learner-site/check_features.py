@@ -463,6 +463,10 @@ def run(page, browser, base: str) -> list[str]:
     shown = page.locator("[data-home] .proof-value").all_inner_texts()
     want = [f"{built['pointers']['checked']:,}", f"{built['pointers']['anchors']:,}", f"{built['narration']['recorded']:,}"]
     need(shown == want, f"home: the proof numbers {shown} are not the build's {want}")
+    # There are no slides on the site (#112, #119): the home page counts parts, not slides.
+    home_text = page.locator("[data-home], main").first.inner_text() + page.locator("main").inner_text()
+    need(not re.search(r"\b[Ss]lides?\b|\bWatch\b", home_text),
+         f"home: still says slide/Watch: {re.findall(r'.{0,30}(?:[Ss]lides?|Watch).{0,20}', home_text)[:3]}")
     resume.click()
     page.wait_for_timeout(600)
     top = page.evaluate(f"document.getElementById('{last.split('#')[1]}').getBoundingClientRect().top")
