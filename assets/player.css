@@ -1539,3 +1539,21 @@ body.transcript .app-content { width: min(46rem, calc(100% - 48px)); }
   .learn-player { gap: 6px; padding: 6px 8px; }
   .learn-player select, .lp-auto { display: none; }
 }
+
+/* Terms explained where they are used (#term-links): a term's first use in a part is a link with a
+   dotted underline; hover or tap shows its card, which links to the full glossary entry. */
+a.term { color: inherit; text-decoration: underline dotted var(--accent); text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px; cursor: help; }
+a.term:hover, a.term:focus-visible { color: var(--accent-deep); }
+.term-card {
+  position: absolute; z-index: 60; width: min(320px, calc(100vw - 32px)); padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ink-strong) 16%, transparent); font-size: var(--d-3); line-height: 1.5;
+}
+.term-card[hidden] { display: none; }
+.term-card-title { margin: 0 0 4px; color: var(--ink-strong); font-weight: 700; }
+.term-card-plain { margin: 0; }
+.term-card-everyday { margin: 6px 0 0; color: var(--ink-soft); font-style: italic; }
+.term-card-more { display: inline-block; margin-top: 8px; font-weight: 600; }
+.glossary-basics dd { margin-bottom: 10px; }
+.basics-everyday { display: block; color: var(--ink-soft); }

@@ -29,7 +29,7 @@
 <section class="path-section module-hero" aria-label="The module at a glance"><figure class="diagram fig fig-architecture" data-figure><figcaption class="sr-only">许多租户共用一个数据库；本模块最后产出两件产物——证明隔离的负路径测试，以及一份承认尚未证明之处的运营手册清单。</figcaption><div class="fig-bands"><div class="fig-layer"><div class="fig-band-head"><span class="fig-label">一个数据库，多个租户</span></div><div class="fig-row"><div class="fig-box"><span class="fig-label">一个教会组织</span></div><div class="fig-box"><span class="fig-label">一个篮球联赛组织</span></div><div class="fig-box is-seam"><span class="fig-label">每条查询都带 org_id</span><span class="fig-flag">接缝</span></div></div></div><div class="fig-layer is-hl"><div class="fig-band-head"><span class="fig-label">你将拿到的产物</span><span class="fig-flag">重点</span></div><div class="fig-row"><div class="fig-box"><span class="fig-label">负路径测试</span><span class="fig-note">隔离，已证明</span></div><div class="fig-box"><span class="fig-label">运营手册清单</span><span class="fig-note">承认尚未证明之处</span></div></div></div></div><p class="fig-source"><span class="source-chip">Source</span><code>SignUpFlow/api/dependencies.py · SignUpFlow/docs/playbooks/coverage.json</code></p></figure></section>
   <section class="path-section">
     <h2>学习目标</h2>
-    <ul class="objectives"><li>用依赖项<strong>强制实施</strong>租户隔离</li><li>把令牌<strong>绑定</strong>到租户，重新加载活跃记录</li><li>有意识地<strong>确定</strong> 401/403/404 语义</li><li>把权限角色与资格<strong>分离</strong></li><li>把授权矩阵<strong>做成</strong>可执行的</li><li><strong>设计</strong>验收：测试层级、运营手册、诚实的清单</li></ul>
+    <ul class="objectives"><li>用<a class="term" href="glossary.html#basics-install" data-term-title="安装与包管理器（package manager）" data-term-plain="安装是把程序放到你的电脑上；包管理器用一条命令替你安装和更新程序。依赖是一个项目需要的其他程序。" data-term-everyday="一个用打字操作的应用商店；依赖就是一道菜谱需要的食材。">依赖</a>项<strong>强制实施</strong>租户隔离</li><li>把<a class="term" href="glossary.html#basics-login" data-term-title="登录与令牌（login / token）" data-term-plain="登录证明你是谁；随后应用给你的浏览器一个令牌——每次请求都出示的一张签名通行证。" data-term-everyday="在门口出示证件，然后整晚戴着腕带。">令牌</a><strong>绑定</strong>到租户，重新加载活跃记录</li><li>有意识地<strong>确定</strong> 401/403/404 语义</li><li>把<a class="term" href="glossary.html#权限角色permission-role" data-term-title="权限角色（Permission role）" data-term-plain="一个账号可以做什么；恰好是 admin 或 volunteer 之一，由一个 frozenset 和一条拒绝两个角色的规范化规则强制执行。（SignUpFlow/api/roles.py:8,38-53）">权限角色</a>与资格<strong>分离</strong></li><li>把授权矩阵<strong>做成</strong>可执行的</li><li><strong>设计</strong>验收：<a class="term" href="glossary.html#测试层级test-tier" data-term-title="测试层级（Test tier）" data-term-plain="七种用途之一，各自在独立进程中运行：单元、API/安全、CLI、集成、Web、契约、浏览器。（SignUpFlow/docs/TESTING.md:38-46,49-50）">测试层级</a>、运营手册、诚实的清单</li></ul>
   </section>
   <section class="path-section">
     <h2>前置条件</h2>
@@ -137,6 +137,6 @@
 </div>
 </div>
 <div class="outline-backdrop" data-outline-backdrop hidden></div>
-<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script>
+<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/terms.js" defer></script>
 </body>
 </html>

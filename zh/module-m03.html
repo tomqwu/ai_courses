@@ -29,7 +29,7 @@
 <section class="path-section module-hero" aria-label="The module at a glance"><figure class="diagram fig fig-flow" data-figure><figcaption class="sr-only">第 2 模块中能跑起来的 TinyCopilot 核心经过三步——失败即关闭的隐私、分层测试、经过验证的交付——最终成为一个经过验证的下载。</figcaption><div class="fig-track is-long"><div class="fig-node"><span class="fig-label">一个能跑起来的核心</span><span class="fig-note">来自第 2 模块的 TinyCopilot</span></div><svg class="fig-link" viewBox="0 0 40 16" aria-hidden="true" focusable="false"><path class="fig-link-line" d="M2 8h29"/><path class="fig-link-head" d="M27 3l7 5-7 5"/></svg><div class="fig-node is-seam"><span class="fig-label">失败即关闭的隐私</span><span class="fig-flag">接缝</span></div><svg class="fig-link" viewBox="0 0 40 16" aria-hidden="true" focusable="false"><path class="fig-link-line" d="M2 8h29"/><path class="fig-link-head" d="M27 3l7 5-7 5"/></svg><div class="fig-node"><span class="fig-label">分层测试</span></div><svg class="fig-link" viewBox="0 0 40 16" aria-hidden="true" focusable="false"><path class="fig-link-line" d="M2 8h29"/><path class="fig-link-head" d="M27 3l7 5-7 5"/></svg><div class="fig-node"><span class="fig-label">经过验证的交付</span></div><svg class="fig-link" viewBox="0 0 40 16" aria-hidden="true" focusable="false"><path class="fig-link-line" d="M2 8h29"/><path class="fig-link-head" d="M27 3l7 5-7 5"/></svg><div class="fig-node is-hl"><span class="fig-label">一个经过验证的下载</span><span class="fig-flag">重点</span></div></div></figure></section>
   <section class="path-section">
     <h2>学习目标</h2>
-    <ul class="objectives"><li><strong>设计</strong>一个失败即关闭的仅本地模式</li><li>在每次请求时<strong>校验</strong>模型元数据</li><li>分层<strong>测试</strong>：单元、契约、人工</li><li><strong>交付</strong>一个经过校验和验证的产物</li><li>基于一张有出处的竞品表来<strong>定位</strong></li></ul>
+    <ul class="objectives"><li><strong>设计</strong>一个<a class="term" href="glossary.html#失败即关闭fail-closed" data-term-title="失败即关闭（Fail closed）" data-term-plain="一种让失败路径成为安全路径的设计：缺失、格式错误或意外的元数据会拒绝请求，而不是让它继续 —— ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:17-24。">失败即关闭</a>的仅本地模式</li><li>在每次请求时<strong>校验</strong><a class="term" href="glossary.html#basics-ai-model" data-term-title="AI 模型（model）" data-term-plain="读取文字并写出回复的、训练好的 AI；LLM（大语言模型）就是聊天助手背后的那一类。" data-term-everyday="聊天助手里的那颗大脑。">模型</a>元数据</li><li>分层<strong>测试</strong>：单元、契约、人工</li><li><strong>交付</strong>一个经过<a class="term" href="glossary.html#basics-hash" data-term-title="哈希（hash / checksum）" data-term-plain="根据文件内容算出的一串短码；哪怕改动一个字节，这串码也会变。" data-term-everyday="文件的指纹。">校验和</a>验证的产物</li><li>基于一张有出处的竞品表来<strong>定位</strong></li></ul>
   </section>
   <section class="path-section">
     <h2>前置条件</h2>
@@ -137,6 +137,6 @@
 </div>
 </div>
 <div class="outline-backdrop" data-outline-backdrop hidden></div>
-<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script>
+<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/terms.js" defer></script>
 </body>
 </html>

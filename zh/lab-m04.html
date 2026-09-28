@@ -28,19 +28,19 @@
   <p class="step-count">开始之前</p>
   <h2 id="before-you-start-title">开始之前</h2>
   
-  <div class="step-body"><div class="step-context" id="lab"><p>你将在<strong>你自己的项目</strong>（如果还没有，就用一个草稿仓库）中新建的 <code>specs/001-your-feature/</code> 文件夹里工作。SignUpFlow 的真实文件夹就是你的模板——边做边打开它们，但不要盲目照抄。你在第 7 步运行的陌生人是脚本化的：提示词、报告格式和通过规则都在本文件旁边的 <code>stranger-prompt.md</code> 中——在第 1 步之前读它，因为知道陌生人会被问什么，正是让第 1 步写得清晰锐利的原因。</p></div></div>
+  <div class="step-body"><div class="step-context" id="lab"><p>你将在<strong>你自己的项目</strong>（如果还没有，就用一个草稿<a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>）中新建的 <code>specs/001-your-feature/</code> 文件夹里工作。SignUpFlow 的真实文件夹就是你的模板——边做边打开它们，但不要盲目照抄。你在第 7 步运行的陌生人是脚本化的：<a class="term" href="glossary.html#basics-prompt" data-term-title="提示词（prompt）" data-term-plain="你给 AI 模型或助手的话，告诉它你想要什么。" data-term-everyday="你写在点单纸上的那句要求。">提示词</a>、报告格式和通过规则都在本文件旁边的 <code>stranger-prompt.md</code> 中——在第 1 步之前读它，因为知道陌生人会被问什么，正是让第 1 步写得清晰锐利的原因。</p></div></div>
   
 </section><section class="lab-step" id="step-1" data-step="1" aria-labelledby="step-1-title">
   <p class="step-count">第 1 步 · 共 7 步</p>
   <h2 id="step-1-title">选定功能，编写 <code>spec.md</code>（只写做什么）</h2>
   
-  <div class="step-body"><p>遵循 SignUpFlow 仓库中的 <code>.specify/templates/spec-template.md</code>：≥3 个用户故事，每个都有一行 "Independent Test"（每个故事都是一个可行的 MVP 切片），以及 Then 子句可测试的 Given/When/Then 场景——要数字，不要感觉（「5 分钟内认证失败 5 次 → 锁定 15 分钟」，<code>specs/014-security-hardening/spec.md</code> US1，就是范本）。添加 ≥8 条功能需求，以及可衡量、与技术无关的成功标准。<strong>零实现细节</strong>——没有语言、框架或模式 SQL；实体的描述要 "without implementation"。</p></div>
+  <div class="step-body"><p>遵循 SignUpFlow <a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>中的 <code>.specify/templates/spec-template.md</code>：≥3 个用户故事，每个都有一行 "Independent Test"（每个故事都是一个可行的 MVP 切片），以及 Then 子句可测试的 Given/When/Then 场景——要数字，不要感觉（「5 分钟内认证失败 5 次 → 锁定 15 分钟」，<code>specs/014-security-hardening/spec.md</code> US1，就是范本）。添加 ≥8 条<a class="term" href="glossary.html#功能需求functional-requirement-fr" data-term-title="功能需求（Functional requirement (FR)）" data-term-plain="一条带编号、与技术无关的 &quot;System MUST…&quot; 陈述；014 有 44 条。— SignUpFlow/specs/014-security-hardening/spec.md。">功能需求</a>，以及可衡量、与技术无关的<a class="term" href="glossary.html#成功标准success-criteria-sc" data-term-title="成功标准（Success criteria (SC)）" data-term-plain="可衡量、与技术无关的结果；014 有 12 条。— SignUpFlow/specs/014-security-hardening/spec.md。">成功标准</a>。<strong>零实现细节</strong>——没有语言、框架或模式 SQL；实体的描述要 "without implementation"。</p></div>
   <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>标记第 1 步完成</span></button></div>
 </section><section class="lab-step" id="step-2" data-step="2" aria-labelledby="step-2-title">
   <p class="step-count">第 2 步 · 共 7 步</p>
   <h2 id="step-2-title">在继续之前解决每一个未知项</h2>
   
-  <div class="step-body"><p>不得遗留任何 <code>[NEEDS CLARIFICATION]</code> 标记（<code>specs/014-security-hardening/checklists/requirements.md</code> 中的关卡规则）。现在就提出一组有限的问题（最多 3 个，按 014 自己的做法），或者明确记录每个默认值，写成一条需求，或放进 Assumptions 部分——014 把 1 小时的令牌有效期写成了需求（FR-013、FR-036）。</p></div>
+  <div class="step-body"><p>不得遗留任何 <code>[NEEDS CLARIFICATION]</code> 标记（<code>specs/014-security-hardening/checklists/requirements.md</code> 中的关卡规则）。现在就提出一组有限的问题（最多 3 个，按 014 自己的做法），或者明确记录每个默认值，写成一条需求，或放进 Assumptions 部分——014 把 1 小时的<a class="term" href="glossary.html#basics-login" data-term-title="登录与令牌（login / token）" data-term-plain="登录证明你是谁；随后应用给你的浏览器一个令牌——每次请求都出示的一张签名通行证。" data-term-everyday="在门口出示证件，然后整晚戴着腕带。">令牌</a>有效期写成了需求（FR-013、FR-036）。</p></div>
   <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>标记第 2 步完成</span></button></div>
 </section><section class="lab-step" id="step-3" data-step="3" aria-labelledby="step-3-title">
   <p class="step-count">第 3 步 · 共 7 步</p>
@@ -52,13 +52,13 @@
   <p class="step-count">第 4 步 · 共 7 步</p>
   <h2 id="step-4-title">编写 <code>data-model.md</code>、<code>plan.md</code> 和一份 <code>contracts/&lt;seam&gt;.md</code></h2>
   
-  <div class="step-body"><p><code>plan.md</code> 负责怎么做（技术栈、版本、存储、性能目标），并且必须包含一个明确的<strong>宪章检查（Constitution Check）</strong>：你项目宪章的每一条原则对应一行结论（SignUpFlow 的是 <code>.specify/memory/constitution.md</code>；在你自己的仓库中使用实验 M1 的项目宪章）。任何违规都放进复杂度追踪（Complexity Tracking）表并附上论证——"Fill ONLY if Constitution Check has violations that must be justified"（<code>.specify/templates/plan-template.md</code>）。契约钉住一条真实的接缝：请求/响应形态、错误键和测试草图（范本：<code>specs/014-security-hardening/contracts/rate-limiting.md</code>）。</p></div>
+  <div class="step-body"><p><code>plan.md</code> 负责怎么做（技术栈、版本、存储、性能目标），并且必须包含一个明确的<strong><a class="term" href="glossary.html#宪章检查constitution-check" data-term-title="宪章检查（Constitution Check）" data-term-plain="计划逐条对照原则的合规检查；这道关卡必须在第 0 阶段研究之前通过，并在第 1 阶段设计之后重新检查。— SignUpFlow/.specify/templates/plan-template.md。">宪章检查</a>（Constitution Check）</strong>：你项目宪章的每一条原则对应一行结论（SignUpFlow 的是 <code>.specify/memory/constitution.md</code>；在你自己的<a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>中使用实验 M1 的项目宪章）。任何违规都放进<a class="term" href="glossary.html#复杂度追踪complexity-tracking" data-term-title="复杂度追踪（Complexity Tracking）" data-term-plain="计划中的一张表，只有在宪章检查记录了需要论证的违规时才必须填写。— SignUpFlow/.specify/templates/plan-template.md。">复杂度追踪</a>（Complexity Tracking）表并附上论证——"Fill ONLY if Constitution Check has violations that must be justified"（<code>.specify/templates/plan-template.md</code>）。契约钉住一条真实的接缝：请求/响应形态、错误键和测试草图（范本：<code>specs/014-security-hardening/contracts/rate-limiting.md</code>）。</p></div>
   <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>标记第 4 步完成</span></button></div>
 </section><section class="lab-step" id="step-5" data-step="5" aria-labelledby="step-5-title">
   <p class="step-count">第 5 步 · 共 7 步</p>
   <h2 id="step-5-title">编写 <code>tasks.md</code>（第 2 阶段）</h2>
   
-  <div class="step-body"><p>采用模板格式的勾选任务——<code>[ID] [P?] [US#] description</code>——按 Setup → Foundational → 每个故事一个阶段（测试先写，并且先失败）→ Polish 组织，每个故事之后有一个检查点。<strong>每个任务都写明一个在你的仓库中存在的精确文件路径</strong>（"Include exact file paths in descriptions"，<code>.specify/templates/tasks-template.md</code>；"T017 [P] [US1] Implement create_wizard_state method in api/services/onboarding_service.py"，<code>specs/000-user-onboarding/tasks.md</code>，就是范本）。</p></div>
+  <div class="step-body"><p>采用模板格式的勾选任务——<code>[ID] [P?] [US#] description</code>——按 Setup → Foundational → 每个故事一个阶段（测试先写，并且先失败）→ Polish 组织，每个故事之后有一个检查点。<strong>每个任务都写明一个在你的<a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>中存在的精确<a class="term" href="glossary.html#basics-folder" data-term-title="文件夹与路径（folder / path）" data-term-plain="文件夹（也叫目录）装着文件；路径是它的地址，比如 `code/my-site/index.html`。" data-term-everyday="文件夹是抽屉，路径是去那个抽屉的路线。">文件路径</a></strong>（"Include exact file paths in descriptions"，<code>.specify/templates/tasks-template.md</code>；"T017 [P] [US1] Implement create_wizard_state method in api/services/onboarding_service.py"，<code>specs/000-user-onboarding/tasks.md</code>，就是范本）。</p></div>
   <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>标记第 5 步完成</span></button></div>
 </section><section class="lab-step" id="step-6" data-step="6" aria-labelledby="step-6-title">
   <p class="step-count">第 6 步 · 共 7 步</p>
@@ -70,7 +70,7 @@
   <p class="step-count">第 7 步 · 共 7 步</p>
   <h2 id="step-7-title">陌生人测试（通过关卡）</h2>
   
-  <div class="step-body"><p>提交这个文件夹，然后运行 <code>stranger-prompt.md</code> 中的<strong>脚本化陌生人</strong>：在一个干净的克隆上，把它的提示词粘贴进任意编码智能体的一个全新会话，除了仓库之外不提供任何上下文，让它在不问你任何问题的情况下实现故事 1。它会返回一份固定格式的报告——它构建了什么、它能检查哪些验收场景，以及它记录下的每一个问题（Q）和假设（A）。使用 <code>stranger-prompt.md</code> 中的表格，把每一行 Q/A 标为 <strong>spec-owed</strong> 或 <strong>environment-owed</strong>。<strong>通过 = 零行 spec-owed。</strong> 只要有一行 spec-owed，就说明规格有漏洞：打磨那个让陌生人缺少信息的产物，然后在一个新的全新会话中重新运行。<strong>学习小组选项：</strong> 按同样的规则和同样的报告格式，把文件夹交给一位同伴。</p></div>
+  <div class="step-body"><p>提交这个文件夹，然后运行 <code>stranger-prompt.md</code> 中的<strong>脚本化陌生人</strong>：在一个干净的<a class="term" href="glossary.html#basics-clone" data-term-title="克隆（clone）" data-term-plain="把一个仓库连同历史完整地下载到你的电脑上。" data-term-everyday="给共享的项目文件夹做一份属于你自己的完整副本。">克隆</a>上，把它的<a class="term" href="glossary.html#basics-prompt" data-term-title="提示词（prompt）" data-term-plain="你给 AI 模型或助手的话，告诉它你想要什么。" data-term-everyday="你写在点单纸上的那句要求。">提示词</a>粘贴进任意编码<a class="term" href="glossary.html#basics-agent" data-term-title="AI 助手（agent）" data-term-plain="一个能在你的电脑上干活的 AI 助手——读文件、运行命令、写代码——你只需用普通话语提出要求。" data-term-everyday="一个能干的帮手，照你写下的指示做事，并给你看它做了什么。">智能体</a>的一个全新会话，除了<a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>之外不提供任何上下文，让它在不问你任何问题的情况下实现故事 1。它会返回一份固定格式的报告——它构建了什么、它能检查哪些<a class="term" href="glossary.html#验收场景acceptance-scenario" data-term-title="验收场景（Acceptance scenario）" data-term-plain="用户故事中的一条 Given/When/Then 陈述，其 Then 子句是一个可观察、可量化的结果。— SignUpFlow/specs/014-security-hardening/spec.md（US1）。">验收场景</a>，以及它记录下的每一个问题（Q）和假设（A）。使用 <code>stranger-prompt.md</code> 中的表格，把每一行 Q/A 标为 <strong>spec-owed</strong> 或 <strong>environment-owed</strong>。<strong>通过 = 零行 spec-owed。</strong> 只要有一行 spec-owed，就说明规格有<a class="term" href="glossary.html#basics-bug" data-term-title="缺陷（bug）" data-term-plain="程序里导致它行为出错的错误。" data-term-everyday="菜谱里一个会毁掉整道菜的笔误。">漏洞</a>：打磨那个让陌生人缺少信息的产物，然后在一个新的全新会话中重新运行。<strong>学习小组选项：</strong> 按同样的规则和同样的报告格式，把文件夹交给一位同伴。</p></div>
   <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>标记第 7 步完成</span></button></div>
 </section></div>
       <div class="lab-accept" aria-label="验收"><section class="lab-section lab-checklist" id="验收清单">
@@ -84,12 +84,12 @@
   <h2 id="auto-fail-title">自动不通过的情形</h2>
   <p class="section-note">摘自本实验的评分标准（<code>lab-rubrics.md</code>）。无论清单显示什么，只要出现其中任何一项，实验即不通过，所以提交前先读一遍。</p>
   <p>以下情形无论其他各项如何，都判实验 M4 <strong>不通过</strong>（依据 <code>01-design/assessment-and-rubrics.md</code>，伪造是唯一的不通过项）：</p>
-<ol><li><strong>伪造证据</strong>——任何并非由其声称的命令、会话或人产生的 grep 记录、检查清单输出或陌生人报告；<code>Counts</code> 被改过或 Q/A 行被删掉的报告。</li><li><strong>一条引用的路径不存在且未被修复</strong>——包括仓库使用 <code>alembic/versions/</code> 时那个真实存在的 <code>migrations/versions/</code> 漂移。</li><li><strong>一份没有漂移检查输出的自评检查清单</strong>——写着 "all checks passed"，却没有记录任何 grep 或重数。</li><li><strong>没有 <code>tasks.md</code></strong>——没有它，文件夹就无法接受陌生人测试，所以通过关卡无法达成。</li><li><strong>关卡运行之后，<code>spec.md</code> 中仍留有实现泄漏</strong>——语言、框架或模式 SQL。</li><li><strong>仍有未解决的 <code>[NEEDS CLARIFICATION]</code> 标记</strong>，却照样产出了计划或任务。</li></ol>
+<ol><li><strong>伪造证据</strong>——任何并非由其声称的<a class="term" href="glossary.html#basics-command" data-term-title="命令（command）" data-term-plain="在终端里输入的一条指令，例如 `git status`。" data-term-everyday="对电脑说的一句指令。">命令</a>、会话或人产生的 grep 记录、检查清单输出或陌生人报告；<code>Counts</code> 被改过或 Q/A 行被删掉的报告。</li><li><strong>一条引用的路径不存在且未被修复</strong>——包括<a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>使用 <code>alembic/versions/</code> 时那个真实存在的 <code>migrations/versions/</code> 漂移。</li><li><strong>一份没有漂移检查输出的自评检查清单</strong>——写着 "all checks passed"，却没有记录任何 grep 或重数。</li><li><strong>没有 <code>tasks.md</code></strong>——没有它，文件夹就无法接受<a class="term" href="glossary.html#陌生人测试stranger-test" data-term-title="陌生人测试（Stranger test）" data-term-plain="唯一的质量测试：一个没有任何对话记忆的全新智能体会话，仅凭产物就能完成实现。— course/03-content/m04-spec-driven-saas/lesson.md（M4.2）。">陌生人测试</a>，所以通过关卡无法达成。</li><li><strong>关卡运行之后，<code>spec.md</code> 中仍留有实现泄漏</strong>——语言、框架或模式 SQL。</li><li><strong>仍有未解决的 <code>[NEEDS CLARIFICATION]</code> 标记</strong>，却照样产出了计划或任务。</li></ol>
 </section><a class="btn-dark lab-export" href="#证据记录" data-evidence-jump>撰写并导出证据条目</a></div>
       <div class="lab-after">
 <section class="lab-section lab-evidence" id="证据记录">
   <h2>证据记录</h2>
-  <p>在你的证据日志中记录：检查清单的三条通过行及今天的日期；你运行的漂移检查命令及其输出；以及每一份原样的陌生人报告，附上运行日期、每行 Q/A 的标注，以及两次运行之间被打磨的产物。格式遵循实验 M1 中的课程证据日志模板。</p>
+  <p>在你的证据日志中记录：检查清单的三条通过行及今天的日期；你运行的漂移检查<a class="term" href="glossary.html#basics-command" data-term-title="命令（command）" data-term-plain="在终端里输入的一条指令，例如 `git status`。" data-term-everyday="对电脑说的一句指令。">命令</a>及其输出；以及每一份原样的陌生人报告，附上运行日期、每行 Q/A 的标注，以及两次运行之间被打磨的产物。格式遵循实验 M1 中的课程证据日志模板。</p>
   <form class="evidence-form" data-evidence-form onsubmit="return false">
     <h3>撰写证据条目</h3>
     <p class="section-note">模块 1 的格式：命令及结果、环境、版本、局限。输入时即保存在此浏览器中；复制或下载到你的证据日志。</p>
@@ -119,6 +119,6 @@
 </div>
 </div>
 <div class="outline-backdrop" data-outline-backdrop hidden></div>
-<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/lab.js" defer></script>
+<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/terms.js" defer></script><script src="../assets/lab.js" defer></script>
 </body>
 </html>

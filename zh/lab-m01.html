@@ -81,7 +81,7 @@ git add -A &amp;&amp; git commit -m &quot;Scaffold starter repo&quot;</code></pr
 - A Stop hook runs `scripts/check-evidence-log.sh` after each turn. When it
   blocks, fix the entry it names; never edit the script or hook to pass.
 - Record the red run in `docs/evidence-log.md` before the green run.</code></pre></div>
-<p>第一条附加说明指向你在第 8 步接上的钩子。在 Claude Code 中运行 <code>/context</code>，确认这个文件已经加载。其他智能体会直接读取 <code>AGENTS.md</code>，并忽略 <code>CLAUDE.md</code> 和钩子；这种情况下，就自己运行第 8 步的检查。</p></div>
+<p>第一条附加说明指向你在第 8 步接上的钩子。在 Claude Code 中运行 <code>/context</code>，确认这个文件已经加载。其他<a class="term" href="glossary.html#basics-agent" data-term-title="AI 助手（agent）" data-term-plain="一个能在你的电脑上干活的 AI 助手——读文件、运行命令、写代码——你只需用普通话语提出要求。" data-term-everyday="一个能干的帮手，照你写下的指示做事，并给你看它做了什么。">智能体</a>会直接读取 <code>AGENTS.md</code>，并忽略 <code>CLAUDE.md</code> 和钩子；这种情况下，就自己运行第 8 步的检查。</p></div>
   <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>标记第 3 步完成</span></button></div>
 </section><section class="lab-step" id="step-4" data-step="3" aria-labelledby="step-4-title">
   <p class="step-count">第 4 步 · 共 9 步</p>
@@ -188,7 +188,7 @@ echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div>
     ]
   }
 }</code></pre></div>
-<p>在信任这个检查之前先测试它：先红，后绿。从你的条目中删掉局限那一行，运行 <code>bash scripts/check-evidence-log.sh; echo "exit=$?"</code>。预期输出 <code>Evidence log: the latest entry in docs/evidence-log.md needs:</code>，接着是 <code>- at least one limitation</code>，然后是 <code>exit=2</code>。把那一行放回去，预期输出 <code>Evidence log: latest entry complete.</code> 和 <code>exit=0</code>。两次运行都要记录。在 Claude Code 会话中，<code>Stop</code> 上的退出码 2 会让 Claude 继续工作，并把脚本的 stderr 当作它的指示。连续阻止八次之后，Claude Code 会让这一轮结束（code.claude.com/docs/en/hooks，2026-09-26 查阅）。这个钩子检查的是形式：带日期的标题、一行 <code>command → result</code>、一个环境、一个在这个仓库中存在的 SHA、一条局限，以及没有 <code>&lt;placeholders&gt;</code>。它无法检查其中任何内容是否属实。</p></div>
+<p>在信任这个检查之前先测试它：先红，后绿。从你的条目中删掉局限那一行，运行 <code>bash scripts/check-evidence-log.sh; echo "exit=$?"</code>。预期输出 <code>Evidence log: the latest entry in docs/evidence-log.md needs:</code>，接着是 <code>- at least one limitation</code>，然后是 <code>exit=2</code>。把那一行放回去，预期输出 <code>Evidence log: latest entry complete.</code> 和 <code>exit=0</code>。两次运行都要记录。在 Claude Code 会话中，<code>Stop</code> 上的退出码 2 会让 Claude 继续工作，并把脚本的 stderr 当作它的指示。连续阻止八次之后，Claude Code 会让这一轮结束（code.claude.com/docs/en/hooks，2026-09-26 查阅）。这个钩子检查的是形式：带日期的标题、一行 <code>command → result</code>、一个环境、一个在这个<a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>中存在的 SHA、一条局限，以及没有 <code>&lt;placeholders&gt;</code>。它无法检查其中任何内容是否属实。</p></div>
   <div class="step-actions"><button type="button" class="step-done" data-step-done aria-pressed="false"><span class="step-done-box" aria-hidden="true"></span><span data-step-done-label>标记第 8 步完成</span></button></div>
 </section><section class="lab-step" id="step-9" data-step="8" aria-labelledby="step-9-title">
   <p class="step-count">第 9 步 · 共 9 步</p>
@@ -207,7 +207,7 @@ echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div>
 </section><section class="lab-section lab-autofail" id="auto-fail" aria-labelledby="auto-fail-title">
   <h2 id="auto-fail-title">自动不通过（无论其他各项如何，只要满足以下任意一条，实验即判不通过）</h2>
   <p class="section-note">摘自本实验的评分标准（<code>lab-rubrics.md</code>）。无论清单显示什么，只要出现其中任何一项，实验即不通过，所以提交前先读一遍。</p>
-  <ol><li><strong>伪造证据</strong>——记录中的某个测试计数、输出行、命令或 head SHA，是所记录的那次运行产生不了的。</li><li><strong>有绿色运行，却没有记录红色运行</strong>——TDD 循环就是交付物；红色输出是它的证明。</li><li><strong>为了通过而削弱测试</strong>——放宽断言，删除、跳过测试，或在测试失败后改写它来迁就实现，或者为了通过而修改证据日志检查脚本。</li><li><strong>证据记录中没有 head SHA</strong>——无法固定到某个版本的证据只是一个说法，而不是一份记录。</li><li><strong>提交的文件中残留占位方括号</strong>——<code>constitution.md</code> 或 <code>AGENTS.md</code> 中仍能看到 <code>[&lt;your rule&gt;]</code>。</li><li><strong>原始输出中可见的失败没有出现在证据条目中</strong>——选择性记录就是以省略的方式造假。</li></ol>
+  <ol><li><strong>伪造证据</strong>——记录中的某个测试计数、输出行、<a class="term" href="glossary.html#basics-command" data-term-title="命令（command）" data-term-plain="在终端里输入的一条指令，例如 `git status`。" data-term-everyday="对电脑说的一句指令。">命令</a>或 head SHA，是所记录的那次运行产生不了的。</li><li><strong>有绿色运行，却没有记录红色运行</strong>——TDD 循环就是交付物；红色输出是它的证明。</li><li><strong>为了通过而削弱测试</strong>——放宽断言，删除、跳过测试，或在测试失败后改写它来迁就实现，或者为了通过而修改证据日志检查脚本。</li><li><strong><a class="term" href="glossary.html#证据记录evidence-record" data-term-title="证据记录（Evidence record）" data-term-plain="一份带日期、固定到具体版本的验证记录：命令及其结果、环境、head SHA，以及一份明确列出哪些未经验证的清单。（SignUpFlow/docs/playbooks/validation.md；模板见 03-content/m01-operating-system/lesson.md，§M1.3）">证据记录</a>中没有 head SHA</strong>——无法固定到某个版本的证据只是一个说法，而不是一份记录。</li><li><strong>提交的文件中残留占位方括号</strong>——<code>constitution.md</code> 或 <code>AGENTS.md</code> 中仍能看到 <code>[&lt;your rule&gt;]</code>。</li><li><strong>原始输出中可见的失败没有出现在证据条目中</strong>——选择性记录就是以省略的方式造假。</li></ol>
 </section><a class="btn-dark lab-export" href="#证据记录" data-evidence-jump>撰写并导出证据条目</a></div>
       <div class="lab-after">
 <section class="lab-section lab-evidence" id="证据记录">
@@ -231,7 +231,7 @@ echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div>
       <span class="evidence-status" data-evidence-status role="status" aria-live="polite"></span>
     </div>
   </form>
-</section><section class="lab-section lab-stretch" id="拓展目标"><h2>拓展目标</h2><ul><li>加一个负路径测试：标记一个不存在的 id 会抛出一个明确定义的错误（<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a> 要求每个功能都有负路径断言）。</li><li>让一条真实的观察完成晋级：把它带日期加进 <code>docs/research-log.md</code>，在这次改动上试用，然后提升进 <code>AGENTS.md</code>——这就是 <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/ai-agent-coding-strategy.md" rel="noopener"><code>SignUpFlow/docs/ai-agent-coding-strategy.md</code></a> 中的完整流水线。</li><li>不重读本实验，跑第二个迷你循环（<code>specs/002-todo-remove/</code>）。</li></ul></section><section class="lab-section lab-discussion" id="讨论题"><h2>讨论题</h2><p>发布你改写前 → 改写后的规则（一条你改写得可验证的模糊规则），以及你仓库的链接。然后评审一位同学的 <code>AGENTS.md</code>：你能否在不问他们任何问题的情况下，检查每条规则是否都被遵守？指出任何你无法验证的词。</p></section>
+</section><section class="lab-section lab-stretch" id="拓展目标"><h2>拓展目标</h2><ul><li>加一个负路径测试：标记一个不存在的 id 会抛出一个明确定义的错误（<a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/AGENTS.md" rel="noopener"><code>SignUpFlow/AGENTS.md</code></a> 要求每个功能都有负路径断言）。</li><li>让一条真实的观察完成晋级：把它带日期加进 <code>docs/research-log.md</code>，在这次改动上试用，然后提升进 <code>AGENTS.md</code>——这就是 <a class="pointer" href="https://github.com/tomqwu/SignUpFlow/blob/c550d46/docs/ai-agent-coding-strategy.md" rel="noopener"><code>SignUpFlow/docs/ai-agent-coding-strategy.md</code></a> 中的完整<a class="term" href="glossary.html#basics-pipeline" data-term-title="流水线（pipeline）" data-term-plain="一串步骤，每一步接收上一步的输出，例如 音频 → 文字 → 回答。" data-term-everyday="一条装配线。">流水线</a>。</li><li>不重读本实验，跑第二个迷你循环（<code>specs/002-todo-remove/</code>）。</li></ul></section><section class="lab-section lab-discussion" id="讨论题"><h2>讨论题</h2><p>发布你改写前 → 改写后的规则（一条你改写得可验证的模糊规则），以及你<a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>的链接。然后评审一位同学的 <code>AGENTS.md</code>：你能否在不问他们任何问题的情况下，检查每条规则是否都被遵守？指出任何你无法验证的词。</p></section>
       <footer class="doc-footer">
         <p class="index-footnote">清单勾选、已完成的步骤和证据草稿只保存在此浏览器中。换电脑时，请从课程首页导出进度。 来源: <code>course/03-content/m01-operating-system/zh/lab.md</code>.</p>
       </footer>
@@ -242,6 +242,6 @@ echo &quot;Evidence log: latest entry complete.&quot;</code></pre></div>
 </div>
 </div>
 <div class="outline-backdrop" data-outline-backdrop hidden></div>
-<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/lab.js" defer></script>
+<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/terms.js" defer></script><script src="../assets/lab.js" defer></script>
 </body>
 </html>

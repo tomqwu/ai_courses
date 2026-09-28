@@ -31,7 +31,7 @@
   </fieldset>
   <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>核对答案</button></div>
   <p class="q-feedback" data-feedback role="status" aria-live="polite"></p>
-  <div class="q-explain" hidden><p class="q-explain-title">解析</p><p>邮件送达率要在第一次发送之前配置好，因为 Gmail 和 Yahoo 对批量发件人强制执行 SPF/DKIM/DMARC，而检查方式是对你自己的域名做一次 DNS 查询，而不是看仪表盘上的徽章（<code>04-sales/launch-plan.md</code>，运营检查清单；实验 M8「邮件送达率关卡」）。<code>_dmarc</code> 返回空结果，意味着没有发布任何策略。A 信任的恰恰是题目刚刚反驳了的仪表盘；C 是错的——DMARC 记录是公开的 TXT 记录，接收方正是这样读取它们的；D 是常见的「有 SPF 就够了」错误：单靠 SPF，接收方不知道对齐失败时该怎么处理，你也收不到任何 <code>rua=</code> 报告。 (M8.2)</p><a class="q-rewatch" href="m08.html#slide-11">Revisit M8.2 — 两个阶段，七封邮件</a></div>
+  <div class="q-explain" hidden><p class="q-explain-title">解析</p><p><a class="term" href="glossary.html#邮件送达率deliverability" data-term-title="邮件送达率（Deliverability）" data-term-plain="邮件到底能不能进入收件箱；通过发件域名上的 SPF、DKIM 和 DMARC 来配置，Gmail 和 Yahoo 对批量发件人强制执行。它位于每一个转化数字的上游。出处： 04-sales/launch-plan.md（开头和运营检查清单）。">邮件送达率</a>要在第一次发送之前<a class="term" href="glossary.html#basics-config" data-term-title="配置（configuration）" data-term-plain="存放在文件里的设置，不改代码就能改变程序的行为。" data-term-everyday="把应用的设置页写进一个文件里。">配置</a>好，因为 Gmail 和 Yahoo 对批量发件人强制执行 SPF/DKIM/DMARC，而检查方式是对你自己的域名做一次 DNS <a class="term" href="glossary.html#basics-query" data-term-title="查询（query）" data-term-plain="向数据库提出的问题，比如“给我这个组织的活动”。" data-term-everyday="在那张表格里做一次搜索。">查询</a>，而不是看仪表盘上的徽章（<code>04-sales/launch-plan.md</code>，运营检查清单；实验 M8「邮件送达率关卡」）。<code>_dmarc</code> 返回空结果，意味着没有发布任何策略。A 信任的恰恰是题目刚刚反驳了的仪表盘；C 是错的——DMARC 记录是公开的 TXT 记录，接收方正是这样读取它们的；D 是常见的「有 SPF 就够了」错误：单靠 SPF，接收方不知道对齐失败时该怎么处理，你也收不到任何 <code>rua=</code> 报告。 (M8.2)</p><a class="q-rewatch" href="m08.html#slide-11">Revisit M8.2 — 两个阶段，七封邮件</a></div>
   
 </section><section class="qq is-mc" data-n="2" data-objective="M8.1" data-rewatch="../m08.html#slide-3" data-answer="a" aria-labelledby="q2-count">
   <p class="q-count-line" id="q2-count"><span>第 2 题 · 共 8 题</span><span class="q-objective">目标：M8.1</span></p>
@@ -83,7 +83,7 @@
   <label class="q-write">你的答案<textarea rows="5" placeholder="先写出你的答案——写满 20 个字符后可查看参考答案。"></textarea></label>
   <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>查看参考答案</button></div>
   <p class="q-feedback" data-feedback role="status" aria-live="polite"></p>
-  <div class="q-explain" hidden><p class="q-explain-title">参考答案</p><p>800 × 0.35 = 280 次打开；× 0.12 = 33.6 次点击；× 0.10 = 3.36 次报名；× $299 = $1,004.64 ≈ <strong>$1,005</strong>（题干规定了约定：保留小数，只在最后取整一次）。诚实的杠杆，任选两个：用免费工具扩大名单；改进主题行/发件人信誉；每封邮件一个行动号召；加强销售页；按 M7 重新审视价格。要拒绝的：购买名单、虚假的紧迫感、编造的推荐语。 — M8.2</p><a class="q-rewatch" href="m08.html#slide-11">Revisit M8.2 — 两个阶段，七封邮件</a></div>
+  <div class="q-explain" hidden><p class="q-explain-title">参考答案</p><p>800 × 0.35 = 280 次打开；× 0.12 = 33.6 次点击；× 0.10 = 3.36 次报名；× $299 = $1,004.64 ≈ <strong>$1,005</strong>（题干规定了约定：保留小数，只在最后取整一次）。诚实的杠杆，任选两个：用免费工具扩大名单；改进主题行/发件人信誉；每封邮件一个<a class="term" href="glossary.html#basics-landing-page" data-term-title="落地页与行动号召（CTA）" data-term-plain="一个介绍某项产品、并请读者做一件事的网页——这件事就是行动号召（CTA），比如“购买”。" data-term-everyday="一个只挂着一块醒目招牌的橱窗：“请进”。">行动号召</a>；加强销售页；按 M7 重新审视价格。要拒绝的：购买名单、虚假的紧迫感、编造的推荐语。 — M8.2</p><a class="q-rewatch" href="m08.html#slide-11">Revisit M8.2 — 两个阶段，七封邮件</a></div>
   
 </section><section class="qq is-mc" data-n="7" data-objective="M8.3" data-rewatch="../m08.html#slide-19" data-answer="a" aria-labelledby="q7-count">
   <p class="q-count-line" id="q7-count"><span>第 7 题 · 共 8 题</span><span class="q-objective">目标：M8.3</span></p>
@@ -98,11 +98,11 @@
   
 </section><section class="qq is-short" data-n="8" data-objective="M8.3" data-rewatch="../m08.html#slide-19" aria-labelledby="q8-count">
   <p class="q-count-line" id="q8-count"><span>第 8 题 · 共 8 题</span><span class="q-objective">目标：M8.3</span></p>
-  <div class="q-stem" id="q8-stem"><p>一份结业项目提交的证据记录全文如下："Tests: all green. Repo: github.com/me/rosterbot. Sales page: done." 把它改写成要求的结业项目证据记录——包含每一个必需区块，对你没有的值用占位符——并说明是什么会让这样一份记录从*不完整*变成*自动不通过*。</p></div>
+  <div class="q-stem" id="q8-stem"><p>一份结业项目提交的<a class="term" href="glossary.html#证据记录evidence-record" data-term-title="证据记录（Evidence record）" data-term-plain="结业项目必需的附件：命令及结果、产物链接，以及一份局限清单。含糊其辞（「测试通过」）会让第 3 个维度不达标。出处： 01-design/assessment-and-rubrics.md（结业项目证据记录）。">证据记录</a>全文如下："Tests: all green. Repo: github.com/me/rosterbot. Sales page: done." 把它改写成要求的结业项目证据记录——包含每一个必需区块，对你没有的值用占位符——并说明是什么会让这样一份记录从*不完整*变成*自动不通过*。</p></div>
   <label class="q-write">你的答案<textarea rows="5" placeholder="先写出你的答案——写满 20 个字符后可查看参考答案。"></textarea></label>
   <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>查看参考答案</button></div>
   <p class="q-feedback" data-feedback role="status" aria-live="polite"></p>
-  <div class="q-explain" hidden><p class="q-explain-title">参考答案</p><p><code>## Capstone evidence — rosterbot — &lt;date&gt;</code> / 已运行的命令：<code>&lt;command&gt;</code> → <code>&lt;N passed, M failed or skipped&gt;</code>，每条命令一行，注明日期 / 产物链接：标签 <code>&lt;vX.Y&gt;</code> 下的仓库、规格文件夹 <code>&lt;path&gt;</code>、证据日志 <code>&lt;path&gt;</code>、销售页草稿 <code>&lt;path&gt;</code> / 局限、未验证：<code>&lt;honest list, failures included&gt;</code> / 外加一段说明，写明智能体做了什么、学员验证了什么。不完整是可以补救的——重新运行并填好各个区块。只有当某一行是伪造的时候，它才会变成自动不通过：为一次从未进行的运行写「all green」，或者写一个命令并没有打印出来的计数。 — M8.3</p><a class="q-rewatch" href="m08.html#slide-19">Revisit M8.3 — 结业项目契约</a></div>
+  <div class="q-explain" hidden><p class="q-explain-title">参考答案</p><p><code>## Capstone evidence — rosterbot — &lt;date&gt;</code> / 已运行的<a class="term" href="glossary.html#basics-command" data-term-title="命令（command）" data-term-plain="在终端里输入的一条指令，例如 `git status`。" data-term-everyday="对电脑说的一句指令。">命令</a>：<code>&lt;command&gt;</code> → <code>&lt;N passed, M failed or skipped&gt;</code>，每条命令一行，注明日期 / 产物链接：标签 <code>&lt;vX.Y&gt;</code> 下的<a class="term" href="glossary.html#basics-repository" data-term-title="仓库（repository）" data-term-plain="由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。" data-term-everyday="一个自带无限撤销历史的项目文件夹。">仓库</a>、规格文件夹 <code>&lt;path&gt;</code>、证据日志 <code>&lt;path&gt;</code>、<a class="term" href="glossary.html#basics-landing-page" data-term-title="落地页与行动号召（CTA）" data-term-plain="一个介绍某项产品、并请读者做一件事的网页——这件事就是行动号召（CTA），比如“购买”。" data-term-everyday="一个只挂着一块醒目招牌的橱窗：“请进”。">销售页</a>草稿 <code>&lt;path&gt;</code> / 局限、未验证：<code>&lt;honest list, failures included&gt;</code> / 外加一段说明，写明<a class="term" href="glossary.html#basics-agent" data-term-title="AI 助手（agent）" data-term-plain="一个能在你的电脑上干活的 AI 助手——读文件、运行命令、写代码——你只需用普通话语提出要求。" data-term-everyday="一个能干的帮手，照你写下的指示做事，并给你看它做了什么。">智能体</a>做了什么、学员验证了什么。不完整是可以补救的——重新运行并填好各个区块。只有当某一行是伪造的时候，它才会变成自动不通过：为一次从未进行的运行写「all green」，或者写一个命令并没有打印出来的计数。 — M8.3</p><a class="q-rewatch" href="m08.html#slide-19">Revisit M8.3 — 结业项目契约</a></div>
   
 </section>
     <section class="quiz-summary" data-quiz-summary aria-labelledby="quiz-result-title">
@@ -121,6 +121,6 @@
 </div>
 </div>
 <div class="outline-backdrop" data-outline-backdrop hidden></div>
-<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/quiz.js" defer></script>
+<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/terms.js" defer></script><script src="../assets/quiz.js" defer></script>
 </body>
 </html>
