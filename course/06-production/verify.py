@@ -699,6 +699,33 @@ def check_zh_edition() -> list[str]:
     return problems
 
 
+def check_terms_explained() -> list[str]:
+    """Terms explained where they are used (#term-links): every watched word has a plain-language
+    entry, and every linked term on the built site (both editions) points at a glossary entry that
+    exists."""
+    sys.path.insert(0, str(ROOT / "learner-site"))
+    import site_terms as ST                                                     # noqa: PLC0415
+    problems = []
+    forms = {f.lower() for t in ST.basics() for f in t["match"]}
+    problems += [f"basics.json: watched word {w!r} has no plain-language entry" for w in ST.watch()
+                 if w.lower() not in forms]
+    site = ROOT / "learner-site"
+    pages = sorted(site.glob("*.html")) + sorted(site.glob("zh/*.html"))
+    ids: dict[Path, set[str]] = {}
+    links = 0
+    for page in pages:
+        for href in re.findall(r'<a class="term" href="([^"]+)"', page.read_text(encoding="utf-8")):
+            links += 1
+            target, _, anchor = href.partition("#")
+            path = (page.parent / target).resolve()
+            if path not in ids:
+                ids[path] = set(re.findall(r'id="([^"]+)"', path.read_text(encoding="utf-8"))) if path.is_file() else set()
+            if anchor not in ids[path]:
+                problems.append(f"{page.relative_to(site)}: term link {href} has no such entry")
+    check_terms_explained.summary = f"{len(ST.basics())} basics, {links} term links on the built site"
+    return sorted(set(problems))[:50]
+
+
 def check_anchors() -> tuple[int, list[str]]:
     """Every anchored pointer is still cited somewhere, and its range still contains its symbol."""
     import json                                                              # noqa: PLC0415
@@ -754,6 +781,7 @@ def main(argv: list[str]) -> int:
         ("Learner site", check_learner_site),
         ("EN / 中文 terms", check_terms_zh),
         ("Chinese edition", check_zh_edition),
+        ("Terms explained", check_terms_explained),
     ]
     failed = 0
     for title, fn in sections:

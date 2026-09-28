@@ -563,7 +563,8 @@ def check_learn(browser: str, port: int, deck_id: str, scripts: dict, narrated: 
     sections = dict(re.findall(r'<section class="learn-section[^"]*" id="(slide-\d+)"(.*?)</section>', dom, re.S))
     for sid, entry in slides.items():
         body = sections.get(sid, "")
-        said = [html_lib.unescape(t) for t in re.findall(r'<span class="said[^"]*" data-s="\d+"[^>]*>(.*?)</span>', body, re.S)]
+        said = [html_lib.unescape(re.sub(r"<[^>]+>", "", t))       # a linked term is still its words
+                for t in re.findall(r'<span class="said[^"]*" data-s="\d+"[^>]*>(.*?)</span>', body, re.S)]
         want = B.sentences(entry.get("text", ""))
         if said != want:
             problems.append(f"{deck_id} {sid}: the narration on the page is not the approved script "

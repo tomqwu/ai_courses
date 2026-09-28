@@ -163,6 +163,7 @@ def english_residue(page: str) -> list[str]:
     at a time, so a quotation that wraps an inline `code` span is still one quotation."""
     body = page.split("<body", 1)[-1].split(">", 1)[-1]
     allowed = ui_table().get("english_ok", [])
+    body = re.sub(r'<a class="term"[^>]*>(.*?)</a>', r"\1", body)   # a linked term is part of its sentence
     body = CODE.sub(" ", body)
     body = QUOTE_BLOCK.sub(" ", body)          # a blockquote or <q> is a verbatim quotation
     found = []

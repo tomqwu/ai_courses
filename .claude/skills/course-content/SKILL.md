@@ -92,6 +92,11 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
   (lesson, slides, NOTES, video script, handout, glossary, quiz, solutions, rubrics) and across
   `course/`. If the number is pinned in `facts.json`, update the pin; if a range is anchored in
   `pointer-anchors.json`, update the key and its token together.
+- **Explain new jargon.** If a change introduces a word a non-programmer might not know, add it to
+  `03-content/_basics/basics.json`: `term`, `match` (the forms that should link), `plain`,
+  `everyday`, the same under `zh`, and `except` for phrases where the word means something else
+  ("model answer"). Put it on the `watch` list. The build links its first use in every part; the
+  gate (`Terms explained`, `test_terms.py`) checks every entry is complete and every link resolves.
 - **Add, rename or drop a glossary term** in `terms-zh.json` too (the gate checks the two agree).
 - **Carry every English change into the Chinese edition** (`zh/` beside the file, `scripts-zh/` for
   narration), then `zh_edition.py stamp mNN`. The gate fails a module whose English changed since

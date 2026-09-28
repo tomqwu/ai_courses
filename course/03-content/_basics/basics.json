@@ -1,0 +1,1192 @@
+{
+ "_about": "The Basics glossary: the everyday words of building software, explained for someone who has never programmed. Every page of the course links a term's first use in each part to its card (plain meaning + an everyday comparison). `match` lists the forms that link (English, case-insensitive, whole words); `zh.match` the Chinese forms. Add a term here when a reader could stumble on it; verify.py fails any word in the watch list that no glossary explains. `watch`: words the gate requires to be explained wherever the course uses them (by a Basics term or a module glossary); `except`: phrases in which a word means something else and is not linked.",
+ "terms": [
+  {
+   "id": "git",
+   "term": "Git",
+   "match": [
+    "Git"
+   ],
+   "plain": "A tool that records every version of a project's files, so you can see what changed and go back.",
+   "everyday": "Like the version history in a shared document, but for a whole folder.",
+   "zh": {
+    "term": "Git（版本控制工具）",
+    "match": [
+     "Git"
+    ],
+    "plain": "一个记录项目文件每个版本的工具，让你能看到改了什么，并随时回到以前的版本。",
+    "everyday": "就像共享文档里的版本历史，只不过针对的是整个文件夹。"
+   }
+  },
+  {
+   "id": "repository",
+   "term": "Repository (repo)",
+   "match": [
+    "repository",
+    "repositories",
+    "repo",
+    "repos"
+   ],
+   "plain": "A project folder that Git tracks: all its files plus the full history of every change.",
+   "everyday": "A project folder with a built-in, unlimited undo history.",
+   "zh": {
+    "term": "仓库（repository）",
+    "match": [
+     "仓库",
+     "代码仓库"
+    ],
+    "plain": "由 Git 跟踪的项目文件夹：所有文件，加上每一次改动的完整历史。",
+    "everyday": "一个自带无限撤销历史的项目文件夹。"
+   }
+  },
+  {
+   "id": "commit",
+   "term": "Commit",
+   "match": [
+    "commit",
+    "commits",
+    "committed",
+    "committing"
+   ],
+   "plain": "A saved snapshot of a project at one moment, with a short note saying what changed.",
+   "everyday": "Pressing 'save' and writing a label on the save, so you can find it later.",
+   "zh": {
+    "term": "提交（commit）",
+    "match": [
+     "commit"
+    ],
+    "plain": "项目在某一刻的快照，附一句说明改了什么。",
+    "everyday": "按下“保存”并在这次保存上贴个标签，以后能找到它。"
+   },
+   "except": [
+    "commit to",
+    "commits to",
+    "committed to"
+   ]
+  },
+  {
+   "id": "branch",
+   "term": "Branch",
+   "match": [
+    "branch",
+    "branches"
+   ],
+   "plain": "A separate line of work in a repository, so you can try changes without disturbing the main version.",
+   "everyday": "A copy of a draft you can edit freely, then fold back into the original.",
+   "zh": {
+    "term": "分支（branch）",
+    "match": [
+     "分支"
+    ],
+    "plain": "仓库里一条独立的工作线，让你尝试改动而不影响主版本。",
+    "everyday": "一份可以随意修改的草稿副本，改好后再合并回原稿。"
+   },
+   "except": [
+    "only branch",
+    "local-only branch"
+   ]
+  },
+  {
+   "id": "main-branch",
+   "term": "Main branch",
+   "match": [
+    "main branch"
+   ],
+   "plain": "The branch that holds the official, current version of a project.",
+   "everyday": "The master copy everyone agrees is the real one.",
+   "zh": {
+    "term": "主分支（main）",
+    "match": [
+     "主分支"
+    ],
+    "plain": "保存项目正式、最新版本的那个分支。",
+    "everyday": "大家都认可的那份正本。"
+   }
+  },
+  {
+   "id": "pull-request",
+   "term": "Pull request (PR)",
+   "match": [
+    "pull request",
+    "pull requests",
+    "PR",
+    "PRs"
+   ],
+   "plain": "A request to add the changes from one branch into another, where others can review them first.",
+   "everyday": "Handing in an edited draft with a note: 'here's what I changed — please check it before it goes in'.",
+   "zh": {
+    "term": "拉取请求（pull request，PR）",
+    "match": [
+     "拉取请求",
+     "合并请求"
+    ],
+    "plain": "请求把一个分支的改动并入另一个分支，别人可以先审阅。",
+    "everyday": "交上一份改过的稿子并附言：“这是我改的地方——请先检查再放进去。”"
+   }
+  },
+  {
+   "id": "merge",
+   "term": "Merge",
+   "match": [
+    "merge",
+    "merges",
+    "merged",
+    "merging"
+   ],
+   "plain": "Combining the changes from one branch into another.",
+   "everyday": "Folding your edited draft back into the master copy.",
+   "zh": {
+    "term": "合并（merge）",
+    "match": [
+     "merge"
+    ],
+    "plain": "把一个分支的改动并入另一个分支。",
+    "everyday": "把改好的草稿并回正本。"
+   }
+  },
+  {
+   "id": "clone",
+   "term": "Clone",
+   "match": [
+    "clone",
+    "clones",
+    "cloned",
+    "cloning"
+   ],
+   "plain": "Downloading a full copy of a repository, with its history, to your computer.",
+   "everyday": "Making your own complete copy of a shared project folder.",
+   "zh": {
+    "term": "克隆（clone）",
+    "match": [
+     "克隆"
+    ],
+    "plain": "把一个仓库连同历史完整地下载到你的电脑上。",
+    "everyday": "给共享的项目文件夹做一份属于你自己的完整副本。"
+   }
+  },
+  {
+   "id": "push",
+   "term": "Push",
+   "match": [
+    "push",
+    "pushes",
+    "pushed",
+    "pushing"
+   ],
+   "plain": "Sending your new commits from your computer up to the shared copy online (such as GitHub).",
+   "everyday": "Uploading your saved changes so everyone else can see them.",
+   "zh": {
+    "term": "推送（push）",
+    "match": [
+     "推送"
+    ],
+    "plain": "把你电脑上的新提交发送到线上的共享副本（例如 GitHub）。",
+    "everyday": "把你保存的改动上传，让其他人都能看到。"
+   },
+   "except": [
+    "push back",
+    "push notification",
+    "push notifications"
+   ]
+  },
+  {
+   "id": "github",
+   "term": "GitHub",
+   "match": [
+    "GitHub"
+   ],
+   "plain": "A website that stores Git repositories online, so people can share, review and publish them.",
+   "everyday": "An online home for project folders, like a shared drive built for code.",
+   "zh": {
+    "term": "GitHub（代码托管平台）",
+    "match": [
+     "GitHub"
+    ],
+    "plain": "一个把 Git 仓库存放在网上的网站，方便大家共享、审阅和发布。",
+    "everyday": "项目文件夹的线上之家，就像专为代码打造的共享网盘。"
+   }
+  },
+  {
+   "id": "github-pages",
+   "term": "GitHub Pages",
+   "match": [
+    "GitHub Pages"
+   ],
+   "plain": "A free GitHub service that turns a repository's files into a public website.",
+   "everyday": "A free shop window for a folder of web pages.",
+   "zh": {
+    "term": "GitHub Pages（静态网站托管）",
+    "match": [
+     "GitHub Pages"
+    ],
+    "plain": "GitHub 的免费服务，把仓库里的文件变成一个公开网站。",
+    "everyday": "一个免费的橱窗，展示一文件夹的网页。"
+   }
+  },
+  {
+   "id": "terminal",
+   "term": "Terminal",
+   "match": [
+    "terminal",
+    "command line",
+    "command-line",
+    "shell"
+   ],
+   "plain": "A window where you type commands to your computer instead of clicking.",
+   "everyday": "Texting your computer instructions rather than pointing at buttons.",
+   "zh": {
+    "term": "终端（terminal）",
+    "match": [
+     "终端",
+     "命令行"
+    ],
+    "plain": "一个输入命令、而不是点击来操作电脑的窗口。",
+    "everyday": "用打字给电脑发指令，而不是去点按钮。"
+   }
+  },
+  {
+   "id": "command",
+   "term": "Command",
+   "match": [
+    "command",
+    "commands"
+   ],
+   "plain": "One instruction typed into the terminal, like `git status`.",
+   "everyday": "A single sentence of instructions to your computer.",
+   "zh": {
+    "term": "命令（command）",
+    "match": [
+     "命令"
+    ],
+    "plain": "在终端里输入的一条指令，例如 `git status`。",
+    "everyday": "对电脑说的一句指令。"
+   }
+  },
+  {
+   "id": "cli",
+   "term": "CLI",
+   "match": [
+    "CLI"
+   ],
+   "plain": "A program you use by typing commands in the terminal (Command-Line Interface).",
+   "everyday": "An app with no buttons — you talk to it by typing.",
+   "zh": {
+    "term": "命令行工具（CLI）",
+    "match": [
+     "命令行工具"
+    ],
+    "plain": "在终端里通过输入命令来使用的程序（命令行界面）。",
+    "everyday": "一个没有按钮的应用——你通过打字和它说话。"
+   }
+  },
+  {
+   "id": "folder",
+   "term": "Folder and path",
+   "match": [
+    "file path",
+    "folder path",
+    "directory",
+    "directories"
+   ],
+   "plain": "A folder (also called a directory) holds files; a path is its address, like `code/my-site/index.html`.",
+   "everyday": "Folders are drawers; a path is the directions to a drawer.",
+   "zh": {
+    "term": "文件夹与路径（folder / path）",
+    "match": [
+     "文件路径"
+    ],
+    "plain": "文件夹（也叫目录）装着文件；路径是它的地址，比如 `code/my-site/index.html`。",
+    "everyday": "文件夹是抽屉，路径是去那个抽屉的路线。"
+   }
+  },
+  {
+   "id": "readme",
+   "term": "README",
+   "match": [
+    "README",
+    "READMEs"
+   ],
+   "plain": "The front-page file of a repository that explains what the project is and how to use it.",
+   "everyday": "The instruction leaflet in the box.",
+   "zh": {
+    "term": "README（说明文件）",
+    "match": [
+     "说明文件"
+    ],
+    "plain": "仓库的首页文件，说明这个项目是什么、怎么用。",
+    "everyday": "包装盒里的说明书。"
+   }
+  },
+  {
+   "id": "markdown",
+   "term": "Markdown",
+   "match": [
+    "Markdown"
+   ],
+   "plain": "A simple way to write formatted text in a plain file: `#` for a heading, `**bold**` for bold.",
+   "everyday": "Typing shorthand that turns into neat formatting.",
+   "zh": {
+    "term": "Markdown（轻量标记语言）",
+    "match": [
+     "Markdown"
+    ],
+    "plain": "在纯文本文件里写带格式文字的简单方法：`#` 表示标题，`**粗体**` 表示粗体。",
+    "everyday": "打字时用的速记符号，会变成整齐的排版。"
+   }
+  },
+  {
+   "id": "html",
+   "term": "HTML and CSS",
+   "match": [
+    "HTML",
+    "CSS"
+   ],
+   "plain": "HTML is the text and structure of a web page; CSS is how it looks (colours, fonts, layout).",
+   "everyday": "HTML is the words and furniture of a room; CSS is the paint and decoration.",
+   "zh": {
+    "term": "HTML 与 CSS（网页结构与样式）",
+    "match": [
+     "HTML",
+     "CSS"
+    ],
+    "plain": "HTML 是网页的文字和结构；CSS 决定它的样子（颜色、字体、布局）。",
+    "everyday": "HTML 是房间里的文字和家具，CSS 是油漆和装饰。"
+   }
+  },
+  {
+   "id": "website",
+   "term": "Static website",
+   "match": [
+    "static site",
+    "static website",
+    "static sites"
+   ],
+   "plain": "A website made only of files (pages, images) that are sent to the browser as they are, with no server program behind it.",
+   "everyday": "A printed brochure: everyone gets the same pages.",
+   "zh": {
+    "term": "静态网站（static website）",
+    "match": [
+     "静态网站"
+    ],
+    "plain": "只由文件（网页、图片）组成的网站，原样发给浏览器，背后没有服务器程序。",
+    "everyday": "一本印好的宣传册：每个人拿到的都是同样的页面。"
+   }
+  },
+  {
+   "id": "url",
+   "term": "URL",
+   "match": [
+    "URL",
+    "URLs"
+   ],
+   "plain": "A web address, like https://example.com/page.",
+   "everyday": "The street address of a page on the internet.",
+   "zh": {
+    "term": "网址（URL）",
+    "match": [
+     "网址"
+    ],
+    "plain": "一个网络地址，例如 https://example.com/page。",
+    "everyday": "网页在互联网上的门牌地址。"
+   }
+  },
+  {
+   "id": "server",
+   "term": "Server",
+   "match": [
+    "server",
+    "servers",
+    "backend",
+    "back end"
+   ],
+   "plain": "A computer program that waits for requests (from a browser or an app) and answers them.",
+   "everyday": "A restaurant kitchen: orders come in, dishes go out.",
+   "zh": {
+    "term": "服务器（server）",
+    "match": [
+     "服务器",
+     "后端"
+    ],
+    "plain": "一个等待请求（来自浏览器或应用）并作出回应的程序。",
+    "everyday": "餐厅的后厨：点单进来，菜品出去。"
+   }
+  },
+  {
+   "id": "client",
+   "term": "Client",
+   "match": [
+    "frontend",
+    "front end"
+   ],
+   "plain": "The part people use — a browser, an app — that sends requests to a server.",
+   "everyday": "The diner who places the order.",
+   "zh": {
+    "term": "客户端（client）",
+    "match": [
+     "客户端",
+     "前端"
+    ],
+    "plain": "人们直接使用的部分——浏览器或应用——它向服务器发出请求。",
+    "everyday": "点单的食客。"
+   }
+  },
+  {
+   "id": "api",
+   "term": "API",
+   "match": [
+    "API",
+    "APIs"
+   ],
+   "plain": "A defined way for one program to ask another for something: the list of requests it accepts and what it returns.",
+   "everyday": "A restaurant menu: what you can order and what you'll get.",
+   "zh": {
+    "term": "接口（API）",
+    "match": [
+     "接口"
+    ],
+    "plain": "一个程序向另一个程序请求东西的约定方式：它接受哪些请求、返回什么。",
+    "everyday": "餐厅的菜单：你能点什么、会拿到什么。"
+   }
+  },
+  {
+   "id": "endpoint",
+   "term": "Endpoint",
+   "match": [
+    "endpoint",
+    "endpoints"
+   ],
+   "plain": "One specific address on a server that handles one kind of request, like `/api/login`.",
+   "everyday": "One window at a service counter — this one for tickets, that one for refunds.",
+   "zh": {
+    "term": "端点（endpoint）",
+    "match": [
+     "端点"
+    ],
+    "plain": "服务器上处理某一类请求的具体地址，比如 `/api/login`。",
+    "everyday": "服务台的某个窗口——这个办票，那个退款。"
+   }
+  },
+  {
+   "id": "database",
+   "term": "Database",
+   "match": [
+    "database",
+    "databases"
+   ],
+   "plain": "Where an app keeps its information (users, orders, schedules) so it survives restarts.",
+   "everyday": "A very large, very fast spreadsheet the app reads and writes.",
+   "zh": {
+    "term": "数据库（database）",
+    "match": [
+     "数据库"
+    ],
+    "plain": "应用存放信息（用户、订单、排班）的地方，重启后也不会丢。",
+    "everyday": "一张超大、超快、由应用读写的表格。"
+   }
+  },
+  {
+   "id": "query",
+   "term": "Query",
+   "match": [
+    "query",
+    "queries"
+   ],
+   "plain": "A question asked of a database, such as 'give me this organisation's events'.",
+   "everyday": "A search you type into the spreadsheet.",
+   "zh": {
+    "term": "查询（query）",
+    "match": [
+     "查询"
+    ],
+    "plain": "向数据库提出的问题，比如“给我这个组织的活动”。",
+    "everyday": "在那张表格里做一次搜索。"
+   }
+  },
+  {
+   "id": "saas",
+   "term": "SaaS",
+   "match": [
+    "SaaS"
+   ],
+   "plain": "Software as a Service: an app people use in the browser and pay for by subscription, run by the maker on its servers.",
+   "everyday": "Renting a tool you use online instead of buying a box.",
+   "zh": {
+    "term": "SaaS（软件即服务）",
+    "match": [
+     "软件即服务"
+    ],
+    "plain": "软件即服务：人们在浏览器里使用、按订阅付费、由开发者在自己的服务器上运行的应用。",
+    "everyday": "在线租用一件工具，而不是买一盒软件。"
+   }
+  },
+  {
+   "id": "multi-tenant",
+   "term": "Multi-tenant",
+   "match": [
+    "multi-tenant",
+    "multi-tenancy"
+   ],
+   "plain": "One app and one database serving many separate customers, each seeing only their own data.",
+   "everyday": "An apartment building: shared building, private flats.",
+   "zh": {
+    "term": "多租户（multi-tenant）",
+    "match": [
+     "多租户"
+    ],
+    "plain": "一个应用、一个数据库同时服务许多互相独立的客户，每个客户只能看到自己的数据。",
+    "everyday": "一栋公寓楼：楼是共用的，每户是私密的。"
+   }
+  },
+  {
+   "id": "login",
+   "term": "Login and token",
+   "match": [
+    "authentication",
+    "log in",
+    "login",
+    "JWT",
+    "JWTs"
+   ],
+   "plain": "Logging in proves who you are; the app then gives your browser a token — a signed pass it shows with every request.",
+   "everyday": "Showing ID at the door, then wearing a wristband for the rest of the night.",
+   "zh": {
+    "term": "登录与令牌（login / token）",
+    "match": [
+     "登录",
+     "令牌"
+    ],
+    "plain": "登录证明你是谁；随后应用给你的浏览器一个令牌——每次请求都出示的一张签名通行证。",
+    "everyday": "在门口出示证件，然后整晚戴着腕带。"
+   }
+  },
+  {
+   "id": "localhost",
+   "term": "Localhost",
+   "match": [
+    "localhost",
+    "loopback"
+   ],
+   "plain": "The address your computer uses for itself: a program at localhost is running on your own machine, not the internet.",
+   "everyday": "Calling your own phone number.",
+   "zh": {
+    "term": "本机地址（localhost）",
+    "match": [
+     "本机",
+     "本地回环"
+    ],
+    "plain": "你的电脑用来指代自己的地址：运行在 localhost 的程序就在你自己的机器上，而不在互联网上。",
+    "everyday": "拨打你自己的电话号码。"
+   }
+  },
+  {
+   "id": "deploy",
+   "term": "Deploy",
+   "match": [
+    "deploy",
+    "deploys",
+    "deployed",
+    "deployment",
+    "deploying"
+   ],
+   "plain": "Putting a new version of an app or site where users can reach it.",
+   "everyday": "Opening the shop doors with the new stock on the shelves.",
+   "zh": {
+    "term": "部署（deploy）",
+    "match": [
+     "部署"
+    ],
+    "plain": "把应用或网站的新版本放到用户能访问的地方。",
+    "everyday": "把新货摆上货架，打开店门。"
+   }
+  },
+  {
+   "id": "hosting",
+   "term": "Hosting",
+   "match": [
+    "hosting",
+    "hosted"
+   ],
+   "plain": "A computer on the internet that keeps your site or app running so others can reach it.",
+   "everyday": "Renting a shopfront for your website.",
+   "zh": {
+    "term": "托管（hosting）",
+    "match": [
+     "托管"
+    ],
+    "plain": "互联网上一台让你的网站或应用持续运行、供别人访问的电脑。",
+    "everyday": "给你的网站租一个店面。"
+   }
+  },
+  {
+   "id": "install",
+   "term": "Install and package manager",
+   "match": [
+    "package manager",
+    "package managers",
+    "dependency",
+    "dependencies"
+   ],
+   "plain": "Installing puts a program on your computer; a package manager installs and updates programs for you with one command. Dependencies are the other programs a project needs.",
+   "everyday": "An app store you use by typing; dependencies are the ingredients a recipe needs.",
+   "zh": {
+    "term": "安装与包管理器（package manager）",
+    "match": [
+     "包管理器",
+     "依赖"
+    ],
+    "plain": "安装是把程序放到你的电脑上；包管理器用一条命令替你安装和更新程序。依赖是一个项目需要的其他程序。",
+    "everyday": "一个用打字操作的应用商店；依赖就是一道菜谱需要的食材。"
+   }
+  },
+  {
+   "id": "python",
+   "term": "Python and Swift",
+   "match": [
+    "Python",
+    "Swift"
+   ],
+   "plain": "Programming languages: Python is used for scripts, tools and servers; Swift for Apple apps (iPhone, Mac).",
+   "everyday": "Two different languages computers can be instructed in.",
+   "zh": {
+    "term": "Python 与 Swift（编程语言）",
+    "match": [
+     "Python",
+     "Swift"
+    ],
+    "plain": "编程语言：Python 常用于脚本、工具和服务器；Swift 用于苹果应用（iPhone、Mac）。",
+    "everyday": "两种可以用来给电脑下指令的不同语言。"
+   }
+  },
+  {
+   "id": "json",
+   "term": "JSON",
+   "match": [
+    "JSON"
+   ],
+   "plain": "A common text format for data, with names and values in braces, like {\"name\": \"Maria\"}.",
+   "everyday": "A tidy form with labelled boxes that programs can read.",
+   "zh": {
+    "term": "JSON（数据格式）",
+    "match": [
+     "JSON"
+    ],
+    "plain": "一种常见的文本数据格式，用花括号写名字和值，比如 {\"name\": \"Maria\"}。",
+    "everyday": "一张带标签格子的整齐表单，程序能读懂。"
+   }
+  },
+  {
+   "id": "config",
+   "term": "Configuration",
+   "match": [
+    "config",
+    "configuration",
+    "settings file"
+   ],
+   "plain": "Settings stored in a file that change how a program behaves, without changing its code.",
+   "everyday": "The settings screen of an app, written down in a file.",
+   "zh": {
+    "term": "配置（configuration）",
+    "match": [
+     "配置"
+    ],
+    "plain": "存放在文件里的设置，不改代码就能改变程序的行为。",
+    "everyday": "把应用的设置页写进一个文件里。"
+   }
+  },
+  {
+   "id": "code",
+   "term": "Code and source",
+   "match": [
+    "source code",
+    "codebase"
+   ],
+   "plain": "The written instructions that make up a program; the codebase is all of it for one project.",
+   "everyday": "The recipe book a program is cooked from.",
+   "zh": {
+    "term": "代码与源码（source code）",
+    "match": [
+     "源码",
+     "源代码",
+     "代码库"
+    ],
+    "plain": "组成程序的书面指令；代码库就是一个项目的全部代码。",
+    "everyday": "程序照着烹饪的那本菜谱。"
+   }
+  },
+  {
+   "id": "bug",
+   "term": "Bug",
+   "match": [
+    "bug",
+    "bugs"
+   ],
+   "plain": "A mistake in a program that makes it behave wrongly.",
+   "everyday": "A typo in the recipe that ruins the dish.",
+   "zh": {
+    "term": "缺陷（bug）",
+    "match": [
+     "缺陷",
+     "漏洞"
+    ],
+    "plain": "程序里导致它行为出错的错误。",
+    "everyday": "菜谱里一个会毁掉整道菜的笔误。"
+   }
+  },
+  {
+   "id": "test",
+   "term": "Test",
+   "match": [
+    "automated test",
+    "automated tests",
+    "test suite",
+    "test suites",
+    "unit test",
+    "unit tests"
+   ],
+   "plain": "A small program that checks another program still does what it should; a test suite is all of them together.",
+   "everyday": "A checklist a robot runs every time you change something.",
+   "zh": {
+    "term": "测试（test）",
+    "match": [
+     "测试套件",
+     "单元测试",
+     "自动化测试"
+    ],
+    "plain": "检查另一个程序是否仍按预期工作的小程序；测试套件就是所有测试的集合。",
+    "everyday": "每次你改动东西时，机器人都会跑一遍的检查清单。"
+   }
+  },
+  {
+   "id": "ci",
+   "term": "CI (continuous integration)",
+   "match": [
+    "CI",
+    "continuous integration"
+   ],
+   "plain": "A service that runs a project's tests automatically every time someone pushes a change.",
+   "everyday": "An inspector who checks every delivery at the door.",
+   "zh": {
+    "term": "持续集成（CI）",
+    "match": [
+     "持续集成"
+    ],
+    "plain": "每当有人推送改动时，自动运行项目测试的服务。",
+    "everyday": "在门口检查每一批送货的质检员。"
+   }
+  },
+  {
+   "id": "coverage",
+   "term": "Test coverage",
+   "match": [
+    "test coverage",
+    "code coverage"
+   ],
+   "plain": "The share of a program's lines that its tests actually run.",
+   "everyday": "How much of the house the inspector actually walked through.",
+   "zh": {
+    "term": "测试覆盖率（test coverage）",
+    "match": [
+     "覆盖率"
+    ],
+    "plain": "程序中真正被测试运行到的代码行所占的比例。",
+    "everyday": "检查员实际走过了这栋房子的多少地方。"
+   }
+  },
+  {
+   "id": "ai-model",
+   "term": "AI model",
+   "match": [
+    "AI model",
+    "AI models",
+    "language model",
+    "language models",
+    "LLM",
+    "LLMs",
+    "model",
+    "models"
+   ],
+   "plain": "The trained AI that reads text and writes a reply; an LLM (large language model) is the kind behind chat assistants.",
+   "everyday": "The brain inside a chat assistant.",
+   "zh": {
+    "term": "AI 模型（model）",
+    "match": [
+     "模型",
+     "大语言模型"
+    ],
+    "plain": "读取文字并写出回复的、训练好的 AI；LLM（大语言模型）就是聊天助手背后的那一类。",
+    "everyday": "聊天助手里的那颗大脑。"
+   },
+   "except": [
+    "data model",
+    "mental model",
+    "business model",
+    "pricing model",
+    "threat model",
+    "role model",
+    "model router",
+    "model_router",
+    "数据模型",
+    "心智模型",
+    "威胁模型",
+    "定价模型",
+    "model answer",
+    "model answers",
+    "revenue model",
+    "参考答案"
+   ]
+  },
+  {
+   "id": "agent",
+   "term": "AI agent",
+   "match": [
+    "AI agent",
+    "AI agents",
+    "coding agent",
+    "coding agents",
+    "agent",
+    "agents"
+   ],
+   "plain": "An AI assistant that can do work on your computer — read files, run commands, write code — when you ask it in plain words.",
+   "everyday": "A capable helper who follows your written instructions and shows you what they did.",
+   "zh": {
+    "term": "AI 助手（agent）",
+    "match": [
+     "智能体",
+     "AI 助手",
+     "编码助手"
+    ],
+    "plain": "一个能在你的电脑上干活的 AI 助手——读文件、运行命令、写代码——你只需用普通话语提出要求。",
+    "everyday": "一个能干的帮手，照你写下的指示做事，并给你看它做了什么。"
+   }
+  },
+  {
+   "id": "prompt",
+   "term": "Prompt",
+   "match": [
+    "prompt",
+    "prompts"
+   ],
+   "plain": "The words you give an AI model or agent to tell it what you want.",
+   "everyday": "The request you write on the order slip.",
+   "zh": {
+    "term": "提示词（prompt）",
+    "match": [
+     "提示词"
+    ],
+    "plain": "你给 AI 模型或助手的话，告诉它你想要什么。",
+    "everyday": "你写在点单纸上的那句要求。"
+   },
+   "except": [
+    "discussion prompt",
+    "closing prompt",
+    "closing prompts",
+    "discussion prompts",
+    "prompt the",
+    "command prompt",
+    "讨论题"
+   ]
+  },
+  {
+   "id": "ollama",
+   "term": "Ollama",
+   "match": [
+    "Ollama"
+   ],
+   "plain": "A free program that runs AI models on your own computer instead of in the cloud.",
+   "everyday": "A small AI engine that lives on your laptop.",
+   "zh": {
+    "term": "Ollama（本地模型运行工具）",
+    "match": [
+     "Ollama"
+    ],
+    "plain": "一个免费程序，在你自己的电脑上运行 AI 模型，而不是在云端。",
+    "everyday": "住在你笔记本电脑里的小型 AI 引擎。"
+   }
+  },
+  {
+   "id": "cloud",
+   "term": "Cloud",
+   "match": [
+    "the cloud",
+    "cloud service",
+    "cloud services"
+   ],
+   "plain": "Computers run by a company on the internet that do work or store data for you.",
+   "everyday": "Someone else's computer that you rent.",
+   "zh": {
+    "term": "云端（cloud）",
+    "match": [
+     "云端",
+     "云服务"
+    ],
+    "plain": "由公司在互联网上运营、替你做事或存数据的电脑。",
+    "everyday": "你租用的别人的电脑。"
+   }
+  },
+  {
+   "id": "on-device",
+   "term": "On-device",
+   "match": [
+    "on-device",
+    "on device"
+   ],
+   "plain": "Done on your own phone or computer, so the data never leaves it.",
+   "everyday": "Cooking at home instead of sending the ingredients out.",
+   "zh": {
+    "term": "端侧（on-device）",
+    "match": [
+     "端侧"
+    ],
+    "plain": "在你自己的手机或电脑上完成，数据不会离开设备。",
+    "everyday": "在家做饭，而不是把食材送出去。"
+   }
+  },
+  {
+   "id": "privacy",
+   "term": "Privacy mode",
+   "match": [
+    "privacy mode"
+   ],
+   "plain": "A setting that decides where your data may go — nowhere, only your own machine, or a cloud service.",
+   "everyday": "A switch for who is allowed in the room.",
+   "zh": {
+    "term": "隐私模式（privacy mode）",
+    "match": [
+     "隐私模式"
+    ],
+    "plain": "决定你的数据可以去哪里的设置——哪儿都不去、只在本机，或去云服务。",
+    "everyday": "一个决定谁能进房间的开关。"
+   }
+  },
+  {
+   "id": "macos",
+   "term": "macOS, iOS and Xcode",
+   "match": [
+    "Xcode",
+    "iOS",
+    "macOS"
+   ],
+   "plain": "macOS runs Macs and iOS runs iPhones; Xcode is Apple's free app for building apps for both.",
+   "everyday": "The operating systems of Apple's devices, and the workshop for making their apps.",
+   "zh": {
+    "term": "macOS、iOS 与 Xcode",
+    "match": [
+     "Xcode",
+     "iOS",
+     "macOS"
+    ],
+    "plain": "macOS 运行在 Mac 上，iOS 运行在 iPhone 上；Xcode 是苹果免费提供的、为两者开发应用的软件。",
+    "everyday": "苹果设备的操作系统，以及制作它们应用的工坊。"
+   }
+  },
+  {
+   "id": "simulator",
+   "term": "Simulator",
+   "match": [
+    "Simulator",
+    "iPhone Simulator"
+   ],
+   "plain": "A pretend iPhone on your Mac screen, for trying an app without a real phone.",
+   "everyday": "A flight simulator, but for your app.",
+   "zh": {
+    "term": "模拟器（Simulator）",
+    "match": [
+     "模拟器"
+    ],
+    "plain": "Mac 屏幕上的一部虚拟 iPhone，不用真手机就能试用应用。",
+    "everyday": "就像飞行模拟器，只不过模拟的是你的应用。"
+   }
+  },
+  {
+   "id": "release",
+   "term": "Release",
+   "match": [
+    "release",
+    "releases"
+   ],
+   "plain": "A finished version of an app, numbered (like 1.4.4) and made available for people to download.",
+   "everyday": "A new edition of a book going on sale.",
+   "zh": {
+    "term": "发布版本（release）",
+    "match": [
+     "发布版本",
+     "版本发布"
+    ],
+    "plain": "应用的一个完成版本，带编号（比如 1.4.4），供人下载。",
+    "everyday": "一本书的新版上架销售。"
+   },
+   "except": [
+    "press release",
+    "release voice",
+    "release recording",
+    "release recordings"
+   ]
+  },
+  {
+   "id": "spec",
+   "term": "Spec (specification)",
+   "match": [
+    "specification",
+    "specifications"
+   ],
+   "plain": "A written description of what a feature must do, clear enough for someone else to build it.",
+   "everyday": "An architect's brief before anyone picks up a hammer.",
+   "zh": {
+    "term": "规格（spec）",
+    "match": [
+     "规格说明"
+    ],
+    "plain": "一份写清楚某个功能必须做什么的说明，清楚到别人也能照着做出来。",
+    "everyday": "动工之前建筑师写好的设计要求。"
+   }
+  },
+  {
+   "id": "hash",
+   "term": "Hash (checksum)",
+   "match": [
+    "hash",
+    "hashes",
+    "checksum",
+    "checksums",
+    "SHA",
+    "SHA-256"
+   ],
+   "plain": "A short code computed from a file's contents; if even one byte changes, the code changes.",
+   "everyday": "A fingerprint for a file.",
+   "zh": {
+    "term": "哈希（hash / checksum）",
+    "match": [
+     "哈希",
+     "校验和"
+    ],
+    "plain": "根据文件内容算出的一串短码；哪怕改动一个字节，这串码也会变。",
+    "everyday": "文件的指纹。"
+   }
+  },
+  {
+   "id": "pipeline",
+   "term": "Pipeline",
+   "match": [
+    "pipeline",
+    "pipelines"
+   ],
+   "plain": "A chain of steps where each one takes the previous step's output, such as audio → text → answer.",
+   "everyday": "An assembly line.",
+   "zh": {
+    "term": "流水线（pipeline）",
+    "match": [
+     "流水线",
+     "管线"
+    ],
+    "plain": "一串步骤，每一步接收上一步的输出，例如 音频 → 文字 → 回答。",
+    "everyday": "一条装配线。"
+   }
+  },
+  {
+   "id": "stream",
+   "term": "Streaming",
+   "match": [
+    "streaming",
+    "streamed",
+    "streams"
+   ],
+   "plain": "Sending a reply a little at a time as it is produced, instead of all at once at the end.",
+   "everyday": "Watching a video while it downloads.",
+   "zh": {
+    "term": "流式传输（streaming）",
+    "match": [
+     "流式"
+    ],
+    "plain": "边生成边一点点发送回复，而不是最后一次性发出。",
+    "everyday": "边下载边看视频。"
+   }
+  },
+  {
+   "id": "landing-page",
+   "term": "Landing page and CTA",
+   "match": [
+    "landing page",
+    "sales page",
+    "CTA",
+    "call to action"
+   ],
+   "plain": "A single web page that explains an offer and asks the reader to do one thing — the call to action (CTA), such as 'Buy'.",
+   "everyday": "A shop window with one clear sign: 'Come in'.",
+   "zh": {
+    "term": "落地页与行动号召（CTA）",
+    "match": [
+     "落地页",
+     "销售页",
+     "行动号召"
+    ],
+    "plain": "一个介绍某项产品、并请读者做一件事的网页——这件事就是行动号召（CTA），比如“购买”。",
+    "everyday": "一个只挂着一块醒目招牌的橱窗：“请进”。"
+   }
+  },
+  {
+   "id": "funnel",
+   "term": "Funnel",
+   "match": [
+    "funnel",
+    "funnels"
+   ],
+   "plain": "The steps from first hearing about a product to buying it; fewer people make it through each step.",
+   "everyday": "A kitchen funnel: wide at the top, narrow at the bottom.",
+   "zh": {
+    "term": "漏斗（funnel）",
+    "match": [
+     "漏斗"
+    ],
+    "plain": "从第一次听说一个产品到购买它的各个步骤；每一步都会少一些人。",
+    "everyday": "厨房的漏斗：上面宽，下面窄。"
+   }
+  }
+ ],
+ "watch": [
+  "repository",
+  "repo",
+  "commit",
+  "branch",
+  "pull request",
+  "merge",
+  "clone",
+  "push",
+  "terminal",
+  "CLI",
+  "API",
+  "endpoint",
+  "server",
+  "database",
+  "query",
+  "JSON",
+  "localhost",
+  "deploy",
+  "JWT",
+  "LLM",
+  "agent",
+  "prompt",
+  "Ollama",
+  "SaaS",
+  "multi-tenant",
+  "CI",
+  "README",
+  "Markdown",
+  "HTML",
+  "CSS",
+  "Xcode",
+  "Simulator",
+  "checksum",
+  "pipeline",
+  "streaming",
+  "landing page",
+  "CTA",
+  "funnel",
+  "dependency",
+  "package manager",
+  "config",
+  "URL",
+  "Git",
+  "GitHub",
+  "GitHub Pages"
+ ]
+}
