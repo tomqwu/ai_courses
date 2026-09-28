@@ -889,4 +889,4 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
   </section>"""
     return SH.document(f"{short} — module — AI Product Studio", facts["promise"], body, site_base,
                        "module-page", crumbs=SH.module_crumbs(site_base, deck, None),
-                       deck_id=deck["id"], current="module")
+                       deck_id=deck["id"], current="module", mode="overview")

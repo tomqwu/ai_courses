@@ -608,13 +608,23 @@ def run(page, browser, base: str) -> list[str]:
         need("<article" not in text and "class=\"" not in text, f"{built.name}: markup shown as text")
     # The four modes are large tabs under the title of every module page (owner: "people can barely
     # see it"), and they stay in view: they stick under the top bar while the page scrolls.
+    for name in ("m05.html", "lesson-m05.html", "lab-m05.html", "quiz-m05.html", "module-m05.html"):
+        page.goto(f"{base}/{name}")
+        page.wait_for_timeout(200)
+        tabs = page.locator("main .mode-tabs")
+        # the module overview is none of the four modes, so no tab is current there
+        current = 0 if name.startswith("module-") else 1
+        need(tabs.count() == 1 and tabs.is_visible() and tabs.locator("a").count() == 4
+             and tabs.locator('a[aria-current="page"]').count() == current,
+             f"{name}: the Learn · Read · Lab · Check tabs are not shown under the title")
+    # every page of a module offers them, in both editions
+    bare = [p.relative_to(SITE).as_posix() for p in sorted(SITE.glob("*.html")) + sorted(SITE.glob("zh/*.html"))
+            if 'data-deck="' in p.read_text(encoding="utf-8") and 'class="mode-tabs"' not in p.read_text(encoding="utf-8")]
+    need(not bare, f"module pages without the mode tabs: {bare[:5]}")
     for name in ("m05.html", "lesson-m05.html", "lab-m05.html", "quiz-m05.html"):
         page.goto(f"{base}/{name}")
         page.wait_for_timeout(200)
         tabs = page.locator("main .mode-tabs")
-        need(tabs.count() == 1 and tabs.is_visible() and tabs.locator("a").count() == 4
-             and tabs.locator('a[aria-current="page"]').count() == 1,
-             f"{name}: the Learn · Read · Lab · Check tabs are not shown under the title")
         page.mouse.wheel(0, 2500)
         page.wait_for_timeout(300)
         box = tabs.bounding_box()
