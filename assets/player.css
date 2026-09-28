@@ -329,12 +329,12 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
 /* EN / 中文 (#116): the course's language of help. English is the course; 中文 adds a key term's
    Chinese name beside its first use in each part, Chinese in the glossaries, and Chinese controls. */
 .lang-switch { display: flex; flex: none; padding: 3px; border-radius: 10px; background: var(--wash); }
-.lang-switch button {
-  min-height: 38px; padding: 0 10px; border: 0; border-radius: 8px;
-  color: var(--ink-soft); font-size: var(--d-2); font-weight: 600; cursor: pointer;
+.lang-switch a {
+  display: inline-flex; align-items: center; min-height: 38px; padding: 0 10px; border-radius: 8px;
+  color: var(--ink-soft); font-size: var(--d-2); font-weight: 600; text-decoration: none;
 }
-.lang-switch button:hover { color: var(--ink-strong); }
-.app-bar .lang-switch button[aria-pressed="true"] {
+.lang-switch a:hover { color: var(--ink-strong); }
+.app-bar .lang-switch a[aria-current="true"] {
   background: var(--surface); color: var(--ink-strong);
   box-shadow: 0 1px 2px color-mix(in srgb, var(--ink-strong) 14%, transparent);
 }
@@ -369,7 +369,7 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   :root { --bar-h: 56px; }
   .app-bar { gap: 4px; padding: 0 4px; }
   .app-bar .app-bar-menu { width: 44px; padding: 0; justify-content: center; border-color: transparent; }
-  .lang-switch button { min-height: 38px; padding: 0 7px; }
+  .lang-switch a { min-height: 44px; padding: 0 7px; }
   .app-bar-title { display: flex; flex-direction: column; flex: 1; min-width: 0; margin: 0; line-height: 1.25; }
   .app-bar-title span { color: var(--ink-soft); font-size: var(--d-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .app-bar-title strong { color: var(--ink-strong); font-size: var(--d-4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

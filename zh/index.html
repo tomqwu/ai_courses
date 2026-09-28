@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="zh-Hans" class="is-zh" data-editions="en zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Product Studio — 带讲解的课程</title>
+<meta name="description" content="构建、发布并销售三类 AI 产品。九个带讲解的模块，附字幕和文字稿。">
+<link rel="preload" href="../assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/player.css">
+<script src="../assets/ui-zh.js"></script>
+<script src="../assets/locale.js"></script>
+</head>
+<body class="app-page index home-page" data-site-base=".." data-page-base="." data-lang="zh">
+<a class="skip-link" href="#content">跳到正文</a>
+<div class="app">
+<nav class="app-outline" id="app-outline" aria-label="Course outline" data-outline data-tracks="[{&quot;slug&quot;:&quot;aps&quot;,&quot;title&quot;:&quot;\u5b8c\u6574\u5de5\u4f5c\u5ba4\u8bfe\u7a0b&quot;,&quot;href&quot;:&quot;index.html&quot;,&quot;modules&quot;:[[&quot;m00&quot;,[&quot;m00:intro&quot;,&quot;m00:M0.1&quot;,&quot;m00:M0.2&quot;,&quot;m00:M0.3&quot;,&quot;m00:lab&quot;,&quot;m00:quiz&quot;,&quot;m00:summary&quot;]],[&quot;m01&quot;,[&quot;m01:intro&quot;,&quot;m01:M1.1&quot;,&quot;m01:M1.2&quot;,&quot;m01:M1.3&quot;,&quot;m01:lab&quot;,&quot;m01:quiz&quot;,&quot;m01:summary&quot;]],[&quot;m02&quot;,[&quot;m02:intro&quot;,&quot;m02:M2.1&quot;,&quot;m02:M2.2&quot;,&quot;m02:M2.3&quot;,&quot;m02:lab&quot;,&quot;m02:quiz&quot;,&quot;m02:summary&quot;]],[&quot;m03&quot;,[&quot;m03:intro&quot;,&quot;m03:M3.1&quot;,&quot;m03:M3.2&quot;,&quot;m03:M3.3&quot;,&quot;m03:lab&quot;,&quot;m03:quiz&quot;,&quot;m03:summary&quot;]],[&quot;m04&quot;,[&quot;m04:intro&quot;,&quot;m04:M4.1&quot;,&quot;m04:M4.2&quot;,&quot;m04:M4.3&quot;,&quot;m04:lab&quot;,&quot;m04:quiz&quot;,&quot;m04:summary&quot;]],[&quot;m05&quot;,[&quot;m05:intro&quot;,&quot;m05:M5.1&quot;,&quot;m05:M5.2&quot;,&quot;m05:M5.3&quot;,&quot;m05:lab&quot;,&quot;m05:quiz&quot;,&quot;m05:summary&quot;]],[&quot;m06&quot;,[&quot;m06:intro&quot;,&quot;m06:M6.1&quot;,&quot;m06:M6.2&quot;,&quot;m06:M6.3&quot;,&quot;m06:lab&quot;,&quot;m06:quiz&quot;,&quot;m06:summary&quot;]],[&quot;m07&quot;,[&quot;m07:intro&quot;,&quot;m07:M7.1&quot;,&quot;m07:M7.2&quot;,&quot;m07:M7.3&quot;,&quot;m07:lab&quot;,&quot;m07:quiz&quot;,&quot;m07:summary&quot;]],[&quot;m08&quot;,[&quot;m08:intro&quot;,&quot;m08:M8.1&quot;,&quot;m08:M8.2&quot;,&quot;m08:M8.3&quot;,&quot;m08:lab&quot;,&quot;m08:quiz&quot;,&quot;m08:summary&quot;]]]},{&quot;slug&quot;:&quot;on-device-app&quot;,&quot;title&quot;:&quot;\u7aef\u4fa7 AI \u5e94\u7528&quot;,&quot;href&quot;:&quot;path-on-device-app.html&quot;,&quot;modules&quot;:[[&quot;m00&quot;,[&quot;m00:intro&quot;,&quot;m00:M0.1&quot;,&quot;m00:M0.2&quot;,&quot;m00:M0.3&quot;,&quot;m00:lab&quot;,&quot;m00:quiz&quot;,&quot;m00:summary&quot;]],[&quot;m01&quot;,[&quot;m01:intro&quot;,&quot;m01:M1.1&quot;,&quot;m01:M1.2&quot;,&quot;m01:M1.3&quot;,&quot;m01:lab&quot;,&quot;m01:quiz&quot;,&quot;m01:summary&quot;]],[&quot;m02&quot;,[&quot;m02:intro&quot;,&quot;m02:M2.1&quot;,&quot;m02:M2.2&quot;,&quot;m02:M2.3&quot;,&quot;m02:lab&quot;,&quot;m02:quiz&quot;,&quot;m02:summary&quot;]],[&quot;m03&quot;,[&quot;m03:intro&quot;,&quot;m03:M3.1&quot;,&quot;m03:M3.2&quot;,&quot;m03:M3.3&quot;,&quot;m03:lab&quot;,&quot;m03:quiz&quot;,&quot;m03:summary&quot;]],[&quot;m07&quot;,[&quot;m07:intro&quot;,&quot;m07:M7.1&quot;,&quot;m07:M7.2&quot;,&quot;m07:M7.3&quot;,&quot;m07:lab&quot;,&quot;m07:quiz&quot;,&quot;m07:summary&quot;]],[&quot;m08&quot;,[&quot;m08:intro&quot;,&quot;m08:M8.1&quot;,&quot;m08:M8.2&quot;,&quot;m08:summary&quot;]]]},{&quot;slug&quot;:&quot;spec-driven-saas&quot;,&quot;title&quot;:&quot;\u89c4\u683c\u9a71\u52a8 AI SaaS&quot;,&quot;href&quot;:&quot;path-spec-driven-saas.html&quot;,&quot;modules&quot;:[[&quot;m00&quot;,[&quot;m00:intro&quot;,&quot;m00:M0.1&quot;,&quot;m00:M0.2&quot;,&quot;m00:M0.3&quot;,&quot;m00:lab&quot;,&quot;m00:quiz&quot;,&quot;m00:summary&quot;]],[&quot;m01&quot;,[&quot;m01:intro&quot;,&quot;m01:M1.1&quot;,&quot;m01:M1.2&quot;,&quot;m01:M1.3&quot;,&quot;m01:lab&quot;,&quot;m01:quiz&quot;,&quot;m01:summary&quot;]],[&quot;m04&quot;,[&quot;m04:intro&quot;,&quot;m04:M4.1&quot;,&quot;m04:M4.2&quot;,&quot;m04:M4.3&quot;,&quot;m04:lab&quot;,&quot;m04:quiz&quot;,&quot;m04:summary&quot;]],[&quot;m05&quot;,[&quot;m05:intro&quot;,&quot;m05:M5.1&quot;,&quot;m05:M5.2&quot;,&quot;m05:M5.3&quot;,&quot;m05:lab&quot;,&quot;m05:quiz&quot;,&quot;m05:summary&quot;]],[&quot;m07&quot;,[&quot;m07:intro&quot;,&quot;m07:M7.1&quot;,&quot;m07:M7.2&quot;,&quot;m07:M7.3&quot;,&quot;m07:summary&quot;]],[&quot;m08&quot;,[&quot;m08:intro&quot;,&quot;m08:M8.1&quot;,&quot;m08:M8.2&quot;,&quot;m08:summary&quot;]]]},{&quot;slug&quot;:&quot;expertise-product&quot;,&quot;title&quot;:&quot;\u628a\u4e13\u4e1a\u77e5\u8bc6\u505a\u6210\u4ea7\u54c1&quot;,&quot;href&quot;:&quot;path-expertise-product.html&quot;,&quot;modules&quot;:[[&quot;m00&quot;,[&quot;m00:intro&quot;,&quot;m00:M0.1&quot;,&quot;m00:M0.2&quot;,&quot;m00:M0.3&quot;,&quot;m00:lab&quot;,&quot;m00:quiz&quot;,&quot;m00:summary&quot;]],[&quot;m01&quot;,[&quot;m01:intro&quot;,&quot;m01:M1.1&quot;,&quot;m01:M1.2&quot;,&quot;m01:M1.3&quot;,&quot;m01:lab&quot;,&quot;m01:quiz&quot;,&quot;m01:summary&quot;]],[&quot;m06&quot;,[&quot;m06:intro&quot;,&quot;m06:M6.1&quot;,&quot;m06:M6.2&quot;,&quot;m06:M6.3&quot;,&quot;m06:lab&quot;,&quot;m06:quiz&quot;,&quot;m06:summary&quot;]],[&quot;m07&quot;,[&quot;m07:intro&quot;,&quot;m07:M7.1&quot;,&quot;m07:M7.2&quot;,&quot;m07:M7.3&quot;,&quot;m07:lab&quot;,&quot;m07:quiz&quot;,&quot;m07:summary&quot;]],[&quot;m08&quot;,[&quot;m08:intro&quot;,&quot;m08:M8.1&quot;,&quot;m08:M8.2&quot;,&quot;m08:M8.3&quot;,&quot;m08:lab&quot;,&quot;m08:quiz&quot;,&quot;m08:summary&quot;]]]},{&quot;slug&quot;:&quot;github-pages&quot;,&quot;title&quot;:&quot;\u7528 GitHub Pages \u53d1\u5e03\u7f51\u7ad9&quot;,&quot;href&quot;:&quot;path-github-pages.html&quot;,&quot;modules&quot;:[[&quot;m09&quot;,[&quot;m09:intro&quot;,&quot;m09:M9.1&quot;,&quot;m09:M9.2&quot;,&quot;m09:M9.3&quot;,&quot;m09:lab&quot;,&quot;m09:quiz&quot;,&quot;m09:summary&quot;]]]}]"><div class="outline-head"><a class="outline-brand" href="index.html"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="7" fill="#2446c8"/><path d="M9 21.6 16 9.4l7 12.2" fill="none" stroke="#f6f4ef" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.3 18.3h7.4" stroke="#f6f4ef" stroke-width="2.3" stroke-linecap="round"/></svg><span>AI Product Studio</span></a><button type="button" class="outline-close" data-outline-close aria-label="关闭目录"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><button type="button" class="outline-search" data-search-open><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span>搜索课程</span><kbd>⌘K</kbd></button><section class="outline-path" aria-labelledby="outline-path-label" data-outline-path><p class="outline-label" id="outline-path-label">你的路线</p><p class="outline-path-title"><a href="index.html" data-path-title>完整工作室课程</a></p><ol class="path-segments" aria-hidden="true" data-path-segments><li data-seg="m00"></li><li data-seg="m01"></li><li data-seg="m02"></li><li data-seg="m03"></li><li data-seg="m04"></li><li data-seg="m05"></li><li data-seg="m06"></li><li data-seg="m07"></li><li data-seg="m08"></li></ol><p class="outline-path-count" data-path-count>已完成 0 / 9 个模块</p><a class="outline-path-change" href="paths.html">更换路线</a></section><a class="outline-home" href="index.html" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>首页</a><p class="outline-label" id="outline-modules-label">模块</p><ol class="outline-modules" aria-labelledby="outline-modules-label"><li class="outline-module" data-module="m00" data-module-units="m00:intro,m00:M0.1,m00:M0.2,m00:M0.3,m00:lab,m00:quiz,m00:summary"><a href="module-m00.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M0</span><span class="outline-name">导览</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m01" data-module-units="m01:intro,m01:M1.1,m01:M1.2,m01:M1.3,m01:lab,m01:quiz,m01:summary"><a href="module-m01.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M1</span><span class="outline-name">操作系统</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m02" data-module-units="m02:intro,m02:M2.1,m02:M2.2,m02:M2.3,m02:lab,m02:quiz,m02:summary"><a href="module-m02.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M2</span><span class="outline-name">端侧：架构</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m03" data-module-units="m03:intro,m03:M3.1,m03:M3.2,m03:M3.3,m03:lab,m03:quiz,m03:summary"><a href="module-m03.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M3</span><span class="outline-name">端侧：隐私与发布</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m04" data-module-units="m04:intro,m04:M4.1,m04:M4.2,m04:M4.3,m04:lab,m04:quiz,m04:summary"><a href="module-m04.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M4</span><span class="outline-name">规格驱动 SaaS</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m05" data-module-units="m05:intro,m05:M5.1,m05:M5.2,m05:M5.3,m05:lab,m05:quiz,m05:summary"><a href="module-m05.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M5</span><span class="outline-name">多租户安全</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m06" data-module-units="m06:intro,m06:M6.1,m06:M6.2,m06:M6.3,m06:lab,m06:quiz,m06:summary"><a href="module-m06.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M6</span><span class="outline-name">专业知识产品</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m07" data-module-units="m07:intro,m07:M7.1,m07:M7.2,m07:M7.3,m07:lab,m07:quiz,m07:summary"><a href="module-m07.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M7</span><span class="outline-name">变现</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m08" data-module-units="m08:intro,m08:M8.1,m08:M8.2,m08:M8.3,m08:lab,m08:quiz,m08:summary"><a href="module-m08.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M8</span><span class="outline-name">发布与毕业项目</span><span class="sr-only" data-status-text>未开始</span></a></li><li class="outline-module" data-module="m09" data-module-units="m09:intro,m09:M9.1,m09:M9.2,m09:M9.3,m09:lab,m09:quiz,m09:summary"><a href="module-m09.html"><svg class="status-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle class="st-ring" cx="10" cy="10" r="7.6"/><path class="st-half" d="M10 2.4a7.6 7.6 0 0 1 0 15.2z"/><path class="st-check" d="M6.2 10.4l2.6 2.6 5-5.4"/></svg><span class="outline-num">M9</span><span class="outline-name">用 GitHub Pages 发布</span><span class="sr-only" data-status-text>未开始</span></a></li></ol><div class="outline-foot"><a href="glossary.html">术语表</a><a href="evidence.html">你的证据日志</a></div></nav>
+<div class="app-main">
+<header class="app-bar"><button type="button" class="app-bar-menu" data-outline-toggle aria-controls="app-outline" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>目录</span></button><nav class="app-crumbs" aria-label="导航路径"><span aria-current="page">首页</span></nav><p class="app-bar-title" aria-hidden="true"><span></span><strong>首页</strong></p><nav class="lang-switch" aria-label="Language · 语言"><a href="../index.html" data-lang="en" hreflang="en" lang="en">EN</a><a href="index.html" data-lang="zh" hreflang="zh-Hans" lang="zh-Hans" aria-current="true">中文</a></nav><button type="button" class="app-bar-search" data-search-open aria-label="搜索课程" title="搜索课程（⌘K 或 /）"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button></header>
+<main id="content" class="app-content" tabindex="-1">
+<div class="home-returning" data-continue data-home="{&quot;modules&quot;:{&quot;m00&quot;:{&quot;number&quot;:0,&quot;title&quot;:&quot;\u5bfc\u89c8\uff1a\u4e09\u4e2a\u4ea7\u54c1\uff0c\u4e00\u5957\u65b9\u6cd5&quot;,&quot;slides&quot;:19,&quot;lab&quot;:&quot;\u7ea6 30 \u5206\u949f\uff0c\u5305\u62ec\u4e0b\u8f7d\uff08`make setup`\u3001Ollama \u5b89\u88c5\u7a0b\u5e8f\u3001\u6a21\u578b\u62c9\u53d6\uff09\uff1b\u4e0b\u9762\u7684\u300c\u8fdb\u5165\u7b2c 1 \u6a21\u5757\u4e4b\u524d\u300d\u90e8\u5206\u518d\u52a0\u7ea6 10 \u5206\u949f\u3002&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m00.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M0.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M0.1 \u4e09\u79cd\u4ea7\u54c1\u539f\u578b\uff0c\u4e00\u5957\u65b9\u6cd5&quot;,&quot;label&quot;:&quot;\u4e09\u79cd\u4ea7\u54c1\u539f\u578b\uff0c\u4e00\u5957\u65b9\u6cd5&quot;,&quot;first&quot;:3,&quot;last&quot;:7,&quot;href&quot;:&quot;m00.html#slide-3&quot;,&quot;read&quot;:&quot;m01-\u4e3a\u4ec0\u4e48\u662f\u4e09\u79cd\u7c7b\u578b\u4e3a\u4ec0\u4e48\u662f\u8fd9\u4e09\u4e2a\u7ea6-8-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M0.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M0.2 \u4ece\u89c4\u683c\u5230\u4ea4\u4ed8\u7684\u5faa\u73af&quot;,&quot;label&quot;:&quot;\u4ece\u89c4\u683c\u5230\u4ea4\u4ed8\u7684\u5faa\u73af&quot;,&quot;first&quot;:8,&quot;last&quot;:11,&quot;href&quot;:&quot;m00.html#slide-8&quot;,&quot;read&quot;:&quot;m02-\u65b9\u6cd5\u4ece\u89c4\u683c\u5230\u4ea4\u4ed8\u7684\u5faa\u73af\u7ea6-10-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M0.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M0.3 \u642d\u5efa\u73af\u5883\uff0c\u62ff\u5230\u9996\u4e2a\u6210\u679c&quot;,&quot;label&quot;:&quot;\u642d\u5efa\u73af\u5883\uff0c\u62ff\u5230\u9996\u4e2a\u6210\u679c&quot;,&quot;first&quot;:12,&quot;last&quot;:15,&quot;href&quot;:&quot;m00.html#slide-12&quot;,&quot;read&quot;:&quot;m03-\u642d\u5efa\u73af\u5883\u62ff\u5230\u9996\u4e2a\u6210\u679c\u7ea6-12-\u5206\u949f\u8bb2\u6388\u7ea6-30-\u5206\u949f\u52a8\u624b&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M0&quot;,&quot;label&quot;:&quot;\u73af\u5883\u642d\u5efa\u4e0e\u9996\u6b21\u4ea4\u4ed8\u6210\u679c&quot;,&quot;first&quot;:16,&quot;last&quot;:16,&quot;href&quot;:&quot;lab-m00.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:17,&quot;last&quot;:17,&quot;href&quot;:&quot;quiz-m00.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:18,&quot;last&quot;:19,&quot;href&quot;:&quot;m00.html#slide-18&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]},&quot;m01&quot;:{&quot;number&quot;:1,&quot;title&quot;:&quot;AI \u4ea7\u54c1\u64cd\u4f5c\u7cfb\u7edf&quot;,&quot;slides&quot;:25,&quot;lab&quot;:&quot;\u7ea6 2 \u5c0f\u65f6\u3002&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m01.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M1.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M1.1 \u4e3a\u4ec0\u4e48\u6cbb\u7406\u5148\u4e8e\u4ea7\u54c1\u7c7b\u578b&quot;,&quot;label&quot;:&quot;\u4e3a\u4ec0\u4e48\u6cbb\u7406\u5148\u4e8e\u4ea7\u54c1\u7c7b\u578b&quot;,&quot;first&quot;:3,&quot;last&quot;:11,&quot;href&quot;:&quot;m01.html#slide-3&quot;,&quot;read&quot;:&quot;m11-\u7528\u5baa\u7ae0\u548c\u89c4\u5219\u6587\u4ef6\u6cbb\u7406\u667a\u80fd\u4f53\u7ea6-20-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M1.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M1.2 spec-kit \u6d41\u6c34\u7ebf&quot;,&quot;label&quot;:&quot;spec-kit \u6d41\u6c34\u7ebf&quot;,&quot;first&quot;:12,&quot;last&quot;:16,&quot;href&quot;:&quot;m01.html#slide-12&quot;,&quot;read&quot;:&quot;m12-\u89c4\u683c-\u8ba1\u5212-\u667a\u80fd\u4f53\u80fd\u6267\u884c\u7684\u4efb\u52a1\u7ea6-20-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M1.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M1.3 \u6ca1\u6709 CI \u68c0\u67e5\uff0c\u8fd9\u662f\u7b56\u7565&quot;,&quot;label&quot;:&quot;\u6ca1\u6709 CI \u68c0\u67e5\uff0c\u8fd9\u662f\u7b56\u7565&quot;,&quot;first&quot;:17,&quot;last&quot;:21,&quot;href&quot;:&quot;m01.html#slide-17&quot;,&quot;read&quot;:&quot;m13-\u8bc1\u636e\u7eaa\u5f8b\u9a8c\u8bc1\u662f\u4e00\u4efd\u8bb0\u5f55\u800c\u4e0d\u662f\u4e00\u79cd\u611f\u89c9\u7ea6-20-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M1&quot;,&quot;label&quot;:&quot;\u6784\u5efa\u4f60\u7684\u64cd\u4f5c\u7cfb\u7edf&quot;,&quot;first&quot;:22,&quot;last&quot;:22,&quot;href&quot;:&quot;lab-m01.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:23,&quot;last&quot;:23,&quot;href&quot;:&quot;quiz-m01.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:24,&quot;last&quot;:25,&quot;href&quot;:&quot;m01.html#slide-24&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]},&quot;m02&quot;:{&quot;number&quot;:2,&quot;title&quot;:&quot;\u7aef\u4fa7 AI \u5e94\u7528\uff1a\u67b6\u6784&quot;,&quot;slides&quot;:26,&quot;lab&quot;:&quot;\u7ea6 3 \u5c0f\u65f6&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m02.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M2.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M2.1 \u4e00\u6761\u6d41\u6c34\u7ebf\uff0c\u4e24\u5c42\u7ed3\u6784&quot;,&quot;label&quot;:&quot;\u4e00\u6761\u6d41\u6c34\u7ebf\uff0c\u4e24\u5c42\u7ed3\u6784&quot;,&quot;first&quot;:3,&quot;last&quot;:9,&quot;href&quot;:&quot;m02.html#slide-3&quot;,&quot;read&quot;:&quot;m21-\u91c7\u96c6\u8f6c\u5199\u4e0a\u4e0b\u6587\u63d0\u793a\u8bcd\u8def\u7531\u6d41\u6c34\u7ebf\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M2.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M2.2 \u4e09\u4e2a\u89d2\u8272\uff0c\u4e09\u4e2a\u6a21\u578b&quot;,&quot;label&quot;:&quot;\u4e09\u4e2a\u89d2\u8272\uff0c\u4e09\u4e2a\u6a21\u578b&quot;,&quot;first&quot;:10,&quot;last&quot;:16,&quot;href&quot;:&quot;m02.html#slide-10&quot;,&quot;read&quot;:&quot;m22-\u6309\u89d2\u8272\u7684\u6a21\u578b\u8def\u7531\u4e0e\u63d0\u793a\u8bcd\u6784\u5efa\u5668\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M2.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M2.3 \u4e3b\u52a8\u5373\u514b\u5236&quot;,&quot;label&quot;:&quot;\u4e3b\u52a8\u5373\u514b\u5236&quot;,&quot;first&quot;:17,&quot;last&quot;:22,&quot;href&quot;:&quot;m02.html#slide-17&quot;,&quot;read&quot;:&quot;m23-\u4e0d\u9760\u9b54\u6cd5\u7684\u4e3b\u52a8\u667a\u80fd\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M2&quot;,&quot;label&quot;:&quot;\u6784\u5efa TinyCopilot \u7684\u6838\u5fc3&quot;,&quot;first&quot;:23,&quot;last&quot;:23,&quot;href&quot;:&quot;lab-m02.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:24,&quot;last&quot;:24,&quot;href&quot;:&quot;quiz-m02.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:25,&quot;last&quot;:26,&quot;href&quot;:&quot;m02.html#slide-25&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]},&quot;m03&quot;:{&quot;number&quot;:3,&quot;title&quot;:&quot;\u7aef\u4fa7 AI \u5e94\u7528\uff1a\u9690\u79c1\u3001\u6d4b\u8bd5\u4e0e\u4ea4\u4ed8&quot;,&quot;slides&quot;:27,&quot;lab&quot;:&quot;\u7ea6 3 \u5c0f\u65f6&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m03.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M3.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M3.1 \u9690\u79c1\u662f\u4e00\u79cd\u6a21\u5f0f\uff0c\u4e0d\u662f\u4e00\u53e5\u53e3\u53f7&quot;,&quot;label&quot;:&quot;\u9690\u79c1\u662f\u4e00\u79cd\u6a21\u5f0f\uff0c\u4e0d\u662f\u4e00\u53e5\u53e3\u53f7&quot;,&quot;first&quot;:3,&quot;last&quot;:11,&quot;href&quot;:&quot;m03.html#slide-3&quot;,&quot;read&quot;:&quot;m31-\u9690\u79c1\u662f\u4e00\u79cd\u6a21\u5f0f\u4e0d\u662f\u4e00\u53e5\u53e3\u53f7\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M3.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M3.2 \u6d4b\u8bd5\u5c31\u662f\u5c42\u7ea7\u5206\u914d&quot;,&quot;label&quot;:&quot;\u6d4b\u8bd5\u5c31\u662f\u5c42\u7ea7\u5206\u914d&quot;,&quot;first&quot;:12,&quot;last&quot;:18,&quot;href&quot;:&quot;m03.html#slide-12&quot;,&quot;read&quot;:&quot;m32-\u6d4b\u8bd5\u5e95\u7ebf\u5951\u7ea6\u4ee5\u53ca-ci-\u505a\u4e0d\u5230\u7684\u4e8b\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M3.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M3.3 \u5b8c\u6210\u5373\u5df2\u5408\u5e76\uff1b\u5df2\u53d1\u5e03\u8981\u62ff\u51fa\u8bc1\u660e&quot;,&quot;label&quot;:&quot;\u5b8c\u6210\u5373\u5df2\u5408\u5e76\uff1b\u5df2\u53d1\u5e03\u8981\u62ff\u51fa\u8bc1\u660e&quot;,&quot;first&quot;:19,&quot;last&quot;:23,&quot;href&quot;:&quot;m03.html#slide-19&quot;,&quot;read&quot;:&quot;m33-\u4ea4\u4ed8\u53d1\u5e03\u7eaa\u5f8b\u4e0e\u7ade\u4e89\u5b9a\u4f4d\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M3&quot;,&quot;label&quot;:&quot;\u52a0\u56fa\u3001\u8bc1\u660e\u3001\u5b9a\u4f4d&quot;,&quot;first&quot;:24,&quot;last&quot;:24,&quot;href&quot;:&quot;lab-m03.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:25,&quot;last&quot;:25,&quot;href&quot;:&quot;quiz-m03.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:26,&quot;last&quot;:27,&quot;href&quot;:&quot;m03.html#slide-26&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]},&quot;m04&quot;:{&quot;number&quot;:4,&quot;title&quot;:&quot;\u89c4\u683c\u9a71\u52a8\u7684 SaaS\uff1a\u4ece\u60f3\u6cd5\u5230\u53ef\u6267\u884c\u89c4\u683c&quot;,&quot;slides&quot;:28,&quot;lab&quot;:&quot;90\u2013120 \u5206\u949f\u3002&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m04.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M4.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M4.1 \u547d\u4ee4\u94fe&quot;,&quot;label&quot;:&quot;\u547d\u4ee4\u94fe&quot;,&quot;first&quot;:3,&quot;last&quot;:9,&quot;href&quot;:&quot;m04.html#slide-3&quot;,&quot;read&quot;:&quot;m41-\u5b8c\u6574\u7684\u4ea7\u7269\u6d41\u6c34\u7ebf\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M4.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M4.2 \u964c\u751f\u4eba\u6d4b\u8bd5&quot;,&quot;label&quot;:&quot;\u964c\u751f\u4eba\u6d4b\u8bd5&quot;,&quot;first&quot;:10,&quot;last&quot;:18,&quot;href&quot;:&quot;m04.html#slide-10&quot;,&quot;read&quot;:&quot;m42-\u89c4\u683c\u8d28\u91cf\u4ec0\u4e48\u6837\u7684\u89c4\u683c\u667a\u80fd\u4f53\u53ef\u4ee5\u6267\u884c\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M4.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M4.3 \u4e00\u4e2a\u6545\u4e8b\u4e00\u4e2a PR&quot;,&quot;label&quot;:&quot;\u4e00\u4e2a\u6545\u4e8b\u4e00\u4e2a PR&quot;,&quot;first&quot;:19,&quot;last&quot;:24,&quot;href&quot;:&quot;m04.html#slide-19&quot;,&quot;read&quot;:&quot;m43-\u4ece\u4efb\u52a1\u5230-pr\u8bda\u5b9e\u7684\u53d8\u66f4\u8bb0\u5f55\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M4&quot;,&quot;label&quot;:&quot;\u4e3a\u4e00\u4e2a\u771f\u5b9e\u529f\u80fd\u5199\u89c4\u683c&quot;,&quot;first&quot;:25,&quot;last&quot;:25,&quot;href&quot;:&quot;lab-m04.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:26,&quot;last&quot;:26,&quot;href&quot;:&quot;quiz-m04.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:27,&quot;last&quot;:28,&quot;href&quot;:&quot;m04.html#slide-27&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]},&quot;m05&quot;:{&quot;number&quot;:5,&quot;title&quot;:&quot;\u591a\u79df\u6237\u5b89\u5168\u4e0e\u9a8c\u6536\u5173\u5361&quot;,&quot;slides&quot;:25,&quot;lab&quot;:&quot;\u7ea6 3 \u5c0f\u65f6&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m05.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M5.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M5.1 \u89c4\u5219\u5199\u5728 `AGENTS.md` \u91cc&quot;,&quot;label&quot;:&quot;\u89c4\u5219\u5199\u5728 `AGENTS.md` \u91cc&quot;,&quot;first&quot;:3,&quot;last&quot;:8,&quot;href&quot;:&quot;m05.html#slide-3&quot;,&quot;read&quot;:&quot;m51-\u591a\u79df\u6237\u662f\u4e00\u6761-p0-\u7ea7\u6587\u5316\u89c4\u5219\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M5.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M5.2 \u4e24\u5957\u8bcd\u6c47\uff0c\u4e00\u4e2a\u6570\u7ec4&quot;,&quot;label&quot;:&quot;\u4e24\u5957\u8bcd\u6c47\uff0c\u4e00\u4e2a\u6570\u7ec4&quot;,&quot;first&quot;:9,&quot;last&quot;:14,&quot;href&quot;:&quot;m05.html#slide-9&quot;,&quot;read&quot;:&quot;m52-\u6b63\u786e\u7684-rbac\u6743\u9650-\u8d44\u683c\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M5.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M5.3 \u4e03\u4e2a\u5c42\u7ea7\uff0c\u5404\u81ea\u72ec\u7acb\u7684\u8fdb\u7a0b&quot;,&quot;label&quot;:&quot;\u4e03\u4e2a\u5c42\u7ea7\uff0c\u5404\u81ea\u72ec\u7acb\u7684\u8fdb\u7a0b&quot;,&quot;first&quot;:15,&quot;last&quot;:21,&quot;href&quot;:&quot;m05.html#slide-15&quot;,&quot;read&quot;:&quot;m53-\u9a8c\u6536\u4e03\u4e2a\u5c42\u7ea7\u8fd0\u8425\u624b\u518c\u548c\u4e00\u4efd\u8bda\u5b9e\u7684\u6e05\u5355\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M5&quot;,&quot;label&quot;:&quot;\u9694\u79bb\u4e0e\u9a8c\u6536&quot;,&quot;first&quot;:22,&quot;last&quot;:22,&quot;href&quot;:&quot;lab-m05.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:23,&quot;last&quot;:23,&quot;href&quot;:&quot;quiz-m05.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:24,&quot;last&quot;:25,&quot;href&quot;:&quot;m05.html#slide-24&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]},&quot;m06&quot;:{&quot;number&quot;:6,&quot;title&quot;:&quot;\u4e13\u4e1a\u77e5\u8bc6\u4ea7\u54c1\uff1a\u8bc1\u636e\u3001\u8def\u7ebf\u4e0e\u7248\u6b21&quot;,&quot;slides&quot;:28,&quot;lab&quot;:&quot;\u7ea6 2.5 \u5c0f\u65f6&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m06.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M6.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M6.1 \u53ef\u4fe1\u5ea6\u5c31\u662f\u4ea7\u54c1&quot;,&quot;label&quot;:&quot;\u53ef\u4fe1\u5ea6\u5c31\u662f\u4ea7\u54c1&quot;,&quot;first&quot;:3,&quot;last&quot;:10,&quot;href&quot;:&quot;m06.html#slide-3&quot;,&quot;read&quot;:&quot;m61-\u53ef\u4fe1\u5ea6\u5c31\u662f\u4ea7\u54c1\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M6.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M6.2 \u4e00\u4e2a\u7814\u7a76\u5e93\uff0c\u591a\u7c7b\u53d7\u4f17&quot;,&quot;label&quot;:&quot;\u4e00\u4e2a\u7814\u7a76\u5e93\uff0c\u591a\u7c7b\u53d7\u4f17&quot;,&quot;first&quot;:11,&quot;last&quot;:17,&quot;href&quot;:&quot;m06.html#slide-11&quot;,&quot;read&quot;:&quot;m62-\u4e00\u4e2a\u7814\u7a76\u5e93\u591a\u7c7b\u53d7\u4f17\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M6.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M6.3 \u5185\u5bb9\u5373\u4ee3\u7801&quot;,&quot;label&quot;:&quot;\u5185\u5bb9\u5373\u4ee3\u7801&quot;,&quot;first&quot;:18,&quot;last&quot;:24,&quot;href&quot;:&quot;m06.html#slide-18&quot;,&quot;read&quot;:&quot;m63-\u5185\u5bb9\u5373\u4ee3\u7801\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M6&quot;,&quot;label&quot;:&quot;\u6784\u5efa\u4e00\u4efd\u8ff7\u4f60\u7b80\u62a5&quot;,&quot;first&quot;:25,&quot;last&quot;:25,&quot;href&quot;:&quot;lab-m06.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:26,&quot;last&quot;:26,&quot;href&quot;:&quot;quiz-m06.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:27,&quot;last&quot;:28,&quot;href&quot;:&quot;m06.html#slide-27&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]},&quot;m07&quot;:{&quot;number&quot;:7,&quot;title&quot;:&quot;\u53d8\u73b0\uff1a\u5b9a\u4ef7\u3001\u5305\u88c5\u4e0e\u5b9a\u4f4d&quot;,&quot;slides&quot;:28,&quot;lab&quot;:&quot;\u7ea6 2 \u5c0f\u65f6&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m07.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M7.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M7.1 \u6210\u672c\u600e\u6837\u91cd\u590d\u53d1\u751f\uff0c\u5c31\u600e\u6837\u5b9a\u4ef7&quot;,&quot;label&quot;:&quot;\u6210\u672c\u600e\u6837\u91cd\u590d\u53d1\u751f\uff0c\u5c31\u600e\u6837\u5b9a\u4ef7&quot;,&quot;first&quot;:3,&quot;last&quot;:12,&quot;href&quot;:&quot;m07.html#slide-3&quot;,&quot;read&quot;:&quot;m71-\u4e3a\u4e09\u79cd\u4ea7\u54c1\u539f\u578b\u5b9a\u4ef7\u7ea6-20-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M7.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M7.2 \u76f4\u64ad\u73ed\u548c\u81ea\u5b66\u7248\u662f\u4e24\u79cd\u4ea7\u54c1&quot;,&quot;label&quot;:&quot;\u76f4\u64ad\u73ed\u548c\u81ea\u5b66\u7248\u662f\u4e24\u79cd\u4ea7\u54c1&quot;,&quot;first&quot;:13,&quot;last&quot;:19,&quot;href&quot;:&quot;m07.html#slide-13&quot;,&quot;read&quot;:&quot;m72-\u5305\u88c5\u4e0e\u5e73\u53f0\u7ea6-20-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M7.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M7.3 \u4e3b\u89d2\u662f\u4e70\u5bb6&quot;,&quot;label&quot;:&quot;\u4e3b\u89d2\u662f\u4e70\u5bb6&quot;,&quot;first&quot;:20,&quot;last&quot;:24,&quot;href&quot;:&quot;m07.html#slide-20&quot;,&quot;read&quot;:&quot;m73-\u80fd\u5e26\u6765\u8f6c\u5316\u7684\u8bda\u5b9e\u8425\u9500\u7ea6-20-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M7&quot;,&quot;label&quot;:&quot;\u4e3a\u4f60\u7684\u4ea7\u54c1\u5b9a\u4ef7\u548c\u5b9a\u4f4d&quot;,&quot;first&quot;:25,&quot;last&quot;:25,&quot;href&quot;:&quot;lab-m07.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:26,&quot;last&quot;:26,&quot;href&quot;:&quot;quiz-m07.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:27,&quot;last&quot;:28,&quot;href&quot;:&quot;m07.html#slide-27&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]},&quot;m08&quot;:{&quot;number&quot;:8,&quot;title&quot;:&quot;\u53d1\u5e03\uff1a\u9500\u552e\u9875\u3001\u90ae\u4ef6\u5e8f\u5217\u4e0e\u7ed3\u4e1a\u9879\u76ee&quot;,&quot;slides&quot;:27,&quot;lab&quot;:&quot;1\u20132 \u5468\u5185 6\u201310 \u5c0f\u65f6\uff08\u540c\u671f\u73ed\uff1a\u7b2c 8 \u5468\uff0c\u5728\u6f14\u793a\u65e5\u7ed3\u675f\uff09&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m08.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M8.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M8.1 \u9875\u9762\u662f\u4e00\u4e2a\u5e8f\u5217\uff0c\u800c\u4e0d\u662f\u4e00\u5806\u5185\u5bb9&quot;,&quot;label&quot;:&quot;\u9875\u9762\u662f\u4e00\u4e2a\u5e8f\u5217\uff0c\u800c\u4e0d\u662f\u4e00\u5806\u5185\u5bb9&quot;,&quot;first&quot;:3,&quot;last&quot;:10,&quot;href&quot;:&quot;m08.html#slide-3&quot;,&quot;read&quot;:&quot;m81-\u9500\u552e\u9875\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M8.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M8.2 \u4e24\u4e2a\u9636\u6bb5\uff0c\u4e03\u5c01\u90ae\u4ef6&quot;,&quot;label&quot;:&quot;\u4e24\u4e2a\u9636\u6bb5\uff0c\u4e03\u5c01\u90ae\u4ef6&quot;,&quot;first&quot;:11,&quot;last&quot;:18,&quot;href&quot;:&quot;m08.html#slide-11&quot;,&quot;read&quot;:&quot;m82-\u53d1\u5e03\u90ae\u4ef6\u5e8f\u5217\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M8.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M8.3 \u7ed3\u4e1a\u9879\u76ee\u5951\u7ea6&quot;,&quot;label&quot;:&quot;\u7ed3\u4e1a\u9879\u76ee\u5951\u7ea6&quot;,&quot;first&quot;:19,&quot;last&quot;:23,&quot;href&quot;:&quot;m08.html#slide-19&quot;,&quot;read&quot;:&quot;m83-\u7ed3\u4e1a\u9879\u76ee\u4ea4\u4ed8\u4e0e\u6f14\u793a\u7ea6-25-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M8&quot;,&quot;label&quot;:&quot;\u7ed3\u4e1a\u9879\u76ee&quot;,&quot;first&quot;:24,&quot;last&quot;:24,&quot;href&quot;:&quot;lab-m08.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:25,&quot;last&quot;:25,&quot;href&quot;:&quot;quiz-m08.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:26,&quot;last&quot;:27,&quot;href&quot;:&quot;m08.html#slide-26&quot;,&quot;read&quot;:&quot;\u56de\u987e\u8bfe\u7a0b\u5c42\u9762\u95ed\u5408\u7684\u5faa\u73af&quot;}]},&quot;m09&quot;:{&quot;number&quot;:9,&quot;title&quot;:&quot;\u7528 GitHub Pages \u53d1\u5e03\u4ea7\u54c1\u76ee\u5f55&quot;,&quot;slides&quot;:25,&quot;lab&quot;:&quot;60\u201390 \u5206\u949f\uff0c\u5927\u90e8\u5206\u65f6\u95f4\u82b1\u5728\u5b89\u88c5\u4e0a&quot;,&quot;questions&quot;:8,&quot;units&quot;:[{&quot;id&quot;:&quot;intro&quot;,&quot;kind&quot;:&quot;intro&quot;,&quot;name&quot;:&quot;\u5bfc\u8bba&quot;,&quot;label&quot;:&quot;Introduction&quot;,&quot;first&quot;:1,&quot;last&quot;:2,&quot;href&quot;:&quot;m09.html#slide-1&quot;,&quot;read&quot;:&quot;\u6982\u89c8&quot;},{&quot;id&quot;:&quot;M9.1&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M9.1 \u56db\u6837\u4e1c\u897f\uff0c\u5404\u7ba1\u4e00\u4ef6\u4e8b&quot;,&quot;label&quot;:&quot;\u56db\u6837\u4e1c\u897f\uff0c\u5404\u7ba1\u4e00\u4ef6\u4e8b&quot;,&quot;first&quot;:3,&quot;last&quot;:8,&quot;href&quot;:&quot;m09.html#slide-3&quot;,&quot;read&quot;:&quot;m91-\u4f60\u7684\u5de5\u5177\u5df2\u5b89\u88c5\u5e76\u5df2\u8bc1\u660e\u7ea6-15-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M9.2&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M9.2 \u4f60\u603b\u662f\u8eab\u5904\u67d0\u4e2a\u4f4d\u7f6e&quot;,&quot;label&quot;:&quot;\u4f60\u603b\u662f\u8eab\u5904\u67d0\u4e2a\u4f4d\u7f6e&quot;,&quot;first&quot;:9,&quot;last&quot;:14,&quot;href&quot;:&quot;m09.html#slide-9&quot;,&quot;read&quot;:&quot;m92-\u5b66\u4f1a\u627e\u8def\u7136\u540e\u514b\u9686\u7ea6-15-\u5206\u949f&quot;},{&quot;id&quot;:&quot;M9.3&quot;,&quot;kind&quot;:&quot;segment&quot;,&quot;name&quot;:&quot;M9.3 \u4e94\u4e2a\u6587\u4ef6\uff0c\u4f60\u53ea\u6539\u4e00\u4e2a&quot;,&quot;label&quot;:&quot;\u4e94\u4e2a\u6587\u4ef6\uff0c\u4f60\u53ea\u6539\u4e00\u4e2a&quot;,&quot;first&quot;:15,&quot;last&quot;:21,&quot;href&quot;:&quot;m09.html#slide-15&quot;,&quot;read&quot;:&quot;m93-\u505a\u51fa\u4ea7\u54c1\u76ee\u5f55\u7136\u540e\u53d1\u5e03\u7ea6-15-\u5206\u949f&quot;},{&quot;id&quot;:&quot;lab&quot;,&quot;kind&quot;:&quot;lab&quot;,&quot;name&quot;:&quot;\u5b9e\u9a8c M9&quot;,&quot;label&quot;:&quot;\u53d1\u5e03\u4f60\u7684\u4ea7\u54c1\u76ee\u5f55&quot;,&quot;first&quot;:22,&quot;last&quot;:22,&quot;href&quot;:&quot;lab-m09.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;quiz&quot;,&quot;kind&quot;:&quot;quiz&quot;,&quot;name&quot;:&quot;\u77e5\u8bc6\u6d4b\u9a8c&quot;,&quot;label&quot;:&quot;Knowledge check&quot;,&quot;first&quot;:23,&quot;last&quot;:23,&quot;href&quot;:&quot;quiz-m09.html&quot;,&quot;read&quot;:&quot;&quot;},{&quot;id&quot;:&quot;summary&quot;,&quot;kind&quot;:&quot;summary&quot;,&quot;name&quot;:&quot;\u603b\u7ed3&quot;,&quot;label&quot;:&quot;Summary&quot;,&quot;first&quot;:24,&quot;last&quot;:25,&quot;href&quot;:&quot;m09.html#slide-24&quot;,&quot;read&quot;:&quot;\u56de\u987e&quot;}]}}}" hidden>
+  <header class="page-head home-head">
+    <h1>从上次停下的地方继续</h1>
+    <p class="page-lede"><span data-home-path>完整工作室课程</span> · 实验对照真实仓库，按通过/不通过评分 · <a href="paths.html">更换路线</a></p>
+  </header>
+  <section class="resume-card" aria-labelledby="resume-title">
+    <div class="resume-thumb" aria-hidden="true">
+      <span class="thumb-kicker" data-thumb-kicker></span>
+      <span class="thumb-title" data-thumb-title></span>
+      <span class="thumb-line"></span><span class="thumb-line is-short"></span>
+    </div>
+    <div class="resume-body">
+      <p class="resume-where" data-resume-where></p>
+      <h2 id="resume-title" data-resume-unit></h2>
+      <p class="resume-slide" data-resume-slide></p>
+      <p class="card-progress"><span class="card-bar"><span class="card-bar-fill" data-resume-fill></span></span>
+        <span class="card-count" data-resume-count></span></p>
+      <div class="resume-actions">
+        <a class="btn-start" href="index.html" data-resume-link data-continue-link>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4l13 8-13 8z" fill="currentColor" stroke="none"/></svg>
+          <span>继续学习</span></a>
+        <a class="btn-outline" href="index.html" data-resume-read>改为阅读这一段</a>
+      </div>
+    </div>
+  </section>
+  <div class="home-row">
+    <section class="next-steps" aria-labelledby="next-title">
+      <h2 id="next-title" data-next-title>Next</h2>
+      <ul class="next-list" data-next-list></ul>
+    </section>
+    <section class="proof-card-dark" aria-labelledby="proof-card-title" data-proof-card><h2 id="proof-card-title">每次构建，这门课程都会检查自己的这些方面</h2><div class="proof-nums"><div class="proof-num"><span class="proof-value">2,689</span><span class="proof-label">个文件指针在固定提交处可解析</span></div><div class="proof-num"><span class="proof-value">155</span><span class="proof-label">个引用范围与所引代码锁定</span></div><div class="proof-num"><span class="proof-value">233</span><span class="proof-label">/ 258 个部分已录制，字幕与审定讲解稿一致</span></div></div><a href="proof.html">每个数字如何核验</a></section>
+  </div>
+  <div class="progress-tools">
+    <span>你的进度保存在此浏览器中。</span>
+    <button type="button" data-progress-export title="把进度下载为 JSON">导出进度</button>
+    <button type="button" data-progress-import title="载入进度文件">导入</button>
+    <button type="button" data-progress-reset>重置</button>
+  </div>
+</div>
+<div class="home-new" data-home-new>
+<header class="page-head"><p class="page-kicker">AI Product Studio · 2026.09 版 · 九个模块</p><h1>交付经得起多疑工程师审计的 AI 产品。</h1><p class="page-lede">三个生产级仓库——一个端侧会议助手、一个由 AI 智能体在书面规则下构建的多租户 SaaS，以及一个引证充分的简报网站——按同一套方法来教：写规格、构建、验证、证明。九个带讲解的模块，通过标准客观的实验，以及一门每次构建都会检查自身主张的课程。</p><ul class="site-facts">
+      <li>258 个讲解部分，以文字呈现</li>
+      <li>阅读 · 搜索 · 打印</li>
+      <li>设计沿用 ai_qe</li>
+    </ul>
+    <div class="hero-actions">
+      <a class="btn-hero" href="lab-m00.html">从这里开始：大约 30 分钟拿下第一个成果 →</a>
+      <a class="btn-hero-quiet" href="proof.html">看看这个网站能证明自己什么</a>
+    </div></header>
+<section class="proof-card-dark" aria-labelledby="proof-card-title" data-proof-card><h2 id="proof-card-title">每次构建，这门课程都会检查自己的这些方面</h2><div class="proof-nums"><div class="proof-num"><span class="proof-value">2,689</span><span class="proof-label">个文件指针在固定提交处可解析</span></div><div class="proof-num"><span class="proof-value">155</span><span class="proof-label">个引用范围与所引代码锁定</span></div><div class="proof-num"><span class="proof-value">233</span><span class="proof-label">/ 258 个部分已录制，字幕与审定讲解稿一致</span></div></div><a href="proof.html">每个数字如何核验</a></section>
+</div>
+  <div class="section-heading">
+    <h2>从你想构建的东西开始</h2>
+    <span class="section-note">每条路线完整地教一种产品类型。不确定什么是<a href="paths.html">路线或单元</a>？</span>
+  </div>
+  <div class="path-grid">
+<article class="path-card">
+  <div class="path-head">
+    <p class="path-kicker">全部三类产品</p>
+    <h3><a href="index.html">完整工作室课程</a></h3>
+    <p class="path-meta">9 个模块 · 63 个单元 · 讲解 135.7 分钟</p>
+    <p class="card-progress"><span class="card-bar" data-ring-units="m00:intro,m00:M0.1,m00:M0.2,m00:M0.3,m00:lab,m00:quiz,m00:summary,m01:intro,m01:M1.1,m01:M1.2,m01:M1.3,m01:lab,m01:quiz,m01:summary,m02:intro,m02:M2.1,m02:M2.2,m02:M2.3,m02:lab,m02:quiz,m02:summary,m03:intro,m03:M3.1,m03:M3.2,m03:M3.3,m03:lab,m03:quiz,m03:summary,m04:intro,m04:M4.1,m04:M4.2,m04:M4.3,m04:lab,m04:quiz,m04:summary,m05:intro,m05:M5.1,m05:M5.2,m05:M5.3,m05:lab,m05:quiz,m05:summary,m06:intro,m06:M6.1,m06:M6.2,m06:M6.3,m06:lab,m06:quiz,m06:summary,m07:intro,m07:M7.1,m07:M7.2,m07:M7.3,m07:lab,m07:quiz,m07:summary,m08:intro,m08:M8.1,m08:M8.2,m08:M8.3,m08:lab,m08:quiz,m08:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+      <span class="card-count" data-ring-text></span></p>
+  </div>
+  <div class="path-body">
+    <p class="path-promise">构建、发布并销售全部三类 AI 产品——最后完成一个评分的毕业项目、一套发布节奏和一个站得住的定价。</p>
+    <dl class="at-a-glance"><div class="aga-item"><dt>你将构建</dt><dd>全部三类</dd></div><div class="aga-item"><dt>难度</dt><dd>入门到中级</dd></div><div class="aga-item"><dt>角色</dt><dd>创始人 · 产品工程师</dd></div><div class="aga-item"><dt>价格</dt><dd>自学 $399 · 训练营 $1,490</dd></div></dl>
+    <p class="path-status"><span class="voice-chip is-release">全部九个模块</span></p>
+    <a class="btn-primary" href="index.html">浏览全部模块 →</a>
+  </div>
+</article>
+<article class="path-card">
+  <div class="path-head">
+    <p class="path-kicker">类型 1 · 带应用的 AI</p>
+    <h3><a href="path-on-device-app.html">端侧 AI 应用</a></h3>
+    <p class="path-meta">6 个模块 · 39 个单元 · 讲解 84.6 分钟</p>
+    <p class="card-progress"><span class="card-bar" data-ring-units="m00:intro,m00:M0.1,m00:M0.2,m00:M0.3,m00:lab,m00:quiz,m00:summary,m01:intro,m01:M1.1,m01:M1.2,m01:M1.3,m01:lab,m01:quiz,m01:summary,m02:intro,m02:M2.1,m02:M2.2,m02:M2.3,m02:lab,m02:quiz,m02:summary,m03:intro,m03:M3.1,m03:M3.2,m03:M3.3,m03:lab,m03:quiz,m03:summary,m07:intro,m07:M7.1,m07:M7.2,m07:M7.3,m07:lab,m07:quiz,m07:summary,m08:intro,m08:M8.1,m08:M8.2,m08:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+      <span class="card-count" data-ring-text></span></p>
+  </div>
+  <div class="path-body">
+    <p class="path-promise">发布一个本地优先的 AI 应用，它的隐私承诺由代码强制执行，并由测试证明。</p>
+    <dl class="at-a-glance"><div class="aga-item"><dt>你将构建</dt><dd>应用</dd></div><div class="aga-item"><dt>难度</dt><dd>入门到中级</dd></div><div class="aga-item"><dt>角色</dt><dd>iOS / macOS 工程师 · 独立开发者</dd></div><div class="aga-item"><dt>价格</dt><dd>$199</dd></div></dl>
+    <p class="path-status"><span class="voice-chip is-release">路线页面</span></p>
+    <a class="btn-primary" href="path-on-device-app.html">打开这条路线 →</a>
+  </div>
+</article>
+<article class="path-card">
+  <div class="path-head">
+    <p class="path-kicker">类型 2 · 带 Web 的 AI</p>
+    <h3><a href="path-spec-driven-saas.html">规格驱动 AI SaaS</a></h3>
+    <p class="path-meta">6 个模块 · 37 个单元 · 讲解 89.4 分钟</p>
+    <p class="card-progress"><span class="card-bar" data-ring-units="m00:intro,m00:M0.1,m00:M0.2,m00:M0.3,m00:lab,m00:quiz,m00:summary,m01:intro,m01:M1.1,m01:M1.2,m01:M1.3,m01:lab,m01:quiz,m01:summary,m04:intro,m04:M4.1,m04:M4.2,m04:M4.3,m04:lab,m04:quiz,m04:summary,m05:intro,m05:M5.1,m05:M5.2,m05:M5.3,m05:lab,m05:quiz,m05:summary,m07:intro,m07:M7.1,m07:M7.2,m07:M7.3,m07:summary,m08:intro,m08:M8.1,m08:M8.2,m08:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+      <span class="card-count" data-ring-text></span></p>
+  </div>
+  <div class="path-body">
+    <p class="path-promise">一个经得起陌生人测试的规格文件夹，以及经得起多疑审计者的验收证据。</p>
+    <dl class="at-a-glance"><div class="aga-item"><dt>你将构建</dt><dd>Web</dd></div><div class="aga-item"><dt>难度</dt><dd>中级</dd></div><div class="aga-item"><dt>角色</dt><dd>后端工程师 · SaaS 构建者</dd></div><div class="aga-item"><dt>价格</dt><dd>$199</dd></div></dl>
+    <p class="path-status"><span class="voice-chip is-release">路线页面</span></p>
+    <a class="btn-primary" href="path-spec-driven-saas.html">打开这条路线 →</a>
+  </div>
+</article>
+<article class="path-card">
+  <div class="path-head">
+    <p class="path-kicker">类型 3 · 带内容的 AI</p>
+    <h3><a href="path-expertise-product.html">把专业知识做成产品</a></h3>
+    <p class="path-meta">5 个模块 · 35 个单元 · 讲解 70.8 分钟</p>
+    <p class="card-progress"><span class="card-bar" data-ring-units="m00:intro,m00:M0.1,m00:M0.2,m00:M0.3,m00:lab,m00:quiz,m00:summary,m01:intro,m01:M1.1,m01:M1.2,m01:M1.3,m01:lab,m01:quiz,m01:summary,m06:intro,m06:M6.1,m06:M6.2,m06:M6.3,m06:lab,m06:quiz,m06:summary,m07:intro,m07:M7.1,m07:M7.2,m07:M7.3,m07:lab,m07:quiz,m07:summary,m08:intro,m08:M8.1,m08:M8.2,m08:M8.3,m08:lab,m08:quiz,m08:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+      <span class="card-count" data-ring-text></span></p>
+  </div>
+  <div class="path-body">
+    <p class="path-promise">每个公开的主张都带有日期、样本、方法、单位和层级——漏斗卖的是一项测量，而不是一个承诺。</p>
+    <dl class="at-a-glance"><div class="aga-item"><dt>你将构建</dt><dd>内容</dd></div><div class="aga-item"><dt>难度</dt><dd>中级</dd></div><div class="aga-item"><dt>角色</dt><dd>顾问 · 领域专家 · 教育者</dd></div><div class="aga-item"><dt>价格</dt><dd>$199</dd></div></dl>
+    <p class="path-status"><span class="voice-chip is-release">路线页面</span></p>
+    <a class="btn-primary" href="path-expertise-product.html">打开这条路线 →</a>
+  </div>
+</article>
+<article class="path-card">
+  <div class="path-head">
+    <p class="path-kicker">免费 · 终端新手从这里开始</p>
+    <h3><a href="path-github-pages.html">用 GitHub Pages 发布网站</a></h3>
+    <p class="path-meta">1 个模块 · 7 个单元 · 讲解 0 秒</p>
+    <p class="card-progress"><span class="card-bar" data-ring-units="m09:intro,m09:M9.1,m09:M9.2,m09:M9.3,m09:lab,m09:quiz,m09:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+      <span class="card-count" data-ring-text></span></p>
+  </div>
+  <div class="path-body">
+    <p class="path-promise">从什么都没安装，到一个公开的产品目录：Git、GitHub CLI、文件夹、克隆和发布，Windows 和 macOS 都适用。</p>
+    <dl class="at-a-glance"><div class="aga-item"><dt>你将构建</dt><dd>网站</dd></div><div class="aga-item"><dt>难度</dt><dd>入门</dd></div><div class="aga-item"><dt>角色</dt><dd>终端新手 · 小企业主</dd></div><div class="aga-item"><dt>价格</dt><dd>免费</dd></div></dl>
+    <p class="path-status"><span class="voice-chip is-release">路线页面</span></p>
+    <a class="btn-primary" href="path-github-pages.html">打开这条路线 →</a>
+  </div>
+</article>
+  </div>
+  <div class="section-heading">
+    <h2>全部模块</h2>
+    <span class="section-note">每张卡片显示你已记录的进度和下一步。</span>
+  </div>
+  <div class="room-grid">
+<article class="module-card" data-card-module="m00">
+  <p class="card-kicker">模块 0 · 3 条路线共用 <span class="voice-chip is-release" data-quiz-badge="m00" hidden></span></p>
+  <h3><a href="module-m00.html">导览：三个产品，一套方法</a></h3>
+  <p class="card-promise">在第 1 模块之前就运行真正的生产软件。</p>
+  <p class="card-meta">19 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m00:intro,m00:M0.1,m00:M0.2,m00:M0.3,m00:lab,m00:quiz,m00:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m00.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m01">
+  <p class="card-kicker">模块 1 · 3 条路线共用 <span class="voice-chip is-release" data-quiz-badge="m01" hidden></span></p>
+  <h3><a href="module-m01.html">AI 产品操作系统</a></h3>
+  <p class="card-promise">在你自己的仓库里治理智能体、规定工作、记录证据。</p>
+  <p class="card-meta">25 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m01:intro,m01:M1.1,m01:M1.2,m01:M1.3,m01:lab,m01:quiz,m01:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m01.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m02">
+  <p class="card-kicker">模块 2 <span class="voice-chip is-release" data-quiz-badge="m02" hidden></span></p>
+  <h3><a href="module-m02.html">端侧 AI 应用：架构</a></h3>
+  <p class="card-promise">追踪一条真实的端侧流水线，然后重建它的核心。</p>
+  <p class="card-meta">26 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m02:intro,m02:M2.1,m02:M2.2,m02:M2.3,m02:lab,m02:quiz,m02:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m02.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m03">
+  <p class="card-kicker">模块 3 <span class="voice-chip is-release" data-quiz-badge="m03" hidden></span></p>
+  <h3><a href="module-m03.html">端侧 AI 应用：隐私、测试与交付</a></h3>
+  <p class="card-promise"></p>
+  <p class="card-meta">27 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m03:intro,m03:M3.1,m03:M3.2,m03:M3.3,m03:lab,m03:quiz,m03:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m03.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m04">
+  <p class="card-kicker">模块 4 <span class="voice-chip is-release" data-quiz-badge="m04" hidden></span></p>
+  <h3><a href="module-m04.html">规格驱动的 SaaS：从想法到可执行规格</a></h3>
+  <p class="card-promise">产出一个陌生人拿来就能实现的规格文件夹。</p>
+  <p class="card-meta">28 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m04:intro,m04:M4.1,m04:M4.2,m04:M4.3,m04:lab,m04:quiz,m04:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m04.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m05">
+  <p class="card-kicker">模块 5 <span class="voice-chip is-release" data-quiz-badge="m05" hidden></span></p>
+  <h3><a href="module-m05.html">多租户安全与验收关卡</a></h3>
+  <p class="card-promise">先用测试证明租户隔离，再证明产品可运营。</p>
+  <p class="card-meta">25 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m05:intro,m05:M5.1,m05:M5.2,m05:M5.3,m05:lab,m05:quiz,m05:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m05.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m06">
+  <p class="card-kicker">模块 6 <span class="voice-chip is-release" data-quiz-badge="m06" hidden></span></p>
+  <h3><a href="module-m06.html">专业知识产品：证据、路线与版次</a></h3>
+  <p class="card-promise">把专业知识变成一个站得住脚、卖得出去的内容产品</p>
+  <p class="card-meta">28 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m06:intro,m06:M6.1,m06:M6.2,m06:M6.3,m06:lab,m06:quiz,m06:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m06.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m07">
+  <p class="card-kicker">模块 7 · 3 条路线共用 <span class="voice-chip is-release" data-quiz-badge="m07" hidden></span></p>
+  <h3><a href="module-m07.html">变现：定价、包装与定位</a></h3>
+  <p class="card-promise"></p>
+  <p class="card-meta">28 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m07:intro,m07:M7.1,m07:M7.2,m07:M7.3,m07:lab,m07:quiz,m07:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m07.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m08">
+  <p class="card-kicker">模块 8 · 3 条路线共用 <span class="voice-chip is-release" data-quiz-badge="m08" hidden></span></p>
+  <h3><a href="module-m08.html">发布：销售页、邮件序列与结业项目</a></h3>
+  <p class="card-promise">把已交付的成果变成一张能卖的页面、一套发布邮件序列和一场演示。</p>
+  <p class="card-meta">27 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m08:intro,m08:M8.1,m08:M8.2,m08:M8.3,m08:lab,m08:quiz,m08:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m08.html" data-card-action>开始</a>
+</article>
+<article class="module-card" data-card-module="m09">
+  <p class="card-kicker">模块 9 <span class="voice-chip is-release" data-quiz-badge="m09" hidden></span></p>
+  <h3><a href="module-m09.html">用 GitHub Pages 发布产品目录</a></h3>
+  <p class="card-promise"></p>
+  <p class="card-meta">25 个部分 · 7 个单元 · 实验 · 知识测验</p>
+  <p class="card-progress"><span class="card-bar" data-ring-units="m09:intro,m09:M9.1,m09:M9.2,m09:M9.3,m09:lab,m09:quiz,m09:summary" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
+    <span class="card-count" data-ring-text></span></p>
+  <a class="card-action" href="module-m09.html" data-card-action>开始</a>
+</article>
+  </div>
+  <section class="included" id="included">
+    <div class="section-heading">
+      <h2>包含什么</h2>
+      <span class="section-note">与销售页的说法一致——而销售页就在仓库里，所以两者不会走样。</span>
+    </div>
+    <div class="included-grid">
+      <article class="included-card">
+        <h3>工作室 · 自学</h3>
+        <p class="included-price">$399</p>
+        <ul>
+          <li>全部 9 个模块：27 个带字幕和文字稿的讲解课程分段</li>
+          <li>8 个带客观验收清单的实验，外加毕业项目</li>
+          <li>9 次知识测验（72 道题），附解析和目标对照</li>
+          <li>TinyCopilot 和 mini-flow 实验起始代码，及其经过验证的测试运行</li>
+          <li>可搜索的课文、讲义和术语表</li>
+          <li>毕业项目评分标准和证据记录模板</li>
+        </ul>
+      </article>
+      <article class="included-card is-featured">
+        <h3>工作室直播 · 8 周训练营</h3>
+        <p class="included-price">$1,490 <small>创始学员 $990</small></p>
+        <ul>
+          <li>包含工作室版的全部内容</li>
+          <li>八次 90 分钟工作坊（我做 / 一起做 / 你做）</li>
+          <li>三个实验的讲师代码评审</li>
+          <li>毕业项目评审和演示日</li>
+          <li>训练营频道，以及创始学员的推荐语交换</li>
+        </ul>
+      </article>
+      <article class="included-card">
+        <h3>单条路线 · 自学</h3>
+        <p class="included-price">$199</p>
+        <ul>
+          <li>一种产品类型：端侧应用、规格驱动 SaaS 或专业知识产品</li>
+          <li>四个完整模块，外加变现与发布的切片</li>
+          <li>这些模块同样的实验、讲稿、测验和产物</li>
+          <li>每个路线页都在结账前写明不包含什么</li>
+        </ul>
+      </article>
+    </div>
+    <p class="index-footnote">价格见决策记录 <a href="https://github.com/tomqwu/ai_courses/blob/main/course/04-sales/pricing-and-platforms.md">pricing-and-platforms.md</a>，其中写明了两个方向的理由。这里没有展示推荐语，因为目前还没有；在创始训练营结束之前，三个仓库就是证明。</p>
+  </section>
+  <section class="how-to">
+    <h2>如何使用本网站</h2>
+    <ul>
+      <li><strong>纯文本版：</strong>此处不发布讲解音频和字幕，所以每个学习页以阅读为主，而不是播放。</li>
+      <li>每个部分都以文字显示讲解，<a href="../transcripts/ALL.md">完整文字稿</a>（英文）把所有模块放在一个文件中。</li>
+      <li><strong>学习</strong>是一页完整的带讲解模块；<strong>阅读</strong>是整篇课文；部分下方的<strong>来源与讲者备注</strong>
+          会打开它引用的每个文件，并附讲者备注。</li>
+      <li>键盘：<kbd>/</kbd> 或 <kbd>⌘K</kbd> 搜索课程，<kbd>↑</kbd> <kbd>↓</kbd> <kbd>↵</kbd> 打开结果，<kbd>Esc</kbd> 关闭。</li>
+      <li>顶栏的 <strong>EN | 中文</strong> 在英文版和中文版之间切换同一页面。</li>
+    </ul>
+  </section>
+  <section class="tools" id="tools">
+    <div class="section-heading">
+      <h2>不买课程也能拿走这套方法</h2>
+      <span class="section-note">本网站对自己运行的三个检查器，免费且自包含。</span>
+    </div>
+    <div class="tools-grid">
+      <article class="tools-card">
+        <h3>指针检查（Pointer lint）</h3>
+        <p>文档中的每个主张都带有路径，每个路径和行范围都仍然能解析——否则运行失败，并指出要修的文件和行。</p>
+        <code>python3 pointer_lint.py docs/</code>
+      </article>
+      <article class="tools-card">
+        <h3>事实漂移（Facts drift）</h3>
+        <p>从来源重新推导你当作事实陈述的数字，并指出仍在打印旧值的文档。固定下来的文件是数据，绝不是代码。</p>
+        <code>python3 facts_drift.py --facts facts.json --strict</code>
+      </article>
+      <article class="tools-card">
+        <h3>智能体规则审计（Agent rule audit）</h3>
+        <p>读取 <code>AGENTS.md</code>、<code>CLAUDE.md</code> 或一份宪章，把每条规则分为可检查、含糊、或命令式但未强制执行三类。</p>
+        <code>python3 agents_audit.py AGENTS.md</code>
+      </article>
+    </div>
+    <p class="index-footnote">只用标准库，无需安装，不向任何地方发送数据。
+      <a href="https://github.com/tomqwu/ai_courses/tree/main/aps-tools">阅读它们或复制整个文件夹 →</a></p>
+  </section>
+  <section class="capture" id="stay">
+    <div class="capture-inner">
+      <h2>30 分钟拆解，分三封邮件</h2>
+      <p>三个已发布的产品如何让自己的主张可被检查：一个失败即关闭的隐私保证、一个由智能体在书面规则下构建的
+         SaaS，以及一个自我引证的专业知识网站。连续三天每天一封，然后是检查清单。不会有其他邮件。</p>
+      <form class="capture-form" method="post" action="" data-unconfigured>
+        <label class="sr-only" for="aps-email">你的邮箱地址</label>
+        <input id="aps-email" type="email" name="email" required autocomplete="email"
+               placeholder="you@example.com" spellcheck="false" disabled>
+        <button class="btn-primary" type="submit" disabled>把拆解发给我</button>
+        <label class="capture-consent">
+          <input type="checkbox" name="consent" value="yes" required disabled>
+          <span>是的，把三部分的拆解和偶尔的课程说明发给我。我可以在任何一封邮件中退订，我的地址不会被共享或出售。</span>
+        </label>
+      </form>
+      <p class="capture-note">本次构建没有配置邮件服务商，所以表单已停用。用 <code>--subscribe-action &lt;form url&gt;</code> 构建网站即可启用。</p>
+    </div>
+  </section>
+  <p class="index-footnote">讲者备注是讲者的版本；讲解稿是学习者的版本。录音已经存在，但不包含在这份发布副本中——无论如何，文字稿就是完整的审定讲解。 进度、测验成绩和实验清单只保存在此浏览器中——换电脑时，从上方的进度栏导出。</p>
+</main>
+</div>
+</div>
+<div class="outline-backdrop" data-outline-backdrop hidden></div>
+<script src="../assets/progress.js" defer></script><script src="../assets/shell.js" defer></script><script src="../assets/search.js" defer></script><script src="../assets/figures.js" defer></script><script src="../assets/home.js" defer></script>
+</body>
+</html>

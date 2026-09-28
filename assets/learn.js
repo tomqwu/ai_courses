@@ -96,6 +96,9 @@
   // The approved sentences, timed from the cues: each word gets a time by its place in its cue.
   function timeRows(i, cues) {
     var texts = spans(i).map(function (s) { return s.textContent; });
+    // each sentence's word count in the recording (data-w): the Chinese edition shows Chinese
+    // sentences over the English recording, one for one
+    var counts = spans(i).map(function (s) { return parseInt(s.getAttribute('data-w'), 10) || 0; });
     if (!cues.length || !texts.length) return [];
     var words = function (t) { return t.split(/\s+/).filter(Boolean); };
     var at = [];
@@ -104,9 +107,9 @@
       ws.forEach(function (_, k) { at.push(c.start + (c.end - c.start) * k / ws.length); });
     });
     var end = cues[cues.length - 1].end, w = 0;
-    return texts.map(function (t) {
+    return texts.map(function (t, k) {
       var start = at[Math.min(w, at.length - 1)] || 0;
-      w += words(t).length;
+      w += counts[k] || words(t).length;
       return { start: start, end: w < at.length ? at[w] : end };
     });
   }
