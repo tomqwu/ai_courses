@@ -629,6 +629,41 @@ def run(page, browser, base: str) -> list[str]:
         page.wait_for_timeout(300)
         box = tabs.bounding_box()
         need(box and 0 <= box["y"] <= 120, f"{name}: the mode tabs do not stay in view when scrolling ({box})")
+    # Terms explained where they are used (#term-links): a technical word's first use in a part is a
+    # link whose card gives the plain meaning — on hover, and on a phone on the first tap.
+    page.goto(f"{base}/lesson-m09.html")
+    page.wait_for_timeout(200)
+    term = page.locator('a.term[href*="basics-repository"]').first
+    need(term.count() == 1, "terms: 'repository' is not linked on the M9 lesson")
+    if term.count():
+        term.scroll_into_view_if_needed()
+        term.hover()
+        page.wait_for_timeout(150)
+        card = page.locator("#term-card")
+        need(card.is_visible() and "project folder" in card.inner_text().lower(),
+             "terms: hovering a term does not show its plain meaning")
+        page.keyboard.press("Escape")
+        page.wait_for_timeout(100)
+        need(not card.is_visible(), "terms: Esc does not close the card")
+    page.goto(f"{base}/glossary.html#basics-repository")
+    need(page.locator("#basics-repository").count() == 1, "terms: the Basics glossary has no repository entry")
+    for part in ("m05.html", "zh/m05.html"):
+        page.goto(f"{base}/{part}")
+        per_part = page.evaluate("""() => [...document.querySelectorAll('.learn-section')].map(s =>
+            [...s.querySelectorAll('a.term')].map(a => a.getAttribute('href')))""")
+        need(any(per_part), f"terms: {part} links no terms")
+        need(all(len(x) == len(set(x)) for x in per_part), f"terms: {part} links a term twice in one part")
+    phone = browser.new_context(viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True).new_page()
+    phone.goto(f"{base}/lesson-m09.html")
+    phone.wait_for_timeout(200)
+    t = phone.locator('a.term[href*="basics-repository"]').first
+    if t.count():
+        t.scroll_into_view_if_needed()
+        t.tap()
+        phone.wait_for_timeout(200)
+        need(phone.url.endswith("lesson-m09.html") and phone.locator("#term-card").is_visible(),
+             "terms: on a phone the first tap does not show the card (it navigated away)")
+    phone.close()
     # A small laptop: no page scrolls sideways at 1024px either — a lesson column beside its table
     # of contents is narrower than a phone, and a flow figure once ran 115px past it.
     laptop = browser.new_context(viewport={"width": 1024, "height": 768}).new_page()

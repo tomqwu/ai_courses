@@ -175,7 +175,8 @@ def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict
     for t in items:
         first = re.sub(r"[^a-z]", "", t["term"].lower()[:1]) or "#"
         by_letter.setdefault(first.upper(), []).append(t)
-    letters = "".join(f'<a href="#g-{k}">{k}</a>' for k in sorted(by_letter))
+    letters = (f'<a href="#basics">{SH.T("Basics", "基础")}</a>'
+               + "".join(f'<a href="#g-{k}">{k}</a>' for k in sorted(by_letter)))
     sections = []
     for k in sorted(by_letter):
         rows = "".join(
@@ -191,9 +192,11 @@ def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict
                              "module the fuller definition is kept and every module is linked.",
                              "由各模块术语表合并而成。同一术语在多个模块中都有定义时，保留更完整的定义，并链接到每个模块。"),
                         f'<nav class="letter-nav" aria-label="Jump to letter">{letters}</nav>')
+    import site_terms as ST                                                       # noqa: PLC0415
     body = f"""{head}
 <div class="doc-main">
   <article class="doc-article glossary-all">
+{ST.basics_section(SH.LANG)}
 {"".join(sections)}
   </article>
 </div>"""

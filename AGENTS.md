@@ -19,6 +19,7 @@ segments, learning paths, playbooks, narration edits, and publishing.
 | `course/06-production/pointer-anchors.json` | Line ranges pinned to the text they must contain |
 | `course/06-production/facts.json` | Case-study numbers the course quotes, re-derived by `check_facts.py` |
 | `course/03-content/mNN-slug/zh/`, `narration/scripts-zh/` | The Chinese edition's sources (built into `zh/`); rules in `course/01-design/zh-translation-guide.md` |
+| `course/03-content/_basics/basics.json` | The Basics glossary: everyday software words in plain language (EN + 中文); their first use in each part links to a card |
 | `course/06-production/terms-zh.json` | Every glossary term's Chinese name and one-line definition — the names the translation uses |
 | `course/learner-site/` | Site generator (`build_site.py`; every page in the `site_shell.py` frame) and browser checks (`check_player.py`, `check_features.py`) |
 | `course/05-tracks/`, `course/07-playbooks/` | Paid learning-path bundles; standalone playbooks |
@@ -45,6 +46,10 @@ Clone the case studies beside `course/` at the commits `gate.yml` pins before ru
   consistent, regenerate transcripts (`make -C course transcripts`), and add the slide to the
   re-recording list in the PR.
 - **Never skip, disable or loosen a check to get green.** Fix the content or the check's real bug.
+- **Explain every technical word.** The course is read by people who have never programmed. A word a
+  newcomer could stumble on (repository, API, token…) belongs in `03-content/_basics/basics.json`
+  (plain meaning, an everyday comparison, both languages); its first use in each part then links to
+  a card automatically. Add it to that file's `watch` list so the gate keeps it explained.
 - **The Chinese edition moves with the English.** Change a module's English and carry the change into
   its `zh/` sources (and `scripts-zh/`), then `python3 course/06-production/zh_edition.py stamp mNN`.
   The gate fails a module whose English changed since its Chinese was stamped, whose Chinese does not

@@ -31,6 +31,7 @@ from narration_data import (COURSE_DIR, DECK_IDS, EDITION, MANIFEST_PATH, PROVEN
 import site_shell as SH                                  # noqa: E402
 import figures as FIG                                    # noqa: E402
 import site_locale as SL                                 # noqa: E402
+import site_terms as ST                                  # noqa: E402
 
 # Our decks already write `M0.1 — Real title` and `Type 1 — Real title`, which is exactly the
 # kicker/title split ai_qe uses (`02 / Strategic target state`). Only an em dash splits: an en dash
@@ -1379,14 +1380,18 @@ def main(argv=None) -> int:
 
     SH.EDITIONS = ("en", "zh") if zh_ready() else ("en",)
     records, terms_by_deck = write_edition("en", decks, target, args.site_base, args, manifest, provenance)
+    # Terms explained where they are used (#term-links): each term's first use in a part links to
+    # its glossary card. After the pages are final, so no later pass splits a linked word.
+    ST.link_edition(target, "en", args.site_base, terms_by_deck)
     # The Chinese edition (#121): the same pages from the Chinese sources, in `zh/`. Assets, figures
     # and recordings are the English edition's, one level up; page links stay inside `zh/`.
     if zh_ready():
         zh_base = ".." if args.site_base == "." else args.site_base
         FIG.ASSET_BASE = zh_base
         zh_decks = [parse_deck(d, load_zh_scripts()["decks"], "zh", scripts["decks"]) for d in DECK_IDS]
-        write_edition("zh", zh_decks, target / "zh", zh_base, args, manifest, provenance)
+        _, zh_terms = write_edition("zh", zh_decks, target / "zh", zh_base, args, manifest, provenance)
         SL.localize_edition(target / "zh", zh_base)
+        ST.link_edition(target / "zh", "zh", zh_base, zh_terms)
     SH.LANG = "en"
 
     # The transcripts are committed as Markdown, so a check must prove the committed copies still

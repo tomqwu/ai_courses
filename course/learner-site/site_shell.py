@@ -336,7 +336,7 @@ def document(title: str, description: str, content: str, site_base: str, body_cl
              scripts: tuple[str, ...] = (), body_attrs: str = "") -> str:
     """A whole page in the shell. `content` is everything inside <main>, page head included."""
     tags = "".join(f'<script src="{site_base}/assets/{s}" defer></script>'
-                   for s in ("progress.js", "shell.js", "search.js", "figures.js") + tuple(scripts))
+                   for s in ("progress.js", "shell.js", "search.js", "figures.js", "terms.js") + tuple(scripts))
     deck_attr = f' data-deck="{deck_id}"' if deck_id else ""
     # Page links in the Chinese edition stay in `zh/`; assets and recordings are one level up.
     page_base = "." if LANG == "zh" else site_base

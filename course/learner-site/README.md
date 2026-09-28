@@ -552,6 +552,22 @@ page; `check_player.py` measures the Chinese Learn pages for clipping; `check_fe
 switch, the redirect, the Chinese narration and Chinese search. Translation rules:
 `course/01-design/zh-translation-guide.md`.
 
+## Terms explained where they are used
+
+The course is read by people who have never programmed. Every technical word's first use in a part
+(a Learn part, a lesson section, a lab step, a question) is a dotted-underlined link; hovering it —
+or the first tap on a phone — shows a card with its plain meaning and an everyday comparison, and the
+card links to the full entry. The words themselves are unchanged.
+
+* **Sources:** the Basics glossary (`03-content/_basics/basics.json`, English and Chinese) and the
+  page's own module glossary. The master glossary opens with the Basics.
+* **Where:** `site_terms.py` links the finished pages of both editions; code, links, headings,
+  figures, buttons and labels are never touched; `except` phrases keep a word from linking where it
+  means something else.
+* **Checks:** `test_terms.py` (the linker; every Basics entry complete; every watched word explained),
+  `verify.py` "Terms explained" (every term link on the built site resolves), `check_features.py`
+  (hover, Esc, a phone's first tap, one link per term per part).
+
 ## Accessibility
 
 * One `h1` per page; slides are `<section>` landmarks labelled by their own heading.
