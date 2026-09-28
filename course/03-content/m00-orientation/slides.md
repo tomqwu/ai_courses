@@ -245,10 +245,23 @@ ollama run qwen3:0.6b "Reply with exactly: PONG"
 
 ## Two valid environments (say which you have)
 
-| What `ollama list` shows | Your environment | Still completes |
-|---|---|---|
-| `qwen3:0.6b` | a local model pulled | Lab M0 and Lab M2 |
-| only `:cloud` names | a valid, instructive setup | Lab M0 and Lab M2 |
+```figure
+kind: system
+alt: Your lab environment as a system: the terminal and TinyCopilot both talk to the Ollama daemon on your machine, which answers from a local model or forwards the prompt to Ollama Cloud when a model's name ends in :cloud.
+source: course/03-content/m02-ondevice-app/tinycopilot/README.md
+layer: You
+  node you: terminal — ollama list · pull · run
+  node tiny: TinyCopilot — Lab M2
+layer: Ollama, on your machine
+  node daemon: Ollama daemon — localhost:11434
+  node local: qwen3:0.6b — a local model @ If ollama list shows the local model
+layer: The internet
+  node cloud: Ollama Cloud (seam) — behind every :cloud name @ If every name it shows ends in the cloud suffix
+edge: you -> daemon — ollama list
+edge: tiny -> daemon — HTTP on localhost
+edge: daemon -> local — runs on your machine
+edge: daemon -> cloud — a :cloud alias forwards the prompt (seam)
+```
 
 - Tell the difference by the `:cloud` suffix
 - Say which one you have in your first-win post

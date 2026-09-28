@@ -7,7 +7,7 @@ type scale and is contrast-audited like every other line.
 
 The grammar, one `key: value` per line:
 
-    kind: flow | architecture | compare | screenshot | scene
+    kind: flow | architecture | compare | screenshot | scene | system
     alt: One sentence describing what the figure shows.          (required)
     source: Repo/path:N-M                                         (when it depicts a case study)
     title: A caption shown under the figure
@@ -21,6 +21,9 @@ The grammar, one `key: value` per line:
     callout: 12,30 — The admin sees gaps before members do
     crop: 60                                                  (show the top 60%; display only)
     scene: stranger-clone.svg · caption: …                                        (scene)
+    layer: API                                                                    (system)
+      node api: routes — FastAPI                    a component; edges name it by id
+    edge: web -> api — cookie JWT                   an arrow, drawn by figures.js from the boxes
 
 A part's value is `label [(flags)] [— note] [@ at-words]`. Flags are seam, hl, good, bad, and
 chain (a layer whose boxes are a sequence, drawn joined by connectors); the
@@ -33,7 +36,7 @@ import html
 import re
 from pathlib import Path
 
-KINDS = ("flow", "architecture", "compare", "screenshot", "scene")
+KINDS = ("flow", "architecture", "compare", "screenshot", "scene", "system")
 FRAMES = ("browser", "phone", "mac", "none")    # none: the image carries its own window chrome
 FLAGS = {"seam", "hl", "good", "bad", "chain"}
 REPEATED = {"step", "layer", "column"}
@@ -86,7 +89,8 @@ def _flags(text: str) -> tuple[str, set]:
 
 def parse(text: str) -> dict:
     fig = {"kind": "", "alt": "", "source": "", "title": "", "items": [], "loop": False,
-           "image": "", "frame": "browser", "scene": "", "caption": "", "callouts": [], "crop": ""}
+           "image": "", "frame": "browser", "scene": "", "caption": "", "callouts": [], "crop": "",
+           "edges": []}
     for n, raw in enumerate(text.splitlines(), 1):
         if not raw.strip() or raw.lstrip().startswith("#"):
             continue
@@ -95,7 +99,23 @@ def parse(text: str) -> dict:
         key, value = key.strip().lower(), value.strip()
         if not sep:
             raise FigureError(f"line {n}: expected `key: value`, got {raw.strip()!r}")
-        if indented and key in CHILDREN:
+        node = re.match(r"^node\s+([a-z][a-z0-9_-]*)$", key)
+        if indented and node:
+            # A system's component: `node api: API routes — FastAPI`; the id is what edges name.
+            if not fig["items"]:
+                raise FigureError(f"line {n}: `node {node.group(1)}:` has no layer above it")
+            part = _part(value)
+            part["id"] = node.group(1)
+            fig["items"][-1]["children"].append(part)
+        elif key == "edge":
+            # `edge: web -> api — cookie JWT (hl) @ opening words`
+            m = re.match(r"^([a-z][a-z0-9_-]*)\s*->\s*([a-z][a-z0-9_-]*)\s*(.*)$", value)
+            if not m:
+                raise FigureError(f"line {n}: an edge is `from -> to — label`")
+            rest = _part("x " + m.group(3).strip()) if m.group(3).strip() else _part("x")
+            fig["edges"].append({"from": m.group(1), "to": m.group(2), "label": rest["note"],
+                                 "flags": rest["flags"], "at": rest["at"]})
+        elif indented and key in CHILDREN:
             if not fig["items"]:
                 raise FigureError(f"line {n}: `{key}:` has no layer or column above it")
             fig["items"][-1]["children"].append(_part(value))
@@ -120,8 +140,18 @@ def parse(text: str) -> dict:
         raise FigureError("a screenshot needs `image:`")
     if fig["kind"] == "scene" and not fig["scene"]:
         raise FigureError("a scene needs `scene:`")
-    if fig["kind"] in ("flow", "architecture", "compare") and not fig["items"]:
+    if fig["kind"] in ("flow", "architecture", "compare", "system") and not fig["items"]:
         raise FigureError(f"a {fig['kind']} figure needs parts")
+    if fig["kind"] == "system":
+        ids = [c["id"] for layer in fig["items"] for c in layer["children"] if c.get("id")]
+        if len(ids) != len(set(ids)):
+            raise FigureError("a system's node ids must be unique")
+        if not fig["edges"]:
+            raise FigureError("a system figure needs at least one `edge:` — that is what makes it a system")
+        for e in fig["edges"]:
+            for end in (e["from"], e["to"]):
+                if end not in ids:
+                    raise FigureError(f"edge {e['from']} -> {e['to']}: no node `{end}`")
     return fig
 
 
@@ -268,6 +298,30 @@ def _png_size(path: Path) -> tuple[int, int] | None:
     return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
 
 
+def _system(fig: dict, sentences, inline) -> str:
+    """Layers of named components, and labelled arrows between any two of them. The boxes are HTML;
+    figures.js draws the arrows from where the boxes actually land (and redraws on resize), so the
+    diagram reflows on a phone. The connections are also a list — read by screen readers, and the
+    diagram's text without JavaScript."""
+    names = {c["id"]: c["label"] for layer in fig["items"] for c in layer["children"] if c.get("id")}
+    bands = []
+    for layer in fig["items"]:
+        boxes = "".join(
+            f'<div class="{_classes("fig-box", c)}" data-node="{c["id"]}"{_step(c, sentences)}>{_body(c, inline)}</div>'
+            for c in layer["children"])
+        head = (f'<div class="fig-band-head">{_body(layer, inline)}</div>' if layer["label"] or layer["note"] else "")
+        bands.append(f'<div class="{_classes("fig-layer", layer)}"{_step(layer, sentences)}>{head}'
+                     f'<div class="fig-row">{boxes}</div></div>')
+    edges = "".join(
+        f'<li class="{_classes("fig-edge", {"flags": e["flags"]})}" data-from="{e["from"]}" data-to="{e["to"]}"'
+        f'{_step(e, sentences)}><span class="fig-edge-ends">{inline(names[e["from"]])} → {inline(names[e["to"]])}</span>'
+        + (f'<span class="fig-edge-label">{inline(e["label"])}</span>' if e["label"] else "")
+        + "</li>"
+        for e in fig["edges"])
+    return (f'<div class="fig-sys" data-sys><div class="fig-bands">{"".join(bands)}</div></div>'
+            f'<ol class="fig-edges" aria-label="Connections">{edges}</ol>')
+
+
 def _screenshot(fig: dict, base: str, inline) -> str:
     # `crop: 45` shows the top 45% of the image — display only; the file stays byte-identical.
     crop, shot_style = 100.0, ""
@@ -316,6 +370,8 @@ def render(fig: dict, *, sentences: list[str] | None = None, inline=_esc, base: 
         inner = _screenshot(fig, base, inline)
     elif kind == "scene":
         inner = _scene(fig, inline)
+    elif kind == "system":
+        inner = _system(fig, sentences, inline)
     else:
         raise FigureError(f"unknown kind {kind!r}")
     alt = "" if kind in ("screenshot", "scene") else f'<figcaption class="sr-only">{_esc(fig["alt"])}</figcaption>'

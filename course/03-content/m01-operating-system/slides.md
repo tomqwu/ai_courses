@@ -61,12 +61,28 @@ column: The bottleneck moves to (good) @ So the bottleneck moves
 
 One canonical source, many delivery files.
 
-<!-- _diagram: stack -->
-
-- `.specify/memory/constitution.md` — above all agent files
-- `AGENTS.md` — the universal baseline agents read
-- `CLAUDE.md` — links to it; yours imports `@AGENTS.md`
-- `.github/copilot-instructions.md` — restates rules for Copilot
+```figure
+kind: system
+alt: One canonical source, many delivery files — the constitution sits above AGENTS.md, which most coding agents read natively; CLAUDE.md imports it for Claude Code, and a restatement file carries the rules to Copilot.
+source: SignUpFlow/.specify/memory/constitution.md · SignUpFlow/AGENTS.md · SignUpFlow/CLAUDE.md
+layer: Source of truth @ The constitution sits above
+  node const: .specify/memory/constitution.md (hl) — above all agent files
+layer: The baseline @ The baseline lives in AGENTS.md
+  node agents: AGENTS.md — the universal baseline
+layer: Delivery files
+  node claude: CLAUDE.md — yours imports @AGENTS.md @ SignUpFlow's CLAUDE.md links to it
+  node copilot: .github/copilot-instructions.md — a restatement @ Copilot needs its own restatement
+layer: The agents that read them
+  node many: Codex CLI · Cursor · Aider · Jules · OpenHands · Amp · Factory @ The baseline lives in AGENTS.md
+  node cc: Claude Code @ So in your own repo
+  node ghc: GitHub Copilot @ Copilot needs its own restatement
+edge: const -> agents — single source of truth @ The constitution sits above
+edge: agents -> many — read natively @ The baseline lives in AGENTS.md
+edge: agents -> claude — imported, not just linked (hl) @ So in your own repo
+edge: agents -> copilot — restated @ Copilot needs its own restatement
+edge: claude -> cc — loads at launch @ So in your own repo
+edge: copilot -> ghc @ Copilot needs its own restatement
+```
 
 <!-- NOTES: Four files, one canonical source. The baseline lives in AGENTS.md and is consumed by Codex CLI, Cursor, Aider, Jules, OpenHands, Sourcegraph Amp, and Factory. SignUpFlow's CLAUDE.md links to it at the top and adds Claude-specific addenda. A link is not an import: Claude Code opens a linked file only if it decides to, so your own CLAUDE.md imports AGENTS.md with one at-sign line and both load at launch. Copilot needs its own restatement file. The constitution is the single source of truth above all of them. Transition: the next slide proves the lengths are real. Timing: 3 minutes. -->
 

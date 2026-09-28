@@ -547,6 +547,38 @@ input:focus-visible, main:focus-visible { outline: 3px solid var(--focus); outli
   line-height: 1.4; }
 .fig-callouts li::marker { color: var(--accent); font-weight: 700; }
 
+/* system (#115): layers of named components with labelled arrows between any two of them. The boxes
+   are laid out here; figures.js draws the arrows over them from where they land. Layers get room
+   between them for the arrows and their labels. */
+.fig-system .fig-sys { position: relative; padding-bottom: 1.9em; }
+.fig-system:not(.is-drawn) .fig-sys { padding-bottom: 0; }
+.fig-system .fig-bands { gap: 3.4em; }
+/* stacking: layer bands, then the arrows, then the boxes, then the labels — a line that passes a box
+   goes behind it rather than across its text */
+.fig-system .fig-layer { position: relative; background: color-mix(in srgb, var(--wash) 70%, transparent); }
+.fig-system .fig-box { position: relative; z-index: 2; background: var(--surface); flex: 1 1 0; max-width: 15em; }
+/* components keep a natural width and real gaps between them, so a sideways arrow has room; a row
+   stays one row on a wide screen and wraps on a narrow one */
+.fig-system .fig-layer > .fig-row { display: flex; flex-wrap: nowrap; justify-content: space-around; gap: 1.4em 3.4em; }
+/* not drawn (a phone, or no JavaScript): components stack, layers close up, the list is the wiring */
+.fig-system:not(.is-drawn) .fig-bands { gap: 0.6em; }
+.fig-system:not(.is-drawn) .fig-layer > .fig-row { flex-wrap: wrap; gap: 0.5em; }
+.fig-system:not(.is-drawn) .fig-box { flex: 1 1 10em; max-width: none; }
+.fig-system:not(.is-drawn) .fig-edges { padding: 0.6em 0.8em 0.6em 2em; border: 1px solid var(--line); border-radius: 0.6em;
+  background: var(--surface); }
+.fig-system .fig-box.is-seam { background: var(--accent-soft); }
+.fig-wires { position: absolute; inset: 0; z-index: 1; overflow: visible; pointer-events: none; }
+.fig-wire { fill: none; stroke: var(--ink-mid); stroke-width: 1.8; }
+.fig-wire.is-hl { stroke: var(--accent); stroke-width: 2.4; }
+.fig-wire.is-seam { stroke: var(--accent); stroke-dasharray: 5 4; }
+.fig-wire-head { fill: var(--ink-mid); }
+.fig-wire-label { position: absolute; z-index: 4; transform: translate(-50%, -50%); max-width: 14em; padding: 0.1em 0.5em;
+  border: 1px solid var(--line); border-radius: 0.5em; background: var(--surface); color: var(--ink-soft);
+  font-size: 0.78em; line-height: 1.3; text-align: center; white-space: normal; }
+.fig-wire-label.is-hl { border-color: var(--accent); color: var(--accent-deep); }
+.fig-edges { margin: 0.8em 0 0; padding-left: 1.2em; color: var(--ink); font-size: 0.85em; }
+.fig-edges li { margin: 0.15em 0; }
+.fig-edge-label::before { content: " — "; color: var(--ink-soft); }
 /* scene: a hand-drawn illustration, centred, captioned as one */
 .fig-scene-art svg { display: block; width: 100%; max-height: 16em; margin: 0 auto; }
 /* The scenes' palette: every fill and stroke is a Studio token, so an illustration can never bring

@@ -51,23 +51,31 @@ layer: TinyCopilot — your rebuild in Python (chain) (hl) @ Then, in the lab
 ## M2.1 — One pipeline, two layers
 
 ```figure
-kind: architecture
-alt: ListenToMe in two layers. Tagged audio enters a six-stage pipeline; App/ glue implements the three seams and the pure core runs everything between them.
+kind: system
+alt: ListenToMe as a system. Tagged audio from the App layer passes through the AudioCapturing and Transcribing seams into a pure core — store, context, prompt, router — which reaches models only through the LLMProvider seam and streams answers back to the panes.
 source: ListenToMe/Sources/ListenToMeCore/MeetingSession.swift · ListenToMe/Sources/ListenToMeCore/Capture.swift:4 · ListenToMe/Sources/ListenToMeCore/Transcriber.swift:4 · ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:13
-layer: Audio in (chain) @ Microphone audio is tagged
-  box: mic (.you) · system audio (.others)
-  box: PCM chunks
-layer: The pipeline (chain) @ The pipeline then runs
-  box: capture (seam)
-  box: transcribe (seam)
-  box: store
-  box: context
-  box: prompt (seam)
-  box: route
-layer: Two layers
-  box: App/ glue — touches hardware @ The split is the important part
-  box: the seams (seam) — AudioCapturing · Transcribing · LLMProvider @ The three seams are
-  box: Core (pure) (hl) — runnable in a unit test against mocks @ That layering is what makes
+layer: App/ — touches hardware @ The split is the important part
+  node mic: mic — tagged .you @ Microphone audio is tagged
+  node sys: system audio — tagged .others @ Microphone audio is tagged
+  node panes: Listener · Quick · Deep panes
+layer: The seams — protocols the core owns (seam) @ The three seams are
+  node cap: AudioCapturing (seam)
+  node stt: Transcribing (seam)
+  node llm: LLMProvider (seam)
+layer: ListenToMeCore — pure, runnable against mocks (hl) @ That layering is what makes
+  node store: store
+  node ctx: context
+  node prompt: prompt
+  node route: route
+edge: mic -> cap — PCM chunks @ Microphone audio is tagged
+edge: sys -> cap — PCM chunks @ Microphone audio is tagged
+edge: cap -> stt — capture @ The pipeline then runs
+edge: stt -> store — transcribe @ The pipeline then runs
+edge: store -> ctx @ The pipeline then runs
+edge: ctx -> prompt @ The pipeline then runs
+edge: prompt -> route @ The pipeline then runs
+edge: route -> llm — per role @ The pipeline then runs
+edge: llm -> panes — streamed answer @ The pipeline then runs
 ```
 
 <!-- NOTES: Read this left to right once, then say the split out loud: everything in `App/` touches hardware; everything in `Sources/ListenToMeCore` is pure. The three seams are `AudioCapturing`, `Transcribing`, and `LLMProvider`. The reason this matters is testability: the pipeline is fully runnable in a unit test against mocks. Hold the diagram; we now walk each layer. (75 seconds; next slide is capture.) -->

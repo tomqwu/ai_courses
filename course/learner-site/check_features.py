@@ -492,6 +492,38 @@ def run(page, browser, base: str) -> list[str]:
         need(calm.evaluate(pending) == 0, "m02 slide-3: reduced motion still hides figure parts")
         calm.evaluate("document.querySelector('audio[data-narration-audio]').pause()")
         calm.close()
+    # A numbered procedure is a left-aligned stepper: each step's text starts beside its number,
+    # not centred across a full-width row (the M0.3 bug, #109).
+    page.goto(f"{base}/m00.html#slide-12")
+    page.wait_for_timeout(300)
+    gap = page.evaluate("""() => { const n = document.querySelector('#slide-12 .fig-track.is-numbered .fig-node');
+        return n ? n.querySelector('.fig-label').getBoundingClientRect().left - n.getBoundingClientRect().left : -1; }""")
+    need(0 <= gap < 60, f"m00 slide-12: a numbered step's text starts {gap}px into its row — not left-aligned")
+    # System diagrams (#115): every connection drawn as an arrow, no label covering a box; on a phone
+    # the connections are a readable list instead of arrows.
+    for mod in ("m02", "m05", "m07"):
+        page.goto(f"{base}/{mod}.html")
+        fig = page.locator(".fig-system").first
+        fig.scroll_into_view_if_needed()
+        page.wait_for_timeout(400)
+        drawn = fig.evaluate("""f => {
+          const boxes = [...f.querySelectorAll('[data-node]')].map(b => b.getBoundingClientRect());
+          const labels = [...f.querySelectorAll('.fig-wire-label')].map(l => l.getBoundingClientRect());
+          const hit = labels.filter(l => boxes.some(b => Math.min(l.right, b.right) - Math.max(l.left, b.left) > 2
+                                                     && Math.min(l.bottom, b.bottom) - Math.max(l.top, b.top) > 2)).length;
+          return { edges: f.querySelectorAll('.fig-edge').length, wires: f.querySelectorAll('.fig-wire').length,
+                   drawn: f.classList.contains('is-drawn'), hit };
+        }""")
+        need(drawn["drawn"] and drawn["wires"] == drawn["edges"] and drawn["hit"] == 0,
+             f"{mod}: system diagram drew {drawn['wires']} of {drawn['edges']} arrows, {drawn['hit']} label(s) over a box")
+    narrow = browser.new_context(viewport={"width": 390, "height": 844}).new_page()
+    narrow.goto(f"{base}/m05.html")
+    nf = narrow.locator(".fig-system").first
+    nf.scroll_into_view_if_needed()
+    narrow.wait_for_timeout(400)
+    need(not nf.evaluate("f => f.classList.contains('is-drawn')") and nf.locator(".fig-edges").is_visible(),
+         "m05 at 390px: the system diagram is not shown as its list of connections")
+    narrow.close()
     page.goto(f"{base}/lesson-m02.html")
     need(page.locator(".doc-article [data-figure]").count() >= 1
          and page.locator(".doc-article [data-figure] [data-step]").count() == 0,
