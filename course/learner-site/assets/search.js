@@ -77,7 +77,8 @@
 
   function tokens(query) {
     return query.toLowerCase().split(/[\s()"“”‘’`]+/)
-      .map(function (w) { return w.replace(/^[^\w:]+|[^\w]+$/g, ''); })
+      // letters in any script: a Chinese term name (#116) is a word too
+      .map(function (w) { return w.replace(/^[^\p{L}\p{N}_:]+|[^\p{L}\p{N}_]+$/gu, ''); })
       .filter(function (w) { return w.length >= 2 && STOP.indexOf(w) < 0; });
   }
 

@@ -411,6 +411,12 @@ def run(page, browser, base: str) -> list[str]:
       return miss;
     }""")
     need(not missed, f"search: {len(missed)} glossary terms are not found by their own name ({missed[:5]})")
+    zh_hit = page.evaluate("""async () => {
+      const r = await window.APSSearch.query('租户隔离');
+      const g = r.groups.find(g => g.key === 'glossary');
+      return !!(g && g.items.some(h => h.it.t === 'Tenant isolation'));
+    }""")
+    need(zh_hit, "search: a term is not found by its Chinese name (租户隔离 → Tenant isolation, #116)")
     spoken = page.evaluate("""async () => {
       const idx = await fetch('search.json').then(r => r.json());
       const s = idx.find(x => x.k === 'slide' && x.ts && x.s.length > 3);
@@ -537,6 +543,63 @@ def run(page, browser, base: str) -> list[str]:
     need(overflow <= 0, f"index at 390px scrolls sideways by {overflow}px")
     # The phone (#81), 390x844: the player and a lab work with no sideways scroll, the modes are a
     # bottom tab bar, and every visible control is a 44px touch target.
+    # EN / 中文 (#116). English is the default and adds nothing. 中文 names a key term in Chinese
+    # beside its first use in each part — without changing the words the narration, search and
+    # read-aloud voice use — shows the glossaries' Chinese, turns the controls Chinese, and is
+    # remembered; EN puts every label back.
+    zh = browser.new_context(viewport={"width": 1280, "height": 900}).new_page()
+    zh.on("pageerror", lambda e: problems.append(f"locale page error: {e}"))
+    zh.goto(f"{base}/m05.html")
+    zh.wait_for_timeout(300)
+    modes_js = "[...document.querySelectorAll('.mode-switch a span')].map(s => s.textContent)"
+    english = zh.evaluate(modes_js)
+    said_js = "[...document.querySelectorAll('.said')].map(s => s.textContent)"
+    said_en = zh.evaluate(said_js)
+    need(zh.locator('.lang-switch [data-lang="en"][aria-pressed="true"]').count() == 1
+         and not zh.evaluate("document.documentElement.classList.contains('is-zh')")
+         and zh.locator(".term-zh").count() == 0, "locale: English is not the default, or it adds terms")
+    zh.click('.lang-switch [data-lang="zh"]')
+    zh.wait_for_timeout(200)
+    need(zh.evaluate(modes_js) == ["学习", "阅读", "实验", "测验"],
+         f"locale: 中文 does not turn the modes Chinese: {zh.evaluate(modes_js)}")
+    named = zh.evaluate("""() => [...document.querySelectorAll('.learn-section')].map(sec =>
+        [...sec.querySelectorAll('.term-zh')].map(t => t.dataset.zh))""")
+    need(sum(len(n) for n in named) >= 10, f"locale: only {sum(len(n) for n in named)} terms named on m05")
+    need(all(len(n) == len(set(n)) for n in named), "locale: a term is named twice in one part")
+    after = zh.evaluate("getComputedStyle(document.querySelector('.term-zh'), '::after').content")
+    need(re.search(r"[\u4e00-\u9fff]", after or ""), f"locale: a named term shows no Chinese ({after!r})")
+    need(len(said_en) > 50 and zh.evaluate(said_js) == said_en,
+         "locale: 中文 changed the narration's words (they must stay as written and recorded)")
+    zh.goto(f"{base}/glossary-m05.html")
+    zh.wait_for_timeout(200)
+    shown = zh.evaluate("""() => [...document.querySelectorAll('.glossary-doc li > strong')].map(s => {
+        const li = s.parentElement, n = li.querySelector('.gl-zh'), d = li.querySelector('.gl-zh-def');
+        return !!(n && d && n.offsetParent && d.offsetParent); })""")
+    need(shown and all(shown), f"locale: after a reload the M5 glossary shows Chinese for {sum(shown)} of {len(shown)} terms")
+    need(zh.locator(".glossary-doc .term-zh").count() == 0, "locale: the glossary names its terms twice")
+    zh.goto(f"{base}/glossary.html")
+    zh.wait_for_timeout(200)
+    need(zh.evaluate("[...document.querySelectorAll('.glossary-all dt')].every(d => d.querySelector('.gl-zh'))"),
+         "locale: a master glossary term has no Chinese name")
+    zh.click('.lang-switch [data-lang="en"]')
+    zh.goto(f"{base}/m05.html")
+    zh.wait_for_timeout(200)
+    need(zh.evaluate(modes_js) == english and zh.locator(".term-zh").count() == 0
+         and zh.locator(".gl-zh:visible").count() == 0, "locale: EN does not put the page back")
+    zh.close()
+
+    # A small laptop: no page scrolls sideways at 1024px either — a lesson column beside its table
+    # of contents is narrower than a phone, and a flow figure once ran 115px past it.
+    laptop = browser.new_context(viewport={"width": 1024, "height": 768}).new_page()
+    wide = []
+    for built in sorted(p for p in SITE.glob("*.html") if not p.name.startswith("_")):
+        laptop.goto(f"{base}/{built.name}", wait_until="load")
+        over = laptop.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+        if over > 0:
+            wide.append(f"{built.name} (+{over}px)")
+    need(not wide, f"at 1024px these pages scroll sideways: {wide[:6]}")
+    laptop.close()
+
     handset = browser.new_context(viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True).new_page()
     small_js = """() => [...document.querySelectorAll('button, select, .mode-switch a, .card-action, .lab-steps a')]
       .filter(e => { const r = e.getBoundingClientRect(), s = getComputedStyle(e);

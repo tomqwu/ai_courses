@@ -1,0 +1,916 @@
+{
+ "_about": "EN / 中文 (#116). One entry per glossary term, keyed by the English term exactly as its glossary writes it. zh: the Chinese name shown beside the term on its first use in each part when the site is in 中文; def: the one-line Chinese definition on the glossary pages. scope: \"module\" limits a generic word (commit, contract, drift) to the modules whose glossary defines it; every other term is named on any module's pages. inline: false keeps a term out of the running text (contrasts, file names, and words whose meaning changes by module) — it is still bilingual in the glossary. verify.py checks every glossary term has an entry.",
+ "terms": {
+  "\"Tests passed\" vs. evidence": {
+   "zh": "“测试通过” 与证据",
+   "def": "没有命令、日期、环境和版本的计数只是一个说法；证据是可审计的记录。",
+   "inline": false
+  },
+  ".nojekyll": {
+   "zh": "禁用 Jekyll 的标记文件",
+   "def": "一个空文件，让 GitHub Pages 按原样发布文件，而不运行 Jekyll。",
+   "inline": false
+  },
+  "403 vs. 404 for a foreign id": {
+   "zh": "对他人 id 返回 403 还是 404",
+   "def": "403 暴露资源存在；404 防止枚举，因为查询按租户限定。",
+   "inline": false
+  },
+  ":cloud alias": {
+   "zh": ":cloud 别名",
+   "def": "以 :cloud 结尾的 Ollama 模型名，背后是托管服务，而不是本机权重。",
+   "inline": false
+  },
+  "[NEEDS CLARIFICATION]": {
+   "zh": "[待澄清] 标记",
+   "def": "模板中未决问题的标记；关卡要求在计划前全部清零。",
+   "inline": false
+  },
+  "[P] vs. [US#]": {
+   "zh": "[P] 与 [US#] 标记",
+   "def": "[P] 表示可与相邻任务并行；[US#] 标明任务属于哪个用户故事。",
+   "inline": false
+  },
+  "A passing badge vs. recorded evidence": {
+   "zh": "通过徽章与记录的证据",
+   "def": "徽章只显示当前状态；证据记录包含命令、计数、日期和限制。",
+   "inline": false
+  },
+  "Absolute path": {
+   "zh": "绝对路径",
+   "def": "从磁盘顶层开始的文件夹地址。",
+   "scope": "module"
+  },
+  "Acceptance criteria": {
+   "zh": "验收标准",
+   "def": "故事必须满足的具体、可测试条件，按 Given/When/Then 书写。"
+  },
+  "Acceptance criteria vs. success criteria": {
+   "zh": "验收标准与成功标准",
+   "def": "验收标准说明故事何时完成；成功标准说明功能是否达成业务目标。",
+   "inline": false
+  },
+  "Acceptance gate": {
+   "zh": "验收关卡",
+   "def": "产品必须被证明可运营（而不只是功能可用）的检查点。"
+  },
+  "Acceptance scenario": {
+   "zh": "验收场景",
+   "def": "用户故事中的 Given/When/Then 陈述，其 Then 部分可观察、可量化。"
+  },
+  "Adjective-wedge": {
+   "zh": "形容词楔子",
+   "def": "定位一句话中承载差异点的开头形容词。"
+  },
+  "AGENTS.md": {
+   "zh": "通用智能体规则文件",
+   "def": "多数编码智能体都会读取的跨工具基线规则文件。",
+   "inline": false
+  },
+  "Anti-hallucination rules": {
+   "zh": "防幻觉规则",
+   "def": "让编造内容可被检查的禁令：不得虚构路径、名称、命令或结果。"
+  },
+  "Archetype": {
+   "zh": "产品原型",
+   "def": "本课程构建的三种产品形态之一：端侧应用、规格驱动 SaaS、专业知识产品。",
+   "scope": "module"
+  },
+  "AudioCapturing": {
+   "zh": "音频采集接缝",
+   "def": "采集协议接缝：核心声明接收什么音频，App/ 层提供实现。",
+   "inline": false
+  },
+  "Authorization matrix (executable)": {
+   "zh": "可执行授权矩阵",
+   "def": "把每个路由归类为公开/成员/管理员，并用测试强制执行的表。"
+  },
+  "Autonomy configuration": {
+   "zh": "自主权配置",
+   "def": "宪章中规定智能体可以独立做什么的部分。"
+  },
+  "Baseline vs. override": {
+   "zh": "基线与覆盖规则",
+   "def": "AGENTS.md 是通用基线，但更具体、更安全的路径级规则优先。",
+   "inline": false
+  },
+  "Benchmark record": {
+   "zh": "基准记录",
+   "def": "可引用证据的单位：一个发现及其日期、样本、方法和单位。"
+  },
+  "Benefits-realization register": {
+   "zh": "收益实现登记表",
+   "def": "由财务维护的表，每种收益捕获机制一行：预算科目、负责人和时间。"
+  },
+  "Beta-discount trade": {
+   "zh": "内测折扣交换",
+   "def": "以创始期折扣明确交换一段推荐语和一次反馈访谈。"
+  },
+  "blocked vs. deleted": {
+   "zh": "blocked 与删除",
+   "def": "blocked 是可见的剩余工作，必须有人工层级；删除这一行会让校验失败。",
+   "inline": false
+  },
+  "Bundle id / TCC": {
+   "zh": "Bundle ID 与 TCC 授权",
+   "def": "macOS 按 bundle id 和代码签名要求授予麦克风与录屏权限。",
+   "inline": false
+  },
+  "Capped phased pilot": {
+   "zh": "有上限的分阶段试点",
+   "def": "有边界的合作阶段：8–10 周、五个阶段，每个关口由发起人签字。"
+  },
+  "Cart open": {
+   "zh": "开放购买",
+   "def": "第 4 封邮件，也是报价可以购买的时刻。",
+   "scope": "module"
+  },
+  "Case study": {
+   "zh": "案例研究",
+   "def": "课程中用作实例的三个公开仓库之一：ListenToMe、SignUpFlow、ai_qe。",
+   "scope": "module"
+  },
+  "Claim level": {
+   "zh": "主张层级",
+   "def": "每个数字都必须带的四种标签之一，从任务效率到硬性节省。",
+   "scope": "module"
+  },
+  "Clone": {
+   "zh": "克隆",
+   "def": "仓库在你电脑上的副本，带完整历史和指向原仓库的链接。",
+   "scope": "module"
+  },
+  "Cloud alias": {
+   "zh": "云端别名",
+   "def": "以 :cloud 结尾、实际由远端托管的模型名。"
+  },
+  "Cloud opted-in vs. cloud by default": {
+   "zh": "主动选择云端与默认云端",
+   "def": "主动选择是用户看得见的模式；默认走云端按原则不在范围内。",
+   "inline": false
+  },
+  "Commit": {
+   "zh": "提交",
+   "def": "仓库的一个已保存版本，带说明、作者和一个短编号。",
+   "scope": "module"
+  },
+  "Comparator band": {
+   "zh": "对标价格区间",
+   "def": "你自己表格中真正可比的产品的最低到最高价格。"
+  },
+  "Comparator band vs. cheapest sticker price": {
+   "zh": "对标区间与最低标价",
+   "def": "区间来自可比产品；品类里最便宜的标价通常是另一种产品。",
+   "inline": false
+  },
+  "Complexity Tracking": {
+   "zh": "复杂度追踪",
+   "def": "只有在宪章检查记录违规时才填写的计划表。"
+  },
+  "Constitution": {
+   "zh": "项目宪章",
+   "def": "最短、最权威的治理文件：绝不能偏离的少数原则。"
+  },
+  "Constitution Check": {
+   "zh": "宪章检查",
+   "def": "计划逐条对照原则的合规检查；必须在第 0 阶段研究前通过。"
+  },
+  "Constitution Check gate": {
+   "zh": "宪章检查关卡",
+   "def": "plan.md 中明确的通过/不通过检查点。"
+  },
+  "Content as code": {
+   "zh": "内容即代码",
+   "def": "用软件的纪律管理已发布内容：测试、评审关卡、哈希和版本。"
+  },
+  "Context window (recentContext)": {
+   "zh": "上下文窗口",
+   "def": "按字符预算截取、发送给提示词的最新转写片段。"
+  },
+  "Contract": {
+   "zh": "契约",
+   "def": "设计功能的会话与实现功能的会话之间的书面接口。",
+   "scope": "module"
+  },
+  "Contract test": {
+   "zh": "契约测试",
+   "def": "验证 mock 只能假设的真实接缝的测试。"
+  },
+  "Conversion phase": {
+   "zh": "转化阶段",
+   "def": "最后四封邮件：开放购买、回应异议、证明、最后提醒。"
+  },
+  "CopilotRole": {
+   "zh": "Copilot 角色枚举",
+   "def": "三种 AI 角色：listener、quick、deep。",
+   "inline": false
+  },
+  "Cost floor": {
+   "zh": "成本底线",
+   "def": "你每月的固定成本换算成的最低售价。"
+  },
+  "Coverage floor": {
+   "zh": "覆盖率底线",
+   "def": "低于该测试覆盖率百分比时运行即失败。"
+  },
+  "Coverage manifest": {
+   "zh": "覆盖清单",
+   "def": "把每个场景绑定到角色、前提、操作和预期结果的机器可读文件。"
+  },
+  "Coverage status": {
+   "zh": "覆盖状态",
+   "def": "四个取值之一：automated、partial、manual、blocked。"
+  },
+  "Coverage vs. confidence": {
+   "zh": "覆盖率与可信度",
+   "def": "覆盖率说明哪些行运行过，并不证明可靠。",
+   "inline": false
+  },
+  "Coverage vs. correctness": {
+   "zh": "覆盖率与正确性",
+   "def": "高覆盖率的代码仍可能把截断的流当作成功。",
+   "inline": false
+  },
+  "Cross-tenant data leak": {
+   "zh": "跨租户数据泄露",
+   "def": "一次未过滤的查询把另一个组织的数据返回给合法用户。"
+  },
+  "Curated route vs. rewritten deck": {
+   "zh": "精选路线与改写的讲稿",
+   "def": "路线在稳定 ID 上重排和省略；为受众改写幻灯片会造成内容分叉。",
+   "inline": false
+  },
+  "data-model.md": {
+   "zh": "数据模型文件",
+   "def": "只列实体和关键字段、不含实现的文件。",
+   "inline": false
+  },
+  "Deadline honesty": {
+   "zh": "截止日期诚实原则",
+   "def": "发布截止日期必须对应真实的变化，比如关闭购买或涨价。"
+  },
+  "Debounce": {
+   "zh": "防抖",
+   "def": "两次主动触发之间的最短间隔。",
+   "scope": "module"
+  },
+  "Definition of Done": {
+   "zh": "完成的定义",
+   "def": "合并到 main、必需检查通过、测试通过、文档已更新。"
+  },
+  "Definition of Done (DoD)": {
+   "zh": "完成的定义（DoD）",
+   "def": "“已发布”而不只是“已构建”的标准：在安装后的产品里验证。"
+  },
+  "Deletion test": {
+   "zh": "删除测试",
+   "def": "从定位一句话中删掉一个分句，看你的表格是否有任何一行会察觉。"
+  },
+  "Deliverability": {
+   "zh": "邮件送达率",
+   "def": "邮件能否进入收件箱，由发件域名的 SPF、DKIM、DMARC 决定。"
+  },
+  "Dependency-lock diff": {
+   "zh": "依赖锁差异检查",
+   "def": "锁文件与生成的工作区不一致时让构建失败的 CI 步骤。"
+  },
+  "Deploy from a branch": {
+   "zh": "从分支部署",
+   "def": "最简单的 GitHub Pages 模式：按原样发布某个分支和文件夹里的文件。"
+  },
+  "Disruption drill": {
+   "zh": "中断演练",
+   "def": "故意打破正常路径，并规定拒绝应当是什么样子的场景。"
+  },
+  "Drift": {
+   "zh": "漂移",
+   "def": "生成的产物与其来源不一致。",
+   "scope": "module"
+  },
+  "Edition": {
+   "zh": "版次",
+   "def": "内容的一个带版本号、不可变的发布。",
+   "scope": "module"
+  },
+  "Epistemic label": {
+   "zh": "认知标签",
+   "def": "数字的状态：实测、自报、厂商关联或示意。"
+  },
+  "Evidence log": {
+   "zh": "证据日志",
+   "def": "学员全程维护的、只追加的命令与输出记录。",
+   "scope": "module"
+  },
+  "Evidence record": {
+   "zh": "证据记录",
+   "def": "带日期、绑定版本的验证记录：命令与结果、环境和提交 SHA。"
+  },
+  "Fail closed": {
+   "zh": "失败即关闭",
+   "def": "缺少必要证明时拒绝操作的安全默认。"
+  },
+  "Fail-closed": {
+   "zh": "失败即关闭",
+   "def": "无法验证为本地时一律拒绝，而不是退回云端。"
+  },
+  "Feature gating": {
+   "zh": "功能门控",
+   "def": "付费路由已写好，但在工作流被证明前通过开关返回 404。"
+  },
+  "Feature gating vs. gating the core": {
+   "zh": "功能门控与门控核心",
+   "def": "门控推迟未被证明的付费路径；门控核心会让关键流程无法使用。",
+   "inline": false
+  },
+  "Financial-capture set": {
+   "zh": "财务信息问题组",
+   "def": "失败的问卷漏掉的问题：预算归属、可变支出比例等。"
+  },
+  "Fixed-fee discovery": {
+   "zh": "固定费用探查",
+   "def": "在更大承诺之前，先确认预算和发起人的首个付费合作。"
+  },
+  "Fraction-of-live-price rule": {
+   "zh": "直播价比例规则",
+   "def": "只有保留项目、异步反馈和社区时，自学版才能定在直播版的 70–85%。"
+  },
+  "Free tier vs. free-and-open positioning": {
+   "zh": "免费档与免费开源定位",
+   "def": "免费档是付费产品的限额；免费开源是带商业模式的零价格。",
+   "inline": false
+  },
+  "Functional requirement (FR)": {
+   "zh": "功能需求（FR）",
+   "def": "带编号、与技术无关的“系统必须……”陈述。"
+  },
+  "Generated vs. verified": {
+   "zh": "已生成与已验证",
+   "def": "已生成表示命令写出了它；已验证表示有人检查并记录了结果。",
+   "inline": false
+  },
+  "Generation token": {
+   "zh": "生成令牌",
+   "def": "使进行中的流失效的按角色计数器。"
+  },
+  "Git": {
+   "zh": "版本控制工具",
+   "def": "在你电脑上记录文件夹各个版本的工具。",
+   "scope": "module"
+  },
+  "GitHub": {
+   "zh": "代码托管平台",
+   "def": "保存仓库副本并能发布它们的网站。",
+   "scope": "module"
+  },
+  "GitHub CLI (gh)": {
+   "zh": "GitHub 命令行工具",
+   "def": "在终端里操作 GitHub：登录、创建仓库。"
+  },
+  "GitHub Pages": {
+   "zh": "静态网站托管",
+   "def": "GitHub 从仓库免费托管静态网站的服务。"
+  },
+  "Go/no-go gate": {
+   "zh": "推进/终止关口",
+   "def": "由发起人签字、有成本上限和停止规则的决策边界。"
+  },
+  "Graceful degradation": {
+   "zh": "优雅降级",
+   "def": "关闭 AI 后，采集、转写和保存仍然可用。"
+  },
+  "Guided route": {
+   "zh": "引导路线",
+   "def": "在稳定幻灯片 ID 上精选的顺序，并声明收尾页。",
+   "scope": "module"
+  },
+  "Health score": {
+   "zh": "健康分",
+   "def": "求解器为生成的排班打出的 0–100 质量分。",
+   "scope": "module"
+  },
+  "Health score vs. oracle": {
+   "zh": "健康分与独立判定",
+   "def": "健康分是求解器给自己打分；独立判定从产物重新计算正确性。",
+   "inline": false
+  },
+  "Home folder": {
+   "zh": "主目录",
+   "def": "终端打开时所在的文件夹，写作 ~。",
+   "scope": "module"
+  },
+  "Homebrew": {
+   "zh": "macOS 包管理器",
+   "def": "macOS 的包管理器。"
+  },
+  "Honest-marketing checklist": {
+   "zh": "诚实营销清单",
+   "def": "每份销售材料都必须通过的五条规则：数字有来源、主张有限定、不编造。"
+  },
+  "Hook": {
+   "zh": "钩子脚本",
+   "def": "Claude Code 在生命周期事件时运行的脚本。",
+   "scope": "module"
+  },
+  "Immutable release": {
+   "zh": "不可变发布",
+   "def": "已发布的版次从不覆盖；需要时另发新版。"
+  },
+  "Independent oracle": {
+   "zh": "独立判定器",
+   "def": "从产物本身重新计算正确性，而不是询问生成它的系统。"
+  },
+  "Independent Test": {
+   "zh": "独立测试",
+   "def": "证明每个故事本身就是可用 MVP 切片的那一行。"
+  },
+  "Instruction hierarchy": {
+   "zh": "指令优先级",
+   "def": "规则重叠时的五级优先顺序，加一条决胜规则。"
+  },
+  "Invitation-only growth": {
+   "zh": "仅限邀请的增长",
+   "def": "注册会同时创建组织和首位管理员，加入现有组织只能通过邀请。"
+  },
+  "Jekyll": {
+   "zh": "静态站点生成器",
+   "def": "GitHub Pages 默认运行的站点构建工具。"
+  },
+  "Launch evidence log": {
+   "zh": "发布证据日志",
+   "def": "记录实际名单规模、送达、打开、点击、转化和退款的日志。"
+  },
+  "Lead product": {
+   "zh": "引流产品",
+   "def": "在邮件序列之前建立名单的免费资产。",
+   "scope": "module"
+  },
+  "Lead product vs. the course": {
+   "zh": "引流产品与课程",
+   "def": "免费拆解用微缩版方法建立名单；它不是课程本身。",
+   "inline": false
+  },
+  "LLMProvider": {
+   "zh": "模型提供方接缝",
+   "def": "提供方协议接缝：核心通过它流式获取文本。",
+   "inline": false
+  },
+  "Local model": {
+   "zh": "本地模型",
+   "def": "权重在你机器上运行的模型。"
+  },
+  "Local model vs. verified local": {
+   "zh": "本地模型与已验证本地",
+   "def": "“在 localhost 上运行”只是地址；“已验证本地”有元数据证明。",
+   "inline": false
+  },
+  "Local validation vs. verified local": {
+   "zh": "本地验证与已验证本地",
+   "def": "在本地运行命令是动作；已验证本地是带记录的证明。",
+   "inline": false
+  },
+  "Local vs. verified local": {
+   "zh": "本地与已验证本地",
+   "def": "localhost 地址证明不了什么，本地守护进程也可能转发到云端。",
+   "inline": false
+  },
+  "Local-first defaults": {
+   "zh": "本地优先的默认值",
+   "def": "自动选择时先排除云端别名，只有没有本地模型时才选云端。"
+  },
+  "LOCAL_HOSTS / loopback allowlist": {
+   "zh": "回环地址白名单",
+   "def": "本地模式唯一信任的主机：localhost、127.0.0.1、::1。",
+   "inline": false
+  },
+  "Loop journal": {
+   "zh": "循环日志",
+   "def": "从 M0.2 开始，学员在每个循环阶段记一行的文件。",
+   "scope": "module"
+  },
+  "Manual smoke test": {
+   "zh": "人工冒烟测试",
+   "def": "覆盖麦克风、系统音频和实时转写的测试层级，需要人工授权。"
+  },
+  "Metric vs. verdict": {
+   "zh": "指标与结论",
+   "def": "覆盖率和测试数只是门槛；验证交付物的评审才是结论。",
+   "inline": false
+  },
+  "NDJSON": {
+   "zh": "逐行 JSON 格式",
+   "def": "Ollama 的流式格式：每行一个 JSON 对象。"
+  },
+  "Negative-path test": {
+   "zh": "负路径测试",
+   "def": "断言拒绝及其状态码的测试，而不是成功路径。"
+  },
+  "No-CI local validation": {
+   "zh": "无 CI 本地验证",
+   "def": "SignUpFlow 在本地运行全部评审、迁移和测试的既定策略。"
+  },
+  "Not verified vs. false": {
+   "zh": "未验证与错误",
+   "def": "“未验证”表示无法确认，是诚实的状态，不等于错误。",
+   "inline": false
+  },
+  "Not-verified list": {
+   "zh": "未验证清单",
+   "def": "公开列出无法确认的主张，与已证实的内容放在一起。"
+  },
+  "On-device": {
+   "zh": "端侧",
+   "def": "在用户自己的硬件上处理，音频或文本无需离开设备。"
+  },
+  "One CTA": {
+   "zh": "单一行动号召",
+   "def": "只有一个行动号召，出现在哪里都措辞一致。",
+   "scope": "module"
+  },
+  "One-time pricing": {
+   "zh": "一次性定价",
+   "def": "每用户边际成本不重复发生时，只收一次费用。"
+  },
+  "P0 bug": {
+   "zh": "最高级缺陷",
+   "def": "最高严重级别，不在分诊中讨价还价。"
+  },
+  "Package manager": {
+   "zh": "包管理器",
+   "def": "用一条命令安装和更新软件的工具。",
+   "scope": "module"
+  },
+  "Page length vs. page quality": {
+   "zh": "页面长度与页面质量",
+   "def": "长度跟随价格和风险，是你必须回答的异议的结果。",
+   "inline": false
+  },
+  "Partial vs. final": {
+   "zh": "临时结果与最终结果",
+   "def": "进行中的临时文本与已定稿的语句；临时结果不进入存储。",
+   "inline": false
+  },
+  "Per-seat pricing": {
+   "zh": "按席位定价",
+   "def": "按席位收费，让价格单位随组织的使用规模增长。"
+  },
+  "Permission role": {
+   "zh": "权限角色",
+   "def": "账号可以做什么：admin 或 volunteer 之一。"
+  },
+  "Permission role vs. qualification": {
+   "zh": "权限角色与资格",
+   "def": "权限角色决定权限；资格决定能否担任某个岗位。",
+   "inline": false
+  },
+  "Persona directive": {
+   "zh": "人设指令",
+   "def": "附加到每个角色系统提示后的预设指导。"
+  },
+  "Phase 0 / Phase 1": {
+   "zh": "第 0 / 第 1 阶段",
+   "def": "研究（有依据的决策）与设计（数据模型、契约、快速上手）。",
+   "inline": false
+  },
+  "plan.md": {
+   "zh": "计划文件",
+   "def": "负责“怎么做”：语言、版本、存储、性能目标和项目结构。",
+   "inline": false
+  },
+  "Positioning one-liner": {
+   "zh": "定位一句话",
+   "def": "形如“形容词楔子 × 差异点 × 受众”的一句话。"
+  },
+  "Price vs. cost floor": {
+   "zh": "价格与成本底线",
+   "def": "价格是你的要价；底线是其下的保本计算。",
+   "inline": false
+  },
+  "PrivacyMode": {
+   "zh": "隐私模式",
+   "def": "用户选择的明确模式：关闭、本地或云端。",
+   "inline": false
+  },
+  "Proactive gate": {
+   "zh": "主动触发关卡",
+   "def": "主动回答触发前的四个条件：已定稿、来自他人、是问题、已过防抖。"
+  },
+  "Prompt": {
+   "zh": "提示符",
+   "def": "终端里等待你输入的那一行。",
+   "inline": false,
+   "scope": "module"
+  },
+  "PromptBuilder": {
+   "zh": "提示词构建层",
+   "def": "纯函数式的提示词构造层。",
+   "inline": false
+  },
+  "Proof asset": {
+   "zh": "证明资产",
+   "def": "仓库里可验证的证据：覆盖率徽章、带日期的测试证据行。",
+   "scope": "module"
+  },
+  "Proof asset vs. README claim": {
+   "zh": "证明资产与 README 主张",
+   "def": "主张是人写的文字；证明资产是机器输出或带日期的记录。",
+   "inline": false
+  },
+  "Protocol seam": {
+   "zh": "协议接缝",
+   "def": "纯核心声明、平台层实现的协议。"
+  },
+  "Provenance": {
+   "zh": "来源追溯",
+   "def": "主张的出处：来源、检索日期和主张类型。"
+  },
+  "Provenance manifest": {
+   "zh": "来源清单",
+   "def": "记录每次检索的 URL、日期、状态和 SHA-256 哈希。"
+  },
+  "Push": {
+   "zh": "推送",
+   "def": "用 git push 把新的提交发送到 GitHub。",
+   "scope": "module"
+  },
+  "Qualification": {
+   "zh": "资格",
+   "def": "一个人能做什么，如引座员、教练；不决定权限。",
+   "scope": "module"
+  },
+  "Qualified claim": {
+   "zh": "有限定的主张",
+   "def": "同时写明来源和局限、买家可以审计的主张。"
+  },
+  "Qualified claim vs. hedged claim": {
+   "zh": "有限定的主张与含糊的主张",
+   "def": "有限定的主张写明来源和局限；含糊的主张只是免责。",
+   "inline": false
+  },
+  "Ralph loop": {
+   "zh": "Ralph 循环",
+   "def": "智能体挑选优先级最高的未完成规格，完成全部验收标准，再输出完成信号。"
+  },
+  "Redirect refusal (RejectRedirects)": {
+   "zh": "拒绝重定向",
+   "def": "拒绝所有 3xx 重定向的传输层，会议文本不会被带走。"
+  },
+  "Relative path": {
+   "zh": "相对路径",
+   "def": "从当前位置出发的文件夹地址。",
+   "scope": "module"
+  },
+  "Release vs. Prove": {
+   "zh": "发布与证明",
+   "def": "发布是你交付的产物；只有签名、下载并比对后才成为证明。",
+   "inline": false
+  },
+  "Released capacity vs. hard-dollar saving": {
+   "zh": "释放的产能与硬性节省",
+   "def": "节省出的工时只是生产力，财务指明预算科目后才算节省。",
+   "inline": false
+  },
+  "Repository": {
+   "zh": "仓库",
+   "def": "Git 记录其历史的文件夹，以及它在 GitHub 上的副本。",
+   "scope": "module"
+  },
+  "Reputation funnel": {
+   "zh": "口碑漏斗",
+   "def": "免费或开源产品依赖的营销面：代码、README、覆盖率。"
+  },
+  "Research log": {
+   "zh": "研究日志",
+   "def": "主张进入页面前必须先登记的、带日期的队列。",
+   "scope": "module"
+  },
+  "research.md": {
+   "zh": "研究文件",
+   "def": "第 0 阶段的决策：评估的选项、理由和被否决的方案。",
+   "inline": false
+  },
+  "Reserved slot vs. placeholder testimonial": {
+   "zh": "预留位与占位推荐语",
+   "def": "预留位是空的并标明；占位推荐语是没人说过的话。",
+   "inline": false
+  },
+  "Reserved testimonial slot": {
+   "zh": "预留推荐语位",
+   "def": "带诚实说明的空推荐语位，取代编造的推荐语。"
+  },
+  "Resource enumeration": {
+   "zh": "资源枚举",
+   "def": "通过观察错误码推断哪些资源存在。"
+  },
+  "Review vs. approval": {
+   "zh": "评审与批准",
+   "def": "带严重级别和行号发现的本地记录是评审；批准是另一回事。",
+   "inline": false
+  },
+  "Reviewed head SHA": {
+   "zh": "已评审的提交 SHA",
+   "def": "本地评审及其证据所绑定的版本；源码改变即失效。"
+  },
+  "Rule graduation": {
+   "zh": "规则晋级",
+   "def": "一条观察成为规则的流程：记录、试用、再写入 AGENTS.md。"
+  },
+  "Rule vs. guideline": {
+   "zh": "规则与指南",
+   "def": "规则可验证；指南只是建议。",
+   "inline": false
+  },
+  "Sales-page anatomy": {
+   "zh": "销售页结构",
+   "def": "八个部分：转变标题、适合谁、问题、成果、可信度、借来的信任、异议、价格。"
+  },
+  "Self-reported vs. measured": {
+   "zh": "自报与实测",
+   "def": "“组织报告提升 10–15%”是感受数据；实测有方法和样本。",
+   "inline": false
+  },
+  "Self-review mapping": {
+   "zh": "自查对照",
+   "def": "计划末尾把每条规格对应到任务和测试的部分。"
+  },
+  "Setup check": {
+   "zh": "环境检查脚本",
+   "def": "检测 Git、GitHub CLI、身份和登录状态的脚本。",
+   "scope": "module"
+  },
+  "Signature qualifier": {
+   "zh": "标志性限定语",
+   "def": "给整个产品定性的一句话。"
+  },
+  "Site version vs. content edition": {
+   "zh": "站点版本与内容版次",
+   "def": "只修播放器会提升站点版本，同时保留内容版次。",
+   "inline": false
+  },
+  "Skeptical-engineer test": {
+   "zh": "怀疑派工程师测试",
+   "def": "你的表格会招来的三个最难异议，每个都用来源回答。"
+  },
+  "Skipped vs. deleted": {
+   "zh": "跳过与删除",
+   "def": "需要基础设施的测试应带理由跳过，而不是删除。",
+   "inline": false
+  },
+  "Spec (the WHAT)": {
+   "zh": "规格（做什么）",
+   "def": "与技术无关、描述用户需要什么的文档。",
+   "inline": false
+  },
+  "Spec folder": {
+   "zh": "规格文件夹",
+   "def": "一个功能自成一体的指令集：spec、research、plan 等。"
+  },
+  "Spec kit": {
+   "zh": "规格套件",
+   "def": "一个功能背后的产物集合：规格、研究、计划、契约。",
+   "scope": "module"
+  },
+  "Spec-kit": {
+   "zh": "规格驱动工具包",
+   "def": "GitHub 的规格驱动工具包，在 specs/ 下生成一组产物。"
+  },
+  "Spec-to-Ship Loop": {
+   "zh": "从规格到交付的循环",
+   "def": "每个模块都用的六阶段方法：研究 → 规格 → 构建 → 验证 → 发布 → 证明。"
+  },
+  "spec.md vs. plan.md": {
+   "zh": "spec.md 与 plan.md",
+   "def": "规格是“做什么”，不提技术；计划是“怎么做”。",
+   "inline": false
+  },
+  "Stable slide ID": {
+   "zh": "稳定幻灯片 ID",
+   "def": "路线和分享链接依赖的不变编号。",
+   "scope": "module"
+  },
+  "StoryBrand stance": {
+   "zh": "StoryBrand 立场",
+   "def": "学员是英雄，讲师是向导的定位规则。"
+  },
+  "Stranger test": {
+   "zh": "陌生人测试",
+   "def": "没有任何对话记忆的新智能体会话能否仅凭文件实现它。"
+  },
+  "Success criteria (SC)": {
+   "zh": "成功标准（SC）",
+   "def": "可衡量、与技术无关的结果。"
+  },
+  "Sufficient evidence": {
+   "zh": "充分证据",
+   "def": "置信区间不跨越决策边界的结果。"
+  },
+  "Task line": {
+   "zh": "任务行",
+   "def": "tasks.md 中可执行的一条，带编号、并行标记、故事和精确文件路径。",
+   "scope": "module"
+  },
+  "tasks.md": {
+   "zh": "任务文件",
+   "def": "第 2 阶段产出：测试优先、带精确路径的勾选任务。",
+   "inline": false
+  },
+  "Tenant isolation": {
+   "zh": "租户隔离",
+   "def": "每个查询都按 org_id 过滤，一个组织看不到另一个组织的数据。"
+  },
+  "Tenant-bound credential": {
+   "zh": "绑定租户的凭证",
+   "def": "同时携带用户 sub 和 org_id 的 JWT 或会话，两者都必需。"
+  },
+  "Terminal": {
+   "zh": "终端",
+   "def": "输入命令而不是点击的窗口。",
+   "scope": "module"
+  },
+  "Test tier": {
+   "zh": "测试层级",
+   "def": "在独立进程中运行的一层测试金字塔。",
+   "scope": "module"
+  },
+  "Tested vs. shipped": {
+   "zh": "已测试与已交付",
+   "def": "测试通过验证你构建的东西；评审验证用户需要的东西。",
+   "inline": false
+  },
+  "Token-prefix matching": {
+   "zh": "词首前缀匹配",
+   "def": "能力标记只在词首匹配，绝不做子串匹配。"
+  },
+  "Token-prefix vs. substring": {
+   "zh": "词首前缀与子串",
+   "def": "“gemini”包含“mini”，但“mini”不在词首。",
+   "inline": false
+  },
+  "Transformation headline": {
+   "zh": "转变式标题",
+   "def": "一句可证伪的目的地陈述，而不是内容清单。"
+  },
+  "Trust boundary": {
+   "zh": "信任边界",
+   "def": "一项保证的诚实边界。",
+   "scope": "module"
+  },
+  "Truthful mode label": {
+   "zh": "如实的模式标签",
+   "def": "说明数据去向，而不是功能有多好的标签。"
+  },
+  "Typed stream errors (OllamaStreamError)": {
+   "zh": "类型化流错误",
+   "def": "流式调用的失败模型：服务端错误、流不完整等。",
+   "inline": false
+  },
+  "VAD": {
+   "zh": "语音活动检测",
+   "def": "找出语句边界的语音活动检测。"
+  },
+  "Validate vs. Prove": {
+   "zh": "验证与证明",
+   "def": "验证说明产物通过测试；证明是对已核实与未核实内容的诚实记录。",
+   "inline": false
+  },
+  "Value anchor": {
+   "zh": "价值锚点",
+   "def": "你的产品替代的东西：工时、人员或某个订阅。",
+   "scope": "module"
+  },
+  "Verified local": {
+   "zh": "已验证本地",
+   "def": "只有元数据证明不是远端托管时，才接受的本地模型。"
+  },
+  "verify_local_model()": {
+   "zh": "本地模型校验函数",
+   "def": "失败即关闭的 /api/show 检查。",
+   "inline": false
+  },
+  "Warmup phase": {
+   "zh": "预热阶段",
+   "def": "前三封邮件：起源故事、转变证明、免费工具。"
+  },
+  "Warmup vs. conversion": {
+   "zh": "预热与转化",
+   "def": "预热赢得推销的资格；转化花掉它。",
+   "inline": false
+  },
+  "WHAT vs. HOW": {
+   "zh": "做什么与怎么做",
+   "def": "“做什么”属于 spec.md；“怎么做”属于 plan.md。",
+   "inline": false
+  },
+  "winget": {
+   "zh": "Windows 包管理器",
+   "def": "Windows 包管理器。"
+  },
+  "Working tree clean": {
+   "zh": "工作区干净",
+   "def": "所有改动都已提交时 git status 显示的状态。"
+  },
+  "YAGNI non-goals": {
+   "zh": "YAGNI 非目标",
+   "def": "设计明确拒绝构建的内容清单。"
+  }
+ }
+}

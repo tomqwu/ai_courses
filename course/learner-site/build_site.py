@@ -30,6 +30,7 @@ from narration_data import (COURSE_DIR, DECK_IDS, EDITION, MANIFEST_PATH, PROVEN
                             SITE_ROOT, load_manifest, load_scripts, read_json, write_json)
 import site_shell as SH                                  # noqa: E402
 import figures as FIG                                    # noqa: E402
+import site_locale as SL                                 # noqa: E402
 
 # Our decks already write `M0.1 — Real title` and `Type 1 — Real title`, which is exactly the
 # kicker/title split ai_qe uses (`02 / Strategic target state`). Only an em dash splits: an en dash
@@ -1149,6 +1150,9 @@ def main(argv=None) -> int:
         (target / f"quiz-{deck['id']}.html").write_text(html_out, encoding="utf-8")
         record["module"] = SPG.short_label(deck)
         records.append(record)
+    # EN / 中文 (#116): the terms locale.js names beside their first use, per module.
+    (target / "assets").mkdir(parents=True, exist_ok=True)
+    (target / "assets" / "terms-zh.js").write_text(SL.script(terms_by_deck, SL.load()), encoding="utf-8")
     decks_by_id_for_glossary = {deck["id"]: deck for deck in decks}
     (target / "glossary.html").write_text(
         SPG.master_glossary_page(terms_by_deck, decks_by_id_for_glossary, args.site_base, BRAND_MARK),

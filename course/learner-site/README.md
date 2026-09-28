@@ -527,6 +527,26 @@ there to read.
 * **Deep links** keep working: `#slide-N` opens that part; `?t=` from a search hit marks the spoken
   sentence and Play starts there.
 
+## EN / 中文
+
+The course is taught in English. The top bar's **EN | 中文** switch (remembered in the browser) adds
+Chinese where it helps a learner rather than translating the course (#116):
+
+* **Key terms, inline, on first use.** In each part of a Learn page, lesson section, lab step and
+  question, the first use of a glossary term shows its Chinese name beside it — "tenant isolation
+  （租户隔离）". The name is a CSS `::after` on a wrapper, so the words themselves never change: the
+  narration text, captions, search and the read-aloud voice all see the English as recorded.
+  Generic words (`"scope": "module"`) are only named in the modules whose glossary defines them.
+* **Glossaries** show each term's Chinese name and a one-line Chinese definition; search finds a term
+  by its Chinese name.
+* **The site's own controls** (modes, buttons, headings the site writes) read in Chinese; module and
+  unit titles, and all course text, stay as written.
+
+Source: `course/06-production/terms-zh.json`. The build renders the glossaries' Chinese and writes
+`assets/terms-zh.js` (generated, not committed); `assets/locale.js` does the rest, loaded in `<head>`
+so the choice applies before first paint. `verify.py` holds every glossary term to an entry;
+`check_features.py` drives the switch.
+
 ## Accessibility
 
 * One `h1` per page; slides are `<section>` landmarks labelled by their own heading.
