@@ -65,11 +65,30 @@ column: A vibe (bad) @ And the wording matters
 
 ## M5.1 — Three mechanical enforcers
 
-<!-- _diagram: grid -->
-
-1. `verify_org_member` — foreign org → `403`
-2. `get_current_user` — reload by id **and** `org_id`
-3. `get_current_admin_user` — admin gate → `403`
+```figure
+kind: system
+alt: One request through SignUpFlow's tenant boundary — the JWT is decoded and the person reloaded by id, org_id and active status; admin routes add a role check; the route checks the org in the path; every query filters by org_id; each failure is a 401 or a 403 before any data is touched.
+source: SignUpFlow/api/dependencies.py:46-160 · SignUpFlow/api/routers/people.py:271-274
+layer: The request
+  node req: Bearer JWT — claims: sub + org_id
+layer: api/dependencies.py (seam) @ One file holds three enforcers
+  node user: get_current_user — reload by id, org_id and active @ One file holds three enforcers
+  node admin: get_current_admin_user — role must be admin @ Anything else is 401
+layer: The route
+  node member: verify_org_member — person.org_id == path org_id @ One file holds three enforcers
+  node query: every query — filter by org_id (hl)
+layer: The outcome
+  node db: the tenant's own rows
+  node deny: 401 · 403 — nothing touched
+edge: req -> user — identity from the credential only (hl) @ One line makes it safe
+edge: user -> admin — admin routes @ Anything else is 401
+edge: user -> member
+edge: member -> query — same org
+edge: query -> db
+edge: user -> deny — 401: bad token, or no such row @ Anything else is 401
+edge: member -> deny — 403: foreign org
+edge: admin -> deny — 403: not an admin @ Anything else is 401
+```
 
 - Identity from the credential only.
 - "Never read user state from the request body."

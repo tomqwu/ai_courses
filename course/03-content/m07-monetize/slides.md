@@ -294,12 +294,21 @@ Gumroad-only start + Circle ~$49/mo or Discord $0 + email ~$29/mo
 
 ## The worked example is this course
 
-| Tier | Price | What defends the rung |
-|---|---|---|
-| Lead product | **$0** | List-builder; one repo teardown |
-| Studio self-paced | **$399** | Completion is the product |
-| Studio Live cohort | **$1,490** (founding **$990**) | Maven's 12–20 live-hours band |
-| Team / Enterprise | **$2,500–4,000** | 3–5 seats, private code review |
+```figure
+kind: system
+alt: This course's offer ladder as a system — a free lead product builds the list that feeds a $399 self-paced tier, a $1,490 cohort with a $990 founding price, and a $2,500–4,000 team tier for 3–5 seats.
+source: course/04-sales/pricing-and-platforms.md:10-13
+layer: Free
+  node lead: lead product — $0; one repo teardown builds the list
+layer: Paid
+  node self: Studio self-paced — $399; completion is the product @ A $0 lead product feeds
+  node cohort: Studio Live cohort (hl) — $1,490, founding $990; Maven's 12–20 live-hours band @ A $0 lead product feeds
+  node team: Team / Enterprise — $2,500–4,000; 3–5 seats, private code review @ A $0 lead product feeds
+edge: lead -> self — the list @ A $0 lead product feeds
+edge: self -> cohort — live feedback and peers
+edge: cohort -> team — a company's seats
+edge: lead -> cohort — founding price, traded for a testimonial @ The founding discount buys
+```
 
 - Why not cheaper: ≥$950 courses earn 50–100% more
 - Why not more: no public testimonials yet

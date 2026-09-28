@@ -52,6 +52,9 @@ Keep each slide's NOTES and its `video-scripts.md` rows consistent with the spok
 - **A figure on every segment's first slide** — the architecture or flow that segment teaches, its
   parts stepped with `@ opening words` of the narration sentences that introduce them. It also heads
   the segment in Read.
+- **At least one system diagram** (`kind: system`): the module's real system — components as
+  `node id: label`, connections as `edge: a -> b — label` — read from the code at the pinned commit
+  and cited. `verify.py` fails a module in `FIGURE_MODULES` without one.
 - **A screenshot wherever a slide makes a claim about a product.** Copy it at the pinned commit:
   `python3 course/06-production/figures_shots.py copy <Repo>/<path> --as <name>.png`, then
   `kind: screenshot` with `image: <name>.png` and numbered `callout:`s.

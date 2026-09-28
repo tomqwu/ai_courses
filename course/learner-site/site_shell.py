@@ -269,7 +269,7 @@ def document(title: str, description: str, content: str, site_base: str, body_cl
              scripts: tuple[str, ...] = (), body_attrs: str = "") -> str:
     """A whole page in the shell. `content` is everything inside <main>, page head included."""
     tags = "".join(f'<script src="{site_base}/assets/{s}" defer></script>'
-                   for s in ("progress.js", "shell.js", "search.js") + tuple(scripts))
+                   for s in ("progress.js", "shell.js", "search.js", "figures.js") + tuple(scripts))
     return f"""<!doctype html>
 <html lang="en">
 <head>

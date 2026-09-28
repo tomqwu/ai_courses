@@ -272,7 +272,23 @@ Pointers: `04-sales/launch-plan.md:48-50` · `04-sales/pricing-and-platforms.md:
 ≈ $8,767). …
 ```
 
-- That is ~456 opens · ~68 clicks · ~11 enrollments.
+```figure
+kind: system
+alt: The launch model as a system — the list is multiplied down through opens, clicks and the sales page to enrollments: 1,200 subscribers at 38%, 15% and 16% is about 11 enrollments at $797, about $8,767; actuals go back into the model.
+source: course/00-research/02-course-market-research.md:62
+layer: Email @ Multiply the five factors in order
+  node list: list — 1,200 subscribers
+  node open: opens — about 456
+  node click: clicks — about 68
+layer: Page and checkout
+  node page: sales page
+  node enrol: enrollments (hl) — about 11 × $797 ≈ $8,767
+edge: list -> open — × 38% open
+edge: open -> click — × 15% click-to-open
+edge: click -> page
+edge: page -> enrol — × 16% page conversion
+edge: enrol -> list — record actuals, re-derive (seam) @ Then record actuals
+```
 - Warm lists convert 2–5% overall; one pass is conservative.
 - Each conversion email is another pass through the funnel.
 - Record actuals after: list, delivery, opens, clicks, conversions.

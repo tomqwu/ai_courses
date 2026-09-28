@@ -292,10 +292,29 @@ All pass/fail. Cheapest place to stop a bad spec.
 
 ## Contracts are the seams between sessions
 
-- Designed in one session, implemented in another
-- They share no memory — only files
-- Pin request/response shapes and error keys
-- Pin key schemas and a test sketch
+```figure
+kind: system
+alt: Spec-kit sessions share no memory, only files — the design session writes spec, plan, contracts and tasks, and a fresh implementing session reads them, with the contracts pinning the seams, before it writes code and tests.
+source: SignUpFlow/specs/014-security-hardening/contracts/rate-limiting.md
+layer: The design session @ A contract is the interface
+  node design: specify · plan · tasks — a session with the conversation
+layer: Files on disk — the only shared state (hl) @ Those two share nothing but the files on disk
+  node spec: spec.md — the WHAT
+  node plan: plan.md — the HOW
+  node contracts: contracts/ (seam) — shapes · error keys · key schema · test sketch
+  node tasks: tasks.md
+layer: The implementing session — no chat history @ A contract is the interface
+  node impl: implement — a fresh agent session
+  node code: code + tests
+edge: design -> spec
+edge: design -> plan
+edge: design -> contracts — written down
+edge: design -> tasks
+edge: spec -> impl
+edge: contracts -> impl — pins the seam (hl) @ Those two share nothing but the files on disk
+edge: tasks -> impl
+edge: impl -> code
+```
 - Rate-limiting config row repeats US1's 5/5/15
 
 `specs/014-security-hardening/contracts/rate-limiting.md`

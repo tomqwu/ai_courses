@@ -39,15 +39,20 @@ step: a public catalog on GitHub Pages (hl) @ By the end you will have
 ## M9.1 — Four things, one job each
 
 ```figure
-kind: architecture
-alt: Git and the terminal live on your computer, GitHub lives on the internet, and the gh command line tool connects them.
-layer: Your computer
-  box: Terminal — type commands instead of clicking @ The terminal is a window
-  box: Git — records versions of a folder; each is a commit @ Git records versions
-layer: The link (seam) @ And gh, the GitHub CLI
-  box: gh — the GitHub CLI: drives GitHub from the terminal
-layer: The internet @ GitHub is a website
-  box: GitHub — stores the folder, a repository, and can publish it
+kind: system
+alt: The four tools and how a change travels — you type in the terminal; Git records commits in your folder; gh signs you in and creates the repository; git push sends commits to GitHub, which publishes the site on Pages.
+layer: Your computer @ Git lives on your computer
+  node git: Git — records versions; each is a commit @ Git records versions
+  node term: Terminal — type commands instead of clicking @ The terminal is a window
+  node gh: gh — the GitHub CLI (seam) @ And gh, the GitHub CLI
+layer: The internet @ GitHub lives on the internet
+  node github: GitHub — stores the repository @ GitHub is a website
+  node pages: GitHub Pages (hl) — your site's address
+edge: term -> git — git add · commit @ Git records versions
+edge: term -> gh — gh auth login · repo create @ And gh, the GitHub CLI
+edge: gh -> github — drives GitHub (seam) @ The CLI connects them
+edge: git -> github — git push @ The CLI connects them
+edge: github -> pages — publish from a branch @ GitHub is a website
 ```
 
 <!-- NOTES: Keep this concrete. Git is on the learner's computer; GitHub is a website; gh connects the two from the terminal. Most beginner confusion is mixing up Git and GitHub, so name the difference once and move on. Timing: 1 minute. Transition: opening a terminal. -->

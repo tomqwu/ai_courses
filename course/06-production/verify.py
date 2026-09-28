@@ -491,6 +491,7 @@ def check_figures() -> list[str]:
     scripts = load_scripts()["decks"]
     problems: list[str] = []
     count = stepped = 0
+    systems: dict[str, int] = {}
 
     def one(where: str, body: str, said: list[str] | None) -> None:
         nonlocal count, stepped
@@ -500,6 +501,9 @@ def check_figures() -> list[str]:
         except F.FigureError as exc:
             problems.append(f"{where}: {exc}")
             return
+        if fig["kind"] == "system":
+            mod = where.split("-")[0]
+            systems[mod] = systems.get(mod, 0) + 1
         if len(fig["alt"]) < 12:
             problems.append(f"{where}: alt is too short to say what the figure shows")
         for src in _figure_sources(fig["source"]):
@@ -517,7 +521,7 @@ def check_figures() -> list[str]:
             problems.append(f"{where}: image {fig['image']} is not in course/figures/shots/")
         if fig["kind"] == "scene" and not (FIGURES / "scenes" / fig["scene"]).is_file():
             problems.append(f"{where}: scene {fig['scene']} is not in course/figures/scenes/")
-        parts = [p for item in fig["items"] for p in (item, *item["children"])]
+        parts = [p for item in fig["items"] for p in (item, *item["children"])] + fig.get("edges", [])
         ats = [p for p in parts if p["at"]]
         if ats:
             stepped += 1
@@ -539,6 +543,9 @@ def check_figures() -> list[str]:
             one(f"{lesson.parent.name}/lesson.md", body, None)
 
     for deck_id in FIGURE_MODULES:
+        # Every module draws at least one real system — components and the arrows between them (#115).
+        if not systems.get(deck_id):
+            problems.append(f"{deck_id}: no system diagram (kind: system) in its slides or lesson")
         deck = B.parse_deck(deck_id, scripts)
         units = SP.module_units(deck)
         figs = F.deck_figures(deck, units)
@@ -550,7 +557,7 @@ def check_figures() -> list[str]:
 
     shots, manifest_problems = check_figure_manifest()
     problems += manifest_problems
-    check_figures.summary = (f"{count} figures, {stepped} stepped, {shots} screenshots, "
+    check_figures.summary = (f"{count} figures, {stepped} stepped, {sum(systems.values())} systems, {shots} screenshots, "
                              f"{len(FIGURE_MODULES)} modules covered")
     return problems
 

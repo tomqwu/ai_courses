@@ -18,6 +18,34 @@ callout: 27.5,38 — generate a schedule: the solver builds the roster
 callout: 27.5,46 — publish it to volunteers
 ```
 
+```figure
+kind: system
+alt: SignUpFlow's architecture — a server-rendered web app, a Flutter mobile app and a CLI; one FastAPI application whose routers pass every protected request through the auth dependencies; services and the solver below; one database filtered by org_id; and a Celery worker for notifications.
+source: SignUpFlow/api/main.py:187-245 · SignUpFlow/api/dependencies.py:46-138 · SignUpFlow/api/routers/solver.py:40 · SignUpFlow/api/cli/main.py:16-27 · SignUpFlow/api/database.py:15 · SignUpFlow/api/services/notification_service.py:72
+title: The system the spec folders changed, at the pinned commit — the security feature in this module touches the auth dependencies and the routers.
+layer: Clients
+  node web: web app — server-rendered pages, same process
+  node mobile: mobile app — Flutter, generated OpenAPI client
+  node cli: CLI — YAML in, JSON out
+layer: FastAPI — /api/v1
+  node routers: routers — people · events · solver · billing…
+  node auth: auth dependencies (seam) — JWT → person + org_id
+layer: Domain
+  node services: services — allocation · publication · notifications
+  node solver: solver — greedy heuristic, OR-Tools adapter
+layer: Data and jobs
+  node db: database (hl) — SQLAlchemy; SQLite by default
+  node worker: Celery worker — email · SMS · billing tasks
+edge: mobile -> routers — Bearer JWT
+edge: routers -> auth — Depends() on every protected route
+edge: web -> services — the same services
+edge: routers -> services
+edge: routers -> solver — generate a schedule
+edge: cli -> solver — init · solve, no server
+edge: services -> db — org_id on every query (hl)
+edge: services -> worker — queued: .delay()
+```
+
 Module 1 gave you the operating system — constitution, agent rules, templates, one mini-loop. This module runs that loop at production scale on a real SaaS. SignUpFlow is a multi-tenant volunteer-scheduling product (FastAPI + SQLAlchemy 2.0 + JWT) whose features are technically ordinary — CRUD plus a greedy heuristic solver. What the repo demonstrates is a governance system for building with AI agents: 17 spec folders under `specs/`, each a complete, self-contained instruction set. The archetype lesson holds: **agents don't lower the bar for process — they raise it.** When code appears in minutes, the bottleneck moves to specification, verification, and honesty about what was validated.
 
 The exemplar is `specs/014-security-hardening/` — security work specced down to 8 user stories, 44 functional requirements, and roughly 4,700 lines of contracts. This module walks every artifact in that folder, then teaches you to judge spec quality by a single test — *could a fresh agent session with zero conversation memory implement from these files alone?* — and closes with the honest change record: one PR per story, local review with severity-tagged findings, and verification of generated artifacts against the repo itself.

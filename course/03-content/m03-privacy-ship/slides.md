@@ -136,11 +136,26 @@ public static func isVerifiedLocal(_ data: Data) -> Bool {
 
 ## Three defenses around the check
 
-<!-- _diagram: grid -->
-
-- **Host check** — loopback only, before any prompt
-- **Per-request verification** — re-run `/api/show` every request
-- **Redirect rejection** — a 3xx kills the request
+```figure
+kind: system
+alt: In local-only mode a chat request passes three defenses before any meeting text leaves the process — a loopback host check, a verified-local /api/show on every request, and a transport that refuses redirects — and any failure throws first.
+source: ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157 · ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:15-24
+layer: OllamaProvider — the local-only branch
+  node req: chat request — carries meeting text
+  node host: host check (seam) — localhost · 127.0.0.1 · ::1 @ First, the base URL host must be
+  node show: /api/show (seam) — 200 + isVerifiedLocal, every request @ Second, the provider posts to the show endpoint
+  node transport: transport (seam) — redirects refused @ Third, redirects
+layer: Where it can end
+  node daemon: the local Ollama daemon (hl)
+  node fail: throws — before a byte of the prompt is sent @ Anything else throws
+edge: req -> host
+edge: host -> show — loopback @ Second, the provider posts to the show endpoint
+edge: host -> fail — any other host @ Anything else throws
+edge: show -> transport — verified local @ Third, redirects
+edge: show -> fail — remote or missing metadata @ Second, the provider posts to the show endpoint
+edge: transport -> daemon — no redirect followed (hl) @ Third, redirects
+edge: transport -> fail — a 3xx @ Third, redirects
+```
 
 - Localhost, 127.0.0.1, and ::1 only
 - Pointer: `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157`

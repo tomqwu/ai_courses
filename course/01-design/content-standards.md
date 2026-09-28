@@ -127,6 +127,7 @@ and in Read. Five kinds:
 | `compare` | two or three options side by side (before/after, fail open/fail closed) | `column:` lines, each with indented `item:` lines |
 | `screenshot` | a claim about a product — show the product | `image:` (a copy in `course/figures/shots/`), `frame: browser\|phone\|mac`, `callout: x,y — text` (x, y in % of the image); `crop: N` shows the top N% (display only — the file is never edited) |
 | `scene` | a situation (a meeting, a stranger cloning the repo, a buyer) | `scene:` (an SVG in `course/figures/scenes/`), `caption:` |
+| `system` | **a real system** — named components and the arrows between them, across layers (a request path, a pipeline with its seams, an offer ladder) | `layer:` lines with indented `node <id>: label — note`; `edge: <from> -> <to> — label` for each connection. Arrows are drawn from where the boxes land; on a phone the connections are listed |
 
 A part is `label [(flags)] [— note] [@ opening words]`. Flags: `seam` (drawn in cobalt, dashed, and
 tagged "seam" — never colour alone), `hl` (the part this slide is about), `good` / `bad` (a compare
@@ -147,6 +148,9 @@ layer: Two layers
 ```
 
 Rules:
+- **Every module draws at least one real system** (`kind: system`): the components the module is
+  about and how requests, data or buyers move between them, drawn from the case-study code or the
+  course's own documents and cited with `source:`. Every `edge:` must name nodes that exist.
 - **Every module has a hero and a figure on each segment opener.** The cover slide carries the
   high-level picture (the whole system or method, this module's part marked with `hl`); it heads the
   module page. Each segment's first slide carries the architecture or flow it teaches; it heads that

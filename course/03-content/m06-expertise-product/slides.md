@@ -260,9 +260,23 @@ layer: Technical — contracts, sequencing, evidence schemas @ A technical lead 
 },
 ```
 
-- 14 of 21 slides; `full_order` retains all
-- Routes reorder and omit — never rewrite
-- Stable IDs keep every link resolving
+```figure
+kind: system
+alt: One research base, many routes — the slides keep stable IDs, and each briefing route reorders and omits them but never rewrites them, so the executive route plays 14 of 21 slides, the full order keeps all 21, and a shared link still resolves next quarter.
+source: ai_qe/_data/briefing_routes.json
+layer: One research base
+  node slides: 21 slides — stable IDs (hl) @ The briefing routes file declares
+layer: _data/briefing_routes.json (seam) @ Routes are the second layer
+  node evp: evp route — 14 of 21, closes on slide 12 @ The banking executive route plays
+  node full: full_order — every slide kept @ The full order retains everything
+layer: What a reader gets
+  node deck: the executive deck
+  node link: a shared link — the same slide next quarter @ So a shared route link
+edge: slides -> evp — reorder, omit, never rewrite @ The invariant is the slide identifier
+edge: slides -> full
+edge: evp -> deck
+edge: evp -> link — same slide ID @ So a shared route link
+```
 
 <!-- NOTES: `_data/briefing_routes.json` declares curated sequences over the same stable slide IDs. The banking executive route plays fourteen of the twenty-one slides and declares closing twelve — the brainstorm-questions slide — as its endpoint. The full order retains everything. Read the README's rule: focused routes end on a decision discussion; full decks retain the supporting material. The invariant is the slide ID. A route reorders and omits; it never rewrites, so a shared route link still resolves to the same slide next quarter. Timing: 4 minutes. Transition: the deck exists to run a meeting. -->
 

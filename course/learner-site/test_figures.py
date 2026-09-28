@@ -139,6 +139,46 @@ class Render(unittest.TestCase):
                     self.assertTrue(c == "scene" or c.startswith("sc-"), f"{svg.name}: {c}")
 
 
+SYSTEM = """kind: system
+alt: A request passes the auth dependency before any query reaches the database.
+layer: Clients
+  node web: Web — HTMX pages
+  node cli: CLI
+layer: API
+  node api: routes (seam) @ The API and security tier
+  node deps: verify_org_member (hl)
+layer: Data
+  node db: database
+edge: web -> api — cookie JWT
+edge: cli -> api
+edge: api -> deps — every request (hl)
+edge: deps -> db — org_id filter @ Unit tests are fast
+"""
+
+
+class System(unittest.TestCase):
+    def test_nodes_edges_and_steps(self):
+        fig = F.parse(SYSTEM)
+        self.assertEqual([c["id"] for c in fig["items"][1]["children"]], ["api", "deps"])
+        self.assertEqual(fig["edges"][0], {"from": "web", "to": "api", "label": "cookie JWT", "flags": set(), "at": ""})
+        self.assertEqual(fig["edges"][2]["flags"], {"hl"})
+        html = F.render(fig, sentences=["Unit tests are fast.", "The API and security tier runs."])
+        self.assertIn('data-sys', html)
+        self.assertEqual(html.count('data-node='), 5)
+        self.assertEqual(html.count('<li class="fig-edge'), 4)
+        self.assertIn('data-from="deps" data-to="db"', html)
+        self.assertIn('data-node="api" data-step="1"', html)
+        self.assertIn('Web → routes', html)
+
+    def test_edge_to_unknown_node_fails(self):
+        with self.assertRaises(F.FigureError):
+            F.parse(SYSTEM + "edge: api -> cache\n")
+
+    def test_system_without_edges_fails(self):
+        with self.assertRaises(F.FigureError):
+            F.parse("kind: system\nalt: boxes with nothing joining them\nlayer: A\n  node a: one\n")
+
+
 class FromList(unittest.TestCase):
     def test_stack_becomes_architecture_with_same_words(self):
         fig = F.from_list("stack", ["mic (.you) · system audio (.others)", "PCM chunks"])
