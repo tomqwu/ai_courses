@@ -23,6 +23,7 @@ Usage:
 """
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -726,6 +727,24 @@ def check_terms_explained() -> list[str]:
     return sorted(set(problems))[:50]
 
 
+def check_pricing_flag() -> list[str]:
+    """With `pricing` off in learner-site/site-flags.json, the site's own pages show no price: the
+    home page's offer, the paths, the path pages and the module pages, in both editions. (Lessons
+    that teach pricing keep their examples.)"""
+    site = ROOT / "learner-site"
+    flags = json.loads((site / "site-flags.json").read_text(encoding="utf-8"))
+    check_pricing_flag.summary = f"pricing {'on' if flags.get('pricing') else 'off'}"
+    if flags.get("pricing"):
+        return []
+    problems = []
+    for pattern in ("index.html", "paths.html", "path-*.html", "module-*.html"):
+        for page in sorted(site.glob(pattern)) + sorted((site / "zh").glob(pattern)):
+            text = re.sub(r"<[^>]+>", " ", page.read_text(encoding="utf-8"))
+            for price in re.findall(r"\$\d[\d,]*", text):
+                problems.append(f"{page.relative_to(site)}: shows a price ({price}) while pricing is off")
+    return sorted(set(problems))
+
+
 def check_anchors() -> tuple[int, list[str]]:
     """Every anchored pointer is still cited somewhere, and its range still contains its symbol."""
     import json                                                              # noqa: PLC0415
@@ -782,6 +801,7 @@ def main(argv: list[str]) -> int:
         ("EN / 中文 terms", check_terms_zh),
         ("Chinese edition", check_zh_edition),
         ("Terms explained", check_terms_explained),
+        ("Pricing flag", check_pricing_flag),
     ]
     failed = 0
     for title, fn in sections:

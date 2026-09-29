@@ -476,9 +476,11 @@ def _plural(n: int, noun: str) -> str:
 
 def _at_a_glance(items: list[tuple[str, str]]) -> str:
     """Microsoft Learn's metadata block: every value is a filter in their catalogue, a fact here."""
+    # With the pricing flag off, no price is shown (site-flags.json).
+    hidden = set() if SH.flag("pricing") else {"Price", "价格"}
     cells = "".join(
         f'<div class="aga-item"><dt>{html.escape(key)}</dt><dd>{html.escape(value)}</dd></div>'
-        for key, value in items if value)
+        for key, value in items if value and key not in hidden)
     return f'<dl class="at-a-glance">{cells}</dl>'
 
 

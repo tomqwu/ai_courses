@@ -1,0 +1,4 @@
+{
+ "_about": "Site feature flags. Change a value and rebuild; nothing else needs editing. `pricing`: show the course's own prices (the home page's offer tiers, the price on every path card and path page). Off until the prices are set — the offer descriptions stay, the prices are hidden, and the gate checks no price leaks onto the site's own pages.",
+ "pricing": false
+}

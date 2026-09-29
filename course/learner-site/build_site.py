@@ -1190,6 +1190,17 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
   </section>
 {capture_html}
   <p class="index-footnote">{footnote} {SH.T("Progress, quiz scores and lab checklists are stored in this browser only — export them from the strip above to move machines.", "进度、测验成绩和实验清单只保存在此浏览器中——换电脑时，从上方的进度栏导出。")}</p>"""
+    if not SH.flag("pricing"):
+        # Pricing is off (site-flags.json): the offer tiers stay, their prices and the note about
+        # where prices are recorded do not.
+        content = re.sub(r'\s*<p class="included-price">.*?</p>', "", content, flags=re.S)
+        content = re.sub(r'<p class="index-footnote">(?:Prices are the decision record|价格见决策记录).*?</p>',
+                         SH.T('<p class="index-footnote">Prices are being finalised and are not shown yet. '
+                              'Testimonials are not shown because none exist yet; the three repositories are '
+                              'the proof until the founding cohort finishes.</p>',
+                              '<p class="index-footnote">价格正在确定中，暂不显示。这里没有展示推荐语，因为目前还没有；'
+                              '在创始训练营结束之前，三个仓库就是证明。</p>'), content, flags=re.S)
+        content = content.replace(SH.T("founding cohort $990", "创始学员 $990"), "")
     return SH.document(SH.T("AI Product Studio — narrated course", "AI Product Studio — 带讲解的课程"),
                        SH.T("Build, ship and sell three kinds of AI product. Nine narrated modules with "
                             "captions and transcripts.", "构建、发布并销售三类 AI 产品。九个带讲解的模块，附字幕和文字稿。"),

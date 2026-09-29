@@ -20,6 +20,7 @@ from __future__ import annotations
 import html
 import json
 import re
+from pathlib import Path
 
 _CTX: dict = {"modules": [], "tracks": []}
 
@@ -35,6 +36,17 @@ EDITIONS = ("en",)
 
 def T(en: str, zh: str) -> str:
     return zh if LANG == "zh" else en
+
+
+FLAGS_PATH = Path(__file__).resolve().parent / "site-flags.json"
+
+
+def flag(name: str) -> bool:
+    """A site feature flag from site-flags.json (e.g. `pricing`); an unknown flag is off."""
+    try:
+        return bool(json.loads(FLAGS_PATH.read_text(encoding="utf-8")).get(name, False))
+    except (OSError, ValueError):
+        return False
 
 
 MODES = (("watch", "Learn", "{d}.html"), ("read", "Read", "lesson-{d}.html"),
