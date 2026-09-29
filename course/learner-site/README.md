@@ -568,6 +568,16 @@ card links to the full entry. The words themselves are unchanged.
   `verify.py` "Terms explained" (every term link on the built site resolves), `check_features.py`
   (hover, Esc, a phone's first tap, one link per term per part).
 
+## Feature flags
+
+`site-flags.json` switches site features without editing templates; change a value and rebuild.
+
+* **`pricing`** (off): the course's own prices — the home page's offer tiers, the Price row on every
+  path card and path page — are hidden, and the home page says prices are being finalised. The offer
+  descriptions stay. `verify.py` "Pricing flag" fails if a price appears on the home, paths, path or
+  module pages (both editions) while it is off; `test_flags.py` checks both states. Lessons that teach
+  pricing (M7, M8) keep their examples.
+
 ## Accessibility
 
 * One `h1` per page; slides are `<section>` landmarks labelled by their own heading.
