@@ -241,7 +241,7 @@ def sidebar(site_base: str, deck_id: str | None = None, current: str | None = No
 
 
 MODE_HINTS = {
-    "watch": ("Narrated, part by part", "逐部分讲解"),
+    "watch": ("The module, part by part", "逐部分学习"),
     "read": ("The lesson as text", "课文全文"),
     "lab": ("Hands-on, pass/fail", "动手实验，通过/不通过"),
     "check": ("Test what you learned", "检验所学"),
