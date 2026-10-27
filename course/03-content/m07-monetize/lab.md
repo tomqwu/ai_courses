@@ -28,7 +28,7 @@ Then compute **contribution** (price − payment fee − variable cost at the ti
 
 ## Step 3 — Positioning one-liner
 
-Write your one-liner in the ListenToMe format — **adjective-wedge × differentiators × audience** — e.g. "the free, open-source, fully on-device meeting copilot for macOS — bring your own model, run it private, and shape it to any conversation" (`ListenToMe/docs/competition-analysis.md:80`). Every clause must be traceable: below the one-liner, list a mapping of clause → table column or repo capability (the M7.3 lesson shows ListenToMe's full mapping). Apply the deletion test: remove any clause and the sentence must become false against a specific row. If no row would notice, the clause is decoration — cut it.
+Write your one-liner in the ListenToMe format — **adjective-wedge × differentiators × audience** — e.g. "the free, open-source, fully on-device meeting copilot for macOS — bring your own model, run it private, and shape it to any conversation" (`ListenToMe/docs/competition-analysis.md:88`). Every clause must be traceable: below the one-liner, list a mapping of clause → table column or repo capability (the M7.3 lesson shows ListenToMe's full mapping). Apply the deletion test: remove any clause and the sentence must become false against a specific row. If no row would notice, the clause is decoration — cut it.
 
 ## Step 4 — Packaging page
 

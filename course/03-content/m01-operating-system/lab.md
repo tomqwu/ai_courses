@@ -16,7 +16,7 @@
    git add -A && git commit -m "Scaffold starter repo"
    ```
    The first commit gives `git rev-parse HEAD` a revision to print, which the evidence entry in step 8 needs.
-2. **Write `constitution.md` (≤80 lines).** SignUpFlow's own has grown to 85 lines since this lab was written (`SignUpFlow/.specify/memory/constitution.md`); the cap is for *your first one* — brevity is the skill. Copy, then personalize the three bracketed parts:
+2. **Write `constitution.md` (≤80 lines).** SignUpFlow's own has grown to 85 lines since this lab was written (`SignUpFlow/.specify/memory/constitution.md`); the cap is for *your first one* — brevity is the skill. Copy, then personalize the two bracketed parts (the project name and the safety rule):
    ```markdown
    # <Project> Constitution
    ## Principles

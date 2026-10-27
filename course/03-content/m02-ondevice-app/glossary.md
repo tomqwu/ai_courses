@@ -27,7 +27,8 @@ relative to the course root.
 - **NDJSON — newline-delimited JSON, Ollama's streaming format.** One JSON object per line carrying a
   delta or `done: true`. `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:3-34`.
 - **Partial vs. final — live in-flight text versus a settled utterance.** Partials never enter the
-  finalized log; a final with the same id supersedes its partial.
+  finalized log; a final with the same id supersedes its partial. Treating a partial as conversation
+  history is the bug the store's two-container design prevents.
   `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/conversation_store.py`.
 - **Persona directive — preset guidance appended to every role's system prompt.** Same code path for
   manual panes and automatic reviews. `ListenToMe/Sources/ListenToMeCore/Prompt.swift:245-260`.
@@ -56,10 +57,8 @@ relative to the course root.
 - **Coverage vs. correctness.** The old provider held 97.24% coverage *and* let truncated streams
   finish as success (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`, gap G06). Tests
   validate what was built, not whether it was right.
-- **Debounce vs. "wait for quiet."** This debounce does not pause until things calm down; it blocks
+- **Debounce vs. "wait for quiet"** — this debounce does not pause until things calm down; it blocks
   re-firing for 8 seconds *after a fire*, so a burst produces exactly one answer.
-- **Partial vs. final.** A partial is display state that will be replaced; treating it as conversation
-  history is the bug the store's two-container design prevents.
 - **Token-prefix vs. substring.** `"gemini"` contains `"mini"` but does not start a token with it;
   substring matching misroutes an entire model family.
 

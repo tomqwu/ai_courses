@@ -39,8 +39,8 @@
 
 These fail Lab M7 regardless of the score above.
 
-1. **A price with no source URL or retrieval date** — fabricated evidence, the only automatic fail per
-   `course/01-design/assessment-and-rubrics.md`.
+1. **A price with no source URL or retrieval date** — fabricated evidence, an automatic fail never
+   excused (`course/01-design/assessment-and-rubrics.md`).
 2. **A fabricated objection answer or copied rationale** presented as the student's own arithmetic.
 3. **Gating the core workflow to force upgrades** — a tier that stops the product working until paid,
    contrary to `SignUpFlow/AGENTS.md`: "core scheduling must not require either paid integration."

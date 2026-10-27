@@ -74,7 +74,7 @@
       "text": "On September tenth, twenty twenty-six, a production review of the one point three point zero candidate produced a thirty-four-item gap inventory, each item with a priority and an evidence class. The team had two hundred fifteen passing core tests and ninety-seven point two four percent coverage in hand. The review still recommended not promoting the release. Item G01 is the privacy hole from earlier in this module, sitting happily inside ninety-seven percent coverage, because the tests tested what was built. Tests validate what you built. Review validates what you shipped."
     },
     "slide-19": {
-      "title": "M3.3 — Done ends at a verified download",
+      "title": "M3.3 — Done is merged; published is proven",
       "text": "ListenToMe's AGENTS.md separates two words most projects blur. A change is done when it is merged to main with the three required checks green, its tests passing, and every affected doc updated. Publication is a separate, batched step, a release train: at most one macOS release a day, and never one release per merged pull request. So the status report for finished work is honest and short: merged to main, riding the next release train. Then the file names three rungs, and you claim only the one your evidence supports. A candidate is built and checked locally. Verified adds installed-app acceptance for the paths the change affects. And published means the asset was downloaded again, its checksum matched the local artifact, and the tag sits on the exact source commit."
     },
     "slide-20": {

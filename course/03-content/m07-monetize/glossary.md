@@ -79,7 +79,7 @@ a comparable amount. Lives in `lab.md` Step 2.
 
 ## Curated resources
 
-1. `ListenToMe/docs/competition-analysis.md` — the 12-row table and the clause-by-clause one-liner;
+1. `ListenToMe/docs/competition-analysis.md` — the 14-row table and the clause-by-clause one-liner;
    read it as the format for your own table.
 2. `SignUpFlow/README.md` ("Provider-backed Features") + `SignUpFlow/AGENTS.md` — the gating pattern
    and the rule that the core must not depend on paid paths.

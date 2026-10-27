@@ -169,7 +169,7 @@ step: Prove (hl) — evidence, provenance, honest claims @ Prove is the honest a
 | Release | Signed, notarized DMGs | `ListenToMe/AGENTS.md` |
 | Prove | "Do not promote the existing 1.3.0 DMG" | `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md` |
 
-<!-- NOTES: Validate is where most builders stop. ListenToMe enforces a ninety-five percent coverage floor with a script, and SignUpFlow runs seven tiers in separate processes. Release is signing, notarizing, and staple — the ListenToMe agent file requires releases to target an exact source commit. Then Prove, in the last row: a review that told the author not to promote a build that had 97.24% coverage. That decision is the rarest artifact in software, and it is the spine of this course. Timing: 6 minutes. Transition: why one method across three products? -->
+<!-- NOTES: Validate is where most builders stop. ListenToMe enforces a ninety-five percent coverage floor with a script, and SignUpFlow runs seven tiers in separate processes. Release is signing, notarizing, and stapling — the ListenToMe agent file requires releases to target an exact source commit. Then Prove, in the last row: a review that told the author not to promote a build that had 97.24% coverage. That decision is the rarest artifact in software, and it is the spine of this course. Timing: 6 minutes. Transition: why one method across three products? -->
 
 ---
 
@@ -189,7 +189,7 @@ failure is not omitted from the evidence.
 
 Pointer: `SignUpFlow/docs/playbooks/validation.md:45, 50-52`
 
-<!-- NOTES: Read that validation playbook and you will find the engineer listing his own failures: a browser timing race that made a test flaky, and a type-checking debt line that says explicitly "not a pass." He could have deleted both lines. Keeping them is what makes the passing numbers believable. When you write your capstone evidence record, the failures section is not optional — a record with no limitations reads as unverified, because it usually is. Timing: 4 minutes. Transition: now the method, applied by you, in the next twelve minutes. -->
+<!-- NOTES: Read that validation playbook and you will find the engineer listing his own failures: a recurring-event browser click race that made a test flaky, and a type-checking debt line that says explicitly "not a pass." He could have deleted both lines. Keeping them is what makes the passing numbers believable. When you write your capstone evidence record, the failures section is not optional — a record with no limitations reads as unverified, because it usually is. Timing: 4 minutes. Transition: now the method, applied by you, in the next twelve minutes. -->
 
 ---
 
@@ -285,7 +285,7 @@ Pointer: `course/03-content/m02-ondevice-app/tinycopilot/README.md`
 
 Guide: `course/03-content/m00-orientation/lab.md`
 
-<!-- NOTES: The lab has five steps and a six-item acceptance checklist — clone, Python version, Ollama, solver, evidence log, community post — and the pass gate is two things: the solver block and a non-empty `ollama list`. Before Module 1, run the TinyCopilot suite; it is the Module 2 reference implementation, and its gate. Run it from the course folder with pytest, or `make lab-m2`. Expected result: 208 passed at 100% coverage, with a ninety percent floor enforced. If a dependency is missing, name the exact missing package in your evidence log instead of guessing — an honest partial is a pass, an invented green is the only automatic fail. Timing: 3 minutes. Transition: quick check of your knowledge. -->
+<!-- NOTES: The lab has five steps and a six-item acceptance checklist — clone, Python version, Ollama, solver, evidence log, community post — and the pass gate is two things: the solver block and a non-empty `ollama list`. Before Module 1, run the TinyCopilot suite; it is the Module 2 reference implementation, and its gate. Run it from the course folder with pytest, or `make lab-m2`. Expected result: 208 passed at 100% coverage, with a ninety percent floor enforced. If a dependency is missing, name the exact missing package in your evidence log instead of guessing — an honest partial is a pass, an invented green is an automatic fail, never excused. Timing: 3 minutes. Transition: quick check of your knowledge. -->
 
 ---
 

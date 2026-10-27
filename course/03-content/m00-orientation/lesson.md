@@ -74,7 +74,7 @@ Each stage has a real artifact behind it. Open these as you read:
 3. **Build.** SignUpFlow's tasks.md turns each spec into checkbox tasks with exact file paths, tests written first (`SignUpFlow/specs/019-sms-notifications/tasks.md`); ListenToMe's implementation plan is a 2,410-line TDD task list ending in a self-review that maps every spec bullet to a task (`ListenToMe/docs/superpowers/plans/2026-06-18-listentome-mvp.md`).
 4. **Validate.** SignUpFlow's seven test tiers and dated counts (`SignUpFlow/docs/playbooks/validation.md`); ListenToMe's **95% coverage floor** enforced by script (`ListenToMe/README.md`).
 5. **Release.** ListenToMe publishes signed + notarized DMGs targeting the exact source commit (`ListenToMe/AGENTS.md`); AI × QE ships immutable, editioned releases — "Public content changes require a new edition before deployment" (`ai_qe/README.md`).
-6. **Prove.** ListenToMe published a gap review that said "**do not promote the existing 1.3.0 DMG**" despite 97.24% core coverage (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`); AI × QE published its own 14-finding site audit (`ai_qe/research/reviews/site-audit-2026-09-06.md`); SignUpFlow's validation record includes its failures — a browser click race and a mypy debt line reading "not a pass" (`SignUpFlow/docs/playbooks/validation.md`).
+6. **Prove.** ListenToMe published a gap review that said "**do not promote the existing 1.3.0 DMG**" despite 97.24% core coverage (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`); AI × QE published its own 14-finding site audit (`ai_qe/research/reviews/site-audit-2026-09-06.md`); SignUpFlow's validation record includes its failures — a recurring-event browser click race and a mypy debt line reading "not a pass" (`SignUpFlow/docs/playbooks/validation.md`).
 
 Stage 6 is the rarest and it is the spine of this course: the honest record of what was verified, what wasn't, and what failed. Tests validate what you built; evidence discipline validates what you shipped.
 
@@ -100,7 +100,7 @@ git clone https://github.com/tomqwu/SignUpFlow.git
 git clone https://github.com/tomqwu/ai_qe.git
 ```
 
-**2. Run a real production solver in three commands** (from `SignUpFlow/README.md`, "Quick Start" and "CLI Example"):
+**2. Run a real production solver in three commands** (from `SignUpFlow/README.md`, "Quick Start" and "CLI Examples"):
 
 ```bash
 cd SignUpFlow && make setup     # Poetry env + migrations + seed data

@@ -27,7 +27,7 @@
 
 | Criterion | Wt | Exemplary | Proficient | Developing | Missing | Evidence required |
 |---|---|---|---|---|---|---|
-| Their products, not the samples | 10 | ≥3 real products; store name, tagline and contact changed; description line in `index.html` changed | ≥3 products, but one sample remains or the contact is still the example address | Fewer than 3 products | The six samples, unchanged | Live page, `products.js` |
+| Their products, not the samples | 10 | ≥3 real products; store name, tagline and contact changed; description and share-title `<meta>` lines in `index.html` changed | ≥3 products, but one sample remains or the contact is still the example address | Fewer than 3 products | The six samples, unchanged | Live page, `products.js` |
 | Live on a phone | 10 | Address pasted; phone screenshot shows the learner's products | Address works; screenshot from a desktop | Pages enabled but the site returns 404, with the cause identified | No address | Address, screenshot |
 | Republished after a change | 10 | Step 8 commit in `git log`, change visible live, and the time to appear recorded | Change visible, time not recorded | Change pushed but not yet visible, and the Actions run named | No second change | `git log --oneline -1`, live page |
 | A catalog, not a shop | 5 | Every button is a `buyUrl` to a checkout run elsewhere, or "Ask about this"; destinations listed in the evidence | Buttons correct, destinations not listed | A `buyUrl` points back into the catalog itself | A cart or payment form on the page | Live page, `evidence.md` |

@@ -44,7 +44,7 @@
 3. 这是一个**契约**测试，不是隐私测试：它在提供方的默认模式下、针对路由选中的任何聊天模型运行，包括 `:cloud` 别名，因为它唯一的任务是证明请求形态、流式解析和错误类型在真实守护进程面前成立（`tinycopilot/README.md`，“Verified status”；被移开的参考实现的文档字符串也这么说）。不要用仅本地模式来门控它，也不要用一个模拟的流来替代——一个只有云端别名的守护进程同样能运行它。
 4. 运行 `LAB_E2E=1 pytest tests/test_contract_real_llm.py` 并记录输出；不带这个标志运行测试套件，并记录跳过信息。
 
-参考：ListenToMe 的 `make e2e`（自动选择一个已安装的聊天模型，可用 `LTM_E2E_MODEL` 覆盖；`ListenToMe/Makefile:39-53`），以及 `OllamaContractE2ETests`，它除非 `LTM_E2E=1` 否则跳过，并断言流式内容非空（`ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-41`）。ListenToMe 的测试同样可以在任何模型上运行，本地或云端都行（`LTM_E2E_BASEURL` 甚至可以指向 Ollama Cloud）。
+参考：ListenToMe 的 `make e2e`（自动选择一个已安装的聊天模型，可用 `LTM_E2E_MODEL` 覆盖；`ListenToMe/Makefile:39-54`），以及 `OllamaContractE2ETests`，它除非 `LTM_E2E=1` 否则跳过，并断言流式内容非空（`ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-41`）。ListenToMe 的测试同样可以在任何模型上运行，本地或云端都行（`LTM_E2E_BASEURL` 甚至可以指向 Ollama Cloud）。
 
 ## 第 3 步 — 覆盖率底线 (~30 分钟)
 

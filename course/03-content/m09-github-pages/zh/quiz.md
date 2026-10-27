@@ -58,7 +58,7 @@
 
 **A3: b.** 克隆会在终端当前所在的文件夹里新建一个文件夹。终端打开时位于你的主目录，所以一打开就输入的克隆命令会落在那里，而不是 `code` 里。克隆之前先运行 `pwd`，或者先 `cd ~/code`。（a）有可能，但会打印一条错误；（c）和（d）是错的。*（目标：M9.2。）*
 
-**A4: a.** `commit` 在你的电脑上保存一个版本；`push` 把它发送到 GitHub，而 Pages 只发布 GitHub 上已有的内容。"Ahead of 'origin/main' by 1 commit" 正是 Git 在说这件事。推送后最多可能需要 10 分钟才会发布，所以（b）在时间和原因上都错了。（c）影响的是网站如何构建，而不是你的提交是否到达。*（目标：M9.2、M9.3 — `github.com/github/docs`，`data/reusables/pages/twenty-minutes-to-publish.md`。）*
+**A4: a.** `commit` 在你的电脑上保存一个版本；`push` 把它发送到 GitHub，而 Pages 只发布 GitHub 上已有的内容。"Ahead of 'origin/main' by 1 commit" 正是 Git 在说这件事。推送后最多可能需要 10 分钟才会发布（那份可复用文档的文件名仍是 `twenty-minutes-to-publish.md`，但正文写的是 10 分钟），所以（b）在时间和原因上都错了。（c）影响的是网站如何构建，而不是你的提交是否到达。*（目标：M9.2、M9.3 — `github.com/github/docs`，`data/reusables/pages/twenty-minutes-to-publish.md`。）*
 
 **A5: c.** 这个设计选择是为了预览：浏览器会阻止从磁盘打开的页面去获取一个单独的文件，但会运行用标签加载的脚本。把数据放在一个脚本里，意味着双击打开的预览和发布出去的页面是同一批文件，中间没有任何步骤。AI × QE 在更大的规模上做了同样的数据与布局分离，用一个供模板遍历的数据文件。*（目标：M9.3 — `course/03-content/m09-github-pages/catalog-starter/products.js`、`ai_qe/CONTRIBUTING.md:23`。）*
 

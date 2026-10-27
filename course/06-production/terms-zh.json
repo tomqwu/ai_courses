@@ -254,6 +254,11 @@
    "def": "两次主动触发之间的最短间隔。",
    "scope": "module"
   },
+  "Debounce vs. \"wait for quiet\"": {
+   "zh": "防抖与「等安静下来」",
+   "def": "防抖是在一次触发之后固定等待一个间隔，而不是等到局面真正安静下来；一连串提问因此只会得到一个回答。",
+   "scope": "module"
+  },
   "Definition of Done": {
    "zh": "完成的定义",
    "def": "合并到 main、必需检查通过、测试通过、文档已更新。"

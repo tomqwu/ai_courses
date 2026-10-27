@@ -13,7 +13,7 @@ name) that installs and lists on a local daemon while its inference runs remotel
 
 **Contract test** — A test that exercises the real seam a mock only assumes — here, NDJSON
 request shape and stream parsing against a live Ollama daemon — kept outside CI behind an
-environment gate — `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22`.
+environment gate — `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-41`.
 
 **Coverage floor** — A hard CI gate that fails the build when total line coverage drops below a
 threshold; it buys enforcement against untested core logic and nothing else —
@@ -45,7 +45,7 @@ all of which need a GUI session and manual permission grants — a numbered, rep
 **Metric vs. verdict** — Coverage and test counts are the entry fee; a review that validates what
 you *shipped* is the verdict — `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md:5`.
 
-**`PrivacyMode`** — The explicit three-way mode switch (`off`/`local`/`cloud`) a user picks;
+**`PrivacyMode`** — The explicit four-way mode switch (`off`/`local`/`apple`/`cloud`) a user picks — four cases in `AIProcessingMode`;
 adding a cloud key never switches it — `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`;
 TinyCopilot mirror: `course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-45`.
 

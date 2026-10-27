@@ -110,7 +110,7 @@ git status
 1. 用任意文本编辑器打开 `products.js`（记事本或 TextEdit 都可以；如果用 TextEdit，先选择 **Format → Make Plain Text**）。
 2. 修改 `store.name`、`store.tagline` 和 `store.contact`（你的邮箱，写成 `mailto:you@example.com`）。
 3. 把示例产品换成**至少三个你自己的产品**。保留各个块之间的逗号。
-4. 在 `index.html` 里，把顶部附近的 `description` 那一行改成一句介绍你的产品的话。
+4. 在 `index.html` 里，改顶部附近的两行 `<meta>`：把 `description` 改成一句介绍你的产品的话，把 `og:title` 改成你的店名。
 5. 预览：
 
    | Windows | macOS |

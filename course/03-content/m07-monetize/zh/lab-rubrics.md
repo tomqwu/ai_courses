@@ -2,8 +2,7 @@
 
 ## 自动不通过（无论评分表得分如何，都判实验 M7 不通过）
 
-1. **一个没有来源 URL 或检索日期的价格**——伪造的证据，按照
-   `course/01-design/assessment-and-rubrics.md`，这是唯一的自动不通过项。
+1. **一个没有来源 URL 或检索日期的价格**——伪造的证据，属于自动不通过项，从不豁免（`course/01-design/assessment-and-rubrics.md`）；其余情形由下面的清单补充。
 2. **一个捏造的异议回答或抄来的理由**，被当作学员自己的算术提交。
 3. **门控核心工作流来逼用户升级**——一个在付费之前让产品无法使用的档位，
    违反了 `SignUpFlow/AGENTS.md`：“core scheduling must not require either paid integration.”

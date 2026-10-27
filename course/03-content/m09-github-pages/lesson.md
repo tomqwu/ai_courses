@@ -186,7 +186,7 @@ Turn the starter into your own catalog, preview it on your computer, publish it 
 | File | What it is | Edit it? |
 |---|---|---|
 | `products.js` | your store's name and contact, and a list of products | **yes** |
-| `index.html` | the page | two lines near the top: the description a search result shows |
+| `index.html` | the page | the two `<meta>` lines near the top: the description and the share title |
 | `styles.css` | colours and layout | only the colours in `:root`, if you like |
 | `app.js` | draws the cards, the category buttons, search and sort | no |
 | `.nojekyll` | an empty file | no — keep it |

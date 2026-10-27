@@ -13,7 +13,7 @@
 - **模型提供方接缝（LLMProvider）** — 提供方这一层的协议接缝。Core 通过它流式获取文本；`OllamaProvider` 通过 HTTP 实现它，`AppleIntelligenceProvider` 在设备上实现它。`ListenToMe/Sources/ListenToMeCore/LLMProvider.swift:13`。
 - **本地优先的默认值（Local-first defaults）** — 自动选择时先把云端别名过滤掉。只有在不存在任何本地模型时，才选择云端模型。`ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95`。
 - **逐行 JSON 格式（NDJSON）** — 以换行分隔的 JSON，Ollama 的流式格式。每行一个 JSON 对象，携带一段增量或 `done: true`。`ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:3-34`。
-- **临时结果与最终结果（Partial vs. final）** — 进行中的实时文本，与已定稿的语句。临时结果从不进入已定稿日志；id 相同的最终结果会取代它的临时结果。`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/conversation_store.py`。
+- **临时结果与最终结果（Partial vs. final）** — 进行中的实时文本，与已定稿的语句。临时结果从不进入已定稿日志；id 相同的最终结果会取代它的临时结果。把临时结果当作对话历史，正是存储的双容器设计所要防止的缺陷。`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/conversation_store.py`。
 - **人设指令（Persona directive）** — 附加到每个角色系统提示词后面的预设指导。手动面板和自动评审走同一条代码路径。`ListenToMe/Sources/ListenToMeCore/Prompt.swift:245-260`。
 - **主动触发关卡（Proactive gate）** — 主动回答触发之前的四个条件。已定稿、来自 `.others`、通过问题检测、在防抖窗口之外。`ListenToMe/Sources/ListenToMeCore/ContextEngine.swift:41-50`。
 - **提示词构建层（PromptBuilder）** — 纯函数式的提示词构造层。一个由静态函数组成的公开枚举：上下文进，请求出，没有 I/O。`ListenToMe/Sources/ListenToMeCore/Prompt.swift`。
@@ -27,8 +27,7 @@
 
 - **本地与已验证本地（Local vs. verified local）** — 一个 `localhost` URL 证明不了什么——本地守护进程也可以提供由云端支撑的别名；只有 `/api/show` 元数据检查（M3）才能证明本地性。
 - **覆盖率与正确性（Coverage vs. correctness）** — 旧的提供方拥有 97.24% 的覆盖率，*同时*让截断的流以成功告终（`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`，差距 G06）。测试验证的是已经构建出来的东西，而不是它是否正确。
-- **防抖与「等安静下来」（Debounce vs. "wait for quiet."）** 这里的防抖不会一直等到局面平静下来；它在*一次触发之后*的 8 秒内阻止再次触发，所以一连串提问只会产生恰好一个回答。
-- **临时结果与最终结果（Partial vs. final）** — 临时结果是会被替换的显示状态；把它当作对话历史，正是存储的双容器设计所要防止的缺陷。
+- **防抖与「等安静下来」（Debounce vs. "wait for quiet"）** — 这里的防抖不会一直等到局面平静下来；它在*一次触发之后*的 8 秒内阻止再次触发，所以一连串提问只会产生恰好一个回答。
 - **词首前缀与子串（Token-prefix vs. substring）** — `"gemini"` 包含 `"mini"`，但并不是以它作为某个词的开头；子串匹配会把整个模型家族路由错。
 
 ## 精选资源

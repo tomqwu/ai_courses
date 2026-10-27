@@ -83,5 +83,5 @@ thing to make stranger-testable, and one drift check you now run. That post is t
 - [ ] Post the session recording, the whiteboard spec, and the two drift examples to the community.
 - [ ] Pin the top three stuck points from this session with their unblocks.
 - [ ] Note for the next workshop: which gate rule students misread most (drives the We-do next week).
-- [ ] Remind the cohort that the Lab M4 stranger test may be a classmate — that peer exchange satisfies
-      the pass gate in the self-paced tier.
+- [ ] Remind the cohort that the Lab M4 stranger test may be a classmate — peer exchange satisfies
+      the pass gate for this cohort; the self-paced tier runs the scripted stranger.

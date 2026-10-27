@@ -22,10 +22,6 @@
     "TestFlight",
     "build 11"
   ],
-  "ListenToMe/docs/RELEASING.md:35-39": [
-    "--target",
-    "merged but not published"
-  ],
   "ListenToMe/docs/RELEASING.md:33-39": [
     "downloaded again",
     "--target"

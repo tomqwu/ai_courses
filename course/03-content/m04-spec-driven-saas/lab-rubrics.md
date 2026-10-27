@@ -43,7 +43,7 @@ The evidence log states which path ran: **scripted** (the `stranger-prompt.md` a
 ## Auto-fail conditions
 
 These fail Lab M4 **regardless of the other rows** (per `01-design/assessment-and-rubrics.md`, fabrication
-is the only fail):
+is an automatic fail, never excused; the conditions below add the rest):
 
 1. **Fabricated evidence** — any grep transcript, checklist output, or stranger report not produced by
    the commands, session, or person it claims; a report with edited `Counts` or deleted Q/A rows.

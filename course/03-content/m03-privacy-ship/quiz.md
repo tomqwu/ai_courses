@@ -52,7 +52,7 @@
 
 ## Answer key
 
-**A1: b.** The guard is one conditional returning false — missing metadata fails closed. (a) is fail-open, the exact anti-pattern; (c)/(d) are silent cloud migration, which the mode forbids. What a passing check proves is exactly what the daemon says about itself and no more: the README states that boundary ("trusts the installed local Ollama service and its metadata"). *Ref: M3.1 — `ModelPrivacy.swift:15-24`, `ListenToMe/README.md`.*
+**A1: b.** The guard is one conditional returning false — missing metadata fails closed. (a) is fail-open, the exact anti-pattern; (c) is silent cloud migration and (d) a silent fallback to a previously verified model — both answer from a model the user did not choose, which the mode forbids. What a passing check proves is exactly what the daemon says about itself and no more: the README states that boundary ("trusts the installed local Ollama service and its metadata"). *Ref: M3.1 — `ModelPrivacy.swift:15-24`, `ListenToMe/README.md`.*
 
 **A2: b.** A stock `ollama pull` of a `:cloud` alias presents exactly this: installed locally, listed locally, computed remotely ("a local endpoint is not proof of local inference," gap review G01). (a) confuses encryption with destination; (d) invents an HTTPS requirement. *Ref: M3.1.*
 
@@ -62,7 +62,7 @@
 
 **A5: a.** Untested core code drags the percentage below the floor. (b) and (d) were real gap-review findings (G01, G02) that coexisted with 97% coverage — "97% coverage means ship it" and "one more test would have caught it" are the misconceptions. *Ref: M3.2 — `design-and-gap-review.md`.*
 
-**A6: c.** Tier assignment: CI covers headless logic; `make e2e` covers the real-model contract on your machine; the manual tier covers audio. Gating keeps the test in the default suite — skipped with a reason, not deleted. *Ref: M3.2 — `Makefile:39-53`.*
+**A6: c.** Tier assignment: CI covers headless logic; `make e2e` covers the real-model contract on your machine; the manual tier covers audio. Gating keeps the test in the default suite — skipped with a reason, not deleted. *Ref: M3.2 — `Makefile:39-54`.*
 
 **A7.** A strong entry names a design or user-facing gap, not a test count — e.g. the privacy label keys off whether an API key is set rather than where the request goes (G01), or nothing checkpoints the transcript so a crash loses the meeting (G02) — refuses the matching claim ("local-only", "production-ready") until it is closed, and defines closure as a P0 filed, the enforcing code plus a test, and a re-review. Reject entries whose "finding" is a coverage or count target. The lesson: metrics validate what you *built*; the review validates what users *need*, which no coverage number establishes — "do not promote" coexisted with 215 passing tests and 97.24% coverage (`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md:5`). *Ref: M3.2.*
 

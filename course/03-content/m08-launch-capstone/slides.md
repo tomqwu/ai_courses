@@ -435,7 +435,7 @@ Limitations / not verified:
 
 - Not "tests pass" — the command and its counts.
 - State what the agent did versus what you verified.
-- A fabricated result is the only automatic fail.
+- A fabricated result is an automatic fail, never excused.
 
 <!-- NOTES: The record is modeled on SignUpFlow's validation format, and three blocks are non-negotiable. Commands with results means the command and its counts, not a summary sentence. Artifact links means the repo at a tag, the spec folder, the evidence log, and the sales page draft. Limitations means the honest list, failures included — the gap review that said do not ship is worth more to your grade than a green badge. Use agents for everything, but the record states what the agent did and what you verified. Transition: the last deliverable, the demo. Timing: 4 minutes. -->
 

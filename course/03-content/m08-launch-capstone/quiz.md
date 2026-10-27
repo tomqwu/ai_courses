@@ -25,7 +25,7 @@ D. Turn what two friends said about the idea in DMs into named testimonials — 
 
 **Q4. (M8.2)** Which describes the launch arc correctly?
 
-A. All 7–10 emails should sell — every send asks for the purchase
+A. All seven emails should sell — every send asks for the purchase
 B. Warmup sells softly; conversion sells hard; the split is roughly half and half
 C. Warmup (origin story → transformation proof → free tool) does not sell; then conversion (cart open → objection teardown → testimonial → final call)
 D. Send one strong sales email, repeated daily until the deadline

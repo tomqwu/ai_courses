@@ -44,7 +44,7 @@ python -m pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q
   per-request verification, `RejectRedirects`.
 - `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95` — local-first auto-selection.
 - `ListenToMe/scripts/check-coverage.sh` + `ListenToMe/.github/workflows/ci.yml:36-42` — the floor.
-- `ListenToMe/Makefile:39-53` + `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22`
+- `ListenToMe/Makefile:39-54` + `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-41`
   — the gated contract test.
 - `ListenToMe/docs/manual-smoke-test.md:1-7` — what only a human can verify.
 - `ListenToMe/docs/RELEASING.md:33-39, 41-52` — the published rung, and bundle-id separation.
