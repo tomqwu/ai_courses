@@ -122,7 +122,11 @@
       if (next) {
         var link = line.querySelector('[data-module-next-link]');
         link.setAttribute('href', next.getAttribute('href'));
-        link.textContent = next.querySelector('.unit-title').textContent + ' · ' + next.querySelector('.unit-kind').textContent;
+        var title = next.querySelector('.unit-title').textContent.trim();
+        var kind = next.querySelector('.unit-kind').textContent.trim();
+        // The introduction, summary and knowledge check use the same word for the unit's kind and
+        // its title; "Next: Introduction · Introduction" is noise.
+        link.textContent = title.toLowerCase() === kind.toLowerCase() ? title : title + ' · ' + kind;
       }
     });
   }
