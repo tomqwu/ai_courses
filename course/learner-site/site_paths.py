@@ -317,6 +317,11 @@ TRACKS = [
         "kicker": "Free · Start here if the terminal is new",
         "promise": "From nothing installed to a public product catalog: Git, the GitHub CLI, "
                    "folders, cloning and publishing, on Windows and macOS.",
+        "outcomes": [
+            "A public catalog at https://<your-username>.github.io/my-catalog/, live on GitHub Pages",
+            "A GitHub repository you created, changed and pushed from the terminal",
+            "A setup check that prints four PASS lines, saved in your evidence file",
+        ],
         "core": ["m09"],
         "slice": {},
         "excluded": [
@@ -373,6 +378,11 @@ TRACKS_ZH = {
     "github-pages": {
         "title": "用 GitHub Pages 发布网站", "medium": "网站", "kicker": "免费 · 终端新手从这里开始",
         "promise": "从什么都没安装，到一个公开的产品目录：Git、GitHub CLI、文件夹、克隆和发布，Windows 和 macOS 都适用。",
+        "outcomes": [
+            "一个公开的产品目录，地址是 https://<your-username>.github.io/my-catalog/，由 GitHub Pages 发布",
+            "一个由你从终端创建、修改并推送的 GitHub 仓库",
+            "一份打印出四行 PASS 的环境检查输出，保存在你的证据日志里",
+        ],
         "excluded": ["付费课程的其余部分（M0–M8）——本路线免费且独立"],
         "price": "免费", "level": "入门", "role": "终端新手 · 小企业主",
         "subject": "Git · GitHub CLI · GitHub Pages", "counts_source": "模块本身",
@@ -641,7 +651,7 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
     rows = "".join(f'<tr><th scope="row">{label}</th><td>{cell(key)}</td></tr>'
                    for label, key in labels)
     source = track.get("counts_source", "the bundle map")
-    note = (SH.T(f'Counted from {html.escape(source)}.', f'统计自 {html.escape(source)}。')
+    note = (SH.T(f'Counted from {html.escape(source)}.', f'统计自{html.escape(source)}。')
             if measured else
             SH.T(f'{html.escape(source)} — so these are counted from the rows, not quoted from a total.',
                  f'{html.escape(source)}——所以这些数字是逐行统计的，而不是引用某个总数。'))
@@ -687,7 +697,15 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
     <p>这条路线不是一门独立的课程。它为一种产品类型编排并组织母课程的模块，复用其课文、实验和测验——
       没有改写、重排或删减，M7/M8 的切片是限定范围，而不是概括。</p>
     <p class="index-footnote">{duration_note} 实验时间引自各模块的源文件。本页没有任何把估算当作实测的数字。</p>""")
-    body = f"""{head}
+    outcomes_html = ""
+    if track.get("outcomes"):
+        items = "".join(f"<li>{html.escape(o)}</li>" for o in track["outcomes"])
+        outcomes_html = f"""  <section class="path-section">
+    <h2>{SH.T("What you will have", "你将得到什么")}</h2>
+    <ul class="objectives">{items}</ul>
+  </section>
+"""
+    body = f"""{head}{outcomes_html}
   <section class="path-section">
     <h2>{SH.T("Prerequisites", "前置条件")}</h2>
     <p>{html.escape(track.get('prereq') or SH.T('None. Module 0 assumes no prior setup beyond a machine that can run Python.', '无。模块 0 只要求一台能运行 Python 的电脑，无需其他准备。'))}</p>
