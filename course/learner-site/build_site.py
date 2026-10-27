@@ -954,7 +954,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
                         "讲者备注是讲者的版本；讲解是学习者的版本。录音目前使用免费的预览语音，凡是出现的地方都会注明——"
                         "正式语音会另行录制，文字不会改变。")
     head = SH.page_head(
-        SH.T("AI Product Studio · edition 2026.09 · nine modules", "AI Product Studio · 2026.09 版 · 九个模块"),
+        SH.T("AI Product Studio · edition 2026.09 · nine modules + a free starter", "AI Product Studio · 2026.09 版 · 九个模块 + 一个免费入门模块"),
         SH.T("Ship AI products a skeptical engineer can audit.", "交付经得起多疑工程师审计的 AI 产品。"),
         SH.T("Three production repositories — an on-device meeting copilot, a multi-tenant SaaS built with "
              "AI agents under written rules, and an evidence-cited briefing site — taught as one method: "
