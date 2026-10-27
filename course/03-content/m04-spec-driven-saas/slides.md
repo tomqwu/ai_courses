@@ -399,7 +399,7 @@ Follow-ups:
 
 `specs/000-user-onboarding/tasks.md`
 
-<!-- NOTES: Open the file and read its Input line, near the top: "Input: Design documents from `/specs/020-user-onboarding/`". The folder is `specs/000-user-onboarding`. The feature was renumbered at some point and the generated task file kept the stale path. Nothing failed, no test caught it, no warning fired — it just sat in a generated artifact waiting for an agent to follow a dead end. Everything in a spec folder is generated output: `/speckit.tasks` wrote that file, `/speckit.checklist` graded the other one. Generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code. Transition: two more, both inside the exemplar folder. -->
+<!-- NOTES: Open the file and read its Input line, near the top: "Input: Design documents from `/specs/020-user-onboarding/`". The folder is `specs/000-user-onboarding`. The feature was renumbered at some point and the generated task file kept the stale path. Nothing failed, no test caught it, no warning fired — it just sat in a generated artifact waiting for an agent to follow a dead end. Everything in a spec folder is generated output: `/speckit.tasks` wrote that file, and `/speckit.specify` graded the other one — the separate `/speckit.checklist` command writes custom checklists, not this gate. Generation is where hallucination risk concentrates, so generated artifacts deserve the same suspicion as generated code. Transition: two more, both inside the exemplar folder. -->
 
 ---
 
@@ -483,5 +483,5 @@ Then comment on one classmate's sharpest scenario.
 
 `lesson.md`, "Discussion prompt"
 
-<!-- NOTES: Post to the community with this template. The third line is the one that matters most — name the specific scenario, requirement, or task you had to sharpen, and say what was vague before. Then read two classmates' posts and comment on one with a single question: would their sharpest acceptance scenario let you implement without asking anything? That is the stranger test, applied to each other. That peer exchange is also how you satisfy the Lab M4 pass gate if you are in the self-paced tier. -->
+<!-- NOTES: Post to the community with this template. The third line is the one that matters most — name the specific scenario, requirement, or task you had to sharpen, and say what was vague before. Then read two classmates' posts and comment on one with a single question: would their sharpest acceptance scenario let you implement without asking anything? That is the stranger test, applied to each other. That peer exchange is the cohort option for the Lab M4 pass gate; if you are self-paced, the scripted stranger in `stranger-prompt.md` is the gate. -->
 

@@ -64,7 +64,7 @@ A PR body's Validation section reads: "Reviewed the diff myself — all good. No
 
 ### Q8 (M4.3, short answer)
 
-Spec 014's self-graded checklist reported "5xP1" while the spec has six P1 stories, and its plan assigned migrations to a `migrations/` directory that doesn't exist. State the two countermeasure habits (from `AGENTS.md`) you should run on every generated artifact, and what each would have caught here.
+Spec 014's self-graded checklist reported "5xP1" while the spec has six P1 stories, and the onboarding tasks file (000's `tasks.md`, T004–T007) assigned migrations to a `migrations/versions/` path that doesn't exist. State the two countermeasure habits (from `AGENTS.md`) you should run on every generated artifact, and what each would have caught here.
 
 ---
 

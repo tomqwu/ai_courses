@@ -59,7 +59,7 @@
     },
     "slide-15": {
       "title": "M9.3 — Five files, and you edit one",
-      "text": "The catalog starter is five files, and you edit one of them. Products dot J S holds your store's name, your contact link, and your list of products. The page itself is index dot H T M L, where you change one description line. The colours live in the stylesheet. The app script draws the cards, the category buttons, the search and the sort, and you never need to touch it. And there is one empty file with a strange name, which you keep. It tells GitHub Pages to publish your files exactly as they are."
+      "text": "The catalog starter is five files, and you edit one of them. Products dot J S holds your store's name, your contact link, and your list of products. The page itself is index dot H T M L, where you change two lines: the description a search engine shows, and the share title. The colours live in the stylesheet. The app script draws the cards, the category buttons, the search and the sort, and you never need to touch it. And there is one empty file with a strange name, which you keep. It tells GitHub Pages to publish your files exactly as they are."
     },
     "slide-16": {
       "title": "Why the data is a script, not JSON",

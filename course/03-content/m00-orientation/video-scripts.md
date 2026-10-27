@@ -56,7 +56,7 @@ feeling."
 | 4:30 | `ListenToMe/docs/superpowers/specs/2026-06-18-listentome-design.md` | ListenToMe does the same job differently: a design spec with protocol-level interfaces and a non-goals list — "No cloud backend, accounts, billing, or multi-user." Writing down what you refuse to build is spec work. |
 | 5:45 | `ListenToMe/README.md` coverage floor | Stages four and five. Validate: SignUpFlow's seven tiers and dated counts; ListenToMe's ninety-five percent coverage floor enforced by a script. Release: signed, notarized DMGs that target an exact source commit. |
 | 7:15 | `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md` | Stage six, Prove. This review told the author: do not promote the existing 1.3.0 build — despite ninety-seven point two four percent core coverage. Someone measured something, wrote it down, and blocked their own release. That is the rarest artifact in software. |
-| 8:30 | `SignUpFlow/docs/playbooks/validation.md` | It gets harder. SignUpFlow's validation record includes a browser click race that made a test flaky, and a type-checking debt line that reads "not a pass." He could have deleted both. Keeping them is what makes the passing numbers believable. |
+| 8:30 | `SignUpFlow/docs/playbooks/validation.md` | It gets harder. SignUpFlow's validation record includes a recurring-event browser click race that made a test flaky, and a type-checking debt line that reads "not a pass." He could have deleted both. Keeping them is what makes the passing numbers believable. |
 
 **Demo cue.** Screen-share the loop diagram first, then open each file at the cited location. The
 viewer should notice the pattern: Study and Spec produce documents, Build and Validate produce

@@ -74,7 +74,7 @@
 3. **构建（Build）。** SignUpFlow 的 tasks.md 把每份规格变成带确切文件路径的复选框任务，测试先写（`SignUpFlow/specs/019-sms-notifications/tasks.md`）；ListenToMe 的实现计划是一份 2,410 行的 TDD 任务清单，最后是一次自查，把每条规格要点对应到一个任务（`ListenToMe/docs/superpowers/plans/2026-06-18-listentome-mvp.md`）。
 4. **验证（Validate）。** SignUpFlow 的七个测试层级和带日期的计数（`SignUpFlow/docs/playbooks/validation.md`）；ListenToMe 由脚本强制执行的 **95% 覆盖率底线**（`ListenToMe/README.md`）。
 5. **发布（Release）。** ListenToMe 发布经过签名 + 公证、对应确切源码提交的 DMG（`ListenToMe/AGENTS.md`）；AI × QE 发布不可变的、按版次编排的版本——"Public content changes require a new edition before deployment"（`ai_qe/README.md`）。
-6. **证明（Prove）。** ListenToMe 公开了一份差距评审，尽管核心覆盖率达到 97.24%，结论仍是 "**do not promote the existing 1.3.0 DMG**"（`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`）；AI × QE 公开了对自家站点的 14 项发现审计（`ai_qe/research/reviews/site-audit-2026-09-06.md`）；SignUpFlow 的验证记录包含了它的失败——一次浏览器点击竞争，以及一行写着 "not a pass" 的 mypy 欠账（`SignUpFlow/docs/playbooks/validation.md`）。
+6. **证明（Prove）。** ListenToMe 公开了一份差距评审，尽管核心覆盖率达到 97.24%，结论仍是 "**do not promote the existing 1.3.0 DMG**"（`ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md`）；AI × QE 公开了对自家站点的 14 项发现审计（`ai_qe/research/reviews/site-audit-2026-09-06.md`）；SignUpFlow 的验证记录包含了它的失败——一次周期性活动的浏览器点击竞争，以及一行写着 "not a pass" 的 mypy 欠账（`SignUpFlow/docs/playbooks/validation.md`）。
 
 第 6 阶段最罕见，也是本课程的主干：对哪些已验证、哪些未验证、哪些失败了的诚实记录。测试验证你构建的东西；证据纪律验证你交付的东西。
 
@@ -100,7 +100,7 @@ git clone https://github.com/tomqwu/SignUpFlow.git
 git clone https://github.com/tomqwu/ai_qe.git
 ```
 
-**2. 用三条命令运行一个真实的生产求解器**（出自 `SignUpFlow/README.md` 的 "Quick Start" 和 "CLI Example"）：
+**2. 用三条命令运行一个真实的生产求解器**（出自 `SignUpFlow/README.md` 的 "Quick Start" 和 "CLI Examples"）：
 
 ```bash
 cd SignUpFlow && make setup     # Poetry env + migrations + seed data

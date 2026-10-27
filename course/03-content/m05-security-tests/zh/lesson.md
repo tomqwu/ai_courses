@@ -86,7 +86,7 @@ SignUpFlow 中的一个 `Person` 带有一个 `roles` JSON 数组，里面放着
 
 这种分离在 `api/roles.py` 中是可执行的。`normalize_roles` 对管理员提交的数组进行分拣：与 `PERMISSION_ROLES` 精确匹配的是权限角色，其余都是资格——但经大小写折叠后发生冲突的值（`"ADMIN"`）会抛出 `"is an ambiguous permission role"`，多于一个权限角色则抛出 `"Select exactly one account access role"`（第 38–53 行）。`parse_qualifications` 会拒绝经大小写折叠后等于 `admin`/`volunteer` 的资格字符串（第 19–20 行）。数据形态容纳两套词汇；策略让它们互不相交，漂移的输入会大声失败，而不是悄悄提权。
 
-**可执行的授权矩阵。** 知道规则还不够——SignUpFlow 在每一次测试运行时都检查每个已挂载的路由是否遵守规则。`api/route_auth_policy.py` 按名称把每个 FastAPI 操作归入恰好五个策略类别：`public`（7 个操作——`signup`、`login`、`health_check`……）、`public-token`（限定范围令牌路由：接受/验证邀请、刷新、密码重置、日历订阅）、`public-callback`（Twilio webhook，默认关闭）、`member`（50 个操作）和 `admin`（78 个操作，包括 `create_invitation`、`solve_schedule`、`publish_solution`）——合计 143 个已归类的操作。`ROUTE_AUTH_POLICY` 字典是可执行的唯一事实来源；`docs/API_AUTHORIZATION.md` 开篇就是这么说的（第 3–9 行）。
+**可执行的授权矩阵。** 知道规则还不够——SignUpFlow 在每一次测试运行时都检查每个已挂载的路由是否遵守规则。`api/route_auth_policy.py` 按名称把每个 FastAPI 操作归入恰好五个策略类别：`public`（7 个操作——`signup`、`login`、`health_check`……）、`public-token`（6 个操作：接受/验证邀请、刷新、密码重置、日历订阅）、`public-callback`（4 个操作——SendGrid、Stripe 和两个 Twilio webhook，默认关闭）、`member`（50 个操作）和 `admin`（78 个操作，包括 `create_invitation`、`solve_schedule`、`publish_solution`）——合计 145 个已归类的操作（7 + 6 + 4 + 50 + 78）。`ROUTE_AUTH_POLICY` 字典是可执行的唯一事实来源；`docs/API_AUTHORIZATION.md` 开篇就是这么说的（第 3–9 行）。
 
 强制执行靠的是 `tests/unit/test_api_route_auth_policy.py`——38 行代码，在三类漂移上失败：
 

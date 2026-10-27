@@ -163,7 +163,7 @@ SignUpFlow **不运行任何 CI 检查**。这是一项有意为之、经过测�
 
 硬性规则：**「不要伪造状态检查、绕过保护措施，或把缺失的证据当作成功」**（`SignUpFlow/AGENTS.md`，PR 规则）。感觉是绿的，不等于套件是绿的。
 
-**把失败写进去。** 同一份验证记录展示了这在实践中意味着什么。一次浏览器时序竞态被记录下来，而不是被隐藏：「一个较早的周期性活动浏览器测试暴露了一个点击竞态；在点击它新渲染出的 Delete 控件之前，要等待 HTMX 稳定」——并且「这次最初的失败没有从证据中省略」（`SignUpFlow/docs/playbooks/validation.md`）。已知的技术债按债务来命名："Full API mypy | Existing debt: 835 errors in 40 files; not a pass"（`SignUpFlow/docs/playbooks/validation.md`）。记录以局限收尾：「不要把人工运营演练、外部投递、PostgreSQL、DST、场地排期或完整的租户隔离算作已被这些运行验证」（`SignUpFlow/docs/playbooks/validation.md`）。一份不能写出「未验证」的证据记录（evidence record）不是证据——它是营销。
+**把失败写进去。** 同一份验证记录展示了这在实践中意味着什么。一次周期性活动的浏览器点击竞争被记录下来，而不是被隐藏：「一个较早的周期性活动浏览器测试暴露了一个点击竞态；在点击它新渲染出的 Delete 控件之前，要等待 HTMX 稳定」——并且「这次最初的失败没有从证据中省略」（`SignUpFlow/docs/playbooks/validation.md`）。已知的技术债按债务来命名："Full API mypy | Existing debt: 835 errors in 40 files; not a pass"（`SignUpFlow/docs/playbooks/validation.md`）。记录以局限收尾：「不要把人工运营演练、外部投递、PostgreSQL、DST、场地排期或完整的租户隔离算作已被这些运行验证」（`SignUpFlow/docs/playbooks/validation.md`）。一份不能写出「未验证」的证据记录（evidence record）不是证据——它是营销。
 
 **完成的定义意味着在真实的东西上验证过。** ListenToMe 的完成的定义（Definition of Done, DoD）要求维护者「在已安装的生产应用中验证受影响的行为。对于音频改动，要验证真实的系统音频转写被标注为 OTHERS；**一个权限开关或麦克风拾音不算证明**」（`ListenToMe/AGENTS.md`）。它的检查清单还会扫一遍这次改动涉及的每一份文档：「**过时的文档是完成的定义上的失败**，而不是后续事项」（`ListenToMe/CLAUDE.md`）。测试验证的是你构建的东西；完成的定义验证的是你交付的东西。
 

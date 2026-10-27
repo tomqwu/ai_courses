@@ -16,7 +16,7 @@
    git add -A && git commit -m "Scaffold starter repo"
    ```
    第一次提交让 `git rev-parse HEAD` 有一个版本可以打印，第 8 步的证据条目需要它。
-2. **写 `constitution.md`（≤80 行）** SignUpFlow 自己的宪章在本实验写成之后已经增长到 85 行（`SignUpFlow/.specify/memory/constitution.md`）；这个上限是给*你的第一份*宪章的——简洁本身就是要练的技能。复制下面的内容，然后把三处方括号部分改成你自己的：
+2. **写 `constitution.md`（≤80 行）** SignUpFlow 自己的宪章在本实验写成之后已经增长到 85 行（`SignUpFlow/.specify/memory/constitution.md`）；这个上限是给*你的第一份*宪章的——简洁本身就是要练的技能。复制下面的内容，然后把两处方括号部分（项目名和安全规则）改成你自己的：
    ```markdown
    # <Project> Constitution
    ## Principles

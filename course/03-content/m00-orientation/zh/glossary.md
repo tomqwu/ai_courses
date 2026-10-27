@@ -81,7 +81,7 @@ M3 中，没有经过验证的本地元数据的模型会被拒绝，而不是�
 ## 精选资源
 
 1. `course/03-content/m00-orientation/lesson.md` — 模块讲稿；做实验前通读一遍。
-2. `SignUpFlow/README.md` — 求解器的 "CLI Example" 给出了你的实验必须对上的确切输出。
+2. `SignUpFlow/README.md` — 求解器的 "CLI Examples" 给出了你的实验必须对上的确切输出。
 3. `course/03-content/m02-ondevice-app/tinycopilot/README.md` — M2 实验参考，外加用一段话讲清的
    隐私实验。
 4. `ListenToMe/docs/competition-analysis.md` — 本课程中把研究转化为定位的最佳

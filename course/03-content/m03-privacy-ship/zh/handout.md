@@ -37,7 +37,7 @@ python -m pytest tests -m "not e2e" --cov=src/tinycopilot --cov-fail-under=90 -q
 - `ListenToMe/Sources/ListenToMeCore/OllamaProvider.swift:138-157, 208-214` — 主机检查、逐请求校验、`RejectRedirects`。
 - `ListenToMe/Sources/ListenToMeCore/ModelRanking.swift:80-95` — 本地优先的自动选择。
 - `ListenToMe/scripts/check-coverage.sh` + `ListenToMe/.github/workflows/ci.yml:36-42` — 底线。
-- `ListenToMe/Makefile:39-53` + `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22`
+- `ListenToMe/Makefile:39-54` + `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-41`
   — 带门控的契约测试。
 - `ListenToMe/docs/manual-smoke-test.md:1-7` — 只有人能验证的东西。
 - `ListenToMe/docs/RELEASING.md:33-39, 41-52` — 已发布这一级，以及 bundle id 分离。

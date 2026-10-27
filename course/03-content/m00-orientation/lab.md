@@ -38,7 +38,7 @@
 - [ ] Evidence log started (see below)
 - [ ] First-win post is up
 
-The pass gate is the solver block plus a non-empty `ollama list`. The post is a checklist item and the completion lever (`course/02-instructor/instructor-guide.md` §1), not an auto-fail; the only auto-fail is fabricated output.
+The pass gate is the solver block plus a non-empty `ollama list`. The post is a checklist item and the completion lever (`course/02-instructor/instructor-guide.md` §1), not an auto-fail; fabricated output is an automatic fail, never excused, and the lab rubric lists the other auto-fails.
 
 ## Before Module 1
 

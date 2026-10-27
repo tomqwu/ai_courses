@@ -48,7 +48,7 @@
 
 ## 精选资源
 
-1. `ListenToMe/docs/competition-analysis.md` — 12 行的表格和逐个分句推导的定位语；
+1. `ListenToMe/docs/competition-analysis.md` — 14 行的表格和逐个分句推导的定位语；
    把它当作你自己表格的格式来读。
 2. `SignUpFlow/README.md`（“Provider-backed Features”）+ `SignUpFlow/AGENTS.md` — 门控模式，
    以及核心不得依赖付费路径的规则。

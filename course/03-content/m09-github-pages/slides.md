@@ -239,12 +239,12 @@ nothing to commit, working tree clean
 
 ```figure
 kind: architecture
-alt: The catalog starter's five files — edit products.js; touch one line of index.html and the colours in styles.css; leave app.js and the empty .nojekyll alone.
+alt: The catalog starter's five files — edit products.js; touch the two meta lines of index.html and the colours in styles.css; leave app.js and the empty .nojekyll alone.
 source: course/03-content/m09-github-pages/catalog-starter/products.js
 layer: Edit (hl)
   box: `products.js` — store name, contact, the products @ Products dot J S holds
 layer: Touch lightly
-  box: `index.html` — the description line only @ The page itself is
+  box: `index.html` — the description and share-title lines @ The page itself is
   box: `styles.css` — the colours, if you like @ The colours live
 layer: Leave alone
   box: `app.js` — cards, filters, search, sort @ The app script draws

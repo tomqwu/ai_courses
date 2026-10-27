@@ -64,7 +64,7 @@ Limitations / not verified:
 
 ## Academic honesty (mirrors the repos' ethos)
 
-- Students may use AI agents for any lab/capstone — **the course teaches that** — but the evidence record must state what the agent did and what the student verified ("I implemented X via agent; I reviewed Y; tests were run locally with results below"). Fabricating a test result or an evidence line is the only fail.
+- Students may use AI agents for any lab/capstone — **the course teaches that** — but the evidence record must state what the agent did and what the student verified ("I implemented X via agent; I reviewed Y; tests were run locally with results below"). Fabricating a test result or an evidence line is an automatic fail — the one never excused — and a lab's rubric may add further auto-fails that each invalidate the evidence on their own.
 - Peer review exchange (self-paced) requires reviewing one other student's M6 briefing or M7 pricing worksheet against the printed checklists; the review template is in the instructor guide.
 
 ## Cohort-specific assessment mechanics

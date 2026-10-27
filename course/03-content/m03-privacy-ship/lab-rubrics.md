@@ -24,7 +24,8 @@
 Any one of these fails Lab M3 regardless of the rows above:
 
 1. **Fabricated evidence** — an invented command output, test count, coverage percentage, or source
-   URL. This is the course's only automatic fail (`course/01-design/assessment-and-rubrics.md`).
+   URL. Fabrication is an automatic fail, never excused (`course/01-design/assessment-and-rubrics.md`);
+   the conditions below add the rest.
 2. **Green with no red** — Step 0, Step 1 or Step 3 submitted with a passing run and no recorded
    failure run, where the step requires both.
 3. **Tests weakened to pass** — deleting or skipping the cloud-alias, missing-metadata,

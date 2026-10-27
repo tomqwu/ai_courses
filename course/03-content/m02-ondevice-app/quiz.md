@@ -73,7 +73,7 @@ Every "By the end of this module you can" line in `course/03-content/m02-ondevic
 | Objective (lesson.md) | Checked by |
 |---|---|
 | Explain and sketch the capture → transcribe → context → prompt → route pipeline, and name the file that implements each stage | Q1 (stage order), Q5 (the file per stage, seam vs implementation); Lab M2 rebuilds the same stages in `tinycopilot/src/tinycopilot/` |
-| Justify the three protocol seams, and implement a conversation store with a character-budgeted context window that always keeps at least the newest segment | Q2 (why the seams make a 96% badge possible); Lab M2 `conversation_store.py` and its tests inside `make lab-m2` (201 passed) |
+| Justify the three protocol seams, and implement a conversation store with a character-budgeted context window that always keeps at least the newest segment | Q2 (why the seams make a 96% badge possible); Lab M2 `conversation_store.py` and its tests inside `make lab-m2` (208 passed) |
 | Route different models to different roles with local-first defaults, token-prefix matching, and stale-stream cancellation on model switch | Q3 (role defaults), Q4 (the per-role generation counter); Lab M2 `model_router.py` |
 | Write prompt builders as pure functions — including a "never invent" grounding contract and an anti-preamble style | Q6 (why the Listener contract is load-bearing downstream); Lab M2 `prompts.py`, asserted string-for-string |
 | Add proactive behavior with a deliberately simple question detector behind a debounce | Q8 (which guard condition each bug violates, and the two tests that pin the fix); Lab M2 `question_detector.py` |

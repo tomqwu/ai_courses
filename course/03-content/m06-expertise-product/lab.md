@@ -48,9 +48,11 @@ Turn research into a **trustworthy, sellable artifact**: a 12-slide mini-briefin
 executive:
   slides: [1, 4, 7, 9, 11, 12]   # 6 slides
   closing: 12                    # ends on the decision ask
+  full_order: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 technical:
-  slides: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11]  # 10 slides — keeps the evidence
-  full_order: [1,2,3,4,5,6,7,8,9,10,11,12]
+  slides: [1, 2, 3, 4, 5, 6, 7, 8, 9, 12]  # 10 slides — keeps the evidence
+  closing: 12
+  full_order: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 ```
 
 ## Acceptance checklist (all must be true)

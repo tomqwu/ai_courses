@@ -29,7 +29,7 @@ and has no converge.
 ls specs/                                   # 17 folders in SignUpFlow
 grep -rn "NEEDS CLARIFICATION" specs/       # must return zero
 grep -o "FR-[0-9]\{3\}" spec.md | sort -u | wc -l   # recount against the checklist
-grep -o "app/[a-z_/]*\.py" tasks.md | sort -u | xargs ls  # every cited path must exist
+grep -oE "[A-Za-z0-9_./-]+\.py" tasks.md | sort -u | xargs ls  # every cited path must exist
 ls alembic/versions/                        # where migrations actually live
 ```
 

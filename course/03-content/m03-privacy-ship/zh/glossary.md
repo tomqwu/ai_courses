@@ -8,7 +8,7 @@
 **云端别名（Cloud alias）** — 一个以 `:cloud` 结尾的模型名（或者一个名字听起来像本地、实际由远端支撑的模型），它在本地守护进程上安装并列出，推理却在远程运行 ——
 `ListenToMe/docs/manual-smoke-test.md`；`ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:16`。
 
-**契约测试（Contract test）** — 一种测试 mock 只能假设的真实接缝的测试——这里指针对一个运行中的 Ollama 守护进程检验 NDJSON 请求形态和流式解析——放在 CI 之外，由一个环境变量门控 —— `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-22`。
+**契约测试（Contract test）** — 一种测试 mock 只能假设的真实接缝的测试——这里指针对一个运行中的 Ollama 守护进程检验 NDJSON 请求形态和流式解析——放在 CI 之外，由一个环境变量门控 —— `ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-41`。
 
 **覆盖率底线（Coverage floor）** — 一道硬性 CI 关卡，当总行覆盖率跌破阈值时让构建失败；它换来的是对未经测试的核心逻辑的强制约束，除此之外什么也换不来 ——
 `ListenToMe/scripts/check-coverage.sh`；`ListenToMe/.github/workflows/ci.yml:36-42`。
@@ -32,7 +32,7 @@
 
 **指标与结论（Metric vs. verdict）** — 覆盖率和测试数量是入场费；一次验证你*交付*了什么的评审才是结论 —— `ListenToMe/docs/reviews/2026-09-10/design-and-gap-review.md:5`。
 
-**隐私模式（`PrivacyMode`）** — 用户选择的显式三路模式开关（`off`/`local`/`cloud`）；添加云端密钥从不切换它 —— `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`；
+**隐私模式（`PrivacyMode`）** — 用户选择的显式四路模式开关（`off`/`local`/`apple`/`cloud`，`AIProcessingMode` 有四个 case）；添加云端密钥从不切换它 —— `ListenToMe/Sources/ListenToMeCore/ModelPrivacy.swift:3-13`；
 TinyCopilot 中的对应实现：`course/03-content/m02-ondevice-app/tinycopilot/src/tinycopilot/privacy.py:28-45`。
 
 **拒绝重定向（Redirect refusal (`RejectRedirects`)）** — 一个拒绝每一个 3xx、而不是跟随它的传输层，让会议文本永远无法被悄悄转发——Swift 中的 URLSession 委托是

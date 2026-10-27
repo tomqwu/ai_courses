@@ -110,7 +110,7 @@ Both forms copy the hidden `.nojekyll` too: `-Force` does it in PowerShell, and 
 1. Open `products.js` in any text editor (Notepad or TextEdit is fine; if you use TextEdit, choose **Format → Make Plain Text** first).
 2. Change `store.name`, `store.tagline` and `store.contact` (your email as `mailto:you@example.com`).
 3. Replace the sample products with **at least three of your own**. Keep the commas between blocks.
-4. In `index.html`, change the `description` line near the top to one sentence about your products.
+4. In `index.html`, change the two `<meta>` lines near the top: the `description` to one sentence about your products, and the `og:title` to your store's name.
 5. Preview:
 
    | Windows | macOS |

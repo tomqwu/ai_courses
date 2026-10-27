@@ -59,7 +59,7 @@
     },
     "slide-15": {
       "title": "Story → scenario → task",
-      "text": "Watch the abstraction drop. A sentence of intent becomes a checkable scenario, and then a task. The story is: as a volunteer, I can block dates so the solver skips me. The scenario gets concrete: given a blocked period covering a specific date, when an admin runs the solver, then the volunteer receives no assignment and the solution reports zero hard violations. The task line carries an ID, a priority marker, and a story tag, plus exact file paths, and it names the contract, the test file, and the order of work. Test first: the failing test is the task's first deliverable."
+      "text": "Watch the abstraction drop. A sentence of intent becomes a checkable scenario, and then a task. The story is: as a volunteer, I can block dates so the solver skips me. The scenario gets concrete: given a blocked period covering a specific date, when an admin runs the solver, then the volunteer receives no assignment and the solution reports zero hard violations. The task line carries an ID, a parallel marker, and a story tag, plus exact file paths, and it names the contract, the test file, and the order of work. Test first: the failing test is the task's first deliverable."
     },
     "slide-16": {
       "title": "ListenToMe's variant: protocols and non-goals",
@@ -95,7 +95,7 @@
     },
     "slide-24": {
       "title": "Recap",
-      "text": "Six lines, one idea each. Governance: a eighty-five-line constitution above a one-hundred-eighty-eight-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing."
+      "text": "Six lines, one idea each. Governance: an eighty-five-line constitution above a one-hundred-eighty-eight-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing."
     },
     "slide-25": {
       "title": "Discussion prompt",

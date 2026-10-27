@@ -25,7 +25,7 @@ layer: Many audiences, nothing forked (chain)
 layer: A skeptic can audit it (hl) @ The promise of this module
 ```
 
-<!-- NOTES: Welcome to Module 6, the third archetype. Modules 2 and 3 shipped an on-device app; Modules 4 and 5 specced and hardened a SaaS. This module packages expertise itself. Your case study is AI × QE, a research-backed presentation site about modernizing quality engineering in regulated financial services. Its topic is banking QA; its discipline transfers to any field. The promise is narrow and testable: you will learn to publish claims a skeptic can audit. Timing: 1 minute. Transition: next, the four capabilities you leave with. -->
+<!-- NOTES: Welcome to Module 6, the third archetype. Modules 2 and 3 shipped an on-device app; Modules 4 and 5 specced and hardened a SaaS. This module packages expertise itself. Your case study is AI × QE, a research-backed presentation site about modernizing quality engineering in regulated financial services. Its topic is banking QA; its discipline transfers to any field. The promise is narrow and testable: you will learn to publish claims a skeptic can audit. Timing: 1 minute. Transition: next, the six capabilities you leave with. -->
 
 ---
 
@@ -161,10 +161,10 @@ Gartner AI-testing productivity figure; …
 
 | Level | Definition | Who can confirm it |
 |---|---|---|
-| Task-level efficiency | Net time reduction for one activity, after review and correction | Pilot measurement |
-| QA capacity released | Human hours freed across the workflow, after adoption | Pilot plus baseline capture |
-| Hard-dollar saving | Budgeted cost Finance can actually remove or avoid | Finance, named budget line |
-| Total software-spend impact | Broader engineering cost — never mislabelled as QA saving | Finance and the CIO office |
+| Task-level efficiency | Net time reduction for a specific activity, after review, correction and control effort | Pilot measurement |
+| QA capacity released | Reduction in human QA hours across the full workflow, after adoption and eligibility | Pilot measurement plus baseline time capture |
+| Hard-dollar saving | Budgeted cost that Finance can actually remove or avoid | Finance, against a named budget line |
+| Total software-spend impact | A broader measure of engineering or delivery cost that must not be mislabelled as QA saving | Finance and the CIO office |
 
 <!-- NOTES: This table is quoted from `ai_qe/docs/principles.md`, and the whole site runs on it. Every number on the site is labelled with one of these four levels, and the file says plainly that mixing them is the most common error in AI business cases. Read the third column carefully, because it is the part people ignore: each level names who can confirm it. Task-level claims need a pilot. Capacity claims need baseline time capture. Hard-dollar claims need Finance, against a named budget line. Not you. Not a vendor deck. Timing: 5 minutes. Transition: watch the mixing error happen. -->
 

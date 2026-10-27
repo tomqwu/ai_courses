@@ -26,9 +26,8 @@ Mixing these is the most common error in AI business cases (`ai_qe/docs/principl
 
 **Route declaration:**
 ```yaml
-executive: { slides: [1, 3, 6, 9, 11, 12], closing: 12 }
-technical: { slides: [1, 3, 4, 5, 7, 8, 10, 9, 11, 12], closing: 12 }
-full_order: [1,2,3,4,5,6,7,8,9,10,11,12]
+executive: { slides: [1, 3, 6, 9, 11, 12], closing: 12, full_order: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }
+technical: { slides: [1, 3, 4, 5, 7, 8, 10, 9, 11, 12], closing: 12, full_order: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] }
 ```
 
 ```bash

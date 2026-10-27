@@ -90,7 +90,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 *29.3s · sentence-measured*
 
-> Read SignUpFlow's validation playbook and you will find the engineer listing his own failures: a browser click race that made a test flaky, and a type-checking debt line that says explicitly, not a pass. He could have deleted both lines. Keeping them is what makes the passing numbers believable. Tests validate what you built; evidence discipline validates what you shipped. When you write your capstone evidence record, the failures section is not optional, because a record with no limitations reads as unverified.
+> Read SignUpFlow's validation playbook and you will find the engineer listing his own failures: a recurring-event browser click race that made a test flaky, and a type-checking debt line that says explicitly, not a pass. He could have deleted both lines. Keeping them is what makes the passing numbers believable. Tests validate what you built; evidence discipline validates what you shipped. When you write your capstone evidence record, the failures section is not optional, because a record with no limitations reads as unverified.
 
 ### Part 12 — M0.3 — Set up and get your first win
 
@@ -120,7 +120,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 *35.0s · sentence-measured*
 
-> The lab has five steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, start your evidence log, and post to the community. The goal is every tool installed and proven with real output, and the pass gate is two things: the solver block with its health-score line, and an ollama list showing at least one model. Before Module 1, run the TinyCopilot suite; it is the Module 2 gate, green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is the only automatic fail.
+> The lab has five steps and a six-item acceptance checklist: clone the repos, check your Python version, install Ollama, run the solver, start your evidence log, and post to the community. The goal is every tool installed and proven with real output, and the pass gate is two things: the solver block with its health-score line, and an ollama list showing at least one model. Before Module 1, run the TinyCopilot suite; it is the Module 2 gate, green or a missing dependency you can name. If a dependency is missing, name the exact package in your evidence log instead of guessing. An honest partial is a pass; an invented green is an automatic fail, never excused.
 
 ### Part 17 — Quiz M0
 
@@ -241,7 +241,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 *36.5s · sentence-measured*
 
-> Watch the abstraction drop. A sentence of intent becomes a checkable scenario, and then a task. The story is: as a volunteer, I can block dates so the solver skips me. The scenario gets concrete: given a blocked period covering a specific date, when an admin runs the solver, then the volunteer receives no assignment and the solution reports zero hard violations. The task line carries an ID, a priority marker, and a story tag, plus exact file paths, and it names the contract, the test file, and the order of work. Test first: the failing test is the task's first deliverable.
+> Watch the abstraction drop. A sentence of intent becomes a checkable scenario, and then a task. The story is: as a volunteer, I can block dates so the solver skips me. The scenario gets concrete: given a blocked period covering a specific date, when an admin runs the solver, then the volunteer receives no assignment and the solution reports zero hard violations. The task line carries an ID, a parallel marker, and a story tag, plus exact file paths, and it names the contract, the test file, and the order of work. Test first: the failing test is the task's first deliverable.
 
 ### Part 16 — ListenToMe's variant: protocols and non-goals
 
@@ -295,7 +295,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 *45.8s · sentence-measured*
 
-> Six lines, one idea each. Governance: a eighty-five-line constitution above a one-hundred-eighty-eight-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.
+> Six lines, one idea each. Governance: an eighty-five-line constitution above a one-hundred-eighty-eight-line baseline, with every rule verifiable. Precedence: five levels, and the more specific and safer rule wins. Anti-hallucination: grep first, read canonical sources, offer options when a request is ambiguous. The spec pipeline: what, then decisions, then how, then tasks. Evidence: commands, counts, date, environment, limits, and head SHA, with the failures included, because not a pass is a valid result. If you remember nothing else: a rule you cannot check is a vibe, a spec without exact paths is not executable, and an evidence record without limitations is marketing.
 
 ### Part 25 — Discussion prompt
 
@@ -404,7 +404,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 *33.4s · sentence-measured*
 
-> Each role has its own base prompt and its own contract. Quick gets no preamble and must answer in one to three sentences. Listener must never invent an owner, a deadline, an agreement, or a completion. Deep prefers depth over brevity, with no padding. The Listener contract exists because its summary feeds back into the Quick and Deep prompts, so one hallucinated owner would propagate everywhere; it is blocked at the source. Nine response actions layer on top, and persona directives append to every role, so a preset like Interview shapes all three identically.
+> Each role has its own base prompt and its own contract. Quick gets no preamble and must answer in one to three sentences. Listener must never invent an owner, a deadline, an agreement, or a completion. Deep values depth over brevity and includes code blocks when relevant. The Listener contract exists because its summary feeds back into the Quick and Deep prompts, so one hallucinated owner would propagate everywhere; it is blocked at the source. Nine response actions layer on top, and persona directives append to every role, so a preset like Interview shapes all three identically.
 
 ### Part 16 — Only completed summaries ground other roles
 
@@ -1219,7 +1219,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 *33.8s · sentence-measured*
 
-> A price of zero is a decision, not an absence of one. ListenToMe prices at $0 under an MIT license, and it offers code open for inspection against rivals charging $8 to $149 a month. Free still has a business model attached. The paying surfaces named in the syllabus are the reputation funnel, support, and a Pro tier. The peer evidence is Natively, whose row reads free personal with Pro via lifetime or yearly. State the rule: the paid tier sits above a complete free core, never as a repair of a deliberately crippled one.
+> A price of zero is a decision, not an absence of one. ListenToMe prices at $0 under an MIT license, and it offers code open for inspection against rivals charging $7 to $149 a month. Free still has a business model attached. The paying surfaces named in the syllabus are the reputation funnel, support, and a Pro tier. The peer evidence is Natively, whose row reads free personal with Pro via lifetime or yearly. State the rule: the paid tier sits above a complete free core, never as a repair of a deliberately crippled one.
 
 ### Part 7 — The wedge rivals cannot copy cheaply
 
@@ -1382,7 +1382,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 *27.4s · sentence-measured*
 
-> A page is an argument in eight moves, in order, and each section has one job. Sell the destination first, then prove it. The order carries the conversion, not the volume. That anatomy comes from a template distilled across thirty-two thousand courses and one point three million enrollments. One creator restructured an existing page onto this order and moved from one percent to eight percent conversion. Read that carefully: it was the order, not new copywriting tricks.
+> A page is an argument in eight moves, in order, and each section has one job. Sell the destination first, then prove it. The order carries the conversion, not the volume. That anatomy comes from a template distilled across more than thirty-two thousand courses and one point three million enrollments. One creator restructured an existing page onto this order and moved from one percent to eight percent conversion. Read that carefully: it was the order, not new copywriting tricks.
 
 ### Part 4 — The eight sections (M8.1)
 
@@ -1496,7 +1496,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 *31.1s · sentence-measured*
 
-> The evidence record has three blocks, and they are non-negotiable. Commands run, with results, means the command and its pass or fail counts, not a summary sentence. Artifact links means the repository at a tag, the spec folder, the evidence log, and the sales page draft. Limitations means the honest list, failures included. The gap review that said do not ship is worth more to your grade than a green badge. State what the agent did versus what you verified. A fabricated result is the only automatic fail.
+> The evidence record has three blocks, and they are non-negotiable. Commands run, with results, means the command and its pass or fail counts, not a summary sentence. Artifact links means the repository at a tag, the spec folder, the evidence log, and the sales page draft. Limitations means the honest list, failures included. The gap review that said do not ship is worth more to your grade than a green badge. State what the agent did versus what you verified. A fabricated result is an automatic fail, never excused.
 
 ### Part 23 — The five-minute demo
 
@@ -1598,7 +1598,7 @@ The text below is what is spoken in each part, in order. It is the same text as 
 
 ### Part 15 — M9.3 — Five files, and you edit one
 
-> The catalog starter is five files, and you edit one of them. Products dot J S holds your store's name, your contact link, and your list of products. The page itself is index dot H T M L, where you change one description line. The colours live in the stylesheet. The app script draws the cards, the category buttons, the search and the sort, and you never need to touch it. And there is one empty file with a strange name, which you keep. It tells GitHub Pages to publish your files exactly as they are.
+> The catalog starter is five files, and you edit one of them. Products dot J S holds your store's name, your contact link, and your list of products. The page itself is index dot H T M L, where you change two lines: the description a search engine shows, and the share title. The colours live in the stylesheet. The app script draws the cards, the category buttons, the search and the sort, and you never need to touch it. And there is one empty file with a strange name, which you keep. It tells GitHub Pages to publish your files exactly as they are.
 
 ### Part 16 — Why the data is a script, not JSON
 

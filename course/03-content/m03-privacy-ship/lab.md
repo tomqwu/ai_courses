@@ -44,7 +44,7 @@ Write one test per defense, all with mocked transports: the cloud-alias rejectio
 3. This is a **contract** test, not a privacy test: it runs in the provider's default mode against whatever chat model the router selects, `:cloud` aliases included, because its only job is to prove the request shape, streaming parse, and error typing hold against a real daemon (`tinycopilot/README.md`, "Verified status"; the parked reference's docstring says the same). Do not gate it on local-only mode, and do not substitute a mocked stream — a cloud-only daemon runs it just as well.
 4. Run `LAB_E2E=1 pytest tests/test_contract_real_llm.py` and record the output; run the suite without the flag and record the skip.
 
-Reference: ListenToMe's `make e2e` (auto-selects an installed chat model, `LTM_E2E_MODEL` override; `ListenToMe/Makefile:39-53`) and `OllamaContractE2ETests`, which skips unless `LTM_E2E=1` and asserts non-empty streamed content (`ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-41`). ListenToMe's test also runs on any model, local or cloud (`LTM_E2E_BASEURL` may even point at Ollama Cloud).
+Reference: ListenToMe's `make e2e` (auto-selects an installed chat model, `LTM_E2E_MODEL` override; `ListenToMe/Makefile:39-54`) and `OllamaContractE2ETests`, which skips unless `LTM_E2E=1` and asserts non-empty streamed content (`ListenToMe/Tests/ListenToMeCoreTests/OllamaContractE2ETests.swift:4-41`). ListenToMe's test also runs on any model, local or cloud (`LTM_E2E_BASEURL` may even point at Ollama Cloud).
 
 ## Step 3 — Coverage floor (~30 min)
 

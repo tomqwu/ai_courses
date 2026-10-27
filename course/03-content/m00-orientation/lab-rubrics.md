@@ -45,8 +45,8 @@ Record the result in the evidence log; grade it in Lab M2, where `make lab-m2` i
 ## Auto-fail conditions (fail Lab M0 regardless of other rows)
 
 1. **Fabricated output** — a hand-edited health score, an invented pytest summary, or a pasted block
-   that no command produced (`course/01-design/assessment-and-rubrics.md`: fabrication is the only automatic
-   fail).
+   that no command produced (`course/01-design/assessment-and-rubrics.md`: fabrication is an automatic fail, never
+   excused; the conditions below add the rest).
 2. **Green claimed without a summary** — asserting "tests pass" (for the TinyCopilot stretch) with no
    pytest summary line anywhere in the evidence.
 3. **Health score without a run record** — the score appears but no workspace summary and no

@@ -74,7 +74,7 @@ Score each dimension 0–5 (3 = meets; equal weights). **Pass = total ≥80% AND
 | 4 | **Privacy/safety engineering** (Type 1/2) **or claim discipline** (Type 3) | Local-only/fail-closed mode OR tenant isolation OR provenance table implemented and tested | Multiple defenses layered with tests for each; or full four-level claim labeling with reconciled provenance |
 | 5 | **Launch-readiness** | Positioning one-liner, pricing rationale with sourced comparators, sales page draft, 5-email arc | Sales page ready to publish; arc personalized with your own proof assets; demo delivered (recorded or live) |
 
-Sequence: **self-score → peer-score → instructor final** (cohort, at demo day). Self-paced: self-score, then exchange with your community pair against this table; post both scores with the evidence record. Honesty rule: use agents freely — the course teaches that — but the record states what the agent did and what you verified. A fabricated result or evidence line is the only automatic fail.
+Sequence: **self-score → peer-score → instructor final** (cohort, at demo day). Self-paced: self-score, then exchange with your community pair against this table; post both scores with the evidence record. Honesty rule: use agents freely — the course teaches that — but the record states what the agent did and what you verified. A fabricated result or evidence line is an automatic fail, never excused; the rubric lists the rest.
 
 ## Evidence to record
 

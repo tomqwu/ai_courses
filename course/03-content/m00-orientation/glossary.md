@@ -82,7 +82,7 @@ no cloud backend, accounts, billing, or multi-user. — `ListenToMe/docs/superpo
 ## Curated resources
 
 1. `course/03-content/m00-orientation/lesson.md` — the module script; read it once before the lab.
-2. `SignUpFlow/README.md` — the solver "CLI Example" gives the exact output your lab must match.
+2. `SignUpFlow/README.md` — the solver "CLI Examples" gives the exact output your lab must match.
 3. `course/03-content/m02-ondevice-app/tinycopilot/README.md` — the M2 lab reference and the
    privacy lab explained in one paragraph.
 4. `ListenToMe/docs/competition-analysis.md` — the best model in the course for turning research into

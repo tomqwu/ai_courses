@@ -239,12 +239,12 @@ nothing to commit, working tree clean
 
 ```figure
 kind: architecture
-alt: 产品目录起始项目的五个文件——编辑 products.js；只动 index.html 的一行和 styles.css 里的颜色；不要碰 app.js 和空的 .nojekyll。
+alt: 产品目录起始项目的五个文件——编辑 products.js；只动 index.html 的两行 meta 和 styles.css 里的颜色；不要碰 app.js 和空的 .nojekyll。
 source: course/03-content/m09-github-pages/catalog-starter/products.js
 layer: 编辑 (hl)
   box: `products.js` — 店名、联系方式、产品 @ products.js 保存
 layer: 轻轻改动
-  box: `index.html` — 只改描述那一行 @ 页面本身是
+  box: `index.html` — 描述和分享标题两行 @ 页面本身是
   box: `styles.css` — 颜色，想改就改 @ 颜色写在
 layer: 不要碰
   box: `app.js` — 卡片、筛选、搜索、排序 @ 应用脚本负责
