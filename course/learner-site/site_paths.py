@@ -198,6 +198,11 @@ TRACKS = [
         "kicker": "All three product types",
         "promise": "Build, ship and sell all three kinds of AI product — and finish with a scored "
                    "capstone, a launch arc and a defensible price.",
+        "outcomes": [
+            "Three portfolio-grade builds: an on-device app, a spec-driven SaaS, and an expertise product",
+            "A public repository for each build, with its validation evidence and release tag",
+            "A priced, positioned offer with a sales page, a launch arc and a recorded demo",
+        ],
         "core": ["m00", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08"],
         "slice": {},
         "price": "$399 self-paced · $1,490 cohort",
@@ -214,6 +219,11 @@ TRACKS = [
         "kicker": "Type 1 · AI with an app",
         "promise": "Ship a local-first AI app whose privacy claims are enforced in code and proven "
                    "by tests.",
+        "outcomes": [
+            "A local-first AI app that rejects anything it cannot verify as local",
+            "A tiered test suite with a coverage floor and a real-provider contract test",
+            "Release evidence: a tagged artifact, its checksum verified, and the limits written down",
+        ],
         "core": ["m00", "m01", "m02", "m03"],
         # Straight from the bundle map. `exclude` names the units the map lists as NOT included,
         # `partial` the ones included only in part. Without this the path page listed all seven M8
@@ -248,6 +258,11 @@ TRACKS = [
         "kicker": "Type 2 · AI with the web",
         "promise": "A spec folder that survives a stranger test, and acceptance evidence that "
                    "survives a skeptical auditor.",
+        "outcomes": [
+            "A spec folder a stranger can implement from, with a checklist that passes",
+            "Negative-path tenant-isolation tests using real JWTs",
+            "An acceptance manifest that labels automated, partial, manual and blocked work honestly",
+        ],
         "core": ["m00", "m01", "m04", "m05"],
         # The launch slice here has NO lab and NO quiz — the week-6 capstone worksheet replaces
         # Lab M7, and Quiz M7/M8 are excluded. That is why this path has 4 quizzes, not 5.
@@ -282,6 +297,11 @@ TRACKS = [
         "kicker": "Type 3 · AI with content",
         "promise": "Every published claim carries a date, sample, method, unit and level — and the "
                    "funnel sells a measurement, not a promise.",
+        "outcomes": [
+            "A 12-slide briefing where every claim has a provenance row",
+            "Two audience routes over stable slide IDs, ending on the decision ask",
+            "A pilot design that sells measurement, not promised outcomes",
+        ],
         "core": ["m00", "m01", "m06"],
         # Unlike the other two, this path keeps M8.3 and Quiz M8 — but the capstone and the lab are
         # the Type 3 row only, so both are marked partial rather than excluded.
@@ -347,11 +367,21 @@ TRACKS_ZH = {
     "aps": {
         "title": "完整工作室课程", "medium": "全部三类", "kicker": "全部三类产品",
         "promise": "构建、发布并销售全部三类 AI 产品——最后完成一个评分的毕业项目、一套发布节奏和一个站得住的定价。",
+        "outcomes": [
+            "三个可用于作品集的成品：一个端侧应用、一个规格驱动的 SaaS，以及一个专业知识产品",
+            "每个成品都有一个公开仓库，附带验证证据和发布标签",
+            "一个定好价、定位清楚的报价，包含销售页、发布邮件序列和一段录制好的演示",
+        ],
         "price": "自学 $399 · 训练营 $1,490", "level": "入门到中级", "role": "创始人 · 产品工程师",
     },
     "on-device-app": {
         "title": "端侧 AI 应用", "medium": "应用", "kicker": "类型 1 · 带应用的 AI",
         "promise": "发布一个本地优先的 AI 应用，它的隐私承诺由代码强制执行，并由测试证明。",
+        "outcomes": [
+            "一个本地优先的 AI 应用：任何无法验证为本地的东西都会被拒绝",
+            "一套分层测试，带覆盖率底线和真实提供方的契约测试",
+            "发布证据：打过标签的产物、校验过的校验和，以及写下来的局限",
+        ],
         "slice_notes": {"m07": "全部三个分段 · 实验 M7 第 1–5 步 · 测验 M7", "m08": "仅分段 M8.1–M8.2"},
         "excluded": ["M4 · M5——规格驱动 SaaS 路线", "M6——专业知识路线", "M8.3 毕业项目、实验 M8 和测验 M8"],
         "price": "$199", "level": "入门到中级", "role": "iOS / macOS 工程师 · 独立开发者",
@@ -360,6 +390,11 @@ TRACKS_ZH = {
     "spec-driven-saas": {
         "title": "规格驱动 AI SaaS", "medium": "Web", "kicker": "类型 2 · 带 Web 的 AI",
         "promise": "一个经得起陌生人测试的规格文件夹，以及经得起多疑审计者的验收证据。",
+        "outcomes": [
+            "一个陌生人也能照着实现的规格文件夹，并通过检查清单",
+            "使用真实 JWT 的负路径租户隔离测试",
+            "一份诚实的验收清单，标明自动、部分、人工和受阻的工作",
+        ],
         "slice_notes": {"m07": "分段 M7.1–M7.3 · 无实验、无测验", "m08": "仅分段 M8.1–M8.2"},
         "excluded": ["M2 · M3——端侧路线", "M6——专业知识路线", "M8.3 毕业项目、实验 M7/M8 和测验 M7/M8"],
         "price": "$199", "level": "中级", "role": "后端工程师 · SaaS 构建者",
@@ -368,6 +403,11 @@ TRACKS_ZH = {
     "expertise-product": {
         "title": "把专业知识做成产品", "medium": "内容", "kicker": "类型 3 · 带内容的 AI",
         "promise": "每个公开的主张都带有日期、样本、方法、单位和层级——漏斗卖的是一项测量，而不是一个承诺。",
+        "outcomes": [
+            "一份 12 页的简报，每条主张都有一行来源追溯",
+            "基于稳定幻灯片 ID 的两条受众路线，都以决策请求收尾",
+            "一份销售测量而非承诺结果的试点设计",
+        ],
         "slice_notes": {"m07": "分段 M7.1–M7.3 · 实验 M7 仅限类型 3 的报价 · 测验 M7",
                         "m08": "M8.1–M8.3 · 毕业项目仅限类型 3 一行 · 测验 M8"},
         "excluded": ["M2 · M3——端侧路线", "M4 · M5——规格驱动 SaaS 路线", "类型 1 / 类型 2 的毕业项目和实验行"],
