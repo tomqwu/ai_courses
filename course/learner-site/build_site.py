@@ -888,12 +888,13 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
         # builds, its size, the learner's recorded progress, and one action — Start, or Resume.
         shared_n = (module_paths or {}).get(deck["id"], 0)
         shared = SH.T(f" · shared by {shared_n} paths", f" · {shared_n} 条路线共用") if shared_n > 1 else ""
+        free_chip = SH.T(" · Free", " · 免费") if deck["id"] == "m09" else ""
         module_href = f"{site_base}/module-{deck['id']}.html"
         units = (units_by_deck or {}).get(deck["id"], [])
         unit_ids = ",".join(f"{deck['id']}:{u['id']}" for u in units)
         promise = SP.cover_facts(deck)["promise"]
         cards.append(f"""<article class="module-card" data-card-module="{deck['id']}">
-  <p class="card-kicker">{SH.T("Module", "模块")} {int(deck['id'][1:])}{shared} <span class="voice-chip is-release" data-quiz-badge="{deck['id']}" hidden></span></p>
+  <p class="card-kicker">{SH.T("Module", "模块")} {int(deck['id'][1:])}{shared}{free_chip} <span class="voice-chip is-release" data-quiz-badge="{deck['id']}" hidden></span></p>
   <h3><a href="{module_href}">{html.escape(short)}</a></h3>
   <p class="card-promise">{html.escape(promise)}</p>
   <p class="card-meta">{SH.T(f"{len(deck['slides'])} parts · {len(units)} units · lab · knowledge check", f"{len(deck['slides'])} 个部分 · {len(units)} 个单元 · 实验 · 知识测验")}</p>
@@ -967,6 +968,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     </ul>
     <div class="hero-actions">
       <a class="btn-hero" href="{site_base}/lab-m00.html">{SH.T("Start here: your first win in about 30 minutes →", "从这里开始：大约 30 分钟拿下第一个成果 →")}</a>
+      <a class="btn-hero-quiet" href="{site_base}/path-github-pages.html">{SH.T("New to the terminal? Start free with the GitHub Pages path →", "终端新手？从免费的 GitHub Pages 路线开始 →")}</a>
       <a class="btn-hero-quiet" href="{site_base}/proof.html">{SH.T("See what this site proves about itself", "看看这个网站能证明自己什么")}</a>
     </div>""")
     home_json = html.escape(json.dumps(home_data or {}, separators=(",", ":")), quote=True)

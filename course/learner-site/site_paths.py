@@ -326,6 +326,7 @@ TRACKS = [
         "level": "Beginner",
         "role": "New to the terminal · Small-business owner",
         "subject": "Git · GitHub CLI · GitHub Pages",
+        "prereq": "None — a computer with a browser, Windows or macOS, 60–90 minutes for the lab, and a free GitHub account. No Python, code editor, or terminal experience needed.",
         "measured": None,
         "counts_source": "the module itself",
         "status": "built",
@@ -375,6 +376,7 @@ TRACKS_ZH = {
         "excluded": ["付费课程 M0–M8——本路线免费且独立"],
         "price": "免费", "level": "入门", "role": "终端新手 · 小企业主",
         "subject": "Git · GitHub CLI · GitHub Pages", "counts_source": "模块本身",
+        "prereq": "无——一台带浏览器的电脑（Windows 或 macOS）、60–90 分钟实验时间，以及一个免费的 GitHub 账号。不需要 Python、代码编辑器或终端经验。",
     },
 }
 
@@ -468,6 +470,16 @@ def fmt_minutes(seconds_value: float) -> str:
     return SH.T(f"{minutes:.1f} min".replace(".0 min", " min"), f"{minutes:.1f} 分钟".replace(".0 分钟", " 分钟"))
 
 
+def fmt_narration(seconds_value: float) -> str:
+    """A path or module's narration phrase: measured, or honest about a text-first build.
+
+    The free GitHub Pages path has no recordings yet; printing "0 sec of narration" reads like a
+    defect rather than the intended text-first edition (#125 follow-up)."""
+    if seconds_value <= 0:
+        return SH.T("text-first copy", "纯文本版")
+    return SH.T(f"{fmt_minutes(seconds_value)} of narration", f"讲解 {fmt_minutes(seconds_value)}")
+
+
 # ---------------------------------------------------------------- pages
 
 def _plural(n: int, noun: str) -> str:
@@ -509,7 +521,7 @@ def path_cards_html(tracks: list[dict], units_by_deck: dict[str, list[dict]],
   <div class="path-head">
     <p class="path-kicker">{html.escape(track['kicker'])}</p>
     <h3><a href="{href}">{html.escape(track['title'])}</a></h3>
-    <p class="path-meta">{SH.T(f'{modules} module{"" if modules == 1 else "s"} · {len(units)} units · {fmt_minutes(minutes)} of narration', f"{modules} 个模块 · {len(units)} 个单元 · 讲解 {fmt_minutes(minutes)}")}</p>
+    <p class="path-meta">{SH.T(f'{modules} module{"" if modules == 1 else "s"} · {len(units)} units · {fmt_narration(minutes)}', f"{modules} 个模块 · {len(units)} 个单元 · {fmt_narration(minutes)}")}</p>
     <p class="card-progress"><span class="card-bar" data-ring-units="{unit_ids}" role="img" aria-label="progress"><span class="card-bar-fill"></span></span>
       <span class="card-count" data-ring-text></span></p>
   </div>
@@ -530,7 +542,7 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
 
     total_units = sum(len(u) for u in units_by_deck.values())
     head = SH.page_head(
-        "Learning paths", SH.T("Four ways into the same method.", "进入同一套方法的四条路线。"),
+        "Learning paths", SH.T("Five ways into the same method.", "进入同一套方法的五条路线。"),
         SH.T("""The three products this course is built from are three <em>types</em> of AI
       product — an <strong>app</strong>, a <strong>web service</strong>, and a
       <strong>content product</strong> like a learning site, a presentation or a sales pitch. Each
@@ -544,7 +556,7 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
         f"""<ul class="site-facts">
       <li>{SH.T(f"{len(tracks)} paths", f"{len(tracks)} 条路线")}</li>
       <li>{SH.T(f"{len(units_by_deck)} modules · {total_units} units", f"{len(units_by_deck)} 个模块 · {total_units} 个单元")}</li>
-      <li>{SH.T("Measured durations", "时长均为实测")}</li>
+      <li>{SH.T("Measured durations where recorded", "有录音时时长均实测")}</li>
     </ul>""")
     unit_grammar = SH.T("""<h2>What a unit is</h2>
     <p>Every module in this course is built the same way, and the path pages show it:</p>
@@ -555,9 +567,9 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
       <li><strong>Knowledge check</strong> — eight questions per module, 72 across the course</li>
       <li><strong>Summary</strong> — the recap and the discussion prompt</li>
     </ol>
-    <p class="index-footnote">Every duration on these pages is measured from the recorded narration,
-      not estimated. Lab times are quoted from each module's own source, because a lab is hours of
-      hands-on work and its narration is a single part.</p>""", """<h2>什么是单元</h2>
+    <p class="index-footnote">Every duration on these pages is measured where a recording exists; a
+      path with no recordings says text-first. Lab times are quoted from each module's own source,
+      because a lab is hours of hands-on work and its narration is a single part.</p>""", """<h2>什么是单元</h2>
     <p>本课程的每个模块都按同样的方式构建，路线页面也这样呈现：</p>
     <ol class="unit-grammar">
       <li><strong>导论</strong>——封面和本模块的目标</li>
@@ -566,8 +578,8 @@ def paths_page(tracks: list[dict], units_by_deck: dict[str, list[dict]],
       <li><strong>知识测验</strong>——每个模块八道题，全课程共 72 道</li>
       <li><strong>总结</strong>——回顾和讨论题</li>
     </ol>
-    <p class="index-footnote">这些页面上的每个时长都来自录制讲解的实测，而非估算。实验时间引自各模块自己的
-      源文件，因为一个实验要数小时的动手操作，而它的讲解只有一个部分。</p>""")
+    <p class="index-footnote">这些页面上的每个时长，在有录音时都来自实测；尚无录音的路线会标明纯文本版。
+      实验时间引自各模块自己的源文件，因为一个实验要数小时的动手操作，而它的讲解只有一个部分。</p>""")
     body = f"""{head}
   <div class="section-heading">
     <h2>{SH.T("Choose by what you want to build", "按你想构建的东西选择")}</h2>
@@ -659,17 +671,22 @@ def path_page(track: dict, decks_by_id: dict[str, dict], units_by_deck: dict[str
         _at_a_glance([(SH.T("You build", "你将构建"), track["medium"]), (SH.T("Level", "难度"), track["level"]),
                       (SH.T("Role", "角色"), track["role"]),
                       (SH.T("Subject", "主题"), track.get("subject", SH.T("AI product engineering", "AI 产品工程"))),
-                      (SH.T("Duration", "时长"), SH.T(f"{fmt_minutes(minutes)} of narration + lab time", f"讲解 {fmt_minutes(minutes)} + 实验时间")),
+                      (SH.T("Duration", "时长"), SH.T(f"{fmt_narration(minutes)} + lab time", f"{fmt_narration(minutes)} + 实验时间")),
                       (SH.T("Price", "价格"), track["price"])]))
-    scope_note = SH.T("""<h2>The honest scope note</h2>
+    duration_note = SH.T(
+        "Durations are measured from the recorded narration." if minutes else
+        "This path is text-first: its narration is not recorded yet, so the text is the approved script.",
+        "时长来自录制讲解的实测。" if minutes else
+        "这条路线是纯文本版：尚无讲解录音，页面上的文字就是获批的讲稿。")
+    scope_note = SH.T(f"""<h2>The honest scope note</h2>
     <p>This path is not a separate course. It sequences and frames the parent course's modules for one
       archetype and reuses its lesson, lab and quiz artifacts — nothing is rewritten, reordered or
       watered down, and the slice of M7/M8 is scoped rather than summarised.</p>
-    <p class="index-footnote">Durations are measured from the recorded narration. Lab times are quoted
-      from each module's source. Nothing on this page is an estimate presented as a measurement.</p>""", """<h2>坦率的范围说明</h2>
+    <p class="index-footnote">{duration_note} Lab times are quoted
+      from each module's source. Nothing on this page is an estimate presented as a measurement.</p>""", f"""<h2>坦率的范围说明</h2>
     <p>这条路线不是一门独立的课程。它为一种产品类型编排并组织母课程的模块，复用其课文、实验和测验——
       没有改写、重排或删减，M7/M8 的切片是限定范围，而不是概括。</p>
-    <p class="index-footnote">时长来自录制讲解的实测。实验时间引自各模块的源文件。本页没有任何把估算当作实测的数字。</p>""")
+    <p class="index-footnote">{duration_note} 实验时间引自各模块的源文件。本页没有任何把估算当作实测的数字。</p>""")
     body = f"""{head}
   <section class="path-section">
     <h2>{SH.T("Prerequisites", "前置条件")}</h2>
@@ -735,7 +752,7 @@ def _module_row(deck: dict, units: list[dict], minutes: float, site_base: str,
     <p class="module-number">{SH.T(f"Module {number}", f"模块 {number}")} {chip}</p>
     <h3><a href="{href}">{html.escape(short)}</a></h3>
     <p class="module-promise">{html.escape(facts['promise'])}</p>
-    <p class="module-meta">{count} · {SH.T(f"{fmt_minutes(minutes)} of narration", f"讲解 {fmt_minutes(minutes)}")}</p>
+    <p class="module-meta">{count} · {fmt_narration(minutes)}</p>
     {note}
   </div>
   <ol class="module-units">{"".join(rows)}</ol>
@@ -755,6 +772,7 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     facts = cover_facts(deck)
     objectives_html = "".join(f"<li>{item}</li>" for item in objectives(deck))
     total = sum(seconds.get(f"{deck['id']}:{u['id']}", 0) for u in units)
+    free = SH.T(" · Free", " · 免费") if deck["id"] == "m09" else ""
 
     mediums = " · ".join(entry["track"]["medium"] for entry in tracks_for) or SH.T("All three types", "全部三类")
     path_rows = []
@@ -830,8 +848,8 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
         path_link = f'<a href="{site_base}/paths.html">{SH.T("the learning paths", "学习路线")}</a>'
 
     head = SH.page_head(
-        SH.T(f"Module {number} · {len(units)} units · {fmt_minutes(total)} of narration",
-             f"模块 {number} · {len(units)} 个单元 · 讲解 {fmt_minutes(total)}"), html.escape(short),
+        SH.T(f"Module {number} · {len(units)} units · {fmt_narration(total)}{free}",
+             f"模块 {number} · {len(units)} 个单元 · {fmt_narration(total)}{free}"), html.escape(short),
         html.escape(facts["promise"]),
         _at_a_glance([(SH.T("Paths", "路线"), mediums),
                       (SH.T("Level", "难度"), tracks_for[0]["track"]["level"] if tracks_for
