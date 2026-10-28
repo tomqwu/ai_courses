@@ -98,7 +98,11 @@ class Linker:
     def __init__(self, items: list[dict]):
         self.items = items
         parts, self.owner = [], {}
-        forms = sorted({(f, i) for i, it in enumerate(items) for f in it["forms"]}, key=lambda x: -len(x[0]))
+        # Longest form first. Equal-length forms (a word defined by both the Basics glossary and
+        # the module glossary) tie on item order, so the earlier entry wins and the build does not
+        # depend on set iteration order.
+        forms = sorted({(f, i) for i, it in enumerate(items) for f in it["forms"]},
+                       key=lambda x: (-len(x[0]), x[1]))
         for n, (form, i) in enumerate(forms):
             flags = "" if re.search(r"[A-Z]", form) else "(?i:"
             group = f"t{n}"

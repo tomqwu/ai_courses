@@ -13,6 +13,7 @@ import re
 
 import site_content as SC
 import site_shell as SH
+import modules as MOD
 
 KIND_TITLES = {
     "lesson": "Lesson", "handout": "Handout", "glossary": "Glossary",
@@ -44,7 +45,7 @@ def read_views(deck_id: str, site_base: str, active: str) -> str:
 
 
 def short_label(deck: dict) -> str:
-    return re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
+    return SH.short_label(deck)
 
 
 # ---------------------------------------------------------------- reading pages
@@ -57,7 +58,6 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str,
     opens it on the slides (#99): one picture, taught in both modes.
     """
     short = short_label(deck)
-    number = int(deck["id"][1:])
     title, body = SC.split_title(text)
     rendered, headings, _ = SC.render_document(body)
     if kind == "lesson":
@@ -73,7 +73,7 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str,
         "glossary": SH.T("Every term the module leans on, with where it lives — a file you can open, not a definition you have to trust.",
                          "本模块用到的每个术语及其出处——一个你可以打开的文件，而不是一个只能相信的定义。"),
     }
-    head = SH.page_head(f"Module {number} · {KIND_TITLES[kind]}",
+    head = SH.page_head(f"{MOD.kicker(deck['id'], SH.LANG)} · {KIND_TITLES[kind]}",
                         html.escape(title or f"{KIND_TITLES[kind]} — {short}"), ledes[kind],
                         read_views(deck["id"], site_base, kind))
     aside = f'<aside class="doc-aside">{toc}</aside>' if toc else ""
@@ -117,7 +117,7 @@ def document_page(deck: dict, kind: str, text: str, site_base: str, brand: str,
 
 READ_UNIT = (
     (re.compile(r"^(?:Overview\b|概览)", re.I), "intro"),
-    (re.compile(r"^(?:Segment\s+)?(M\d+\.\d)\b"), None),
+    (re.compile(rf"^(?:Segment\s+)?({MOD.TAG}\.\d)\b"), None),
     (re.compile(r"^(?:Recap\b|回顾)", re.I), "summary"),
 )
 
@@ -181,7 +181,7 @@ def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict
     for k in sorted(by_letter):
         rows = "".join(
             f'<dt id="{SC.slug(t["term"])}">{SC.inline(t["term"])}'
-            + "".join(f' <a class="term-module" href="{site_base}/glossary-{m}.html">M{int(m[1:])}</a>' for m in t["modules"])
+            + "".join(f' <a class="term-module" href="{site_base}/glossary-{m}.html">{MOD.tag(m)}</a>' for m in t["modules"])
             + f'</dt><dd>{SC.inline(t["definition"])}</dd>'
             for t in by_letter[k])
         sections.append(f'<section class="glossary-letter" id="g-{k}"><h2>{k}</h2><dl>{rows}</dl></section>')
@@ -212,7 +212,6 @@ def master_glossary_page(terms_by_deck: dict[str, list[dict]], decks_by_id: dict
 def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
              auto_fail: dict | None = None) -> tuple[str, dict]:
     short = short_label(deck)
-    number = int(deck["id"][1:])
     meta = lab["meta"]
     goal = SC.inline(meta["Goal"][:1].upper() + meta["Goal"][1:]) if meta.get("Goal") else \
         SH.T("The hands-on checkpoint for this module. Every item on the acceptance checklist is binary, "
@@ -317,7 +316,7 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
     # brief under the title. Labs that open without one keep the generic line.
     brief = (f'<div class="lab-brief">{lab["brief_html"]}</div>' if lab.get("brief_html")
              else f'<p class="page-lede">{goal}</p>')
-    head = SH.page_head(f"Module {number} · Lab · pass/fail", SC.inline(lab["title"]), "",
+    head = SH.page_head(f"{MOD.kicker(deck['id'], SH.LANG)} · Lab · pass/fail", SC.inline(lab["title"]), "",
                         brief + f'<p class="lab-facts">{facts_row}</p>')
     body = f"""{head}
 <div class="lab-root" data-lab="{deck['id']}" data-lab-checks="{lab['checklist_count']}" data-lab-title="{html.escape(lab['title'], quote=True)}">
@@ -357,7 +356,6 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
     Rewatch link is the segment's first slide — derived, never hand-written.
     """
     short = short_label(deck)
-    number = int(deck["id"][1:])
     by_segment = {u["id"]: u for u in (units or []) if u["kind"] == "segment"}
     total = len(quiz["questions"])
     blocks = []
@@ -404,7 +402,7 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
   {nav}
 </section>""")
     head = SH.page_head(
-        f"Module {number} · Knowledge check · {quiz['mc']} multiple choice + {quiz['short']} short answer",
+        f"{MOD.kicker(deck['id'], SH.LANG)} · Knowledge check · {quiz['mc']} multiple choice + {quiz['short']} short answer",
         SC.inline(quiz["title"]),
         SH.T("Each question maps to one lesson objective, and the distractors are the misconceptions the "
              "lesson argues against. Multiple choice is checked instantly; short answers reveal the model "
@@ -450,7 +448,7 @@ def evidence_page(labs: list[dict], site_base: str) -> str:
         f'<li class="evidence-row" data-evidence-lab="{lab["deck"]}"'
         f' data-lab-title="{html.escape(lab["title"], quote=True)}" data-lab-checks="{lab["checks"]}">'
         f'<h2><a href="{site_base}/lab-{lab["deck"]}.html">{SC.inline(lab["title"])}</a></h2>'
-        f'<p class="evidence-state" data-evidence-state>Module {int(lab["deck"][1:])} · no entry yet</p>'
+        f'<p class="evidence-state" data-evidence-state>{MOD.kicker(lab["deck"], SH.LANG)} · no entry yet</p>'
         f'<pre class="evidence-entry" data-evidence-entry hidden></pre></li>'
         for lab in labs)
     head = SH.page_head(

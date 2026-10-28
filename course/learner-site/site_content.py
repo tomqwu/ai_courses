@@ -291,7 +291,7 @@ SHORT_KEY = [
     re.compile(r"^###\s+Q(\d+)\s*[—–-]+\s*(?:Model|Acceptable)[^—–-]*[—–-]+\s*(.*)$"),
     re.compile(r"^\*\*Q(\d+)\.?\s*\([^)]*\)\s*[—–-]+\s*(?:Acceptable|Model)[^*]*\*\*\s*(.*)$"),
 ]
-SEGMENT = re.compile(r"\bM(\d+)\.(\d+)\b")
+SEGMENT = re.compile(r"\b([ML])(\d+)\.(\d+)\b")
 
 
 class QuizError(ValueError):
@@ -317,7 +317,7 @@ def parse_quiz(text: str, deck_id: str) -> dict:
                 cur["type"] = "short"
             seg = SEGMENT.search(head)
             if seg:
-                cur["segment"] = f"M{seg.group(1)}.{seg.group(2)}"
+                cur["segment"] = f"{seg.group(1)}{seg.group(2)}.{seg.group(3)}"
             questions.append(cur)
             continue
         if cur is None:
@@ -399,7 +399,7 @@ def parse_quiz(text: str, deck_id: str) -> dict:
             problems.append(f"Q{q['n']}: no answer-key entry")
             continue
         seg = SEGMENT.search(k["rationale"]) or (SEGMENT.search(q.get("head", "")) if q.get("head") else None)
-        q["objective"] = q.get("segment") or (f"M{seg.group(1)}.{seg.group(2)}" if seg else "")
+        q["objective"] = q.get("segment") or (f"{seg.group(1)}{seg.group(2)}.{seg.group(3)}" if seg else "")
         # The objective in the key's own words ("M2.1 pipeline"), shown beside the question (#78).
         said = re.search(r"(?:Objective|目标)[:：]\s*(.+?)\s*(?:—|\(|;|\)|（|；|）|。|$)", k["rationale"])
         q["objective_text"] = said.group(1).strip().rstrip(".") if said else q["objective"]

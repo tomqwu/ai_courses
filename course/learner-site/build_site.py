@@ -32,14 +32,15 @@ import site_shell as SH                                  # noqa: E402
 import figures as FIG                                    # noqa: E402
 import site_locale as SL                                 # noqa: E402
 import site_terms as ST                                  # noqa: E402
+import modules as MOD                                    # noqa: E402
 
 # Our decks already write `M0.1 — Real title` and `Type 1 — Real title`, which is exactly the
 # kicker/title split ai_qe uses (`02 / Strategic target state`). Only an em dash splits: an en dash
 # inside "Stages 1–3" must stay part of the label.
 KICKER_RE = re.compile(
-    r"^(M\d+(?:\.\d+)?|Type\s+\d+|Lab\s+M\d+|实验\s*M\d+|Segment\s+M\d+(?:\.\d+)?|"
+    rf"^({MOD.TAG}(?:\.\d+)?|Type\s+\d+|Lab\s+{MOD.TAG}|实验\s*{MOD.TAG}|Segment\s+{MOD.TAG}(?:\.\d+)?|"
     r"Stages?\s+\d+\s*[–-]\s*\d+|Proof|Part\s+\d+|Step\s+\d+)\s+—\s+(.+)$")
-DECK_LABEL_RE = re.compile(r"^(M\d+)\s*—\s*(.+)$")
+DECK_LABEL_RE = re.compile(rf"^({MOD.TAG})\s*—\s*(.+)$")
 
 NOTES_RE = re.compile(r"<!--\s*NOTES:(.*?)-->", re.DOTALL)
 DIRECTIVE_RE = re.compile(r"<!--\s*(_class|_footer|_paginate|_header|_diagram)\s*:\s*([^>]*?)\s*-->")
@@ -264,12 +265,11 @@ def parse_deck(deck_id: str, scripts: dict | None = None, lang: str = "en",
         if cover:
             # The opening slide is a title slide: the deck's own name, not a section label.
             deck_match = DECK_LABEL_RE.match(raw_title)
-            kicker = (f"AI Product Studio · 模块 {int(deck_id[1:])} / {len(DECK_IDS)}" if lang == "zh"
-                      else f"AI Product Studio · Module {int(deck_id[1:])} of {len(DECK_IDS)}")
+            kicker = f"AI Product Studio · {MOD.kicker(deck_id, lang)}"
             title = deck_match.group(2).strip() if deck_match else raw_title
         else:
             kicker, title = split_kicker(raw_title, standing)
-            if re.fullmatch(r"M\d+\.\d+", kicker):
+            if re.fullmatch(MOD.SEG, kicker):
                 chapter = kicker            # a segment heading opens a new chapter, carried forward
         slides.append({
             "id": f"slide-{index}",
@@ -456,7 +456,7 @@ BRAND_MARK = SH.BRAND_MARK
 def slide_cta(deck: dict, slide: dict, site_base: str) -> str:
     """The unit's next step, on the slide that opens it: the lab checklist or the knowledge check."""
     title = slide.get("full_title", slide["title"])
-    lab, quiz = r"^(?:Lab|实验)\s*M\d+", r"^(?:Quiz|测验)\s*M\d+"
+    lab, quiz = rf"^(?:Lab|实验)\s*{MOD.TAG}", rf"^(?:Quiz|测验)\s*{MOD.TAG}"
     if re.match(lab, title) or re.match(lab, slide["kicker"]):
         return (f'<p class="slide-cta"><a href="{site_base}/lab-{deck["id"]}.html">'
                 f'{SH.T("Open the lab checklist →", "打开实验清单 →")}</a></p>')
@@ -801,13 +801,12 @@ def learn_page(deck: dict, manifest: dict, provenance: dict, site_base: str,
             f'<h2>{html.escape(SH.unit_name(u))}</h2>'
             f'<p class="learn-unit-facts">{" · ".join(html.escape(f) for f in facts)}</p>{listen}</header>'
             f'{sections}{end}</section>')
-    number = int(deck["id"][1:])
-    short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
+    short = re.sub(rf"^{MOD.TAG}\s*—\s*", "", deck["label"]).strip()
     total = sum(float(e.get("duration", 0) or 0) for e in deck_manifest.values())
     head_facts = [f"{len(units)} units", f"{len(deck['slides'])} parts"]
     if total:
         head_facts.append(f"{round(total / 60)} min narrated")
-    head = SH.page_head(f"Module {number} · Learn · " + " · ".join(head_facts), html.escape(short), "",
+    head = SH.page_head(f"{MOD.kicker(deck['id'], SH.LANG)} · Learn · " + " · ".join(head_facts), html.escape(short), "",
                         f'<p class="learn-voice">{html.escape(label)}</p>')
     player = "" if not deck_manifest else f"""<div class="learn-player" data-learn-player role="group" aria-label="Narration">
   <button type="button" class="lp-icon" data-lp-prev aria-label="Previous part">{CHEVRON.format(d="M15 18l-6-6 6-6")}</button>
@@ -822,13 +821,14 @@ def learn_page(deck: dict, manifest: dict, provenance: dict, site_base: str,
   <label class="lp-auto"><input type="checkbox" data-lp-auto checked> Continue</label>
   <p class="sr-only" data-lp-status role="status" aria-live="polite"></p>
 </div>"""
-    next_module = f"m{number + 1:02d}"
+    next_module = MOD.next_id(deck["id"])
+    next_href = f"module-{next_module}.html" if next_module else "index.html"
     body = f"""{head}
 <div class="learn doc-article" data-learn="{deck['id']}">
 {"".join(parts)}
 <p class="learn-foot"><a href="{site_base}/lesson-{deck['id']}.html">Read the full lesson →</a> ·
   <a href="{site_base}/transcript-{deck['id']}.html">The module's transcript →</a> ·
-  <a href="{site_base}/{('module-' + next_module + '.html') if next_module in DECK_IDS else 'index.html'}">Next module →</a></p>
+  <a href="{site_base}/{next_href}">Next module →</a></p>
 </div>
 {player}"""
     unit_data = [{"id": u["id"], "first": u["first"], "last": u["last"], "kind": u["kind"],
@@ -883,7 +883,7 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
     for deck in decks:
         entries = (manifest.get("decks", {}).get(deck["id"], {}) or {}).get("slides", {})
         grand_total += sum(float(e.get("duration", 0) or 0) for e in entries.values())
-        short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
+        short = re.sub(rf"^{MOD.TAG}\s*—\s*", "", deck["label"]).strip()
         # A plain light card (#84): it must never read as a slide or a video. Title, what the module
         # builds, its size, the learner's recorded progress, and one action — Start, or Resume.
         shared_n = (module_paths or {}).get(deck["id"], 0)
@@ -1322,7 +1322,8 @@ def write_edition(lang: str, decks: list[dict], target: Path, site_base: str, ar
     anchors = {r["deck"]: r.get("read_anchors", {}) for r in records if r["kind"] == "lesson"}
     questions = {r["deck"]: len(r.get("headings", [])) for r in records if r["kind"] == "quiz"}
     home_data = {"modules": {deck["id"]: {
-        "number": int(deck["id"][1:]), "title": SH.short_label(deck), "slides": len(deck["slides"]),
+        "number": int(deck["id"][1:]), "tag": MOD.tag(deck["id"]), "family": MOD.family(deck["id"]),
+        "title": SH.short_label(deck), "slides": len(deck["slides"]),
         "lab": SP.lab_time(deck["id"]), "questions": questions.get(deck["id"], 0),
         "units": [{"id": u["id"], "kind": u["kind"], "name": SH.unit_name(u), "label": u["label"],
                    "first": u["first"], "last": u["last"], "href": SH.unit_href(deck["id"], u),

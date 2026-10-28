@@ -20,7 +20,11 @@ from __future__ import annotations
 import html
 import json
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "06-production"))
+import modules as MOD                                       # noqa: E402
 
 _CTX: dict = {"modules": [], "tracks": []}
 
@@ -85,29 +89,13 @@ HOME_ICON = ('<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable
 
 # The outline's own names: one line each in a 264px column. A deck title such as "The On-Device AI
 # App: Privacy, Testing, Shipping" wraps to three lines there, and two modules share its first half.
-# A module missing here falls back to its title up to the colon.
-OUTLINE_NAMES = {
-    "m00": "Orientation", "m01": "The operating system", "m02": "On-device: architecture",
-    "m03": "On-device: privacy & shipping", "m04": "Spec-driven SaaS", "m05": "Multi-tenant security",
-    "m06": "The expertise product", "m07": "Monetize", "m08": "Launch & capstone",
-    "m09": "Ship with GitHub Pages",
-}
-
-
 def short_label(deck: dict) -> str:
-    return re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
-
-
-OUTLINE_NAMES_ZH = {
-    "m00": "导览", "m01": "操作系统", "m02": "端侧：架构", "m03": "端侧：隐私与发布",
-    "m04": "规格驱动 SaaS", "m05": "多租户安全", "m06": "专业知识产品", "m07": "变现",
-    "m08": "发布与毕业项目", "m09": "用 GitHub Pages 发布",
-}
+    return re.sub(rf"^{MOD.TAG}\s*—\s*", "", deck["label"]).strip()
 
 
 def outline_name(deck: dict) -> str:
-    names = OUTLINE_NAMES_ZH if LANG == "zh" else OUTLINE_NAMES
-    return names.get(deck["id"]) or short_label(deck).split(":")[0].strip()
+    module = MOD.get(deck["id"])
+    return module.outline_zh if LANG == "zh" else module.outline_en
 
 
 def unit_href(deck_id: str, unit: dict) -> str:
@@ -124,7 +112,7 @@ def unit_name(unit: dict) -> str:
     if unit["kind"] == "segment":
         return f"{unit['id']} {unit['label']}"
     if unit["kind"] == "lab":
-        return T(f"Lab M{int(unit['deck'][1:])}", f"实验 M{int(unit['deck'][1:])}")
+        return T(f"Lab {MOD.tag(unit['deck'])}", f"实验 {MOD.tag(unit['deck'])}")
     return T(unit["title"], {"Introduction": "导论", "Knowledge check": "知识测验", "Summary": "总结"}.get(unit["title"], unit["title"]))
 
 
@@ -137,7 +125,8 @@ def configure(decks: list[dict], units_by_deck: dict[str, list[dict]], tracks: l
     def terms(deck: dict) -> int:
         path = COURSE_DIR / deck["source"].rsplit("/", 1)[0] / "glossary.md"
         return len(SC.parse_glossary(SC.read(path))) if path.is_file() else 0
-    _CTX["modules"] = [{"id": d["id"], "number": int(d["id"][1:]), "short": outline_name(d),
+    _CTX["modules"] = [{"id": d["id"], "number": int(d["id"][1:]), "tag": MOD.tag(d["id"]),
+                        "short": outline_name(d),
                         "units": units_by_deck.get(d["id"], []), "terms": terms(d)} for d in decks]
     shown = []
     for track in tracks:
@@ -211,7 +200,7 @@ def sidebar(site_base: str, deck_id: str | None = None, current: str | None = No
             f'<li class="outline-module{" is-open" if here else ""}" data-module="{mid}"'
             f' data-module-units="{html.escape(unit_ids)}">'
             f'<a href="{site_base}/module-{mid}.html"{link_current}>{STATUS_ICON}'
-            f'<span class="outline-num">M{module["number"]}</span>'
+            f'<span class="outline-num">{module["tag"]}</span>'
             f'<span class="outline-name">{html.escape(module["short"])}</span>{STATUS_TEXT}</a>'
             f'{units}</li>')
     tracks_json = html.escape(json.dumps(_CTX["tracks"], separators=(",", ":")), quote=True)
@@ -321,7 +310,7 @@ def lang_switch(site_base: str) -> str:
 
 def module_crumbs(site_base: str, deck: dict, here: str | None) -> list[tuple[str, str | None]]:
     """Course / M2 · Short title / here."""
-    module = (f"M{int(deck['id'][1:])} · {short_label(deck)}",
+    module = (f"{MOD.tag(deck['id'])} · {short_label(deck)}",
               None if here is None else f"{site_base}/module-{deck['id']}.html")
     trail = [("Course", f"{site_base}/index.html"), module]
     if here:
