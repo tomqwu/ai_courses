@@ -21,7 +21,7 @@
       var total = parseInt(row.getAttribute('data-lab-checks') || '0', 10);
       var lab = P.lab(deck);
       var ticked = Object.keys(lab.checks || {}).length;
-      var number = 'Module ' + parseInt(deck.slice(1), 10);
+      var number = row.getAttribute('data-kicker') || '';
       var state = row.querySelector('[data-evidence-state]');
       var pre = row.querySelector('[data-evidence-entry]');
       var checks = ticked + ' of ' + total + ' checklist items';
