@@ -411,6 +411,11 @@ def run(page, browser, base: str) -> list[str]:
       return miss;
     }""")
     need(not missed, f"search: {len(missed)} glossary terms are not found by their own name ({missed[:5]})")
+    tags = page.evaluate("""async () => {
+      const idx = await fetch('search.json').then(r => r.json());
+      return [...new Set(idx.filter(x => x.d).map(x => x.g))]; }""")
+    need(tags and all(t and t[0] in "ML" for t in tags),
+         f"search: entries carry no module tag ({tags[:3]})")
     spoken = page.evaluate("""async () => {
       const idx = await fetch('search.json').then(r => r.json());
       const s = idx.find(x => x.k === 'slide' && x.ts && x.s.length > 3);

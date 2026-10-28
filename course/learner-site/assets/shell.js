@@ -30,7 +30,7 @@
 
   // Where the learner stopped: "m02.html#slide-9" → { deck: "m02", n: 9 }.
   function lastSlide(s) {
-    var m = s.last && /^(m\d+)\.html#slide-(\d+)/.exec(s.last.href || '');
+    var m = s.last && /^([a-z]\d+)\.html#slide-(\d+)/.exec(s.last.href || '');
     return m ? { deck: m[1], n: parseInt(m[2], 10) } : null;
   }
 

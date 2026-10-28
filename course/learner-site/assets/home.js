@@ -35,7 +35,7 @@
 
   function render() {
     var s = P.get();
-    var m = s.last && /^(m\d+)\.html#slide-(\d+)/.exec(s.last.href || '');
+    var m = s.last && /^([a-z]\d+)\.html#slide-(\d+)/.exec(s.last.href || '');
     var mod = m && (data.modules || {})[m[1]];
     var back = !!mod;
     root.hidden = !back;
@@ -47,11 +47,11 @@
     var watching = unit.kind !== 'lab' && unit.kind !== 'quiz';
 
     set('[data-home-path]', pathTitle());
-    set('[data-resume-where]', 'Module ' + mod.number + ' · ' + mod.title);
+    set('[data-resume-where]', mod.kicker + ' · ' + mod.title);
     set('[data-resume-unit]', unit.kind === 'segment' ? unit.id + ' — ' + unit.label : unit.name);
     set('[data-resume-slide]', 'Part ' + n + ' of ' + mod.slides + (info.title ? ' · ' + info.title : ''));
     set('[data-resume-count]', n + ' of ' + mod.slides + ' parts');
-    set('[data-thumb-kicker]', info.kicker || ('M' + mod.number));
+    set('[data-thumb-kicker]', info.kicker || mod.tag);
     set('[data-thumb-title]', info.title || unit.name);
     var fill = root.querySelector('[data-resume-fill]');
     if (fill) fill.style.width = Math.round(n / mod.slides * 100) + '%';
@@ -62,7 +62,7 @@
     read.setAttribute('href', base + '/lesson-' + deck + '.html' + (unit.read ? '#' + unit.read : ''));
 
     // Next in this module: the next lesson unit not yet recorded, then the lab and the check.
-    set('[data-next-title]', 'Next in Module ' + mod.number);
+    set('[data-next-title]', 'Next in ' + mod.kicker);
     var here = mod.units.indexOf(unit);
     var next = mod.units.filter(function (u, i) {
       return i > here && u.kind !== 'lab' && u.kind !== 'quiz' && !s.units[deck + ':' + u.id];

@@ -159,7 +159,7 @@
   function clock(t) { t = Math.floor(t); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
 
   function where(it) {
-    var mod = it.d ? 'M' + parseInt(it.d.slice(1), 10) : 'Course';
+    var mod = it.g || 'Course';
     if (it.k === 'slide') return mod + ' · part ' + it.n;
     if (it.k === 'term') return mod + ' glossary';
     return mod + ' · ' + (it.m || '');
@@ -186,7 +186,7 @@
             link = sh.href; quote = sh.quote;
             // The slide's own title; its module and number are on the line below.
             title = it.t.split(' — ').slice(1).join(' — ') || it.t;
-            thumb = '<span class="search-thumb" aria-hidden="true"><span>' + escapeHtml('M' + parseInt(it.d.slice(1), 10)) + '</span><span>' + it.n + '</span></span>';
+            thumb = '<span class="search-thumb" aria-hidden="true"><span>' + escapeHtml(it.g || '') + '</span><span>' + it.n + '</span></span>';
             if (sh.at !== null) quote += ' · spoken at ' + clock(sh.at);
           }
           return '<a class="search-hit" role="option" id="' + id + '" href="' + base + '/' + link + '" data-kind="' + it.k + '">' + thumb +
