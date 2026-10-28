@@ -34,11 +34,10 @@ REPO = ROOT.parent                                  # workspace (holds the clone
 CONTENT = ROOT / "03-content"
 TRACKS = ROOT / "05-tracks"
 
-MODULES = [
-    "m00-orientation", "m01-operating-system", "m02-ondevice-app", "m03-privacy-ship",
-    "m04-spec-driven-saas", "m05-security-tests", "m06-expertise-product",
-    "m07-monetize", "m08-launch-capstone", "m09-github-pages",
-]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import modules as _M                                # noqa: E402
+
+MODULES = [m.folder for m in _M.MODULES]
 ARTIFACTS = {
     "slides.md": None,          # slide-count checked by deck_lint.py
     "solutions.md": (800, 1600),
@@ -439,7 +438,7 @@ def check_exhibits() -> list[str]:
 # Figures (#99). A module listed here is held to the standard's coverage rule: its cover slide
 # carries the hero figure and every segment's first slide carries a figure. A module joins the list
 # in the change that draws its figures (the course-content skill's "A new module" step).
-FIGURE_MODULES: list[str] = ["m00", "m01", "m02", "m03", "m04", "m05", "m06", "m07", "m08", "m09"]
+FIGURE_MODULES: list[str] = [m.id for m in _M.MODULES if m.figures]
 FIGURES = ROOT / "figures"
 FIGURE_FENCE_RE = re.compile(r"^```figure[^\n]*\n(.*?)^```", re.S | re.M)
 

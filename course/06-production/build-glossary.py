@@ -15,14 +15,14 @@ from __future__ import annotations
 import collections
 import pathlib
 import re
+import sys
 
 COURSE = pathlib.Path(__file__).resolve().parents[1]
-MODULES = [
-    "m00-orientation", "m01-operating-system", "m02-ondevice-app", "m03-privacy-ship",
-    "m04-spec-driven-saas", "m05-security-tests", "m06-expertise-product",
-    "m07-monetize", "m08-launch-capstone", "m09-github-pages",
-]
-LABEL = {m: f"M{int(m[1:3])}" for m in MODULES}
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import modules as M                                # noqa: E402
+
+MODULES = [m.folder for m in M.MODULES]
+LABEL = {m.folder: M.tag(m.id) for m in M.MODULES}
 
 # The nine glossaries were written independently and use three entry shapes:
 #   A.  **Term** — definition            (most modules; optional bullet prefix)

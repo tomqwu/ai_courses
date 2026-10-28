@@ -27,9 +27,12 @@ COURSE = Path(__file__).resolve().parents[1]
 CONTENT = COURSE / "03-content"
 SCRIPTS = COURSE / "06-production" / "narration" / "scripts"
 SCRIPTS_ZH = COURSE / "06-production" / "narration" / "scripts-zh"
-for extra in (COURSE / "learner-site", COURSE / "06-production" / "narration",
+for extra in (COURSE / "learner-site", COURSE / "06-production",
+              COURSE / "06-production" / "narration",
               COURSE / "06-production" / "slides"):
     sys.path.insert(0, str(extra))
+
+import modules as M                                                                # noqa: E402
 
 FILES = ("slides", "lesson", "handout", "glossary", "lab", "quiz", "lab-rubrics")
 # The English each Chinese source was translated from, by hash: an English edit that is not carried
@@ -142,8 +145,8 @@ def check_slides(deck_id: str, en: str, zh: str) -> list[str]:
     front_zh, s_zh = split_slides(zh)
     if len(s_en) != len(s_zh):
         return [f"slides: {len(s_zh)} parts, the English has {len(s_en)}"]
-    if not re.match(rf"^M{int(deck_id[1:])}\s*—\s*\S", front_zh.get("title", "")):
-        problems.append(f"slides: front-matter title must read `M{int(deck_id[1:])} — <Chinese title>`")
+    if not re.match(rf"^{M.tag(deck_id)}\s*—\s*\S", front_zh.get("title", "")):
+        problems.append(f"slides: front-matter title must read `{M.tag(deck_id)} — <Chinese title>`")
     said = load_zh_sentences(deck_id)
     directive = re.compile(r"<!--\s*(_class|_diagram|_paginate|_header|_footer)\s*:\s*([^>]*?)\s*-->")
     for n, (a, b) in enumerate(zip(s_en, s_zh), 1):
@@ -189,7 +192,7 @@ def check_narration(deck_id: str) -> list[str]:
         return [f"narration: {path.relative_to(COURSE)} is missing"]
     data = json.loads(path.read_text(encoding="utf-8"))
     problems = []
-    if not re.match(rf"^M{int(deck_id[1:])}\s*—\s*\S", data.get("label", "")):
+    if not re.match(rf"^{M.tag(deck_id)}\s*—\s*\S", data.get("label", "")):
         problems.append("narration: label must read `M<n> — <Chinese title>`")
     en = en_sentences(deck_id)
     zh = data.get("slides", {})
@@ -223,7 +226,7 @@ def check_document(kind: str, en: str, zh: str) -> list[str]:
     heads = lambda t: [len(m.group(1)) for m in re.finditer(r"^(#{1,4})\s", outside_fences(t), re.M)]
     if heads(en) != heads(zh):
         problems.append(f"{kind}: heading structure differs ({len(heads(zh))} headings, the English has {len(heads(en))})")
-    seg = lambda t: re.findall(r"^#{2,3}\s+(?:Segment\s+)?(M\d+\.\d+)\b", t, re.M)
+    seg = lambda t: re.findall(rf"^#{{2,3}}\s+(?:Segment\s+)?({M.SEG})\b", t, re.M)
     if seg(en) != seg(zh):
         problems.append(f"{kind}: segment headings must keep their ids (`## M5.1 — …`)")
     if len(CJK.findall(outside_fences(zh))) < 50:

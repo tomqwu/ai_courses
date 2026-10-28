@@ -23,19 +23,22 @@ from __future__ import annotations
 
 import html
 import re
+import sys
 from pathlib import Path
 
 import figures as FIG
 import site_shell as SH
 
 COURSE_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(COURSE_DIR / "06-production"))
+import modules as MOD                                       # noqa: E402
 
 # ---------------------------------------------------------------- unit model
 
-NUM = re.compile(r"^[mM](\d+)$")
-SEGMENT = re.compile(r"^M\d+\.\d+$")
-LAB = re.compile(r"^(?:Lab|实验)\s*M\d+")
-QUIZ = re.compile(r"^(?:Quiz|测验)\s*M\d+")
+NUM = re.compile(r"^[mMlL](\d+)$")
+SEGMENT = re.compile(rf"^{MOD.SEG}$")
+LAB = re.compile(rf"^(?:Lab|实验)\s*{MOD.TAG}")
+QUIZ = re.compile(rf"^(?:Quiz|测验)\s*{MOD.TAG}")
 SUMMARY = re.compile(r"^(Recap|Summary|Discussion|回顾|总结|讨论)", re.I)
 
 KIND_LABEL = {
@@ -65,7 +68,7 @@ def module_units(deck: dict) -> list[dict]:
     ``check_player.py`` asserts the result covers every slide exactly once, so a future edit to a
     deck that breaks a boundary fails the gate rather than silently mis-grouping a unit.
     """
-    number = int(NUM.match(deck["id"]).group(1))
+    tag = MOD.tag(deck["id"])
     units: list[dict] = []
     current: dict | None = None
     seen_segment = False
@@ -76,7 +79,7 @@ def module_units(deck: dict) -> list[dict]:
             kind, uid, label = "intro", "intro", "Introduction"
         elif LAB.match(title) or LAB.match(kicker):
             kind, uid = "lab", "lab"
-            label = re.sub(r"^(?:Lab|实验)\s*M\d+\s*(—\s*)?", "", title).strip() or "Lab"
+            label = re.sub(rf"^(?:Lab|实验)\s*{MOD.TAG}\s*(—\s*)?", "", title).strip() or "Lab"
         elif QUIZ.match(title):
             kind, uid, label = "quiz", "quiz", "Knowledge check"
         elif SUMMARY.match(title) or (current and current["kind"] == "summary"):
@@ -85,7 +88,7 @@ def module_units(deck: dict) -> list[dict]:
             kind, uid, label = "segment", kicker, title
             seen_segment = True
         elif not seen_segment:
-            kind, uid, label = "segment", f"M{number}.1", title
+            kind, uid, label = "segment", f"{tag}.1", title
             seen_segment = True
         else:
             kind, uid, label = current["kind"], current["id"], current["label"]
@@ -781,8 +784,7 @@ def _module_row(deck: dict, units: list[dict], minutes: float, site_base: str,
     exclude = set(spec.get("exclude") or ())
     partial = set(spec.get("partial") or ())
     facts = cover_facts(deck)
-    short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
-    number = int(NUM.match(deck["id"]).group(1))
+    short = re.sub(rf"^{MOD.TAG}\s*—\s*", "", deck["label"]).strip()
     chip = (f'<span class="inclusion-chip is-full">{SH.T("full module", "完整模块")}</span>' if inclusion == "full"
             else f'<span class="inclusion-chip is-slice">{SH.T("slice", "切片")}</span>')
 
@@ -807,7 +809,7 @@ def _module_row(deck: dict, units: list[dict], minutes: float, site_base: str,
             else f"{site_base}/{deck['id']}.html")
     return f"""<article class="module-row">
   <div class="module-head">
-    <p class="module-number">{SH.T(f"Module {number}", f"模块 {number}")} {chip}</p>
+    <p class="module-number">{MOD.kicker(deck["id"], SH.LANG)} {chip}</p>
     <h3><a href="{href}">{html.escape(short)}</a></h3>
     <p class="module-promise">{html.escape(facts['promise'])}</p>
     <p class="module-meta">{count} · {fmt_narration(minutes)}</p>
@@ -825,8 +827,7 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
     M0 and M1 open all three, M7 and M8 are sliced into all three — so the page says so per path
     rather than claiming a single owner.
     """
-    number = int(NUM.match(deck["id"]).group(1))
-    short = re.sub(r"^M\d+\s*—\s*", "", deck["label"]).strip()
+    short = re.sub(rf"^{MOD.TAG}\s*—\s*", "", deck["label"]).strip()
     facts = cover_facts(deck)
     objectives_html = "".join(f"<li>{item}</li>" for item in objectives(deck))
     total = sum(seconds.get(f"{deck['id']}:{u['id']}", 0) for u in units)
@@ -906,8 +907,8 @@ def module_page(deck: dict, units: list[dict], seconds: dict[str, float], site_b
         path_link = f'<a href="{site_base}/paths.html">{SH.T("the learning paths", "学习路线")}</a>'
 
     head = SH.page_head(
-        SH.T(f"Module {number} · {len(units)} units · {fmt_narration(total)}{free}",
-             f"模块 {number} · {len(units)} 个单元 · {fmt_narration(total)}{free}"), html.escape(short),
+        f"{MOD.kicker(deck['id'], SH.LANG)} · {len(units)} units · {fmt_narration(total)}{free}",
+        html.escape(short),
         html.escape(facts["promise"]),
         _at_a_glance([(SH.T("Paths", "路线"), mediums),
                       (SH.T("Level", "难度"), tracks_for[0]["track"]["level"] if tracks_for
