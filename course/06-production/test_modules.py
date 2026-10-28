@@ -34,6 +34,13 @@ class Registry(unittest.TestCase):
         deep = [m for m in M.MODULES if m.family == "deep"]
         self.assertEqual(sum(4 + m.segments[0] for m in deep), 70)
 
+    def test_ladder_modules_declare_smaller_checks(self):
+        for m in M.MODULES:
+            if m.family == "ladder":
+                self.assertEqual(m.quiz, (4, 5))
+                self.assertEqual(m.segments, (3, 4))
+                self.assertFalse(m.figures)
+
 
 if __name__ == "__main__":
     unittest.main()
