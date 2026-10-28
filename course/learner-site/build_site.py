@@ -1322,7 +1322,8 @@ def write_edition(lang: str, decks: list[dict], target: Path, site_base: str, ar
     anchors = {r["deck"]: r.get("read_anchors", {}) for r in records if r["kind"] == "lesson"}
     questions = {r["deck"]: len(r.get("headings", [])) for r in records if r["kind"] == "quiz"}
     home_data = {"modules": {deck["id"]: {
-        "number": int(deck["id"][1:]), "tag": MOD.tag(deck["id"]), "family": MOD.family(deck["id"]),
+        "number": int(deck["id"][1:]), "tag": MOD.tag(deck["id"]),
+        "family": MOD.family(deck["id"]), "kicker": MOD.kicker(deck["id"], SH.LANG),
         "title": SH.short_label(deck), "slides": len(deck["slides"]),
         "lab": SP.lab_time(deck["id"]), "questions": questions.get(deck["id"], 0),
         "units": [{"id": u["id"], "kind": u["kind"], "name": SH.unit_name(u), "label": u["label"],

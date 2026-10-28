@@ -446,6 +446,7 @@ def evidence_page(labs: list[dict], site_base: str) -> str:
     """
     rows = "".join(
         f'<li class="evidence-row" data-evidence-lab="{lab["deck"]}"'
+        f' data-kicker="{html.escape(MOD.kicker(lab["deck"], SH.LANG), quote=True)}"'
         f' data-lab-title="{html.escape(lab["title"], quote=True)}" data-lab-checks="{lab["checks"]}">'
         f'<h2><a href="{site_base}/lab-{lab["deck"]}.html">{SC.inline(lab["title"])}</a></h2>'
         f'<p class="evidence-state" data-evidence-state>{MOD.kicker(lab["deck"], SH.LANG)} · no entry yet</p>'
@@ -489,8 +490,9 @@ def search_index(records: list[dict], decks: list[dict], units_by_deck: dict,
     times = times or {}
     for deck in decks:
         short = short_label(deck)
+        g = MOD.tag(deck["id"])
         for slide in deck["slides"]:
-            entry = {"k": "slide", "d": deck["id"], "t": f"{slide['kicker']} — {slide['title']}",
+            entry = {"k": "slide", "d": deck["id"], "g": g, "t": f"{slide['kicker']} — {slide['title']}",
                      "h": f"{deck['id']}.html#{slide['id']}", "m": short, "n": slide["number"],
                      "x": re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", slide["html"])).strip()[:400],
                      "s": B.said_of(slide)}
@@ -499,15 +501,17 @@ def search_index(records: list[dict], decks: list[dict], units_by_deck: dict,
                 entry["ts"] = spoken
             out.append(entry)
         for unit in units_by_deck.get(deck["id"], []):
-            out.append({"k": "unit", "d": deck["id"], "t": unit["title"] if unit["kind"] == "segment" else unit["label"],
+            out.append({"k": "unit", "d": deck["id"], "g": g,
+                        "t": unit["title"] if unit["kind"] == "segment" else unit["label"],
                         "h": unit["href"], "m": short, "x": f"{unit['kind']} unit, slides {unit['first']}–{unit['last']}"})
     for r in records:
-        out.append({"k": r["kind"], "d": r["deck"], "t": r["title"], "h": r["href"], "m": r.get("module", ""),
+        g = MOD.tag(r["deck"])
+        out.append({"k": r["kind"], "d": r["deck"], "g": g, "t": r["title"], "h": r["href"], "m": r.get("module", ""),
                     "x": r["text"][:1500]})
         for h in r.get("headings", []):
-            out.append({"k": r["kind"] + "-heading", "d": r["deck"], "t": re.sub(r"<[^>]+>", "", h["text"]),
+            out.append({"k": r["kind"] + "-heading", "d": r["deck"], "g": g, "t": re.sub(r"<[^>]+>", "", h["text"]),
                         "h": f"{r['href']}#{h['id']}", "m": r["title"], "x": h.get("x", "")})
         for t in r.get("terms", []):
-            out.append({"k": "term", "d": r["deck"], "t": t["term"], "h": f"{r['href']}#{SC.slug(t['term'])}",
+            out.append({"k": "term", "d": r["deck"], "g": g, "t": t["term"], "h": f"{r['href']}#{SC.slug(t['term'])}",
                         "m": r["title"], "x": t["definition"][:400]})
     return json.dumps(out, ensure_ascii=False, separators=(",", ":"))
