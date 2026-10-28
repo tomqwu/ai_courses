@@ -15,9 +15,13 @@ from __future__ import annotations
 
 import html
 import re
+import sys
 from pathlib import Path
 
 import figures as FIG
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "06-production"))
+import modules as MOD                                       # noqa: E402
 
 INLINE_CODE = re.compile(r"`([^`]+)`")
 BOLD = re.compile(r"\*\*([^*]+)\*\*")
@@ -417,8 +421,10 @@ def parse_quiz(text: str, deck_id: str) -> dict:
                 o["html"] = inline(o["text"])
         else:
             q["answer"] = None
-    if len(questions) != 8:
-        problems.append(f"expected 8 questions, parsed {len(questions)}")
+    lo, hi = MOD.get(deck_id).quiz if deck_id in MOD.IDS else (8, 8)
+    if not lo <= len(questions) <= hi:
+        problems.append(f"expected {lo}–{hi} questions, parsed {len(questions)}" if lo != hi
+                        else f"expected {lo} questions, parsed {len(questions)}")
     if problems:
         raise QuizError(f"{deck_id}/quiz.md: " + "; ".join(problems))
     return {"deck": deck_id, "title": title, "questions": questions,

@@ -48,6 +48,18 @@ ARTIFACTS = {
     "lab-rubrics.md": (600, 1100),
     "accessibility.md": (400, 900),
 }
+# A ladder module is written for non-coders: no facilitation guide, solutions or accessibility
+# notes of its own (the deep modules keep theirs); its build is proven by runs/run.json instead.
+ARTIFACTS_LADDER = {
+    "slides.md": None,
+    "handout.md": (250, 650),
+    "glossary.md": (200, 900),
+    "lab-rubrics.md": (150, 700),
+}
+
+
+def artifacts_for(folder: str) -> dict:
+    return ARTIFACTS_LADDER if folder.startswith("l") else ARTIFACTS
 # Standalone playbooks (#66): each folder is a sellable unit extracted from a module.
 PLAYBOOKS = ROOT / "07-playbooks"
 PLAYBOOK_BAND = (1500, 3000)
@@ -142,7 +154,7 @@ def check_artifacts() -> list[str]:
         if not folder.is_dir():
             problems.append(f"{mod}: folder missing")
             continue
-        for name, band in ARTIFACTS.items():
+        for name, band in artifacts_for(mod).items():
             f = folder / name
             if not f.exists():
                 problems.append(f"{mod}/{name}: MISSING")

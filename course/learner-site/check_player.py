@@ -35,6 +35,9 @@ import threading
 from pathlib import Path
 
 SITE_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(SITE_ROOT.parent / "06-production"))
+import modules as MOD                                      # noqa: E402
+
 CHROME_CANDIDATES = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
@@ -417,17 +420,18 @@ def check_units() -> list[str]:
         for required in ("intro", "lab", "quiz", "summary"):
             if required not in kinds:
                 problems.append(f"{deck_id}: no {required} unit")
-        if kinds.count("segment") != 3:
-            problems.append(f"{deck_id}: {kinds.count('segment')} segment units, expected 3")
+        lo, hi = MOD.get(deck_id).segments
+        if not lo <= kinds.count("segment") <= hi:
+            problems.append(f"{deck_id}: {kinds.count('segment')} segment units, expected {lo}–{hi}")
         # A path page must never link a module page that the build did not write.
         if not (SITE_ROOT / f"module-{deck_id}.html").exists() and deck_id in {
                 d for tr in SP.TRACKS if tr["status"] == "built"
                 for d in list(tr["core"]) + list(tr.get("slice") or {})}:
             problems.append(f"{deck_id}: in a built path but has no module page")
-    # 63 units for M0-M8, plus 7 for the free M9 (intro, three segments, lab, quiz, summary). Kept
-    # as a literal on purpose: a deck edit that moves a unit boundary should fail here, not re-count.
-    if total != 70:
-        problems.append(f"unit model yields {total} units, expected 70")
+    # Declared per module in the registry, not re-counted: a deck edit that moves a unit boundary
+    # should fail here. A ladder module with a fourth segment declares (4, 4).
+    if total != MOD.expected_units():
+        problems.append(f"unit model yields {total} units, expected {MOD.expected_units()}")
     # Independent cross-check: the unit model derives 17 segments for the On-Device path from the
     # decks alone, while `bundle-map.md` states "17 of 27 teaching segments" by hand. If a deck
     # edit changes a boundary, the two stop agreeing — which is the whole point of asserting it.
