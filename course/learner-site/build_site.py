@@ -841,6 +841,115 @@ def learn_page(deck: dict, manifest: dict, provenance: dict, site_base: str,
                        scripts=("narration-media.js", "learn.js"), body_attrs=attrs)
 
 
+def _trailhead(home_json: str, proof_html: str, site_base: str, returning: bool) -> str:
+    """The home dashboard, in two states: a returning learner's route and a first-run start.
+
+    Both states use the same route map and the same rail; `trailhead.js` reads progress and fills
+    the map, the stats and the field note. The returning state is hidden until `home.js` confirms a
+    stored position; the first-run state is hidden when one exists.
+    """
+    flame = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c1 4 5 5 5 '
+             '10a5 5 0 1 1-10 0c0-2 1-3 2-5 0 2 1 3 2 3 1-2-1-5-1-8z"/></svg>')
+    note_icon = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+                 'aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v5h4M9 12h7M9 16h5"/></svg>')
+    arrow = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" '
+             'aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>')
+    if returning:
+        root = f'data-continue data-home="{home_json}" hidden'
+        next_panel = f"""      <section class="th-next">
+        <h2>{SH.T("Resume", "继续")}</h2>
+        <p class="th-part" data-resume-unit></p>
+        <p class="th-meta" data-resume-where></p>
+        <p class="th-meta" data-resume-slide></p>
+        <div class="th-bar" role="progressbar" aria-label="{SH.T("Module progress", "模块进度")}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span data-resume-fill></span></div>
+        <div class="th-bar-meta"><span data-resume-count></span><span>{SH.T("this camp", "本营地")}</span></div>
+        <div class="th-actions">
+          <a class="th-continue" href="{site_base}/index.html" data-resume-link>{SH.T("Continue", "继续")} {arrow}</a>
+          <a class="th-read" href="{site_base}/index.html" data-resume-read>{SH.T("Read this segment instead", "改为阅读这一段")}</a>
+        </div>
+        <ul class="th-next-list" data-next-list></ul>
+      </section>"""
+    else:
+        root = "data-home-new"
+        next_panel = f"""      <section class="th-next">
+        <h2>{SH.T("Start here", "从这里开始")}</h2>
+        <p class="th-part">{SH.T("Camp 0 — Orientation", "第 0 营地 — 导览")}</p>
+        <p class="th-meta">{SH.T("No prerequisites · begin with the introduction", "无前置条件 · 从导论开始")}</p>
+        <div class="th-actions">
+          <a class="th-continue" href="{site_base}/m00.html#slide-1">{SH.T("Start the first leg", "开始第一段")} {arrow}</a>
+        </div>
+        <ul class="th-new-list">
+          <li><a href="{site_base}/lab-m00.html"><strong>{SH.T("Your first win in about 30 minutes", "大约 30 分钟拿下第一个成果")}</strong><span>{SH.T("Lab M0 — set up the tools and run a real solver", "实验 M0 — 安装工具并运行一个真实求解器")}</span></a></li>
+          <li><a href="{site_base}/path-github-pages.html"><strong>{SH.T("New to the terminal?", "终端新手？")}</strong><span>{SH.T("Start free with the GitHub Pages path", "从免费的 GitHub Pages 路线开始")}</span></a></li>
+        </ul>
+      </section>"""
+    proof = f'<div class="th-proof">{proof_html}</div>' if returning else ""
+    return f"""<section class="trailhead" {root}>
+  <div class="th-head">
+    <div>
+      <p class="th-crumb"><a href="{site_base}/paths.html">{SH.T("The full studio course", "完整工作室课程")}</a><span>/</span><span data-th-camp>{SH.T("Your trailhead", "你的路线起点")}</span></p>
+      <h1 data-th-heading>{SH.T("Your route through the studio", "你的工作室路线")}</h1>
+      <p class="th-lede" data-th-lede>{SH.T("A route of ten camps. Each leg is short enough to finish today, and every checkpoint leaves evidence.", "十个营地的路线。每一段都短到今天就能走完，每个检查点都会留下证据。")}</p>
+    </div>
+    <a class="th-switch" href="{site_base}/paths.html">{SH.T("Change route", "更换路线")}</a>
+  </div>
+  <div class="th-stats">
+    <span class="th-stat">{flame}<strong data-trail-streak>0</strong> {SH.T("day trail", "天连续")}</span>
+    <span class="th-stat">{note_icon}<strong data-trail-notes>0</strong> {SH.T("field notes", "条野外笔记")}</span>
+    <span class="th-stat"><strong data-th-camps>0</strong> {SH.T("of 10 camps stamped", "个营地已盖章")}</span>
+    <a href="{site_base}/evidence.html">{SH.T("Your evidence log", "你的证据日志")}</a>
+  </div>
+  <div class="th-grid">
+    <section class="th-map">
+      <div class="th-map-head">
+        <h2>{SH.T("Your route", "你的路线")}</h2>
+        <p data-route-meta>{SH.T("0 of 10 camps", "0 / 10 个营地")}</p>
+      </div>
+      <svg class="th-map-svg" data-route-map viewBox="0 0 860 420" role="group" aria-label="{SH.T("Your route through ten camps", "你穿过十个营地的路线")}"></svg>
+      <ol class="th-list" data-route-list aria-label="{SH.T("Your route through ten camps", "你穿过十个营地的路线")}"></ol>
+      <div class="th-legend">
+        <span><i class="l-done"></i>{SH.T("stamped", "已盖章")}</span>
+        <span><i class="l-now"></i>{SH.T("you are here", "你在这里")}</span>
+        <span><i class="l-ahead"></i>{SH.T("ahead", "在前方")}</span>
+        <span><i class="l-partial"></i>{SH.T("in progress", "进行中")}</span>
+      </div>
+    </section>
+    <aside class="th-rail">
+{next_panel}
+      <section class="th-quiet">
+        <h2>{SH.T("Today", "今天")}</h2>
+        <div class="th-goal-row"><strong><span data-today-count>0</span> / <span data-goal>3</span></strong><span>{SH.T("actions", "个动作")}</span></div>
+        <div class="th-goal-bar" role="progressbar" aria-label="{SH.T("Daily pace", "每日节奏")}" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><span data-today-bar></span></div>
+        <p class="th-goal-note">{SH.T("A leg, a check or an exported entry keeps the trail alive.", "走一段、做一次检查，或导出一条记录，都能让路线继续。")}</p>
+        <div class="th-goal-stats">
+          <span>{flame}<strong data-trail-streak>0</strong> {SH.T("day trail", "天连续")}</span>
+          <span>{note_icon}<strong data-trail-notes>0</strong> {SH.T("notes", "条笔记")}</span>
+        </div>
+        <label class="th-pace">{SH.T("Daily pace", "每日节奏")}
+          <select data-pace>
+            <option value="1">1</option><option value="3" selected>3</option><option value="5">5</option>
+          </select>
+        </label>
+      </section>
+      <section class="th-note">
+        <h2>{SH.T("Field note", "野外笔记")}</h2>
+        <span class="th-evidence">{SH.T("Evidence", "证据")}</span>
+        <blockquote data-field-quote>{SH.T("Every claim in this course carries a file you can open.", "本课程的每个主张都带有一个你可以打开的文件。")}</blockquote>
+        <span class="th-source" data-field-source>course/04-sales/landing-page.md</span>
+        <a data-field-link href="{site_base}/proof.html">{SH.T("Open the proof", "打开证明")} {arrow}</a>
+      </section>
+    </aside>
+  </div>
+  <div class="th-progress">
+    <span>{SH.T("Progress lives in this browser.", "进度保存在此浏览器中。")}</span>
+    <button type="button" data-progress-export title="{SH.T("Download your progress as JSON", "把进度下载为 JSON")}">{SH.T("Export progress", "导出进度")}</button>
+    <button type="button" data-progress-import title="{SH.T("Load a progress file", "载入进度文件")}">{SH.T("Import", "导入")}</button>
+    <button type="button" data-progress-reset>{SH.T("Reset", "重置")}</button>
+  </div>
+{proof}
+</section>"""
+
+
 def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: str,
                text_only: bool = False, path_cards: str = "",
                module_paths: dict[str, int] | None = None,
@@ -1167,11 +1276,10 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
       <a href="https://github.com/tomqwu/ai_courses/tree/main/aps-tools">阅读它们或复制整个文件夹 →</a></p>""")
     paths_note = SH.T(f"""Each path teaches one product type end to end. Not sure what a
       <a href="{site_base}/paths.html">path or a unit</a> is?""", f"""每条路线完整地教一种产品类型。不确定什么是<a href="{site_base}/paths.html">路线或单元</a>？""")
-    content = f"""{returning}
-<div class="home-new" data-home-new>
-{head}
-{proof_html}
-</div>
+    trailhead_returning = _trailhead(home_json, proof_html, site_base, True)
+    trailhead_new = _trailhead(home_json, "", site_base, False)
+    content = f"""{trailhead_returning}
+{trailhead_new}
   <div class="section-heading">
     <h2>{SH.T("Start with what you want to build", "从你想构建的东西开始")}</h2>
     <span class="section-note">{paths_note}</span>
@@ -1207,7 +1315,8 @@ def index_page(decks: list[dict], manifest: dict, provenance: dict, site_base: s
                        SH.T("Build, ship and sell three kinds of AI product. Nine narrated modules with "
                             "captions and transcripts.", "构建、发布并销售三类 AI 产品。九个带讲解的模块，附字幕和文字稿。"),
                        content, site_base, "index home-page",
-                       crumbs=[("Home", None)], current="home", scripts=("home.js",))
+                       crumbs=[(SH.T("AI Product Studio", "AI Product Studio"), None)], current="home",
+                       scripts=("home.js", "trailhead.js"))
 
 
 def write_edition(lang: str, decks: list[dict], target: Path, site_base: str, args, manifest: dict,
@@ -1322,7 +1431,7 @@ def write_edition(lang: str, decks: list[dict], target: Path, site_base: str, ar
     anchors = {r["deck"]: r.get("read_anchors", {}) for r in records if r["kind"] == "lesson"}
     questions = {r["deck"]: len(r.get("headings", [])) for r in records if r["kind"] == "quiz"}
     home_data = {"modules": {deck["id"]: {
-        "number": int(deck["id"][1:]), "tag": MOD.tag(deck["id"]),
+        "id": deck["id"], "number": int(deck["id"][1:]), "tag": MOD.tag(deck["id"]),
         "family": MOD.family(deck["id"]), "kicker": MOD.kicker(deck["id"], SH.LANG),
         "title": SH.short_label(deck), "slides": len(deck["slides"]),
         "lab": SP.lab_time(deck["id"]), "questions": questions.get(deck["id"], 0),

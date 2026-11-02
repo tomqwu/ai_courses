@@ -55,6 +55,8 @@
     set('[data-thumb-title]', info.title || unit.name);
     var fill = root.querySelector('[data-resume-fill]');
     if (fill) fill.style.width = Math.round(n / mod.slides * 100) + '%';
+    var bar = root.querySelector('.th-bar[role="progressbar"]');
+    if (bar) bar.setAttribute('aria-valuenow', String(Math.round(n / mod.slides * 100)));
     var resume = root.querySelector('[data-resume-link]');
     resume.setAttribute('href', base + '/' + s.last.href);
     var read = root.querySelector('[data-resume-read]');

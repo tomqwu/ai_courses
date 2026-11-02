@@ -28,3 +28,6 @@ course/learner-site/zh/
 
 # Design-review screenshots (regenerate, don't commit)
 course/learner-site/_review/
+
+# Local design-review state (impeccable)
+.impeccable/

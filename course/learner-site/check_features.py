@@ -462,6 +462,9 @@ def run(page, browser, base: str) -> list[str]:
     shown = page.locator("[data-home] .proof-value").all_inner_texts()
     want = [f"{built['pointers']['checked']:,}", f"{built['pointers']['anchors']:,}", f"{built['narration']['recorded']:,}"]
     need(shown == want, f"home: the proof numbers {shown} are not the build's {want}")
+    need(page.locator("[data-home] [data-route-map] .camp-circle").count() >= 10
+         and page.locator("[data-home] [data-th-heading]").inner_text().startswith("Camp"),
+         "home: the returning trailhead did not paint the ten-camp route")
     # There are no slides on the site (#112, #119): the home page counts parts, not slides.
     home_text = page.locator("[data-home], main").first.inner_text() + page.locator("main").inner_text()
     need(not re.search(r"\b[Ss]lides?\b|\bWatch\b", home_text),
@@ -479,6 +482,9 @@ def run(page, browser, base: str) -> list[str]:
     need(newcomer.locator("[data-home]").is_hidden()
          and newcomer.locator('[data-home-new] a[href$="lab-m00.html"]').is_visible(),
          "home: a first-time visitor is not offered the first-win start")
+    need(newcomer.locator("[data-home-new] [data-route-map] .camp-circle").count() >= 10
+         and newcomer.locator("[data-home-new] [data-th-heading]").inner_text().startswith("Camp 0"),
+         "home: the first-run trailhead did not paint the route at Camp 0")
     newcomer.close()
     # Figures build on the narration (#99): a stepped figure opens complete, Replay (or ".") takes it
     # back to its first part and builds it one step at a time to complete, and under reduced motion
