@@ -35,7 +35,7 @@ The course is a static learner site generated from Markdown and JSON, delivered 
 - English and Chinese editions are held to parity; a module's Chinese must be re-stamped when the English changes.
 - Content is not to be shrunk to fit a frame; the gate checks clipping at two desktop sizes.
 - An approved beginner ladder (L0–L5) is in progress on top of M0–M9; L1 is the pilot.
-- The learner experience is being rebuilt around an Expedition trailhead: a route map, session-sized legs, a day trail and field notes derived from recorded study events.
+- The learner experience is being rebuilt around an Expedition trailhead and a one-question check loop: a route map, session-sized legs, a day trail, field notes derived from recorded study events, and a checkpoint result that names the next camp.
 
 ## Brand Commitments
 

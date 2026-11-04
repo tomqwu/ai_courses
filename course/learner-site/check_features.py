@@ -117,6 +117,11 @@ def run(page, browser, base: str) -> list[str]:
         need("is-done" in (row.get_attribute("class") or ""), f"module-m02: {unit} was watched but its row is not done")
         need("is-done" in (page.locator(f'#app-outline [data-unit="{unit}"]').get_attribute("class") or ""),
              f"outline: {unit} was watched but the outline does not show it done")
+    page.goto(f"{base}/m02.html#slide-{watch[-1][1]}")
+    stamp = page.locator('[data-unit-stamp="m02:M2.1"]')
+    need("is-stamped" in (stamp.get_attribute("class") or "")
+         and page.locator("[data-lp-leg]").is_visible(),
+         "learn: the watched leg is not stamped, or has no next-leg action")
     page.goto(f"{base}/index.html")
     need(page.locator("[data-continue]").is_visible(), "index: a returning visit shows no 'continue'")
     card = page.locator('[data-card-module="m02"] [data-ring-units]').get_attribute("aria-label") or ""
@@ -246,20 +251,18 @@ def run(page, browser, base: str) -> list[str]:
          "outline at 800px: Escape did not close the drawer and return focus to its button")
     tablet.close()
 
-    # Knowledge checks: every question on every page, played to its keyed answer.
+    # Knowledge checks: one question at a time (#78), played to its keyed answer.
     quiz_pages = sorted(SITE.glob("quiz-m*.html"))
     need(quiz_pages, "no quiz pages built")
     played = 0
-    # One question at a time (#78): each is answered, then "Next question" opens the next; the last
-    # opens the result. Every question is a fieldset with a legend, and its feedback is a status.
     for qp in quiz_pages:
         page.goto(f"{base}/{qp.name}")
         qs = page.locator(".qq")
         for i in range(qs.count()):
-            q, label = qs.nth(i), f"{qp.name} question {i + 1}"
+            q, label = page.locator(".qq.is-current"), f"{qp.name} question {i + 1}"
             played += 1
-            need(q.is_visible() and page.locator(".qq:visible").count() == qs.count(),
-                 f"{label}: not on the page with every other question")
+            need(q.is_visible() and page.locator(".qq:visible").count() == 1,
+                 f"{label}: is not the only question shown")
             if "is-mc" in (q.get_attribute("class") or ""):
                 key = q.get_attribute("data-answer") or ""
                 need(q.locator("fieldset legend").count() == 1 and q.locator('[role="status"]').count() == 1,
@@ -277,9 +280,17 @@ def run(page, browser, base: str) -> list[str]:
                      f"{label}: model answer reachable before an attempt")
                 q.locator("textarea").fill("An attempt long enough to count as one.")
                 q.locator("[data-reveal]").click()
+            next_btn = q.locator("[data-next-question]")
+            need(next_btn.is_visible(), f"{label}: no next action after the answer")
+            next_btn.click()
+            page.wait_for_timeout(40)
         summary = page.locator("[data-summary-text]")
         need(summary.count() and "clears the 75%" in summary.inner_text(),
              f"{qp.name}: all keyed answers did not clear the 75% threshold")
+        need(page.locator(".quiz-summary").is_visible(), f"{qp.name}: the result is not visible")
+        if qp.name == "quiz-m08.html":
+            need(page.locator(".check-next").get_attribute("href").endswith("m09.html#slide-1"),
+                 "quiz-m08: the result does not carry the next camp")
     quizzes = json.loads(page.evaluate("JSON.stringify(window.APSProgress.get().quizzes)"))
     need(len(quizzes) == len(quiz_pages), f"quiz scores reached progress for {len(quizzes)} of {len(quiz_pages)} modules")
     # Answers persist: a finished check reopens on its result; "Try again" clears it.
@@ -302,9 +313,9 @@ def run(page, browser, base: str) -> list[str]:
     need(re.search(r"m03\.html#slide-\d+$", q.locator(".q-rewatch").get_attribute("href") or ""),
          "quiz-m03: the feedback does not link back to the part that teaches the question")
     page.reload()
-    visible = sum(1 for i in range(page.locator(".qq").count()) if page.locator(".qq").nth(i).is_visible())
-    need(visible == page.locator(".qq").count() and "is-wrong" in (page.locator(".qq").first.get_attribute("class") or ""),
-         "quiz-m03: the answer did not survive a reload, or the questions are not all on the page")
+    need(page.locator(".qq:visible").count() == 1 and page.locator(".qq.is-wrong").count() == 1
+         and page.locator("[data-check-current]").inner_text().startswith("Question 2"),
+         "quiz-m03: reload did not resume at the next question with the saved answer")
 
     # Labs: the checklist persists and completes; the evidence entry exports; auto-fail is shown.
     page.goto(f"{base}/lab-m01.html")
@@ -636,10 +647,14 @@ def run(page, browser, base: str) -> list[str]:
         page.goto(f"{base}/{name}")
         page.wait_for_timeout(200)
         tabs = page.locator("main .mode-tabs")
-        page.mouse.wheel(0, 2500)
-        page.wait_for_timeout(300)
-        box = tabs.bounding_box()
-        need(box and 0 <= box["y"] <= 120, f"{name}: the mode tabs do not stay in view when scrolling ({box})")
+        scrollable = page.evaluate("document.documentElement.scrollHeight > innerHeight + 200")
+        if scrollable:
+            page.evaluate("window.scrollTo(0, 300)")
+            page.wait_for_timeout(300)
+            box = tabs.bounding_box()
+            need(box and 0 <= box["y"] <= 120, f"{name}: the mode tabs do not stay in view when scrolling ({box})")
+        else:
+            need(tabs.is_visible(), f"{name}: the mode tabs are not visible on a short page")
     # Terms explained where they are used (#term-links): a technical word's first use in a part is a
     # link whose card gives the plain meaning — on hover, and on a phone on the first tap.
     page.goto(f"{base}/lesson-m09.html")

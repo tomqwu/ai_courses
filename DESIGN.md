@@ -65,7 +65,21 @@ progress. A first visit starts at Camp 0 with zero stamps and zero field notes; 
 camp of the last part opened, or the next unfinished camp after it. Nothing is ticked by hand.
 
 The mobile composition puts the next action first, then the route as a vertical list of camps, then
-today and the field note. The player and the quiz/lab modes are not part of this surface yet.
+today and the field note.
+
+## The player and the check
+
+The Learn page is a **recorder dock**, not a dark slab over the reading column. It is a paper surface
+with the route rail on top, the play control in cobalt, the part and time in mono, and — once the
+unit is recorded — a single **Next leg** link. The end of every teaching leg is a checkpoint card:
+“Leg endpoint” before, “Leg stamped” after, with the next leg or next module. The stamp comes from a
+recorded watch or read, never a hand tick. On a phone the dock sits above the four-mode tab bar, and
+the content keeps enough bottom room that the last line is reachable.
+
+The Check is a **one-question loop**: one card, a progress rail, the key and the learner's answer in
+words, the rationale and its revisit link, then **Next question**. The last answer opens the result:
+score, pass state, objectives to revisit, and **Next camp**. The result is the only celebratory
+surface; it uses the green stamp, not confetti.
 
 ## Motion
 

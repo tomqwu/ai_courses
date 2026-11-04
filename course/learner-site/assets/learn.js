@@ -35,7 +35,6 @@
 
   /* ---------------------------------------------------------- where you are (no audio needed) */
   var viewing = -1;
-  var lastSaved = 0;
   function spy() {
     var line = window.innerHeight / 3, n = -1;
     sections.forEach(function (s, i) { if (s.getBoundingClientRect().top <= line) n = i; });
@@ -44,19 +43,65 @@
     viewing = n;
     var num = numberOf(sections[n]);
     document.dispatchEvent(new CustomEvent('aps:slide', { detail: { deck: deck, n: num } }));
-    var now = Date.now();
-    if (P && now - lastSaved > 800) {
-      lastSaved = now;
+    if (P) {
       var u = unitAt(num);
       P.setLast(deck + '.html#' + sections[n].id,
         (body.getAttribute('data-deck-label') || deck) + (u ? ' — ' + u.name : ''));
     }
+    paintLeg();
   }
   window.addEventListener('scroll', spy, { passive: true });
-  window.addEventListener('load', function () { viewing = -1; spy(); });   // after the browser's own jump to a #hash
-  window.addEventListener('hashchange', function () { viewing = -1; spy(); });
+  function jumpToHash() {
+    if (!location.hash) return;
+    var target = null;
+    try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) { target = null; }
+    if (target && target.classList.contains('learn-section')) target.scrollIntoView({ block: 'start' });
+  }
+  window.addEventListener('load', function () { jumpToHash(); viewing = -1; setTimeout(spy, 0); setTimeout(spy, 120); });
+  window.addEventListener('hashchange', function () { jumpToHash(); viewing = -1; spy(); });
   spy();
 
+  function stampFor(uid) {
+    return document.querySelector('[data-unit-stamp="' + uid + '"]');
+  }
+
+  function paintStamps() {
+    if (!P) return;
+    var s = P.get();
+    document.querySelectorAll('[data-unit-stamp]').forEach(function (el) {
+      var uid = el.getAttribute('data-unit-stamp');
+      var done = !!(s.units && s.units[uid]);
+      el.classList.toggle('is-stamped', done);
+      var title = el.querySelector('.unit-stamp-title');
+      var note = el.querySelector('.unit-stamp-note');
+      if (title) title.textContent = done
+        ? (document.body.getAttribute('data-lang') === 'zh' ? '本段已盖章' : 'Leg stamped')
+        : (document.body.getAttribute('data-lang') === 'zh' ? '本段终点' : 'Leg endpoint');
+      if (note) note.textContent = done
+        ? (document.body.getAttribute('data-lang') === 'zh' ? '看完或读完，路线已记下。' : 'Watched or read. The route keeps it.')
+        : (document.body.getAttribute('data-lang') === 'zh' ? '走完这一段即可盖章。' : 'Finish this leg to stamp it.');
+    });
+  }
+
+  function paintLeg() {
+    if (!ui || !ui.leg) return;
+    var n = viewing >= 0 ? numberOf(sections[viewing]) : -1;
+    var u = n >= 0 ? unitAt(n) : null;
+    var stamp = u ? stampFor(deck + ':' + u.id) : null;
+    if (u && stamp && P && P.get().units && P.get().units[deck + ':' + u.id]) {
+      var next = stamp.getAttribute('data-next-href');
+      var label = stamp.getAttribute('data-next-label') || 'Next leg';
+      if (next) ui.leg.setAttribute('href', next);
+      if (ui.legLabel) ui.legLabel.textContent = label;
+      ui.leg.hidden = false;
+      return;
+    }
+    ui.leg.hidden = true;
+  }
+
+  paintStamps();
+  paintLeg();
+  document.addEventListener('aps:progress', function () { paintStamps(); paintLeg(); });
   if (!player || !M) return;          // the text-first copy: a page to read, no audio
 
   /* ---------------------------------------------------------- the player */
@@ -65,6 +110,8 @@
     next: player.querySelector('[data-lp-next]'), where: player.querySelector('[data-lp-where]'),
     time: player.querySelector('[data-lp-time]'), speed: player.querySelector('[data-lp-speed]'),
     auto: player.querySelector('[data-lp-auto]'), status: player.querySelector('[data-lp-status]'),
+    leg: player.querySelector('[data-lp-leg]'), legLabel: player.querySelector('[data-lp-leg-label]'),
+    progress: player.querySelector('[data-lp-progress]'),
   };
   var audio = document.createElement('audio');
   audio.preload = 'none';
@@ -146,7 +193,12 @@
       var h = sections[cur].querySelector('h3');
       var u = unitAt(numberOf(sections[cur]));
       ui.where.textContent = (u ? u.name : '') + (h ? (u ? ' · ' : '') + h.textContent : '');
+      var num = numberOf(sections[cur]);
+      var pct = Math.max(0, Math.min(100, Math.round(cur / Math.max(1, sections.length - 1) * 100)));
+      player.style.setProperty('--lp-progress', pct + '%');
+      if (ui.progress) ui.progress.textContent = 'Part ' + num + ' of ' + sections.length;
     }
+    paintLeg();
   }
 
   function tick() {
@@ -177,6 +229,7 @@
 
   function play(i, opts) {
     opts = opts || {};
+    if (ui.leg) ui.leg.hidden = true;
     if (i < 0 || i >= sections.length || !sections[i].hasAttribute('data-audio')) return;
     var go = function () {
       if (startAt !== null && i === startIndex) { audio.currentTime = startAt; startAt = null; }
@@ -214,7 +267,11 @@
     var num = numberOf(sections[i]);
     var u = unitAt(num);
     // The narration played through: on a unit's last part, that unit is watched.
-    if (u && u.last === num && u.kind !== 'lab' && u.kind !== 'quiz' && P) P.record(deck + ':' + u.id, 'watched');
+    if (u && u.last === num && u.kind !== 'lab' && u.kind !== 'quiz' && P) {
+      P.record(deck + ':' + u.id, 'watched');
+      announce((u.name || u.id) + (body.getAttribute('data-lang') === 'zh' ? ' 已盖章，下一段已就绪。' : ' stamped. Next leg ready.'));
+      paintStamps(); paintLeg();
+    }
     var n = nextVoiced(i, 1);
     if (ui.auto.checked && n >= 0) play(n, { scroll: true });
     else if (n < 0) announce('End of the module.');
