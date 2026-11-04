@@ -768,10 +768,12 @@ def learn_page(deck: dict, manifest: dict, provenance: dict, site_base: str,
         deck_manifest = {}
     units = units or []
     unit_meta = unit_meta or {}
+    next_module = MOD.next_id(deck["id"])
+    next_module_href = f"module-{next_module}.html" if next_module else "index.html"
     by_number = {sl["number"]: sl for sl in deck["slides"]}
     segments = [u for u in units if u["kind"] == "segment"]
     parts = []
-    for u in units:
+    for unit_index, u in enumerate(units):
         span = [by_number[n] for n in range(u["first"], u["last"] + 1) if n in by_number]
         secs = sum(float((deck_manifest.get(sl["id"]) or {}).get("duration", 0) or 0) for sl in span)
         kicker = (f"Section {segments.index(u) + 1} of {len(segments)}" if u["kind"] == "segment"
@@ -792,36 +794,58 @@ def learn_page(deck: dict, manifest: dict, provenance: dict, site_base: str,
         # completed on their own pages.
         end = (f'<span class="read-end" data-read-unit="{html.escape(uid, quote=True)}" aria-hidden="true"></span>'
                if u["kind"] not in ("lab", "quiz") else "")
+        # The end of a teaching leg is a checkpoint, not a dead end: it says what finishing means and
+        # carries the next leg (or the next camp). The player and shell paint the stamped state after
+        # the learner records a watch or a read; no one can tick it by hand.
+        stamp = ""
+        if u["kind"] not in ("lab", "quiz"):
+            nxt = units[unit_index + 1] if unit_index + 1 < len(units) else None
+            if nxt:
+                stamp_href = f"{site_base}/{nxt['href']}"
+                stamp_label = SH.T("Next: ", "下一段：") + SH.unit_name(nxt)
+            else:
+                stamp_href = f"{site_base}/{next_module_href}"
+                stamp_label = (SH.T("Next module", "下一模块") if next_module
+                               else SH.T("Back to the trailhead", "回到路线起点"))
+            stamp = f'''<footer class="unit-stamp" data-unit-stamp="{html.escape(uid, quote=True)}"
+  data-next-href="{html.escape(stamp_href, quote=True)}" data-next-label="{html.escape(stamp_label, quote=True)}">
+  <span class="unit-stamp-mark" aria-hidden="true"></span>
+  <span class="unit-stamp-body"><span class="unit-stamp-title">{SH.T("Leg endpoint", "本段终点")}</span>
+    <span class="unit-stamp-note" role="status" aria-live="polite">{SH.T("Finish this leg to stamp it.", "走完这一段即可盖章。")}</span></span>
+  <a class="unit-stamp-next" href="{stamp_href}">{html.escape(stamp_label)} <span aria-hidden="true">→</span></a>
+</footer>'''
         parts.append(
             f'<section class="learn-unit" id="unit-{html.escape(u["id"].lower().replace(".", "-"))}"'
             f' data-unit="{html.escape(uid, quote=True)}" data-unit-kind="{u["kind"]}"'
             f' data-first="{u["first"]}" data-last="{u["last"]}"'
             f' data-unit-label="{html.escape(SH.unit_name(u), quote=True)}">'
-            f'<header class="learn-unit-head"><p class="page-kicker">{html.escape(kicker)}</p>'
-            f'<h2>{html.escape(SH.unit_name(u))}</h2>'
-            f'<p class="learn-unit-facts">{" · ".join(html.escape(f) for f in facts)}</p>{listen}</header>'
-            f'{sections}{end}</section>')
+            f'<header class="learn-unit-head"><h2>{html.escape(SH.unit_name(u))}</h2>'
+            f'<p class="learn-unit-facts"><span class="learn-unit-index">{html.escape(kicker)}</span> · '
+            f'{" · ".join(html.escape(f) for f in facts)}</p>{listen}</header>'
+            f'{sections}{end}{stamp}</section>')
     short = re.sub(rf"^{MOD.TAG}\s*—\s*", "", deck["label"]).strip()
     total = sum(float(e.get("duration", 0) or 0) for e in deck_manifest.values())
     head_facts = [f"{len(units)} units", f"{len(deck['slides'])} parts"]
     if total:
         head_facts.append(f"{round(total / 60)} min narrated")
-    head = SH.page_head(f"{MOD.kicker(deck['id'], SH.LANG)} · Learn · " + " · ".join(head_facts), html.escape(short), "",
+    head = SH.page_head("", html.escape(short), "",
+                        f'<p class="learn-facts">{" · ".join(html.escape(f) for f in head_facts)}</p>'
                         f'<p class="learn-voice">{html.escape(label)}</p>')
     player = "" if not deck_manifest else f"""<div class="learn-player" data-learn-player role="group" aria-label="Narration">
   <button type="button" class="lp-icon" data-lp-prev aria-label="Previous part">{CHEVRON.format(d="M15 18l-6-6 6-6")}</button>
   <button type="button" class="lp-play" data-lp-play aria-label="Play narration">{PLAY_ICON}</button>
   <button type="button" class="lp-icon" data-lp-next aria-label="Next part">{CHEVRON.format(d="M9 6l6 6-6 6")}</button>
-  <p class="lp-now"><span class="lp-where" data-lp-where>Press play to listen from the start</span><span class="lp-time" data-lp-time></span></p>
+  <p class="lp-now"><span class="lp-where" data-lp-where>{SH.T("Press play to start", "按播放开始")}</span><span class="lp-time" data-lp-time></span></p>
   <label class="sr-only" for="lp-speed">Narration speed</label>
   <select class="lp-speed" id="lp-speed" data-lp-speed>
     <option value="0.75">0.75×</option><option value="1" selected>1×</option>
     <option value="1.25">1.25×</option><option value="1.5">1.5×</option>
   </select>
   <label class="lp-auto"><input type="checkbox" data-lp-auto checked> Continue</label>
+  <a class="lp-leg" data-lp-leg hidden href="{site_base}/{next_module_href}"><span data-lp-leg-label>Next leg</span> <span aria-hidden="true">→</span></a>
+  <span class="sr-only" data-lp-progress role="status" aria-live="polite"></span>
   <p class="sr-only" data-lp-status role="status" aria-live="polite"></p>
 </div>"""
-    next_module = MOD.next_id(deck["id"])
     next_href = f"module-{next_module}.html" if next_module else "index.html"
     body = f"""{head}
 <div class="learn doc-article" data-learn="{deck['id']}">

@@ -349,8 +349,8 @@ def lab_page(deck: dict, lab: dict, site_base: str, brand: str,
 
 def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
               units: list[dict] | None = None) -> tuple[str, dict]:
-    """Check (#78, #112): every question on one page, feedback under each answer that links back to
-    the part of the Learn page that teaches it, and the result at the end.
+    """Check (#78, #112): one question at a time, feedback after each answer that links back to the
+    part of the Learn page that teaches it, and a result that names the next camp.
 
     Every question maps to a lesson objective, and the objective names its segment (M2.1), so the
     Rewatch link is the segment's first slide — derived, never hand-written.
@@ -358,6 +358,16 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
     short = short_label(deck)
     by_segment = {u["id"]: u for u in (units or []) if u["kind"] == "segment"}
     total = len(quiz["questions"])
+    next_id = MOD.next_id(deck["id"])
+    if next_id:
+        next_mod = MOD.get(next_id)
+        next_name = next_mod.outline_zh if SH.LANG == "zh" else next_mod.outline_en
+        next_href = f"{site_base}/{next_id}.html#slide-1"
+        next_label = SH.T(f"Next camp: {MOD.tag(next_id)} — {next_name}",
+                          f"下一个营地：{MOD.tag(next_id)} — {next_name}")
+    else:
+        next_href = f"{site_base}/index.html"
+        next_label = SH.T("Back to the trailhead", "回到路线起点")
     blocks = []
     for index, q in enumerate(quiz["questions"], 1):
         n = q["n"]
@@ -389,6 +399,7 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
   <div class="q-actions"><button type="button" class="btn-primary" data-check disabled>Check answer</button></div>
   <p class="q-feedback" data-feedback role="status" aria-live="polite"></p>
   <div class="q-explain" hidden><p class="q-explain-title">Why</p><p>{q['rationale_html']}</p>{rewatch}</div>
+  <div class="q-next"><button type="button" class="btn-primary" data-next-question hidden>{'See result' if index == total else 'Next question'} <span aria-hidden="true">→</span></button></div>
   {nav}
 </section>""")
         else:
@@ -399,27 +410,36 @@ def quiz_page(deck: dict, quiz: dict, site_base: str, brand: str,
   <div class="q-actions"><button type="button" class="btn-primary" data-reveal disabled>Reveal the model answer</button></div>
   <p class="q-feedback" data-feedback role="status" aria-live="polite"></p>
   <div class="q-explain" hidden><p class="q-explain-title">Model answer</p><p>{q['rationale_html']}</p>{rewatch}</div>
+  <div class="q-next"><button type="button" class="btn-primary" data-next-question hidden>{'See result' if index == total else 'Next question'} <span aria-hidden="true">→</span></button></div>
   {nav}
 </section>""")
+    raw_title = SC.inline(quiz["title"])
+    check_title = re.sub(r"^Quiz\s+", "Checkpoint ", raw_title, count=1)
+    if check_title == raw_title:
+        check_title = "Checkpoint — " + raw_title
     head = SH.page_head(
-        f"{MOD.kicker(deck['id'], SH.LANG)} · Knowledge check · {quiz['mc']} multiple choice + {quiz['short']} short answer",
-        SC.inline(quiz["title"]),
-        SH.T("Each question maps to one lesson objective, and the distractors are the misconceptions the "
-             "lesson argues against. Multiple choice is checked instantly; short answers reveal the model "
-             "answer only after you have written yours. Best score is kept; 75% is the certificate threshold.",
-             "每道题对应一个课程目标，干扰项正是课程所反驳的误解。选择题即时判分；简答题要先写出你的答案，"
-             "才会显示参考答案。保留最好成绩；75% 是证书门槛。"))
+        "",
+        check_title,
+        SH.T("One question at a time. Check an answer to see why, then take the next; the last one opens "
+             "the result. Best score is kept; 75% is the certificate threshold.",
+             "一次一题。检查答案后看看为什么，再进入下一题；最后一题打开结果。保留最好成绩；75% 是证书门槛。"))
     body = f"""{head}
 <div class="doc-main">
   <article class="doc-article quiz-article" data-quiz="{deck['id']}" data-total="{total}">
     <p class="quiz-score sr-only" data-quiz-score role="status" aria-live="polite"></p>
+    <div class="check-head">
+      <div class="check-progress" data-check-progress role="progressbar" aria-label="{SH.T("Check progress", "检查进度")}" aria-valuemin="0" aria-valuemax="{total}" aria-valuenow="0"><span data-check-bar></span></div>
+      <p class="check-pos"><span data-check-current>Question 1 of {total}</span> · <span data-check-answered>0 {SH.T("answered", "已答")}</span></p>
+    </div>
 {"".join(blocks)}
-    <section class="quiz-summary" data-quiz-summary aria-labelledby="quiz-result-title">
+    <section class="quiz-summary" data-quiz-summary aria-labelledby="quiz-result-title" hidden>
+      <span class="check-result-stamp" data-result-stamp aria-hidden="true" hidden></span>
       <h2 id="quiz-result-title" tabindex="-1">Your result</h2>
       <p data-summary-text>{SH.T("Answer every question above; your result appears here.", "回答上面的每道题，结果会显示在这里。")}</p>
       <div data-revisit hidden><h3>Objectives to revisit</h3><ul class="revisit-list" data-revisit-list></ul></div>
       <div class="evidence-actions"><button type="button" data-quiz-again>Try again</button>
-        <a class="btn-primary" href="{site_base}/module-{deck['id']}.html">Back to the module →</a></div>
+        <a class="btn-outline" href="{site_base}/module-{deck['id']}.html">{SH.T("Back to the module", "回到模块")}</a></div>
+      <a class="check-next" href="{next_href}">{html.escape(next_label)} <span aria-hidden="true">→</span></a>
     </section>
     <footer class="doc-footer">
       <p class="index-footnote">{SH.T("Scores are stored in this browser only.", "成绩只保存在此浏览器中。")} {SH.T("Source", "来源")}: <code>{source_path(deck, "quiz")}</code> {SH.T("— the answer key with rationale and objective references is the same file.", "——带解析和目标对照的答案也在同一个文件中。")}</p>
